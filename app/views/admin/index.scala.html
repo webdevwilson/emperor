@@ -1,0 +1,9 @@
+@(implicit request: Request[AnyContent])
+
+@main("Home") {
+<ul class="nav nav-list well">
+ <li class="nav-header">@Messages("People")</li>
+ <li><a href="@controllers.admin.routes.User.index">@Messages("List Users")</a></li>
+ <li><a href="@controllers.admin.routes.User.create">@Messages("Add User")</a></li>
+</ul>
+}

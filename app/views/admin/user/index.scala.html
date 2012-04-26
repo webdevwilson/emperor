@@ -1,0 +1,21 @@
+@(users: List[chc.User])(implicit request: Request[AnyContent])
+
+@main("Users") {
+<div class="btn-group pull-right">
+ <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("Add User")</a>
+</div>
+<table class="table table-bordered table-rounded table-striped">
+ <thead>
+  <th>@Messages("Real Name")</th>
+ </thead>
+ <tbody>
+  @users.map { u =>
+  <tr>
+   <td>@u.realName</li>
+  </tr>
+  }
+ </tbody>
+ <tfoot>
+ </tfoot
+</table>
+}
