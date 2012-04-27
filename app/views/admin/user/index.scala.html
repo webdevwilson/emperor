@@ -1,4 +1,4 @@
-@(users: List[chc.User])(implicit request: Request[AnyContent])
+@(implicit request: Request[AnyContent])
 
 @main("Users") {
 <div class="btn-group pull-right">
@@ -9,11 +9,6 @@
   <th>@Messages("Real Name")</th>
  </thead>
  <tbody>
-  @users.map { u =>
-  <tr>
-   <td>@u.realName</li>
-  </tr>
-  }
  </tbody>
  <tfoot>
  </tfoot

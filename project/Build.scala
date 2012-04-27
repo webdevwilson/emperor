@@ -11,7 +11,6 @@ object ApplicationBuild extends Build {
     "org.specs2"    %% "specs2"                 % "1.8.2"           % "test",
     "org.squeryl"   %% "squeryl"                % "0.9.5-RC1",
     "mysql"         % "mysql-connector-java"    % "5.1.19",
-    "org.scalaquery"%% "scalaquery"             % "0.10.0-M1",
     "org.mindrot"   % "jbcrypt"                 % "0.3m"
   )
 

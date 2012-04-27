@@ -8,11 +8,6 @@ import play.api.mvc._
 import play.db._
 import chc._
 import org.mindrot.jbcrypt.BCrypt
-import org.scalaquery.session._
-import org.scalaquery.session.Database.threadLocalSession
-import org.scalaquery.ql.basic.BasicDriver.Implicit._
-import org.scalaquery.ql.extended.MySQLDriver.Implicit._
-import org.scalaquery.ql._
 
 object User extends Controller {
 
@@ -27,9 +22,7 @@ object User extends Controller {
 
   def index = Action { implicit request =>
 
-    val list = models.UserModel.getAllUsers
-
-    Ok(views.html.admin.user.index(list)(request))
+    Ok(views.html.admin.user.index(request))
   }
   
   def create = Action { implicit request =>

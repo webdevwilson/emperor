@@ -1,12 +1,7 @@
-@(foo: String, thelist : List[chc.TicketType], bar : String)(implicit request: Request[AnyContent])
+@(foo: String, bar : String)(implicit request: Request[AnyContent])
 
 @main("Home") {
 @foo
 
 <strong>@bar</strong>
-<ul>
-@for(l <- thelist) {
-  <li>@l.id @Messages(l.name)</li>
-} 
-</ul>
 }
