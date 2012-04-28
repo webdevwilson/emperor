@@ -25,6 +25,28 @@
   }
  </tbody>
  <tfoot>
+  <tr>
+   <td colspan="4">
+     <p>Displaying @(page.offset + 1) to @(page.offset + users.size) of @page.total</p>
+     <div class="pagination pull-right">
+       <ul>
+         @page.prev.map { prev =>
+         <li><a href="@page">@prev</a></li>
+         }.getOrElse {
+         <li class="disabled"><a href="#">Prev</a></li>
+         }
+         <li>
+           <a href="#">1XXX</a>
+         </li>
+         @page.next.map { next =>
+         <li><a href="@page.next">Next</a></li>
+         }.getOrElse {
+         <li class="disabled"><a href="#">Next</a></li>
+         }
+       </ul>
+     </div>
+    </td>
+   </tr>
  </tfoot
 </table>
 }
