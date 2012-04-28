@@ -1,9 +1,9 @@
-@(userForm: Form[(User)])(implicit request: Request[AnyContent])
+@(id: Long, userForm: Form[(User)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
 
-@main("Add User") {
+@main("Edit User") {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("Admin")</a> <span class="divider">/</span>
@@ -11,19 +11,19 @@
  <li>
   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("Users")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("user.add")</li>
-    </ul>
-<h1>@Messages("Add User")</h1>
-@helper.form(action = controllers.admin.routes.User.add) {
+ <li class="active">@Messages("user.with.id", id)</li>
+</ul>
+<h1>@Messages("Edit User")</h1>
+@helper.form(action = controllers.admin.routes.User.update(id)) {
  <fieldset>
   @helper.inputText(userForm("username"), '_label -> Messages("Username"))
   @helper.inputPassword(userForm("password"), '_label -> Messages("Password"))
   @helper.inputText(userForm("realName"), '_label -> Messages("Real Name"))
   @helper.input(userForm("email"), '_label -> Messages("Email")) { (id, name, value, args) =>
-      <input type="email" name="@name" id="@id" @toHtmlArgs(args)>
+      <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
   }
   <div class="form-actions">
-   <a href="#" class="btn">@Messages("Cancel")</a>
+   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("Cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("Submit")</button>
   </div>
  </fieldset>

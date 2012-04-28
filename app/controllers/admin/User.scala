@@ -31,7 +31,7 @@ object User extends Controller {
       errors => BadRequest(views.html.admin.user.create(errors)),
       {
         case user: models.User =>
-        UserModel.createUser(user)
+        UserModel.create(user)
         Redirect("/admin/user")
       }
     )
@@ -48,7 +48,17 @@ object User extends Controller {
 
     Ok(views.html.admin.user.index(users)(request))
   }
-  
+
+  def edit(userId: Long) = Action { implicit request =>
+
+    val user = UserModel.findById(userId)
+
+    user match {
+      case Some(value) => Ok(views.html.admin.user.edit(userId, userForm.fill(value))(request))
+      case None => NotFound
+    }
+  }
+
   def item(userId: Long) = Action { implicit request =>
     
     val user = UserModel.findById(userId)
@@ -58,5 +68,17 @@ object User extends Controller {
       case None => NotFound
     }
     
+  }
+  
+  def update(userId: Long) = Action { implicit request =>
+
+    userForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.admin.user.edit(userId, errors)),
+      {
+        case user: models.User =>
+        UserModel.update(userId, user)
+        Redirect("/admin/user")
+      }
+    )
   }
 }

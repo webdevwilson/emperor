@@ -3,6 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import org.mindrot.jbcrypt.BCrypt
 import play.api.db.DB
 import play.api.Play.current
 
@@ -15,6 +16,7 @@ object UserModel {
   val listUsersQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listUsersCountQuery = SQL("SELECT count(*) FROM users")
   val insertUserQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
+  val updateUserQuery = SQL("UPDATE users SET username={username}, password={password}, realname={realname}, email={email} WHERE id={id}")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -26,21 +28,21 @@ object UserModel {
     }
   }
 
-  def createUser(user: User): User = {
+  def create(user: User): User = {
 
     DB.withConnection { implicit conn =>
       insertUserQuery.on(
-        "username"  -> user.username,
-        "password"  -> user.password,
-        "realname"  -> user.realName,
-        "email"     -> user.email
+        'username   -> user.username,
+        'password   -> BCrypt.hashpw(user.password, BCrypt.gensalt(12)),
+        'realname   -> user.realName,
+        'email      -> user.email
       ).executeUpdate
     }
     
     user
   }
   
-  def deleteUser(id: Long) {
+  def delete(id: Long) {
       
   }
 
@@ -72,5 +74,22 @@ object UserModel {
 
         Page(users, page, offset, totalRows)
       }
+  }
+  
+  def update(id: Long, user: User) = {
+
+    val hashedPass = BCrypt.hashpw(user.password, BCrypt.gensalt(12))
+    println("HASHED " + hashedPass)
+
+    DB.withTransaction { implicit conn =>
+      val foo = updateUserQuery.on(
+        'id         -> id,
+        'username   -> user.username,
+        'password   -> hashedPass,
+        'realname   -> user.realName,
+        'email      -> user.email
+      ).executeUpdate
+      println("Affected: " + foo)
+    }
   }
 }

@@ -1,1 +1,8 @@
+general.home=Home
+general.admin=Admin
+
+user=User
+user.add=Add User
+user.list=List Users
+user.with.id=User {0}
 TICK_RESO_FIXED=Fixed

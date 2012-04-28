@@ -1,7 +1,5 @@
-@(foo: String, bar : String)(implicit request: Request[AnyContent])
+@(bar: String)(implicit request: Request[AnyContent])
 
 @main("Home") {
-@foo
-
 <strong>@bar</strong>
 }

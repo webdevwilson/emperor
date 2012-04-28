@@ -1,6 +1,12 @@
 @(page: chc.Page[models.User])(implicit request: Request[AnyContent])
 
 @main("Users") {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("Admin")</a> <span class="divider">/</span>
+ </li>
+ <li class="active">@Messages("Users")</li>
+</ul>
 <div class="btn-group pull-right">
  <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("Add User")</a>
 </div>
@@ -21,7 +27,7 @@
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-small" href="XXX">@Messages("Edit")</a>
+      <a class="btn btn-small" href="@controllers.admin.routes.User.edit(user.id.get)">@Messages("Edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-small">@Messages("Disable") XXX</button>
