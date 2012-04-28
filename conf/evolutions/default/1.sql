@@ -3,7 +3,6 @@
 CREATE TABLE projects (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
@@ -13,14 +12,12 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     realname VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE groups (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
@@ -28,7 +25,6 @@ CREATE TABLE group_users (
     id INT UNSIGNED AUTO_INCREMENT,
     group_id INT UNSIGNED NOT NULL,
     user_id INT UNSIGNED NOT NULL,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (group_id) REFERENCES groups(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -78,7 +74,6 @@ CREATE TABLE tickets (
     position INT,
     summary VARCHAR(255) NOT NULL,
     description TEXT,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (ticket_resolution_id) REFERENCES ticket_resolutions(id),
     FOREIGN KEY (ticket_status_id) REFERENCES ticket_statuses(id),
@@ -99,7 +94,6 @@ CREATE TABLE ticket_links (
     link_type_id INT UNSIGNED NOT NULL,
     parent_ticket_id INT UNSIGNED NOT NULL,
     child_ticket_id INT UNSIGNED NOT NULL,
-    date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(link_type_id) REFERENCES ticket_link_types(id),
     FOREIGN KEY(parent_ticket_id) REFERENCES tickets(id),

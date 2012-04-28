@@ -23,9 +23,9 @@ object User extends Controller {
     )(models.User.apply)(models.User.unapply)
   )
 
-  def index = Action { implicit request =>
+  def index(page: Int, count: Int) = Action { implicit request =>
 
-    val users = UserModel.getAllUsers
+    val users = UserModel.list(page = page, count = count)
 
     Ok(views.html.admin.user.index(users)(request))
   }

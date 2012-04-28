@@ -1,9 +1,10 @@
-@(users: List[models.User])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.User])(implicit request: Request[AnyContent])
 
 @main("Users") {
 <div class="btn-group pull-right">
  <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("Add User")</a>
 </div>
+@Option(page.items).filterNot(_.isEmpty).map { users =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("Username")</th>
@@ -12,18 +13,19 @@
   <th>@Messages("Actions")</th>
  </thead>
  <tbody>
+  @users.map { user =>
   <tr>
-   @users.map { user =>
    <td><a href="XXX">@user.username</a></td>
    <td>@user.realName</td>
    <td>@user.email</td>
    <td>
     <a class="btn" href="XXX">@Messages("Edit")</a>
    </td>
-   }
   </tr>
+  }
  </tbody>
  <tfoot>
  </tfoot
 </table>
+}
 }

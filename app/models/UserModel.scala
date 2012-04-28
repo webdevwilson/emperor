@@ -1,15 +1,18 @@
 package models
 
-import play.api.db.DB
-import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
+import chc._
+import play.api.db.DB
+import play.api.Play.current
 
-case class User(id: Pk[Long], username: String, password: String, realName: String, email: String)
+case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String)
 
 object UserModel {
 
   val allUsersQuery = SQL("SELECT * FROM users")
+  val listUsersQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
+  val listUsersCountQuery = SQL("SELECT count(*) FROM users")
   val insertUserQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
 
   val user = {
@@ -22,11 +25,27 @@ object UserModel {
     }
   }
 
-  def getAllUsers: List[User] = {
+  def getAll: List[User] = {
       
     DB.withConnection { implicit conn =>
       allUsersQuery.as(user *)
     }
+  }
+
+  def list(page: Int = 0, count: Int = 10) : Page[User] = {
+
+      val offset = count * page
+      
+      DB.withConnection { implicit conn =>
+        val users = listUsersQuery.on(
+          'count  -> count,
+          'offset -> offset
+        ).as(user *)
+
+        val totalRows = listUsersCountQuery.as(scalar[Long].single)
+
+        Page(users, page, offset, totalRows)
+      }
   }
   
   def createUser(user: User): User = {

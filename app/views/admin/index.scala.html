@@ -3,7 +3,7 @@
 @main("Home") {
 <ul class="nav nav-list well">
  <li class="nav-header">@Messages("People")</li>
- <li><a href="@controllers.admin.routes.User.index">@Messages("List Users")</a></li>
+ <li><a href="@controllers.admin.routes.User.index(page = 1, count = 10)">@Messages("List Users")</a></li>
  <li><a href="@controllers.admin.routes.User.create">@Messages("Add User")</a></li>
 </ul>
 }
