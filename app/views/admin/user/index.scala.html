@@ -1,4 +1,4 @@
-@(implicit request: Request[AnyContent])
+@(users: List[models.User])(implicit request: Request[AnyContent])
 
 @main("Users") {
 <div class="btn-group pull-right">
@@ -6,9 +6,22 @@
 </div>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
+  <th>@Messages("Username")</th>
   <th>@Messages("Real Name")</th>
+  <th>@Messages("Email")</th>
+  <th>@Messages("Actions")</th>
  </thead>
  <tbody>
+  <tr>
+   @users.map { user =>
+   <td><a href="XXX">@user.username</a></td>
+   <td>@user.realName</td>
+   <td>@user.email</td>
+   <td>
+    <a class="btn" href="XXX">@Messages("Edit")</a>
+   </td>
+   }
+  </tr>
  </tbody>
  <tfoot>
  </tfoot

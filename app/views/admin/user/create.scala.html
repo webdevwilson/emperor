@@ -1,19 +1,22 @@
-@(implicit request: Request[AnyContent])
+@(userForm: Form[(String,String,String,String)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
 
 @main("Add User") {
 <h1>@Messages("Add User")</h1>
-<form class="form-horizontal">
+@helper.form(action = controllers.admin.routes.User.add) {
  <fieldset>
- <div class="control-group">
-  <label class="control-label">@Messages("User Name")</label>
-  <div class="controls">
-   <input type="text" class="span3" placeholder="">
-   <span class="help-block">@Messages("Not sure what goes here!")</span>
-  </div>
+  @helper.inputText(userForm("username"), '_label -> Messages("Username"))
+  @helper.inputPassword(userForm("password"), '_label -> Messages("Password"))
+  @helper.inputText(userForm("realname"), '_label -> Messages("Real Name"))
+  @helper.input(userForm("email"), '_label -> Messages("Email")) { (id, name, value, args) =>
+      <input type="email" name="@name" id="@id" @toHtmlArgs(args)>
+  }
   <div class="form-actions">
    <a href="#" class="btn">@Messages("Cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("Submit")</button>
   </div>
  </fieldset>
-</form>
+}
 }

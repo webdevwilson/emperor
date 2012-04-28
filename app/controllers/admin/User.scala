@@ -13,27 +13,34 @@ object User extends Controller {
 
   val userForm = Form(
     tuple(
-      "username" -> of[String],
-      "password" -> of[String],
-      "realName" -> of[String],
-      "email"    -> of[String]
+    "username" -> nonEmptyText,
+    "password" -> nonEmptyText,
+    "realName" -> nonEmptyText,
+    "email"    -> nonEmptyText
     )
   )
 
   def index = Action { implicit request =>
 
-    Ok(views.html.admin.user.index(request))
+    val users = models.UserModel.getAllUsers
+
+    Ok(views.html.admin.user.index(users)(request))
   }
   
   def create = Action { implicit request =>
 
-    Ok(views.html.admin.user.create(request))
+    Ok(views.html.admin.user.create(userForm)(request))
   }
 
   def add = Action { implicit request =>
 
-    val (username) = userForm.bindFromRequest.get
+    // val (username, password, realName, email) = userForm.bindFromRequest.get
 
-    Ok(views.html.admin.user.create(request))
+    userForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.admin.user.create(errors)),
+      label => {
+        Redirect(controllers.admin.routes.User.index)
+      }
+    )
   }
 }

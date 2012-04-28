@@ -1,4 +1,4 @@
-package chc
+// package chc
 
 // import org.scalaquery.session._
 // import org.scalaquery.session.Database.threadLocalSession
@@ -6,16 +6,16 @@ package chc
 // import org.scalaquery.ql.extended.{ExtendedTable => Table}
 // import org.scalaquery.ql.TypeMapper._
 // import org.scalaquery.ql._
-import java.sql.Timestamp
-import org.squeryl.Schema
-import org.squeryl.annotations._
-
-class Project(
-  val id : Long,
-  val name : String,
-  @Column("date_created")
-  val dateCreated : Timestamp) {
-}
+// import java.sql.Timestamp
+// import org.squeryl.Schema
+// import org.squeryl.annotations._
+// 
+// class Project(
+//   val id : Long,
+//   val name : String,
+//   @Column("date_created")
+//   val dateCreated : Timestamp) {
+// }
 
 // object Projects extends Table[(Int, String, Timestamp)]("projects") {
 //   def id = column[Int]("id")
@@ -23,7 +23,18 @@ class Project(
 //   def dateCreated = column[Timestamp]("date_created")
 //   def * = id ~ name ~ dateCreated
 // }
-// 
+
+// class User(
+//   val id : Long,
+//   val username : String,
+//   val password : String,
+//   @Column("real_name")
+//   val realName : String,
+//   val email : String,
+//   @Column("date_created")
+//   val dateCreated : Timestamp) {
+// }
+ 
 // case class User(id: Int, username: String, password: String, realName: String, email: String, dateCreated: Timestamp)
 // 
 // object Users extends Table[User]("users") {
@@ -67,10 +78,10 @@ class Project(
 // 
 // case class TicketType(id: Int, name: String)
 
-class TicketType(
-  val id : Long,
-  val name : String
-)
+// class TicketType(
+//   val id : Long,
+//   val name : String
+// )
 
 // object TicketTypes extends Table[TicketType]("ticket_types") {
 //   def id = column[Int]("id")
@@ -120,6 +131,7 @@ class TicketType(
 //   def childTicket = foreignKey("fk_ticket_links_child_ticket_id", childTicketId, Tickets)(_.id)
 // }
 
-object Library extends Schema {
-    
-}
+// object Library extends Schema {
+//     val users = table[User]("users")
+//     val ticketTypes = table[TicketType]("ticket_types")
+// }
