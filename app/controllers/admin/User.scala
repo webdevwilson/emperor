@@ -23,18 +23,6 @@ object User extends Controller {
     )(models.User.apply)(models.User.unapply)
   )
 
-  def index(page: Int, count: Int) = Action { implicit request =>
-
-    val users = UserModel.list(page = page, count = count)
-
-    Ok(views.html.admin.user.index(users)(request))
-  }
-  
-  def create = Action { implicit request =>
-
-    Ok(views.html.admin.user.create(userForm)(request))
-  }
-
   def add = Action { implicit request =>
 
     // val (username, password, realName, email) = userForm.bindFromRequest.get
@@ -47,5 +35,28 @@ object User extends Controller {
         Redirect("/admin/user")
       }
     )
+  }
+  
+  def create = Action { implicit request =>
+
+    Ok(views.html.admin.user.create(userForm)(request))
+  }
+
+  def index(page: Int, count: Int) = Action { implicit request =>
+
+    val users = UserModel.list(page = page, count = count)
+
+    Ok(views.html.admin.user.index(users)(request))
+  }
+  
+  def item(userId: Long) = Action { implicit request =>
+    
+    val user = UserModel.findById(userId)
+
+    user match {
+      case Some(value) => Ok(views.html.admin.user.item(value)(request))
+      case None => NotFound
+    }
+    
   }
 }

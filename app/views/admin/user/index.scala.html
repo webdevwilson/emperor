@@ -15,17 +15,17 @@
  <tbody>
   @users.map { user =>
   <tr>
-   <td><a href="XXX">@user.username</a></td>
+   <td><a href="@controllers.admin.routes.User.item(user.id.get)">@user.username</a></td>
    <td>@user.realName</td>
    <td>@user.email</td>
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn" href="XXX">@Messages("Edit")</a>
+      <a class="btn btn-small" href="XXX">@Messages("Edit")</a>
      </div>
      <div class="btn-group">
-       <button class="btn btn-danger">@Messages("Disable") XXX</button>
-       <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+       <button class="btn btn-danger btn-small">@Messages("Disable") XXX</button>
+       <button class="btn btn-danger btn-small dropdown-toggle" data-toggle="dropdown">
          <span class="caret"></span>
        </button>
        <ul class="dropdown-menu">
@@ -40,21 +40,24 @@
  <tfoot>
   <tr>
    <td colspan="4">
-     <p>Displaying @(page.offset + 1) to @(page.offset + users.size) of @page.total</p>
+     <!-- Template me! -->
+     <p>Displaying @(page.offset + 1) to @(page.offset + users.size) of @page.total and @page.lastPage</p>
      <div class="pagination pull-right">
        <ul>
          @page.prev.map { prev =>
-         <li><a href="@page">@prev</a></li>
+         <li><a href="@prev">&larr; Prev</a></li>
          }.getOrElse {
-         <li class="disabled"><a href="#">Prev</a></li>
+         <li class="disabled"><a href="#">&larr; Prev</a></li>
          }
-         <li>
-           <a href="#">1XXX</a>
+         @page.lastPage.until(page.lastPage + 1).map { pageNum =>
+         <li @if(pageNum == page.page + 1) { class="active" }>
+           <a href="#">@pageNum</a>
          </li>
+         }
          @page.next.map { next =>
-         <li><a href="@page.next">Next</a></li>
+         <li><a href="@next">Next &rarr;</a></li>
          }.getOrElse {
-         <li class="disabled"><a href="#">Next</a></li>
+         <li class="disabled"><a href="#">Next &rarr;</a></li>
          }
        </ul>
      </div>

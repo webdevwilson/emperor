@@ -3,3 +3,10 @@
     font-family: 'Great Vibes', cursive;
     margin-top: 4px;
 }
+table td .btn-toolbar {
+    margin: 0;
+}
+table td .btn-toolbar .btn-group {
+    margin-bottom: 0;
+    margin-top: 0;
+}

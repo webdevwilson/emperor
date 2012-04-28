@@ -6,6 +6,7 @@
 GET     /                           controllers.Core.index
 GET     /admin                      controllers.Admin.index
 GET     /admin/user                 controllers.admin.User.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/user/:id             controllers.admin.User.item(id: Long)
 GET     /admin/user/create          controllers.admin.User.create
 POST    /admin/user                 controllers.admin.User.add
 

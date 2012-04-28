@@ -11,6 +11,7 @@ case class User(id: Pk[Long] = NotAssigned, username: String, password: String, 
 object UserModel {
 
   val allUsersQuery = SQL("SELECT * FROM users")
+  val getUserByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
   val listUsersQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listUsersCountQuery = SQL("SELECT count(*) FROM users")
   val insertUserQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
@@ -22,6 +23,31 @@ object UserModel {
     get[String]("realName") ~
     get[String]("email") map {
       case id~username~password~realName~email => User(id, username, password, realName, email)
+    }
+  }
+
+  def createUser(user: User): User = {
+
+    DB.withConnection { implicit conn =>
+      insertUserQuery.on(
+        "username"  -> user.username,
+        "password"  -> user.password,
+        "realname"  -> user.realName,
+        "email"     -> user.email
+      ).executeUpdate
+    }
+    
+    user
+  }
+  
+  def deleteUser(id: Long) {
+      
+  }
+
+  def findById(id: Long) : Option[User] = {
+      
+    DB.withConnection { implicit conn =>
+      getUserByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
     }
   }
 
@@ -46,23 +72,5 @@ object UserModel {
 
         Page(users, page, offset, totalRows)
       }
-  }
-  
-  def createUser(user: User): User = {
-
-    DB.withConnection { implicit conn =>
-      insertUserQuery.on(
-        "username"  -> user.username,
-        "password"  -> user.password,
-        "realname"  -> user.realName,
-        "email"     -> user.email
-      ).executeUpdate
-    }
-    
-    user
-  }
-  
-  def deleteUser(id: Long) {
-      
   }
 }
