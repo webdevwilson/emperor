@@ -1,5 +1,6 @@
 package controllers.admin
 
+import anorm._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -7,22 +8,24 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
 
 object User extends Controller {
 
   val userForm = Form(
-    tuple(
-    "username" -> nonEmptyText,
-    "password" -> nonEmptyText,
-    "realName" -> nonEmptyText,
-    "email"    -> nonEmptyText
-    )
+    mapping(
+      "id" -> ignored(NotAssigned:Pk[Long]),
+      "username" -> nonEmptyText,
+      "password" -> nonEmptyText,
+      "realName" -> nonEmptyText,
+      "email"    -> nonEmptyText
+    )(models.User.apply)(models.User.unapply)
   )
 
   def index = Action { implicit request =>
 
-    val users = models.UserModel.getAllUsers
+    val users = UserModel.getAllUsers
 
     Ok(views.html.admin.user.index(users)(request))
   }
@@ -38,8 +41,10 @@ object User extends Controller {
 
     userForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
-      label => {
-        Redirect(controllers.admin.routes.User.index)
+      {
+        case user: models.User =>
+        UserModel.createUser(user)
+        Redirect("/admin/user")
       }
     )
   }

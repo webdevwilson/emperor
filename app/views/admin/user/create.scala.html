@@ -1,4 +1,4 @@
-@(userForm: Form[(String,String,String,String)])(implicit request: Request[AnyContent])
+@(userForm: Form[(User)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -9,7 +9,7 @@
  <fieldset>
   @helper.inputText(userForm("username"), '_label -> Messages("Username"))
   @helper.inputPassword(userForm("password"), '_label -> Messages("Password"))
-  @helper.inputText(userForm("realname"), '_label -> Messages("Real Name"))
+  @helper.inputText(userForm("realName"), '_label -> Messages("Real Name"))
   @helper.input(userForm("email"), '_label -> Messages("Email")) { (id, name, value, args) =>
       <input type="email" name="@name" id="@id" @toHtmlArgs(args)>
   }
