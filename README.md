@@ -6,7 +6,7 @@ Emperor aims to replicate features of established bug-trackers such as JIRA, Fog
 
 # Mission Statement
 
-The mission of emperor is to provide project management software that is reasonable to administer, useful for developers and &mdash; perhaps most critical &mdash; visible and information to non-developers.
+The mission of emperor is to provide project management software that is reasonable to administer, useful for developers and &mdash; perhaps most critical &mdash; visible and informative to non-developers.
 
 ## Features
 
