@@ -10,3 +10,11 @@ table td .btn-toolbar .btn-group {
     margin-bottom: 0;
     margin-top: 0;
 }
+table tfoot span.summ {
+    display: inline-block;
+    margin-top: 8px;
+}
+table tfoot .pagination {
+    margin-bottom: 0;
+    margin-top: 0;
+}

@@ -1,20 +1,22 @@
 @(page: chc.Page[Any])(implicit request: Request[AnyContent])
-<!-- Template me! -->
-<span>@request @Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</span>
+
+@import chc._
+
+<span class="summ">@Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</span>
 <div class="pagination pull-right">
   <ul>
     @page.prev.map { prev =>
-    <li><a href="@controllers.admin.routes.Group.index(prev)">&larr; @Messages("pager.prev")</a></li>
+    <li><a href="@Library.pagerLink(request, page.prev.get, page.count)">&larr; @Messages("pager.prev")</a></li>
     }.getOrElse {
     <li class="disabled"><a href="#">&larr; @Messages("pager.prev")</a></li>
     }
     @page.firstPage.until(page.lastPage + 1).map { pageNum =>
-    <li @if(pageNum == page.page + 1) { class="active" }>
-      <a href="#">@pageNum</a>
+    <li @if(pageNum == page.page) { class="active" }>
+      <a href="@Library.pagerLink(request, pageNum, page.count)">@{pageNum + 1}</a>
     </li>
     }
     @page.next.map { next =>
-    <li><a href="@controllers.admin.routes.Group.index(next)">@Messages("pager.next") &rarr;</a></li>
+    <li><a href="@Library.pagerLink(request, page.next.get, page.count)">@Messages("pager.next") &rarr;</a></li>
     }.getOrElse {
     <li class="disabled"><a href="#">@Messages("pager.next") &rarr;</a></li>
     }

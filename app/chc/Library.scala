@@ -28,6 +28,6 @@ object Library {
       )
     )
     
-    request.host + request.path + "?" + qs
+    request.path + "?" + qs
   }
 }
