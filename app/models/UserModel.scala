@@ -72,14 +72,13 @@ object UserModel {
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(users, page, offset, totalRows)
+        Page(users, page, count, totalRows)
       }
   }
   
   def update(id: Long, user: User) = {
 
     val hashedPass = BCrypt.hashpw(user.password, BCrypt.gensalt(12))
-    println("HASHED " + hashedPass)
 
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(

@@ -65,7 +65,7 @@ object TicketLinkTypeModel {
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(tss, page, offset, totalRows)
+        Page(tss, page, count, totalRows)
       }
   }
   

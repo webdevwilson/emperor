@@ -1,7 +1,6 @@
-@(page: chc.Page[Any])
+@(page: chc.Page[Any])(implicit request: Request[AnyContent])
 <!-- Template me! -->
-<p>@Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</p>
-<p>@{(page.lastPage)}</p>
+<span>@request @Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</span>
 <div class="pagination pull-right">
   <ul>
     @page.prev.map { prev =>

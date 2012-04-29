@@ -65,10 +65,7 @@ object TicketTypeModel {
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
-        println("#### WEEE")
-        println("count = " + count) 
-        println("total = " + totalRows) 
-        Page(tss, page, offset, totalRows)
+        Page(tss, page, count, totalRows)
       }
   }
   

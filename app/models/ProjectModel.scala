@@ -65,7 +65,7 @@ object ProjectModel {
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(projects, page, offset, totalRows)
+        Page(projects, page, count, totalRows)
       }
   }
   

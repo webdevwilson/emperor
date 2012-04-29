@@ -69,7 +69,7 @@ object GroupModel {
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(groups, page, offset, totalRows)
+        Page(groups, page, count, totalRows)
       }
   }
   
