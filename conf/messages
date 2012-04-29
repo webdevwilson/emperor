@@ -1,10 +1,20 @@
 admin.people=People
 admin.groups=Groups
+
 admin.tickets=Tickets
+
+admin.ticket_link_type.add=Add Ticket Link Type
+admin.ticket_link_type.edit=Edit Ticket Link Type
+admin.ticket_link_types=Ticket Link Types
+
 admin.ticket_type.add=Add Ticket Type
+admin.ticket_type.edit=Edit Ticket Type
 admin.ticket_types=Ticket Types
+
 admin.group.add=Add Group
+
 admin.user.add=Add User
+
 admin.users=Users
 
 form.cancel=Cancel
@@ -21,6 +31,8 @@ pager.next=Next
 pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
 
+ticket_link_type.name=Name
+
 ticket_type.name=Name
 
 user=User
@@ -33,6 +45,8 @@ user.with.id=User {0}
 
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix
+
+TICK_LINK_BLOCKS=Blocks
 
 TICK_STATUS_OPEN=Open
 TICK_STATUS_CLOSED=Closed

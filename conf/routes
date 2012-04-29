@@ -13,11 +13,18 @@ POST    /admin/group/:id             controllers.admin.Group.update(id: Long)
 GET     /admin/group/edit/:id        controllers.admin.Group.edit(id: Long)
 POST    /admin/group                 controllers.admin.Group.add
 
+GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/linktype/create   controllers.admin.TicketLinkType.create
+GET     /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.item(id: Long)
+POST    /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.update(id: Long)
+GET     /admin/ticket/linktype/edit/:id controllers.admin.TicketLinkType.edit(id: Long)
+POST    /admin/ticket/linktype              controllers.admin.TicketLinkType.add
+
 GET     /admin/ticket/type          controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/type/create   controllers.admin.TicketType.create
 GET     /admin/ticket/type/:id      controllers.admin.TicketType.item(id: Long)
 POST    /admin/ticket/type/:id      controllers.admin.TicketType.update(id: Long)
-GET     /admin/ticket/edit/:id      controllers.admin.TicketType.edit(id: Long)
+GET     /admin/ticket/type/edit/:id controllers.admin.TicketType.edit(id: Long)
 POST    /admin/ticket/type          controllers.admin.TicketType.add
 
 GET     /admin/user                 controllers.admin.User.index(page: Int ?= 0, count: Int ?= 10)

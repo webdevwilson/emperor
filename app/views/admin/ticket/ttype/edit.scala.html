@@ -3,13 +3,13 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("Edit Ticket Type") {
+@main("Edit Ticket Type XXX") {
 <ul class="breadcrumb">
  <li>
-  <a href="@routes.Admin.index">@Messages("general.Admin")</a> <span class="divider">/</span>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.ticket_type.add")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)">@Messages("admin.ticket_type.add")</a> <span class="divider">/</span>
  </li>
  <li class="active">@Messages("ticket_type.with.id", id)</li>
 </ul>
@@ -18,7 +18,7 @@
  <fieldset>
   @helper.inputText(typeForm("name"), '_label -> Messages("ticket_type.name"))
   <div class="form-actions">
-   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submt")</button>
   </div>
  </fieldset>
