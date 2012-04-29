@@ -1,6 +1,7 @@
 package chc
 
 import play.api.mvc._
+import scala.collection.mutable.ListBuffer
 
 /**
  * Helper for pagination.
@@ -15,7 +16,18 @@ case class Page[+A](items: Seq[A], page: Int, count: Int, total: Long) {
 
 object Library {
     
-  def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) {
+  def pagerLink(request: Request[AnyContent], page: Int = 0, count: Int = 10) : String = {
 
+    var q = request.queryString
+    q += "page" -> List(page.toString)
+    q += "count" -> List(count.toString)
+
+    val qs = q.foldLeft("")(
+      (acc, value) => acc + value._2.foldLeft("")(
+        (acc2, param) => acc2 + value._1 + "=" + param + "&"
+      )
+    )
+    
+    request.host + request.path + "?" + qs
   }
 }
