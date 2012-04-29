@@ -6,6 +6,13 @@
 GET     /                           controllers.Core.index
 GET     /admin                      controllers.Admin.index
 
+GET     /admin/group                 controllers.admin.Group.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/group/create          controllers.admin.Group.create
+GET     /admin/group/:id             controllers.admin.Group.item(id: Long)
+POST    /admin/group/:id             controllers.admin.Group.update(id: Long)
+GET     /admin/group/edit/:id        controllers.admin.Group.edit(id: Long)
+POST    /admin/group                 controllers.admin.Group.add
+
 GET     /admin/ticket/type          controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/type/create   controllers.admin.TicketType.create
 GET     /admin/ticket/type/:id      controllers.admin.TicketType.item(id: Long)

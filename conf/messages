@@ -1,7 +1,9 @@
 admin.people=People
+admin.groups=Groups
 admin.tickets=Tickets
 admin.ticket_type.add=Add Ticket Type
 admin.ticket_types=Ticket Types
+admin.group.add=Add Group
 admin.user.add=Add User
 admin.users=Users
 

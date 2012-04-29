@@ -6,6 +6,7 @@
  <div class="span6">
   <ul class="nav nav-list">
    <li class="nav-header"><i class="icon-user"></i> @Messages("admin.people")</li>
+   <li><a href="@controllers.admin.routes.Group.index(page = 0, count = 10)">@Messages("admin.groups")</a></li>
    <li><a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a></li>
   </ul>
  </div>

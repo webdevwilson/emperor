@@ -1,5 +1,8 @@
 # Features Sheet
 
+## General
+* Internationalization
+
 ## Security
 
 * Passwords are stored using bcrypt.

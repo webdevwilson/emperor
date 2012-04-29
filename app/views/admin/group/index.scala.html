@@ -1,35 +1,29 @@
-@(page: chc.Page[models.User])(implicit request: Request[AnyContent])
-
+@(page: chc.Page[models.Group])(implicit request: Request[AnyContent])
 @import util._
-
-@main("UsersXXX") {
+@main("Ticket TypesXXX") {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("admin.users")</li>
+ <li class="active">@Messages("admin.groups")</li>
 </ul>
 <div class="btn-group pull-right">
- <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("admin.user.add")</a>
+ <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
 </div>
-@Option(page.items).filterNot(_.isEmpty).map { users =>
+@Option(page.items).filterNot(_.isEmpty).map { groups =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("user.username")</th>
-  <th>@Messages("user.realname")</th>
-  <th>@Messages("user.email")</th>
+  <th>@Messages("group.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
-  @users.map { user =>
+  @groups.map { group =>
   <tr>
-   <td><a href="@controllers.admin.routes.User.item(user.id.get)">@user.username</a></td>
-   <td>@user.realName</td>
-   <td>@user.email</td>
+   <td><a href="@controllers.admin.routes.Group.item(group.id.get)">@Messages(group.name)</a></td>
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-small" href="@controllers.admin.routes.User.edit(user.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-small" href="@controllers.admin.routes.TicketType.edit(group.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-small">@Messages("general.disable") XXX</button>
@@ -48,6 +42,7 @@
  <tfoot>
   <tr>
    <td colspan="4">
+     <!-- Template me! -->
      @pager(page)
     </td>
    </tr>

@@ -1,0 +1,23 @@
+@(page: chc.Page[Any])
+<!-- Template me! -->
+<p>@Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</p>
+<p>@{(page.lastPage)}</p>
+<div class="pagination pull-right">
+  <ul>
+    @page.prev.map { prev =>
+    <li><a href="@controllers.admin.routes.Group.index(prev)">&larr; @Messages("pager.prev")</a></li>
+    }.getOrElse {
+    <li class="disabled"><a href="#">&larr; @Messages("pager.prev")</a></li>
+    }
+    @page.firstPage.until(page.lastPage + 1).map { pageNum =>
+    <li @if(pageNum == page.page + 1) { class="active" }>
+      <a href="#">@pageNum</a>
+    </li>
+    }
+    @page.next.map { next =>
+    <li><a href="@controllers.admin.routes.Group.index(next)">@Messages("pager.next") &rarr;</a></li>
+    }.getOrElse {
+    <li class="disabled"><a href="#">@Messages("pager.next") &rarr;</a></li>
+    }
+  </ul>
+</div>

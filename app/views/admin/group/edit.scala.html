@@ -1,0 +1,26 @@
+@(id: Long, userForm: Form[(Group)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main("Edit GroupXXX") {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.groups")</a> <span class="divider">/</span>
+ </li>
+ <li class="active">@Messages("group.with.id", id)</li>
+</ul>
+<h1>@Messages("Edit GroupXXX")</h1>
+@helper.form(action = controllers.admin.routes.Group.update(id)) {
+ <fieldset>
+  @helper.inputText(userForm("name"), '_label -> Messages("group.name"))
+  <div class="form-actions">
+   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}

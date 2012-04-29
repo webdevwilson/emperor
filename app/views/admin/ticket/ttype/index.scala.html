@@ -1,5 +1,7 @@
 @(page: chc.Page[models.TicketType])(implicit request: Request[AnyContent])
 
+@import util._
+
 @main("Ticket TypesXXX") {
 <ul class="breadcrumb">
  <li>
@@ -42,28 +44,7 @@
  <tfoot>
   <tr>
    <td colspan="4">
-     <!-- Template me! -->
-     <p>@Messages("pager.summary", page.offset + 1, page.offset + ttypes.size, page.total)</p>
-     <p>@{(page.lastPage)}</p>
-     <div class="pagination pull-right">
-       <ul>
-         @page.prev.map { prev =>
-         <li><a href="@controllers.admin.routes.TicketType.index(prev)">&larr; @Messages("pager.prev")</a></li>
-         }.getOrElse {
-         <li class="disabled"><a href="#">&larr; @Messages("pager.prev")</a></li>
-         }
-         @page.firstPage.until(page.lastPage + 1).map { pageNum =>
-         <li @if(pageNum == page.page + 1) { class="active" }>
-           <a href="#">@pageNum</a>
-         </li>
-         }
-         @page.next.map { next =>
-         <li><a href="@controllers.admin.routes.TicketType.index(next)">@Messages("pager.next") &rarr;</a></li>
-         }.getOrElse {
-         <li class="disabled"><a href="#">@Messages("pager.next") &rarr;</a></li>
-         }
-       </ul>
-     </div>
+     @pager(page)
     </td>
    </tr>
  </tfoot
