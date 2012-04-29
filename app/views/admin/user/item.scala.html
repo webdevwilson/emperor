@@ -2,11 +2,12 @@
 @main("Users") {
 <ul class="breadcrumb">
  <li>
-  <a href="@routes.Admin.index">@Messages("Admin")</a> <span class="divider">/</span>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("Users")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a> <span class="divider">/</span>
  </li>
  <li class="active">@Messages("user.with.id", user.id)</li>
 </ul>
+XXX
 }

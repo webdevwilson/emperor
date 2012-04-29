@@ -5,6 +5,14 @@
 # Home page
 GET     /                           controllers.Core.index
 GET     /admin                      controllers.Admin.index
+
+GET     /admin/ticket/type          controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/type/create   controllers.admin.TicketType.create
+GET     /admin/ticket/type/:id      controllers.admin.TicketType.item(id: Long)
+POST    /admin/ticket/type/:id      controllers.admin.TicketType.update(id: Long)
+GET     /admin/ticket/edit/:id      controllers.admin.TicketType.edit(id: Long)
+POST    /admin/ticket/type          controllers.admin.TicketType.add
+
 GET     /admin/user                 controllers.admin.User.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/user/create          controllers.admin.User.create
 GET     /admin/user/:id             controllers.admin.User.item(id: Long)

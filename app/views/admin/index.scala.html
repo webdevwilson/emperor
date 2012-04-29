@@ -1,9 +1,23 @@
 @(implicit request: Request[AnyContent])
 
-@main("Home") {
-<ul class="nav nav-list well">
- <li class="nav-header"><i class="icon-user"></i>@Messages("People")</li>
- <li><a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("user.list")</a></li>
- <li><a href="@controllers.admin.routes.User.create">@Messages("user.add")</a></li>
-</ul>
+@main("HomeXXX") {
+<div class="well">
+<div class="row-fluid">
+ <div class="span6">
+  <ul class="nav nav-list">
+   <li class="nav-header"><i class="icon-user"></i> @Messages("admin.people")</li>
+   <li><a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a></li>
+  </ul>
+ </div>
+</div>
+<hr>
+<div class="row-fluid">
+ <div class="span6">
+  <ul class="nav nav-list">
+   <li class="nav-header"><i class="icon-tag"></i> @Messages("admin.tickets")</li>
+   <li><a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)">@Messages("admin.ticket_types")</a></li>
+  </ul>
+ </div>
+</div>
+</div>
 }

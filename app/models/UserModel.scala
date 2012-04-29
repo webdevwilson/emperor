@@ -11,12 +11,12 @@ case class User(id: Pk[Long] = NotAssigned, username: String, password: String, 
 
 object UserModel {
 
-  val allUsersQuery = SQL("SELECT * FROM users")
-  val getUserByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
-  val listUsersQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
-  val listUsersCountQuery = SQL("SELECT count(*) FROM users")
-  val insertUserQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
-  val updateUserQuery = SQL("UPDATE users SET username={username}, password={password}, realname={realname}, email={email} WHERE id={id}")
+  val allQuery = SQL("SELECT * FROM users")
+  val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
+  val listQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
+  val listCountQuery = SQL("SELECT count(*) FROM users")
+  val insertQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
+  val updateQuery = SQL("UPDATE users SET username={username}, password={password}, realname={realname}, email={email} WHERE id={id}")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -31,7 +31,7 @@ object UserModel {
   def create(user: User): User = {
 
     DB.withConnection { implicit conn =>
-      insertUserQuery.on(
+      insertQuery.on(
         'username   -> user.username,
         'password   -> BCrypt.hashpw(user.password, BCrypt.gensalt(12)),
         'realname   -> user.realName,
@@ -49,14 +49,14 @@ object UserModel {
   def findById(id: Long) : Option[User] = {
       
     DB.withConnection { implicit conn =>
-      getUserByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
+      getByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
     }
   }
 
   def getAll: List[User] = {
       
     DB.withConnection { implicit conn =>
-      allUsersQuery.as(user *)
+      allQuery.as(user *)
     }
   }
 
@@ -65,12 +65,12 @@ object UserModel {
       val offset = count * page
       
       DB.withConnection { implicit conn =>
-        val users = listUsersQuery.on(
+        val users = listQuery.on(
           'count  -> count,
           'offset -> offset
         ).as(user *)
 
-        val totalRows = listUsersCountQuery.as(scalar[Long].single)
+        val totalRows = listCountQuery.as(scalar[Long].single)
 
         Page(users, page, offset, totalRows)
       }
@@ -82,14 +82,13 @@ object UserModel {
     println("HASHED " + hashedPass)
 
     DB.withTransaction { implicit conn =>
-      val foo = updateUserQuery.on(
+      val foo = updateQuery.on(
         'id         -> id,
         'username   -> user.username,
         'password   -> hashedPass,
         'realname   -> user.realName,
         'email      -> user.email
       ).executeUpdate
-      println("Affected: " + foo)
     }
   }
 }

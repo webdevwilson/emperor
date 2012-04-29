@@ -56,7 +56,7 @@ CREATE TABLE ticket_types (
 
 INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_BUG");
 INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_IMPROVEMENT");
-INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_RELEASE");
+INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_MILESTONE");
 
 CREATE TABLE ticket_link_types (
     id INT UNSIGNED AUTO_INCREMENT,

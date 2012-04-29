@@ -1,33 +1,29 @@
-@(page: chc.Page[models.User])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.TicketType])(implicit request: Request[AnyContent])
 
-@main("UsersXXX") {
+@main("Ticket TypesXXX") {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("admin.users")</li>
+ <li class="active">@Messages("admin.ticket_types")</li>
 </ul>
 <div class="btn-group pull-right">
- <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("admin.user.add")</a>
+ <a href="@controllers.admin.routes.TicketType.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_type.add")</a>
 </div>
-@Option(page.items).filterNot(_.isEmpty).map { users =>
+@Option(page.items).filterNot(_.isEmpty).map { ttypes =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("user.username")</th>
-  <th>@Messages("user.realname")</th>
-  <th>@Messages("user.email")</th>
+  <th>@Messages("ticket_type.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
-  @users.map { user =>
+  @ttypes.map { ttype =>
   <tr>
-   <td><a href="@controllers.admin.routes.User.item(user.id.get)">@user.username</a></td>
-   <td>@user.realName</td>
-   <td>@user.email</td>
+   <td><a href="@controllers.admin.routes.TicketType.item(ttype.id.get)">@Messages(ttype.name)</a></td>
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-small" href="@controllers.admin.routes.User.edit(user.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-small" href="@controllers.admin.routes.TicketType.edit(ttype.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-small">@Messages("general.disable") XXX</button>
@@ -47,21 +43,22 @@
   <tr>
    <td colspan="4">
      <!-- Template me! -->
-     <p>@Messages("Display {0} to {1} of {2}", page.offset + 1, page.offset + users.size, page.total)</p>
+     <p>@Messages("pager.summary", page.offset + 1, page.offset + ttypes.size, page.total)</p>
+     <p>@{(page.lastPage)}</p>
      <div class="pagination pull-right">
        <ul>
          @page.prev.map { prev =>
-         <li><a href="@prev">&larr; @Messages("pager.prev")</a></li>
+         <li><a href="@controllers.admin.routes.TicketType.index(prev)">&larr; @Messages("pager.prev")</a></li>
          }.getOrElse {
          <li class="disabled"><a href="#">&larr; @Messages("pager.prev")</a></li>
          }
-         @page.lastPage.until(page.lastPage + 1).map { pageNum =>
+         @page.firstPage.until(page.lastPage + 1).map { pageNum =>
          <li @if(pageNum == page.page + 1) { class="active" }>
            <a href="#">@pageNum</a>
          </li>
          }
          @page.next.map { next =>
-         <li><a href="@next">@Messages("pager.next") &rarr;</a></li>
+         <li><a href="@controllers.admin.routes.TicketType.index(next)">@Messages("pager.next") &rarr;</a></li>
          }.getOrElse {
          <li class="disabled"><a href="#">@Messages("pager.next") &rarr;</a></li>
          }

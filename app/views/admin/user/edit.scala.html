@@ -3,17 +3,17 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("Edit User") {
+@main("Edit UserXXX") {
 <ul class="breadcrumb">
  <li>
-  <a href="@routes.Admin.index">@Messages("Admin")</a> <span class="divider">/</span>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("Users")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a> <span class="divider">/</span>
  </li>
  <li class="active">@Messages("user.with.id", id)</li>
 </ul>
-<h1>@Messages("Edit User")</h1>
+<h1>@Messages("Edit UserXXX")</h1>
 @helper.form(action = controllers.admin.routes.User.update(id)) {
  <fieldset>
   @helper.inputText(userForm("username"), '_label -> Messages("Username"))
@@ -23,8 +23,8 @@
       <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
   }
   <div class="form-actions">
-   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("Cancel")</a>
-   <button type="submit" class="btn btn-primary">@Messages("Submit")</button>
+   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
   </div>
  </fieldset>
 }

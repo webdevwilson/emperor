@@ -1,8 +1,39 @@
-general.home=Home
+admin.people=People
+admin.tickets=Tickets
+admin.ticket_type.add=Add Ticket Type
+admin.ticket_types=Ticket Types
+admin.user.add=Add User
+admin.users=Users
+
+form.cancel=Cancel
+form.submit=Submit
+
 general.admin=Admin
+general.delete=Delete
+general.disable=Disable
+general.edit=Edit
+general.home=Home
+
+pager.next=Next
+pager.prev=Prev
+pager.summary=Display {0} to {1} of {2}
+
+ticket_type.name=Name
 
 user=User
-user.add=Add User
-user.list=List Users
+user.email=Email
+user.password=Password
+user.realname=Real Name
+user.username=Username
+
 user.with.id=User {0}
+
 TICK_RESO_FIXED=Fixed
+TICK_RESO_WONTFIX=Won't Fix
+
+TICK_STATUS_OPEN=Open
+TICK_STATUS_CLOSED=Closed
+
+TICK_TYPE_BUG=Bug
+TICK_TYPE_IMPROVEMENT=Improvement
+TICK_TYPE_MILESTONE=Milestone
