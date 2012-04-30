@@ -22,7 +22,7 @@
 YUI().use('autocomplete', function (Y) {
   Y.one('#groupsearch').plug(Y.Plugin.AutoComplete, {
     resultHighlighter: 'phraseMatch',
-    source: '?q={query}'
+    source: '@routes.Group.startsWith?query={query}'
   });
 });
 </script>

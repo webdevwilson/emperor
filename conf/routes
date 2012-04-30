@@ -4,6 +4,9 @@
 
 # Home page
 GET     /                           controllers.Core.index
+
+GET     /group/startswith           controllers.Group.startsWith
+
 GET     /admin                      controllers.Admin.index
 
 GET     /admin/group                 controllers.admin.Group.index(page: Int ?= 0, count: Int ?= 10)

@@ -13,7 +13,7 @@ object GroupModel {
 
   val addUserToGroupQuery = SQL("INSERT IGNORE INTO user_groups (user_id, group_id) VALUES ({userId}, {groupId})")
   val allQuery = SQL("SELECT * FROM groups")
-  val findStartsWithQuery("SELECT * FROM groups WHERE name={name}")
+  val findStartsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
@@ -52,13 +52,26 @@ object GroupModel {
   }
   
   def delete(id: Long) {
-      
+      // XXX
   }
 
   def findById(id: Long) : Option[Group] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(GroupModel.group.singleOpt)
+    }
+  }
+
+  def findStartsWith(query: String) : Seq[Group] = {
+    
+    val likeQuery = query + "%"
+    
+    DB.withConnection { implicit conn =>
+      val groups = findStartsWithQuery.on(
+        'name -> likeQuery
+      ).as(group *)
+
+      groups
     }
   }
 
