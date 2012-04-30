@@ -1,3 +1,5 @@
+admin.title=Admin
+
 admin.people=People
 admin.groups=Groups
 
@@ -27,6 +29,8 @@ general.disable=Disable
 general.edit=Edit
 general.home=Home
 
+group.name=Name
+
 pager.next=Next
 pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
@@ -36,7 +40,9 @@ ticket_link_type.name=Name
 ticket_type.name=Name
 
 user=User
+user.specific=User {0}
 user.email=Email
+user.groups.memberof=Groups {0} Is In
 user.password=Password
 user.realname=Real Name
 user.username=Username

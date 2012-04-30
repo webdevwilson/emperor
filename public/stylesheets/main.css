@@ -3,6 +3,24 @@
     font-family: 'Great Vibes', cursive;
     margin-top: 4px;
 }
+ul.bordered li {
+    background-color: #f7f7f9;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #e1e1e8;
+    margin-bottom: 5px;
+    padding: 6px 8px;
+}
+form.ac-list-adder {
+    margin-bottom: 0;
+}
+form.ac-list-adder input[type="text"] {
+    margin-bottom: 5px;
+}
+ul.bordered li .btn {
+    margin-left: 10px;
+    line-height: 14px;
+}
 table td .btn-toolbar {
     margin: 0;
 }
@@ -13,6 +31,9 @@ table td .btn-toolbar .btn-group {
 table tfoot span.summ {
     display: inline-block;
     margin-top: 8px;
+}
+.btn-group-above-table {
+    margin-bottom: .5em;
 }
 table tfoot .pagination {
     margin-bottom: 0;

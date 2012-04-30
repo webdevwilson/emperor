@@ -11,11 +11,13 @@ case class Group(id: Pk[Long] = NotAssigned, name: String)
 
 object GroupModel {
 
+  val addUserToGroupQuery = SQL("INSERT IGNORE INTO user_groups (user_id, group_id) VALUES ({userId}, {groupId})")
   val allQuery = SQL("SELECT * FROM groups")
+  val findStartsWithQuery("SELECT * FROM groups WHERE name={name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
-  val insertQuery = SQL("INSERT INTO groups (name) VALUES ({name})")
+  val addQuery = SQL("INSERT INTO groups (name) VALUES ({name})")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
@@ -26,10 +28,20 @@ object GroupModel {
     }
   }
 
+  def addUserToGroup(userId: Long, groupId: Long) {
+    
+    DB.withConnection { implicit conn =>
+      addUserToGroupQuery.on(
+        'userId -> userId,
+        'groupId-> groupId
+      )
+    }
+  }
+
   def create(group: Group): Group = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
+      addQuery.on(
         'name   -> group.name
       ).executeUpdate
 
@@ -56,7 +68,7 @@ object GroupModel {
       allQuery.as(group *)
     }
   }
-
+  
   def list(page: Int = 0, count: Int = 10) : Page[Group] = {
 
       val offset = count * page

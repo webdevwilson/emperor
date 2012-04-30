@@ -9,7 +9,7 @@
  </li>
  <li class="active">@Messages("admin.ticket_link_types")</li>
 </ul>
-<div class="btn-group pull-right">
+<div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.TicketLinkType.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_link_type.add")</a>
 </div>
 @Option(page.items).filterNot(_.isEmpty).map { tltypes =>

@@ -13,6 +13,7 @@ object UserModel {
 
   val allQuery = SQL("SELECT * FROM users")
   val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
+  val getByGroupIdQuery = SQL("SELECT * from users")
   val listQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
@@ -52,6 +53,14 @@ object UserModel {
       getByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
     }
   }
+
+  // def findUsersInGroup(id: Long, page: Int = 0, count: = 10) : Page[models.User] = {
+  //     
+  //   val offset = count * page
+  // 
+  //   DB.withConnection { implicit conn =>
+  //   }
+  // }
 
   def getAll: List[User] = {
       

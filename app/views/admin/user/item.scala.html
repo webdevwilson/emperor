@@ -9,5 +9,21 @@
  </li>
  <li class="active">@Messages("user.with.id", user.id)</li>
 </ul>
-XXX
+<h1>@Messages("user.specific", user.username)</h1>
+<h2>@Messages("user.groups.memberof", user.username)</h2>
+<form class="ac-list-adder">
+ <input id="groupsearch" type="text" class="span4">
+</form>
+<ul class="unstyled bordered">
+ <li><a href="#"><i class="icon-minus"></i></a> administrators</li>
+ <li><a href="#"><i class="icon-minus"></i></a> users</li>
+</ul>
+<script>
+YUI().use('autocomplete', function (Y) {
+  Y.one('#groupsearch').plug(Y.Plugin.AutoComplete, {
+    resultHighlighter: 'phraseMatch',
+    source: '?q={query}'
+  });
+});
+</script>
 }

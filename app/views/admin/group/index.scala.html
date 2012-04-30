@@ -7,7 +7,7 @@
  </li>
  <li class="active">@Messages("admin.groups")</li>
 </ul>
-<div class="btn-group pull-right">
+<div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
 </div>
 @Option(page.items).filterNot(_.isEmpty).map { groups =>
@@ -23,7 +23,7 @@
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@controllers.admin.routes.TicketType.edit(group.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@controllers.admin.routes.Group.edit(group.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>
