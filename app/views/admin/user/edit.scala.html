@@ -3,17 +3,17 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("Edit UserXXX") {
+@main(Messages("admin.user.edit")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.list")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("user.with.id", id)</li>
+ <li class="active">@Messages("admin.user.with.id", "XXX")</li>
 </ul>
-<h1>@Messages("Edit UserXXX")</h1>
+<h1>@Messages("admin.user.edit")</h1>
 @helper.form(action = controllers.admin.routes.User.update(id)) {
  <fieldset>
   @helper.inputText(userForm("username"), '_label -> Messages("Username"))

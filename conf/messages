@@ -3,26 +3,28 @@ admin.title=Admin
 admin.people=People
 
 admin.group.add=Add Group
+admin.group.edit=Edit Group
 admin.group.list=Groups
 admin.group.members=Members
-admin.group.withname=Group {0}
+admin.group.with.id=Group {0}
 
 admin.tickets=Tickets
 
 admin.ticket_link_type.add=Add Ticket Link Type
 admin.ticket_link_type.edit=Edit Ticket Link Type
 admin.ticket_link_type.list=Ticket Link Types
-admin.ticket_link_type.withname=Ticket Link Type {0}
+admin.ticket_link_type.with.id=Ticket Link Type {0}
 
 admin.ticket_type.add=Add Ticket Type
 admin.ticket_type.edit=Edit Ticket Type
 admin.ticket_type.list=Ticket Types
-admin.ticket_type.withname=Ticket Type {0}
+admin.ticket_type.with.id=Ticket Type {0}
 
 admin.user.add=Add User
+admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
-admin.user.withusername=User {0}
+admin.user.with.id=User {0}
 
 form.cancel=Cancel
 form.submit=Submit

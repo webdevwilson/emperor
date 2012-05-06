@@ -3,22 +3,22 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("Edit GroupXXX") {
+@main(Messages("admin.group.edit")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.groups")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.group.list")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("group.with.id", id)</li>
+ <li class="active">@Messages("admin.group.with.id", "XXX")</li>
 </ul>
-<h1>@Messages("Edit GroupXXX")</h1>
+<h1>@Messages("admin.group.edit")</h1>
 @helper.form(action = controllers.admin.routes.Group.update(id)) {
  <fieldset>
   @helper.inputText(groupForm("name"), '_label -> Messages("group.name"))
   <div class="form-actions">
-   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <a href="@controllers.admin.routes.Group.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
   </div>
  </fieldset>

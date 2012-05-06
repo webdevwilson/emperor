@@ -1,5 +1,5 @@
 @(user: models.User, allGroups: List[Group], userGroups: List[GroupUser])(implicit request: Request[AnyContent])
-@main(Messages("admin.user.withusername", user.username)) {
+@main(Messages("admin.user.with.id", user.username)) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
