@@ -14,7 +14,9 @@ admin.ticket_type.edit=Edit Ticket Type
 admin.ticket_types=Ticket Types
 
 admin.group.add=Add Group
+admin.group.list=Groups
 admin.group.members=Members
+admin.group.withname=Group {0}
 
 admin.user.add=Add User
 admin.user.groups.list=Group Membership
@@ -38,6 +40,7 @@ pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
 
 project.add=Add Project
+project.list=Projects
 project.name=Name
 
 ticket_link_type.name=Name

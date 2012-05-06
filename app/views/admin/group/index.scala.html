@@ -1,6 +1,6 @@
 @(page: chc.Page[models.Group])(implicit request: Request[AnyContent])
 @import util._
-@main("admin.groups") {
+@main("admin.group.list") {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
@@ -11,6 +11,7 @@
  <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
 </div>
 @Option(page.items).filterNot(_.isEmpty).map { groups =>
+<h1>@Messages("admin.group.list")</h1>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("group.name")</th>
@@ -19,7 +20,7 @@
  <tbody>
   @groups.map { group =>
   <tr>
-   <td><a href="@controllers.admin.routes.Group.item(group.id.get)">group.name</a></td>
+   <td><a href="@controllers.admin.routes.Group.item(group.id.get)">@group.name</a></td>
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">

@@ -1,10 +1,11 @@
 @(page: chc.Page[models.Project])(implicit request: Request[AnyContent])
 @import util._
-@main("projects") {
+@main("projects.list") {
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.routes.Project.create" class="btn"><i class="icon-plus"></i> @Messages("project.add")</a>
 </div>
 @Option(page.items).filterNot(_.isEmpty).map { projects =>
+<h1>@Messages("project.list")</h1>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("project.name")</th>
