@@ -7,11 +7,10 @@
  <li>
   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("user.with.id", user.id)</li>
+ <li class="active">@user.username</li>
 </ul>
 <h1>@Messages("user.specific", user.username)</h1>
-<h2>@Messages("user.groups.memberof", user.username)</h2>
-
+<h2>@Messages("admin.user.groups.list")</h2>
 <ul id="userGroups" class="unstyled bordered">
 @allGroups.map { group =>
   <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.group_id == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>

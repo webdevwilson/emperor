@@ -9,6 +9,7 @@ import play.api.mvc._
 import play.db._
 import chc._
 import models.GroupModel
+import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
 
 object Group extends Controller {
@@ -57,9 +58,11 @@ object Group extends Controller {
   def item(groupId: Long) = Action { implicit request =>
     
     val group = GroupModel.findById(groupId)
+    val allUsers = UserModel.getAll
+    val userGroups = GroupModel.findGroupUsersForGroup(groupId)
 
     group match {
-      case Some(value) => Ok(views.html.admin.group.item(value)(request))
+      case Some(value) => Ok(views.html.admin.group.item(value, allUsers, userGroups)(request))
       case None => NotFound
     }
     

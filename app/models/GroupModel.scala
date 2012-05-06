@@ -16,6 +16,7 @@ object GroupModel {
   val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id) VALUES ({userId}, {groupId})")
   val removeUserQuery = SQL("DELETE FROM group_users WHERE user_id={userId} AND group_id={groupId}")
   val allQuery = SQL("SELECT * FROM groups")
+  val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users WHERE group_id={groupId}")
   val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users WHERE user_id={userId}")
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.id WHERE gu.user_id={userId}")
   val findStartsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
@@ -99,6 +100,13 @@ object GroupModel {
     
     DB.withConnection { implicit conn =>
       allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
+    }
+  }
+
+  def findGroupUsersForGroup(groupId: Long): List[GroupUser] = {
+    
+    DB.withConnection { implicit conn =>
+      allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser *)
     }
   }
   

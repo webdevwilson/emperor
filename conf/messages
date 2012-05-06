@@ -14,8 +14,10 @@ admin.ticket_type.edit=Edit Ticket Type
 admin.ticket_types=Ticket Types
 
 admin.group.add=Add Group
+admin.group.members=Members
 
 admin.user.add=Add User
+admin.user.groups.list=Group Membership
 
 admin.users=Users
 
@@ -42,12 +44,10 @@ ticket_type.name=Name
 user=User
 user.specific=User {0}
 user.email=Email
-user.groups.memberof=Groups {0} Is In
+
 user.password=Password
 user.realname=Real Name
 user.username=Username
-
-user.with.id=User {0}
 
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix
