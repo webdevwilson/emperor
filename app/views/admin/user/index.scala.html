@@ -2,12 +2,12 @@
 
 @import util._
 
-@main(Messages("admin.users")) {
+@main(Messages("admin.user.list")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("admin.users")</li>
+ <li class="active">@Messages("admin.user.list")</li>
 </ul>
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("admin.user.add")</a>

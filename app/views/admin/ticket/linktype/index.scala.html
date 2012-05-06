@@ -2,16 +2,17 @@
 
 @import util._
 
-@main("Ticket Link TypesXXX") {
+@main(Messages("admin.ticket_link_type.list")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("admin.ticket_link_types")</li>
+ <li class="active">@Messages("admin.ticket_link_type.list")</li>
 </ul>
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.TicketLinkType.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_link_type.add")</a>
 </div>
+<h1>@Messages("admin.ticket_link_type.list")</h1>
 @Option(page.items).filterNot(_.isEmpty).map { tltypes =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>

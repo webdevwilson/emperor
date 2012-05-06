@@ -3,13 +3,13 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("admin.group.add") {
+@main(Messages("admin.group.add")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.groups")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.group.list")</a> <span class="divider">/</span>
  </li>
  <li class="active">@Messages("admin.group.add")</li>
     </ul>

@@ -1,13 +1,13 @@
 @(tltype: models.TicketLinkType)(implicit request: Request[AnyContent])
-@main("Ticket Link TypeXXX") {
+@main(Messages("admin.ticket_link_type.withname", Messages(tltype.name))) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.ticket_link_types")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.ticket_link_type.list")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("XXX", tltype.id)</li>
+ <li class="active">@Messages("admin.ticket_link_type.withname", Messages(tltype.name))</li>
 </ul>
 XXX
 }

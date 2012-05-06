@@ -1,11 +1,11 @@
 @(user: models.User, allGroups: List[Group], userGroups: List[GroupUser])(implicit request: Request[AnyContent])
-@main("Users") {
+@main(Messages("admin.user.withusername", user.username)) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.users")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.list")</a> <span class="divider">/</span>
  </li>
  <li class="active">@user.username</li>
 </ul>
