@@ -37,6 +37,9 @@ pager.next=Next
 pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
 
+project.add=Add Project
+project.name=Name
+
 ticket_link_type.name=Name
 
 ticket_type.name=Name

@@ -1,0 +1,17 @@
+@(userForm: Form[(Project)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main(Messages("project.add")) {
+<h1>@Messages("project.add")</h1>
+@helper.form(action = controllers.routes.Project.add) {
+ <fieldset>
+  @helper.inputText(userForm("name"), '_label -> Messages("project.name"))
+  <div class="form-actions">
+   <a href="controllers.route.Project.index" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}

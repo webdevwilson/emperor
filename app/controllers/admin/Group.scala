@@ -10,7 +10,6 @@ import play.db._
 import chc._
 import models.GroupModel
 import models.UserModel
-import org.mindrot.jbcrypt.BCrypt
 
 object Group extends Controller {
 

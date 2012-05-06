@@ -1,29 +1,23 @@
-@(page: chc.Page[models.Group])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.Project])(implicit request: Request[AnyContent])
 @import util._
-@main("admin.groups") {
-<ul class="breadcrumb">
- <li>
-  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
- </li>
- <li class="active">@Messages("admin.groups")</li>
-</ul>
+@main("projects") {
 <div class="btn-group btn-group-above-table pull-right">
- <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
+ <a href="@controllers.routes.Project.create" class="btn"><i class="icon-plus"></i> @Messages("project.add")</a>
 </div>
-@Option(page.items).filterNot(_.isEmpty).map { groups =>
+@Option(page.items).filterNot(_.isEmpty).map { projects =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("group.name")</th>
+  <th>@Messages("project.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
-  @groups.map { group =>
+  @projects.map { project =>
   <tr>
-   <td><a href="@controllers.admin.routes.Group.item(group.id.get)">group.name</a></td>
+   <td><a href="@controllers.routes.Project.item(project.id.get)">@project.name</a></td>
    <td>
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@controllers.admin.routes.Group.edit(group.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@routes.Project.edit(project.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>

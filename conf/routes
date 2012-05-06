@@ -39,5 +39,12 @@ PUT     /admin/user/:id/group/:gid  controllers.admin.User.addToGroup(id: Long, 
 DELETE  /admin/user/:id/group/:gid  controllers.admin.User.removeFromGroup(id: Long, gid: Long)
 POST    /admin/user                 controllers.admin.User.add
 
+GET     /project                    controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
+GET     /project/create             controllers.Project.create
+GET     /project/:id                controllers.Project.item(id: Long)
+POST    /project/:id                controllers.Project.update(id: Long)
+GET     /project/edit/:id           controllers.Project.edit(id: Long)
+POST    /project                    controllers.Project.add
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
