@@ -1,4 +1,4 @@
-@(user: models.User)(implicit request: Request[AnyContent])
+@(user: models.User, allGroups: List[Group], userGroups: List[GroupUser])(implicit request: Request[AnyContent])
 @main("Users") {
 <ul class="breadcrumb">
  <li>
@@ -11,19 +11,28 @@
 </ul>
 <h1>@Messages("user.specific", user.username)</h1>
 <h2>@Messages("user.groups.memberof", user.username)</h2>
-<form class="ac-list-adder">
- <input id="groupsearch" type="text" class="span4">
-</form>
-<ul class="unstyled bordered">
- <li><a href="#"><i class="icon-minus"></i></a> administrators</li>
- <li><a href="#"><i class="icon-minus"></i></a> users</li>
+
+<ul id="userGroups" class="unstyled bordered">
+@allGroups.map { group =>
+  <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.group_id == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>
+} 
 </ul>
-<script>
-YUI().use('autocomplete', function (Y) {
-  Y.one('#groupsearch').plug(Y.Plugin.AutoComplete, {
-    resultHighlighter: 'phraseMatch',
-    source: '@routes.Group.startsWith?query={query}'
+}
+<script type="text/javascript">
+YUI({gallery: 'gallery-2012.03.23-18-00'}).use('node', 'model', 'model-list', 'gallery-model-sync-rest', function (Y) {
+  UserGroupModel = Y.Base.create('UserGroup', Y.Model, [ Y.ModelSync.REST ],
+    {
+      root : '/admin/user/' +  @user.id + '/group'
+    }
+  );
+  
+  Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
+    var model = new UserGroupModel({ id: e.target.get('value') });
+    if ( e.target.get('checked') ) {
+      model.save();
+    } else {
+      model.destroy({ 'delete' : true });
+    }
   });
 });
 </script>
-}

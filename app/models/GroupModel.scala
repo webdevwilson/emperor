@@ -9,10 +9,15 @@ import play.Logger
 
 case class Group(id: Pk[Long] = NotAssigned, name: String)
 
+case class GroupUser(id: Pk[Long] = NotAssigned, user_id: Long, group_id: Long)
+
 object GroupModel {
 
-  val addUserToGroupQuery = SQL("INSERT IGNORE INTO user_groups (user_id, group_id) VALUES ({userId}, {groupId})")
+  val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id) VALUES ({userId}, {groupId})")
+  val removeUserQuery = SQL("DELETE FROM group_users WHERE user_id={userId} AND group_id={groupId}")
   val allQuery = SQL("SELECT * FROM groups")
+  val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users WHERE user_id={userId}")
+  val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.id WHERE gu.user_id={userId}")
   val findStartsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
@@ -27,14 +32,22 @@ object GroupModel {
       case id~name => Group(id, name)
     }
   }
+  
+  val groupUser = {
+    get[Pk[Long]]("id") ~
+    get[Long]("group_id") ~
+    get[Long]("user_id") map {
+      case id~group_id~user_id => GroupUser(id, group_id, user_id)
+    }
+  }
 
-  def addUserToGroup(userId: Long, groupId: Long) {
+  def addUser(userId: Long, groupId: Long) {
     
     DB.withConnection { implicit conn =>
-      addUserToGroupQuery.on(
+      addUserQuery.on(
         'userId -> userId,
         'groupId-> groupId
-      )
+      ).execute
     }
   }
 
@@ -81,6 +94,20 @@ object GroupModel {
       allQuery.as(group *)
     }
   }
+
+  def findGroupUsersForUser(userId: Long): List[GroupUser] = {
+    
+    DB.withConnection { implicit conn =>
+      allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
+    }
+  }
+  
+  def findForUser(userId: Long): List[Group] = {
+    
+    DB.withConnection { implicit conn =>
+      allForUserQuery.on('userId -> userId).as(group *)
+    }
+  }
   
   def list(page: Int = 0, count: Int = 10) : Page[Group] = {
 
@@ -96,6 +123,16 @@ object GroupModel {
 
         Page(groups, page, count, totalRows)
       }
+  }
+  
+  def removeUser(userId : Long, groupId : Long) {
+    
+    DB.withConnection { implicit conn =>
+      removeUserQuery.on(
+        'userId   -> userId,
+        'groupId  -> groupId
+      ).execute
+    }
   }
   
   def update(id: Long, group: Group) = {

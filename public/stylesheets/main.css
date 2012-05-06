@@ -11,16 +11,6 @@ ul.bordered li {
     margin-bottom: 5px;
     padding: 6px 8px;
 }
-form.ac-list-adder {
-    margin-bottom: 0;
-}
-form.ac-list-adder input[type="text"] {
-    margin-bottom: 5px;
-}
-ul.bordered li .btn {
-    margin-left: 10px;
-    line-height: 14px;
-}
 table td .btn-toolbar {
     margin: 0;
 }

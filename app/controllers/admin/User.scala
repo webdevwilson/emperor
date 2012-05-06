@@ -5,9 +5,11 @@ import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.format.Formats._
+import play.api.libs.json.Json._
 import play.api.mvc._
 import play.db._
 import chc._
+import models.GroupModel
 import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
 
@@ -22,7 +24,7 @@ object User extends Controller {
       "email"    -> nonEmptyText
     )(models.User.apply)(models.User.unapply)
   )
-
+  
   def add = Action { implicit request =>
 
     // val (username, password, realName, email) = userForm.bindFromRequest.get
@@ -30,11 +32,44 @@ object User extends Controller {
     userForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
       {
-        case user: models.User =>
-        UserModel.create(user)
-        Redirect("/admin/user")
+        case user: models.User => {
+          UserModel.create(user)
+          Redirect("/admin/user")
+        }
       }
     )
+  }
+  
+  def addToGroup(userId: Long, groupId: Long) = Action { implicit request =>
+
+    val user = UserModel.findById(userId)
+
+    user match {
+      case Some(value) => // #nothing
+      case None => NotFound
+    }
+
+    GroupModel.addUser(userId, groupId)
+
+    Ok(toJson(
+      Map("status" -> "OK", "message" -> "admin.user.group.add.success")
+    ))
+  }
+  
+  def removeFromGroup(userId: Long, groupId: Long) = Action { implicit request =>
+
+    val user = UserModel.findById(userId)
+
+    user match {
+      case Some(value) => // #nothing
+      case None => NotFound
+    }
+
+    GroupModel.removeUser(userId, groupId)
+
+    Ok(toJson(
+      Map("status" -> "OK")
+    ))
   }
   
   def create = Action { implicit request =>
@@ -62,9 +97,11 @@ object User extends Controller {
   def item(userId: Long) = Action { implicit request =>
     
     val user = UserModel.findById(userId)
+    val allGroups = GroupModel.getAll
+    val groupUsers = GroupModel.findGroupUsersForUser(userId)
 
     user match {
-      case Some(value) => Ok(views.html.admin.user.item(value)(request))
+      case Some(value) => Ok(views.html.admin.user.item(value, allGroups, groupUsers)(request))
       case None => NotFound
     }
     
