@@ -1,0 +1,4 @@
+@(ticket: models.Ticket)(implicit request: Request[AnyContent])
+@main(Messages("ticket.with.id", ticket.id)) {
+<h2>@Messages("ticket.with.id", ticket.id)</h2>
+}

@@ -12,6 +12,7 @@
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.User.create" class="btn"><i class="icon-plus"></i> @Messages("admin.user.add")</a>
 </div>
+<h1>@Messages("admin.user.list")</h1>
 @Option(page.items).filterNot(_.isEmpty).map { users =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>

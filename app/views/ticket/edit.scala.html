@@ -1,0 +1,17 @@
+@(id: Long, ticketForm: Form[(Ticket)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main(Messages("ticket.edit")) {
+<h1>@Messages("ticket.edit")</h1>
+@helper.form(action = routes.Ticket.update(id)) {
+ <fieldset>
+  @helper.inputText(ticketForm("name"), '_label -> Messages("ticket.name"))
+  <div class="form-actions">
+   <a href="@controllers.routes.Ticket.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}

@@ -10,8 +10,8 @@
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
 </div>
-@Option(page.items).filterNot(_.isEmpty).map { groups =>
 <h1>@Messages("admin.group.list")</h1>
+@Option(page.items).filterNot(_.isEmpty).map { groups =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("group.name")</th>

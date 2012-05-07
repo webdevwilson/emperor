@@ -46,5 +46,13 @@ POST    /project/:id                controllers.Project.update(id: Long)
 GET     /project/edit/:id           controllers.Project.edit(id: Long)
 POST    /project                    controllers.Project.add
 
+GET     /ticket                     controllers.Ticket.index(page: Int ?= 0, count: Int ?= 10)
+GET     /ticket/create              controllers.Ticket.create
+GET     /ticket/:id                 controllers.Ticket.item(id: Long)
+POST    /ticket/:id                 controllers.Ticket.update(id: Long)
+GET     /ticket/edit/:id            controllers.Ticket.edit(id: Long)
+POST    /ticket                     controllers.Ticket.add
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

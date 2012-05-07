@@ -12,6 +12,7 @@
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.admin.routes.TicketType.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_type.add")</a>
 </div>
+<h1>@Messages("admin.ticket_type.list")</h1>
 @Option(page.items).filterNot(_.isEmpty).map { ttypes =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
