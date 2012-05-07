@@ -1,4 +1,4 @@
-admin.title=Admin
+admin.title=Administration
 
 admin.people=People
 
@@ -30,11 +30,12 @@ form.cancel=Cancel
 form.submit=Submit
 
 general.actions=Actions
-general.admin=Admin
+general.admin=Administration
 general.delete=Delete
 general.disable=Disable
 general.edit=Edit
 general.home=Home
+general.project=Projects
 
 group.name=Name
 
@@ -45,6 +46,7 @@ pager.summary=Displaying {0} to {1} of {2}
 project.add=Add Project
 project.list=Projects
 project.name=Name
+project.with.id=Project {0}
 
 ticket_link_type.name=Name
 
