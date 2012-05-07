@@ -44,6 +44,7 @@ pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
 
 project.add=Add Project
+project.edit=Edit Project
 project.list=Projects
 project.name=Name
 project.with.id=Project {0}

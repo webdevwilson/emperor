@@ -3,8 +3,8 @@
 @import helper._
 @import helper.bootstrap._
 
-@main("Edit PojectXXX") {
-<h1>@Messages("Edit ProjectXXX")</h1>
+@main(Messages("project.edit")) {
+<h1>@Messages("project.edit")</h1>
 @helper.form(action = routes.Project.update(id)) {
  <fieldset>
   @helper.inputText(projectForm("name"), '_label -> Messages("project.name"))

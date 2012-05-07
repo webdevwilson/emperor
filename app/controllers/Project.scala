@@ -24,7 +24,7 @@ object Project extends Controller {
       {
         case project: models.Project =>
         ProjectModel.create(project)
-        Redirect("/admin") // XXX
+        Redirect("/project") // XXX
       }
     )
   }

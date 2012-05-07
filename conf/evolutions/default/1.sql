@@ -68,7 +68,7 @@ INSERT INTO ticket_link_types (name) VALUES ("TICK_LINK_BLOCKS");
 
 CREATE TABLE tickets (
     id INT UNSIGNED AUTO_INCREMENT,
-    ticket_resolution_id INT UNSIGNED NOT NULL,
+    ticket_resolution_id INT UNSIGNED,
     ticket_status_id INT UNSIGNED NOT NULL,
     ticket_type_id INT UNSIGNED NOT NULL,
     position INT,
