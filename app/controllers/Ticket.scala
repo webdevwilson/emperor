@@ -4,9 +4,11 @@ import anorm._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
 import models.TicketModel
+import models.TicketTypeModel
 
 object Ticket extends Controller {
 
@@ -24,8 +26,10 @@ object Ticket extends Controller {
 
   def add = Action { implicit request =>
 
+    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
     ticketForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.ticket.create(errors)),
+      errors => BadRequest(views.html.ticket.create(errors, ttypes)),
       {
         case ticket: models.Ticket =>
         TicketModel.create(ticket)
@@ -36,7 +40,9 @@ object Ticket extends Controller {
   
   def create = Action { implicit request =>
 
-    Ok(views.html.ticket.create(ticketForm)(request))
+    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+    Ok(views.html.ticket.create(ticketForm, ttypes)(request))
   }
 
   def index(page: Int, count: Int) = Action { implicit request =>

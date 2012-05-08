@@ -1,4 +1,4 @@
-@(userForm: Form[(Ticket)])(implicit request: Request[AnyContent])
+@(userForm: Form[(Ticket)], ticket_types: List[(String,String)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -7,7 +7,9 @@
 <h1>@Messages("ticket.add")</h1>
 @helper.form(action = controllers.routes.Ticket.add) {
  <fieldset>
-  @helper.inputText(userForm("summary"), '_label -> Messages("ticket.summary"))
+  @helper.inputText(field = userForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
+  @helper.textarea(field = userForm("description"), args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
+  @helper.select(field = userForm("type_id"), options = ticket_types, args = 'class -> "foo", '_label -> Messages("ticket.type"))
   <div class="form-actions">
    <a href="@controllers.routes.Ticket.index()" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>

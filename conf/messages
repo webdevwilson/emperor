@@ -50,8 +50,10 @@ project.name=Name
 project.with.id=Project {0}
 
 ticket.add=Add Ticket
+ticket.description=Description
 ticket.list=Tickets
 ticket.summary=Summary
+ticket.type=Type
 
 ticket_link_type.name=Name
 
