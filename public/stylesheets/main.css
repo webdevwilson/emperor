@@ -12,6 +12,7 @@ ul.bordered li {
     padding: 6px 8px;
 }
 table td .btn-toolbar {
+    line-height: 14px;
     margin: 0;
 }
 table td .btn-toolbar .btn-group {

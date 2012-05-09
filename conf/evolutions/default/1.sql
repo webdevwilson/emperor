@@ -66,6 +66,28 @@ CREATE TABLE ticket_link_types (
 
 INSERT INTO ticket_link_types (name) VALUES ("TICK_LINK_BLOCKS");
 
+CREATE TABLE ticket_severities (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    position INT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+INSERT INTO ticket_severities (name, position) VALUES ("TICK_SEV_DIFFICULT", 100);
+INSERT INTO ticket_severities (name, position) VALUES ("TICK_SEV_NORMAL", 66);
+INSERT INTO ticket_severities (name, position) VALUES ("TICK_SEV_TRIVIAL", 33);
+
+CREATE TABLE ticket_priorities (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    position INT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+INSERT INTO ticket_priorities (name, position) VALUES ("TICK_PRIO_HIGH", 100);
+INSERT INTO ticket_priorities (name, position) VALUES ("TICK_PRIO_NORMAL", 66);
+INSERT INTO ticket_priorities (name, position) VALUES ("TICK_PRIO_LOW", 33);
+
 CREATE TABLE tickets (
     id INT UNSIGNED AUTO_INCREMENT,
     ticket_resolution_id INT UNSIGNED,
