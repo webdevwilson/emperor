@@ -6,7 +6,7 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketSeverity(id: Pk[Long] = NotAssigned, name: String)
+case class TicketSeverity(id: Pk[Long] = NotAssigned, name: String, position: Int)
 
 object TicketSeverityModel {
 

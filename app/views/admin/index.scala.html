@@ -16,8 +16,10 @@
  <div class="span6">
   <ul class="nav nav-list">
    <li class="nav-header"><i class="icon-tag"></i> @Messages("admin.tickets")</li>
-   <li><a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)">@Messages("admin.ticket_type.list")</a></li>
-   <li><a href="@controllers.admin.routes.TicketLinkType.index(page = 0, count = 10)">@Messages("admin.ticket_link_type.list")</a></li>
+   <li><a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)">@Messages("admin.ticket_type.menu.list")</a></li>
+   <li><a href="@controllers.admin.routes.TicketLinkType.index(page = 0, count = 10)">@Messages("admin.ticket_link_type.menu.list")</a></li>
+   <li><a href="@controllers.admin.routes.TicketPriority.index(page = 0, count = 10)">@Messages("admin.ticket_priority.menu.list")</a></li>
+   <li><a href="#">@Messages("admin.ticket_severity.menu.list")</a></li>
   </ul>
  </div>
 </div>

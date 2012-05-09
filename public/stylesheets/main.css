@@ -11,6 +11,10 @@ ul.bordered li {
     margin-bottom: 5px;
     padding: 6px 8px;
 }
+table td.actions {
+    white-space: nowrap;
+    width: 1%;
+}
 table td .btn-toolbar {
     line-height: 14px;
     margin: 0;

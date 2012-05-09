@@ -1,0 +1,26 @@
+@(userForm: Form[(TicketPriority)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main("admin.ticket_priority.add") {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.TicketPriority.index(page = 0, count = 10)">@Messages("admin.ticket_priority.list")</a> <span class="divider">/</span>
+ </li>
+ <li class="active">@Messages("admin.ticket_priority.add")</li>
+</ul>
+<h1>@Messages("admin.ticket_priority.add")</h1>
+@helper.form(action = controllers.admin.routes.TicketPriority.add) {
+ <fieldset>
+  @helper.inputText(userForm("name"), '_label -> Messages("ticket_priority.name"))
+  <div class="form-actions">
+   <a href="@routes.Admin.index" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}

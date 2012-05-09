@@ -23,7 +23,7 @@
   @tltypes.map { tltype =>
   <tr>
    <td><a href="@controllers.admin.routes.TicketLinkType.item(tltype.id.get)">@Messages(tltype.name)</a></td>
-   <td>
+   <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
       <a class="btn btn-mini" href="@controllers.admin.routes.TicketLinkType.edit(tltype.id.get)">@Messages("general.edit")</a>

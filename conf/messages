@@ -13,11 +13,20 @@ admin.tickets=Tickets
 admin.ticket_link_type.add=Add Ticket Link Type
 admin.ticket_link_type.edit=Edit Ticket Link Type
 admin.ticket_link_type.list=Ticket Link Types
+admin.ticket_link_type.menu.list=Link Types
 admin.ticket_link_type.with.id=Ticket Link Type {0}
+
+admin.ticket_priority.add=Add Ticket Priority
+admin.ticket_priority.edit=Edit Ticket Priority
+admin.ticket_priority.menu.list=Priorities
+admin.ticket_priority.list=Ticket Priorities
+
+admin.ticket_severity.menu.list=Severities
 
 admin.ticket_type.add=Add Ticket Type
 admin.ticket_type.edit=Edit Ticket Type
 admin.ticket_type.list=Ticket Types
+admin.ticket_type.menu.list=Types
 admin.ticket_type.with.id=Ticket Type {0}
 
 admin.user.add=Add User
@@ -57,6 +66,10 @@ ticket.type=Type
 
 ticket_link_type.name=Name
 
+ticket_priority.name=Name
+ticket_priority.position=Position
+ticket_priority.with.id=Ticket Priority {0}
+
 ticket_type.name=Name
 
 user=User
@@ -71,6 +84,10 @@ TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix
 
 TICK_LINK_BLOCKS=Blocks
+
+TICK_SEV_DIFFICULT=Difficult
+TICK_SEV_NORMAL=Normal
+TICK_SEV_TRIVIAL=Trivial
 
 TICK_STATUS_OPEN=Open
 TICK_STATUS_CLOSED=Closed

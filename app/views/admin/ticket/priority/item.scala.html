@@ -1,0 +1,13 @@
+@(priority: models.TicketPriority)(implicit request: Request[AnyContent])
+@main(Messages("admin.ticket_priority.with.id", Messages(priority.name))) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.priority.list")</a> <span class="divider">/</span>
+ </li>
+ <li class="active">@Messages("admin.ticket_priority.with.id", Messages(priority.name))</li>
+</ul>
+XXX
+}
