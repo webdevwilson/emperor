@@ -66,6 +66,8 @@ ticket.description=Description
 ticket.list=Tickets
 ticket.summary=Summary
 ticket.type=Type
+ticket.priority=Priority
+ticket.severity=Severity
 
 ticket_link_type.name=Name
 

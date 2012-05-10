@@ -10,7 +10,7 @@ case class TicketSeverity(id: Pk[Long] = NotAssigned, name: String, position: In
 
 object TicketSeverityModel {
 
-  val allQuery = SQL("SELECT * FROM ticket_severities")
+  val allQuery = SQL("SELECT * FROM ticket_severities ORDER BY position ASC")
   val getByIdQuery = SQL("SELECT * FROM ticket_severities WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_severities LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_severities")

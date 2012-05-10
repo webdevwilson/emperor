@@ -10,7 +10,7 @@
   @helper.inputText(field = objForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
   @helper.textarea(field = objForm("description"), args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
   @helper.select(field = objForm("type_id"), options = ttypes, args = 'class -> "foo", '_label -> Messages("ticket.type"))
-  @helper.select(field = objForm("priority_id"), options = priorities, args = 'class -> "foo", '_label -> Messages("ticket.priorities"))
+  @helper.select(field = objForm("priority_id"), options = priorities, args = 'class -> "foo", '_label -> Messages("ticket.priority"))
   @helper.select(field = objForm("severity_id"), options = severities, args = 'class -> "foo", '_label -> Messages("ticket.severity"))
   <div class="form-actions">
    <a href="@controllers.routes.Ticket.index()" class="btn">@Messages("form.cancel")</a>
