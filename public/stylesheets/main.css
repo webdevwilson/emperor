@@ -3,6 +3,9 @@
     font-family: 'Great Vibes', cursive;
     margin-top: 4px;
 }
+.navbar .nav li {
+  margin-top: 3px;
+}
 ul.bordered li {
     background-color: #f7f7f9;
     -webkit-border-radius: 3px;
