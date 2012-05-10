@@ -13,7 +13,7 @@
  <a href="@controllers.admin.routes.TicketPriority.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_priority.add")</a>
 </div>
 <h1>@Messages("admin.ticket_priority.list")</h1>
-@Option(page.items).filterNot(_.isEmpty).map { priorities =>
+@Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("ticket_priority.name")</th>
@@ -21,14 +21,14 @@
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
-  @priorities.map { priority =>
+  @items.map { item =>
   <tr>
-   <td><a href="@controllers.admin.routes.TicketPriority.item(priority.id.get)">@Messages(priority.name)</a></td>
-   <td>@priority.position</td>
+   <td><a href="@controllers.admin.routes.TicketPriority.item(item.id.get)">@Messages(item.name)</a></td>
+   <td>@item.position</td>
    <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@controllers.admin.routes.TicketPriority.edit(priority.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@controllers.admin.routes.TicketPriority.edit(item.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>

@@ -1,5 +1,5 @@
-@(ttype: models.TicketType)(implicit request: Request[AnyContent])
-@main(Messages("admin.ticket_type.with.id", ttype.name)) {
+@(obj: models.TicketType)(implicit request: Request[AnyContent])
+@main(Messages("admin.ticket_type.with.id", obj.name)) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
@@ -7,7 +7,7 @@
  <li>
   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.ticket_type.list")</a> <span class="divider">/</span>
  </li>
- <li class="active">@Messages("admin.ticket_type.with.id", Messages(ttype.name))</li>
+ <li class="active">@Messages("admin.ticket_type.with.id", Messages(obj.name))</li>
 </ul>
 XXX
 }

@@ -13,20 +13,20 @@
  <a href="@controllers.admin.routes.TicketLinkType.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_link_type.add")</a>
 </div>
 <h1>@Messages("admin.ticket_link_type.list")</h1>
-@Option(page.items).filterNot(_.isEmpty).map { tltypes =>
+@Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("ticket_link_type.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
-  @tltypes.map { tltype =>
+  @items.map { item =>
   <tr>
-   <td><a href="@controllers.admin.routes.TicketLinkType.item(tltype.id.get)">@Messages(tltype.name)</a></td>
+   <td><a href="@controllers.admin.routes.TicketLinkType.item(item.id.get)">@Messages(item.name)</a></td>
    <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@controllers.admin.routes.TicketLinkType.edit(tltype.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@controllers.admin.routes.TicketLinkType.edit(item.id.get)">@Messages("general.edit")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>

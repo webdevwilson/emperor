@@ -1,4 +1,4 @@
-@(id: Long, prioForm: Form[(TicketPriority)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(TicketPriority)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -16,8 +16,8 @@
 <h1>@Messages("admin.ticket_priority.edit")</h1>
 @helper.form(action = controllers.admin.routes.TicketType.update(id)) {
  <fieldset>
-  @helper.inputText(prioForm("name"), '_label -> Messages("ticket_priority.name"))
-  @helper.inputText(prioForm("position"), '_label -> Messages("ticket_priority.position"))
+  @helper.inputText(objForm("name"), '_label -> Messages("ticket_priority.name"))
+  @helper.inputText(objForm("position"), '_label -> Messages("ticket_priority.position"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.TicketPriority.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submt")</button>

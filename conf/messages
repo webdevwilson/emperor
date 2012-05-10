@@ -21,7 +21,10 @@ admin.ticket_priority.edit=Edit Ticket Priority
 admin.ticket_priority.menu.list=Priorities
 admin.ticket_priority.list=Ticket Priorities
 
+admin.ticket_severity.add=Add Ticket Severity
+admin.ticket_severity.edit=Edit Ticket Severity
 admin.ticket_severity.menu.list=Severities
+admin.ticket_severity.list=Severities
 
 admin.ticket_type.add=Add Ticket Type
 admin.ticket_type.edit=Edit Ticket Type
@@ -69,6 +72,9 @@ ticket_link_type.name=Name
 ticket_priority.name=Name
 ticket_priority.position=Position
 ticket_priority.with.id=Ticket Priority {0}
+
+ticket_severity.name=Name
+ticket_severity.position=Position
 
 ticket_type.name=Name
 

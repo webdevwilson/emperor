@@ -30,6 +30,14 @@ POST    /admin/ticket/priority/:id      controllers.admin.TicketPriority.update(
 GET     /admin/ticket/priority/edit/:id controllers.admin.TicketPriority.edit(id: Long)
 POST    /admin/ticket/priority          controllers.admin.TicketPriority.add
 
+GET     /admin/ticket/severity          controllers.admin.TicketSeverity.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/severity/create   controllers.admin.TicketSeverity.create
+GET     /admin/ticket/severity/:id      controllers.admin.TicketSeverity.item(id: Long)
+POST    /admin/ticket/severity/:id      controllers.admin.TicketSeverity.update(id: Long)
+GET     /admin/ticket/severity/edit/:id controllers.admin.TicketSeverity.edit(id: Long)
+POST    /admin/ticket/severity          controllers.admin.TicketSeverity.add
+
+
 GET     /admin/ticket/type              controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/type/create       controllers.admin.TicketType.create
 GET     /admin/ticket/type/:id          controllers.admin.TicketType.item(id: Long)
