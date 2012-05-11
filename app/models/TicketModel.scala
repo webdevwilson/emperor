@@ -6,6 +6,11 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
+case class InitialTicket(
+  priorityId: Long, severityId: Long, typeId: Long,
+  position: Option[Long], summary: String, description: Option[String]
+)
+
 case class Ticket(
   id: Pk[Long] = NotAssigned, priorityId: Long, resolutionId: Option[Long],
   statusId: Long, severityId: Long, typeId: Long, position: Option[Long],
@@ -48,7 +53,7 @@ object TicketModel {
         'description        -> ticket.description,
         'position           -> ticket.position,
         'summary            -> ticket.summary
-      ).executeUpdate
+      ).execute
     }
     
     ticket

@@ -16,16 +16,13 @@ object Ticket extends Controller {
 
   val ticketForm = Form(
     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
       "priority_id" -> longNumber,
-      "resolution_id" -> optional(longNumber),
       "severity_id" -> longNumber,
-      "status_id" -> longNumber,
       "type_id" -> longNumber,
       "position" -> optional(longNumber),
       "summary" -> nonEmptyText,
       "description" -> optional(text)
-    )(models.Ticket.apply)(models.Ticket.unapply)
+    )(models.InitialTicket.apply)(models.InitialTicket.unapply)
   )
 
   def add = Action { implicit request =>
@@ -37,8 +34,17 @@ object Ticket extends Controller {
     ticketForm.bindFromRequest.fold(
       errors => BadRequest(views.html.ticket.create(errors, ttypes, prios, sevs)),
       {
-        case ticket: models.Ticket =>
-        TicketModel.create(ticket)
+        case ticket: models.InitialTicket =>
+        
+        val realTick = models.Ticket(
+          id = NotAssigned, priorityId = ticket.priorityId, resolutionId = None,
+          statusId = 1.toLong, // XXX This shouldn't be hardcoded
+          severityId = ticket.severityId, typeId = ticket.typeId,
+          position = ticket.position, summary = ticket.summary,
+          description = ticket.description
+        )
+        
+        TicketModel.create(realTick)
         Redirect("/ticket") // XXX
       }
     )
