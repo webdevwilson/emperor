@@ -11,12 +11,13 @@
  <li>
   <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.workflow.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages("admin.group.with.id", "XXX")</li>
+ <li class="active">@Messages("admin.workflow.with.id", "XXX")</li>
 </ul>
 <h1>@Messages("admin.workflow.edit")</h1>
-@helper.form(action = controllers.admin.routes.Group.update(id)) {
+@helper.form(action = controllers.admin.routes.Workflow.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("workflow.name"))
+  @helper.inputText(objForm("description"), '_label -> Messages("workflow.description"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.Workflow.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>

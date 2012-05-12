@@ -10,7 +10,7 @@ admin.group.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
 
-admin.projects=Projects
+admin.project.list=Projects
 
 admin.role.add=Add Role
 
@@ -46,7 +46,9 @@ admin.user.groups.list=Group Membership
 admin.user.list=Users
 admin.user.with.id=User {0}
 
-admin.workflows=Workflows
+admin.workflow.add=Add Workflow
+admin.workflow.edit=Edit Workflow
+admin.workflow.list=Workflows
 
 form.cancel=Cancel
 form.submit=Submit
@@ -120,3 +122,6 @@ TICK_STATUS_CLOSED=Closed
 TICK_TYPE_BUG=Bug
 TICK_TYPE_IMPROVEMENT=Improvement
 TICK_TYPE_MILESTONE=Milestone
+
+workflow.name=Name
+workflow.description=Description
