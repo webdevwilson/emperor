@@ -12,8 +12,11 @@ import models.TicketModel
 import models.TicketPriorityModel
 import models.TicketSeverityModel
 import models.TicketTypeModel
+import org.clapper.markwrap._
 
 object Ticket extends Controller {
+
+  val mdParser = MarkWrap.parserFor(MarkupType.Markdown)
 
   val initialTicketForm = Form(
     mapping(
@@ -91,7 +94,11 @@ object Ticket extends Controller {
     val ticket = TicketModel.findById(ticketId)
 
     ticket match {
-      case Some(value) => Ok(views.html.ticket.item(value)(request))
+      case Some(value) => {
+        val ttype = TicketTypeModel.findById(value.typeId)
+        
+        Ok(views.html.ticket.item(value, mdParser, ttype.get)(request))
+      }
       case None => NotFound
     }
     

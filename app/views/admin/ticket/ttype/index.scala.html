@@ -16,7 +16,7 @@
 @Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("item.name")</th>
+  <th>@Messages("ticket_type.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
@@ -50,5 +50,38 @@
    </tr>
  </tfoot
 </table>
+<div id="objtable"></div>
+<script>
+// YUI({gallery: 'gallery-2012.03.23-18-00'}).use('node', 'datatable', 'datatable-sort', 'model', 'model-list', 'gallery-model-sync-rest', function (Y) {
+//   TicketTypeModel = Y.Base.create('TicketType', Y.Model, [ Y.ModelSync.REST ],
+//     {
+//       url : '/admin/user/{id}/group/group.id'
+//     }
+//   );
+//   
+//   TicketTypeModelList = Y.Base.create('ticketTypeList', Y.ModelList, [] {
+//     model: TicketTypeModel,
+//   });
+//   
+//   var types = new Y.TicketTypeModelList();
+//   
+//   var typeTable = new Y.DataTable({
+//       recordType: Y.PieModel,
+//       columns: [
+//         { key: "name", label: "Messages("ticket.name")", sortable:true }
+//       ],
+//       data: types
+//   }).render('#objtable');
+  
+  // Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
+  //   var model = new UserGroupModel({ id: group.id });
+  //   if ( e.target.get('checked') ) {
+  //     model.save();
+  //   } else {
+  //     model.destroy({ 'delete' : true });
+  //   }
+  // });
+// });
+</script>
 }
 }

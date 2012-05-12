@@ -1,5 +1,9 @@
-@(bar: String)(implicit request: Request[AnyContent])
+@(projects: List[Project])(implicit request: Request[AnyContent])
 
 @main("Home") {
-<strong>@bar</strong>
+<ul>
+ @projects.map { project =>
+   <li>@project.name</li>
+ }
+</ul>
 }

@@ -1,4 +1,7 @@
-@(ticket: models.Ticket)(implicit request: Request[AnyContent])
+@(ticket: models.Ticket, mdParser: org.clapper.markwrap.MarkWrapParser, ttype: models.TicketType)(implicit request: Request[AnyContent])
 @main(Messages("ticket.with.id", ticket.id)) {
-<h2>@Messages("ticket.with.id", ticket.id)</h2>
+<h2><span class="label">@Messages(ttype.name)</span> @ticket.summary</h2>
+<div class="well">
+@{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+</div>
 }

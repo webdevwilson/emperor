@@ -48,6 +48,7 @@ general.disable=Disable
 general.edit=Edit
 general.home=Home
 general.project=Projects
+general.ticket=Tickets
 
 group.name=Name
 
