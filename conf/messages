@@ -7,14 +7,17 @@ admin.people=People
 admin.group.add=Add Group
 admin.group.edit=Edit Group
 admin.group.list=Groups
+admin.group.menu.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
 
-admin.project.list=Projects
+admin.projects=Projects
+admin.project.menu.list=Projects
 
 admin.role.add=Add Role
 
 admin.role.list=Roles
+admin.role.menu.list=Roles
 
 admin.tickets=Tickets
 
@@ -32,7 +35,12 @@ admin.ticket_priority.list=Ticket Priorities
 admin.ticket_severity.add=Add Ticket Severity
 admin.ticket_severity.edit=Edit Ticket Severity
 admin.ticket_severity.menu.list=Severities
-admin.ticket_severity.list=Severities
+admin.ticket_severity.list=Ticket Severities
+
+admin.ticket_status.add=Add Ticket Status
+admin.ticket_status.edit=Edit Ticket Status
+admin.ticket_status.menu.list=Statuses
+admin.ticket_status.list=Ticket Statuses
 
 admin.ticket_type.add=Add Ticket Type
 admin.ticket_type.edit=Edit Ticket Type
@@ -44,11 +52,13 @@ admin.user.add=Add User
 admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
+admin.user.menu.list=Users
 admin.user.with.id=User {0}
 
 admin.workflow.add=Add Workflow
 admin.workflow.edit=Edit Workflow
 admin.workflow.list=Workflows
+admin.workflow.menu.list=Workflows
 
 form.cancel=Cancel
 form.submit=Submit
@@ -97,6 +107,10 @@ ticket_priority.with.id=Ticket Priority {0}
 ticket_severity.name=Name
 ticket_severity.position=Position
 
+ticket_status.name=Name
+ticket_status.position=Position
+ticket_status.with.id=Ticket Status {0}
+
 ticket_type.name=Name
 
 user=User
@@ -117,6 +131,7 @@ TICK_SEV_NORMAL=Normal
 TICK_SEV_TRIVIAL=Trivial
 
 TICK_STATUS_OPEN=Open
+TICK_STATUS_IN_PROG=In Progress
 TICK_STATUS_CLOSED=Closed
 
 TICK_TYPE_BUG=Bug

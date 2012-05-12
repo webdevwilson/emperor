@@ -14,13 +14,13 @@
  <li class="active">@Messages("ticket_priority.with.id", id)</li>
 </ul>
 <h1>@Messages("admin.ticket_priority.edit")</h1>
-@helper.form(action = controllers.admin.routes.TicketType.update(id)) {
+@helper.form(action = controllers.admin.routes.TicketPriority.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_priority.name"))
   @helper.inputText(objForm("position"), '_label -> Messages("ticket_priority.position"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.TicketPriority.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
-   <button type="submit" class="btn btn-primary">@Messages("form.submt")</button>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
   </div>
  </fieldset>
 }

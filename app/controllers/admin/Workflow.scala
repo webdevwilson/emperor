@@ -57,9 +57,10 @@ object Workflow extends Controller {
   def item(workflowId: Long) = Action { implicit request =>
     
     val workflow = WorkflowModel.findById(workflowId)
+    val statuses = WorkflowModel.findStatuses(workflowId)
 
     workflow match {
-      case Some(value) => Ok(views.html.admin.workflow.item(value)(request))
+      case Some(value) => Ok(views.html.admin.workflow.item(value, statuses)(request))
       case None => NotFound
     }
     

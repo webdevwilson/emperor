@@ -9,9 +9,12 @@ import play.Logger
 
 case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String])
 
+case class WorkflowStatus(id: Pk[Long], statusId: Long, name: String, position: Int)
+
 object WorkflowModel {
 
   val allQuery = SQL("SELECT * FROM workflows")
+  val allStatuses = SQL("SELECT ws.id, ts.id, ts.name, ws.position FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
@@ -24,6 +27,15 @@ object WorkflowModel {
     get[String]("name") ~
     get[Option[String]]("description") map {
       case id~name~description => Workflow(id, name, description)
+    }
+  }
+  
+  val workflowStatus = {
+    get[Pk[Long]]("workflow_statuses.id") ~
+    get[Long]("ticket_statuses.id") ~
+    get[String]("ticket_statuses.name") ~
+    get[Int]("workflow_statuses.position") map {
+      case id~statusId~name~position => WorkflowStatus(id, statusId, name, position)
     }
   }
   
@@ -49,6 +61,13 @@ object WorkflowModel {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(WorkflowModel.workflow.singleOpt)
+    }
+  }
+
+  def findStatuses(id: Long) : Seq[WorkflowStatus] = {
+    
+    DB.withConnection { implicit conn =>
+      allStatuses.on('id -> id).as(workflowStatus *)
     }
   }
 

@@ -1,0 +1,54 @@
+@(page: chc.Page[models.TicketStatus])(implicit request: Request[AnyContent])
+
+@import util._
+
+@main(Messages("admin.ticket_status.list")) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li class="active">@Messages("admin.ticket_status.list")</li>
+</ul>
+<div class="btn-group btn-group-above-table pull-right">
+ <a href="@controllers.admin.routes.TicketSeverity.create" class="btn"><i class="icon-plus"></i> @Messages("admin.ticket_status.add")</a>
+</div>
+<h1>@Messages("admin.ticket_status.list")</h1>
+@Option(page.items).filterNot(_.isEmpty).map { items =>
+<table class="table table-bordered table-rounded table-striped">
+ <thead>
+  <th>@Messages("ticket_status.name")</th>
+  <th>@Messages("general.actions")</th>
+ </thead>
+ <tbody>
+  @items.map { item =>
+  <tr>
+   <td><a href="@controllers.admin.routes.TicketStatus.item(item.id.get)">@Messages(item.name)</a></td>
+   <td class="actions">
+    <div class="btn-toolbar">
+     <div class="btn-group">
+      <a class="btn btn-mini" href="@controllers.admin.routes.TicketStatus.edit(item.id.get)">@Messages("general.edit")</a>
+     </div>
+     <div class="btn-group">
+       <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>
+       <button class="btn btn-danger btn-mini dropdown-toggle" data-toggle="dropdown">
+         <span class="caret"></span>
+       </button>
+       <ul class="dropdown-menu">
+        <li>@Messages("general.delete")</li>
+       </ul>
+     </div>
+    </div>
+   </td>
+  </tr>
+  }
+ </tbody>
+ <tfoot>
+  <tr>
+   <td colspan="4">
+     @pager(page)
+    </td>
+   </tr>
+ </tfoot
+</table>
+}
+}

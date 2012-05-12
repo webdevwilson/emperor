@@ -7,6 +7,8 @@ CREATE TABLE workflows (
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
+INSERT INTO workflows (name) VALUES ('WORK_EMP_DEFAULT');
+
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     username VARCHAR(255) NOT NULL,
@@ -37,6 +39,10 @@ CREATE TABLE roles (
     description TEXT,
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+INSERT INTO roles (name) VALUES ('QA');
+INSERT INTO roles (name) VALUES ('Developer');
+INSERT INTO roles (name) VALUES ('Operations');
 
 CREATE TABLE ticket_resolutions (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -107,6 +113,10 @@ CREATE TABLE workflow_statuses (
     FOREIGN KEY(workflow_id) REFERENCES workflows(id),
     FOREIGN KEY(status_id) REFERENCES ticket_statuses(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 1, 25);
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 2, 50);
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 3, 75);
 
 CREATE TABLE projects (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,

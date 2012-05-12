@@ -6,16 +6,16 @@
  <div class="span6">
   <ul class="nav nav-list">
    <li class="nav-header"><i class="icon-user"></i> @Messages("admin.people")</li>
-   <li><a href="@controllers.admin.routes.Group.index(page = 0, count = 10)">@Messages("admin.group.list")</a></li>
-   <li><a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.list")</a></li>
-   <li><a href="@controllers.admin.routes.Role.index(page = 0, count = 10)">@Messages("admin.role.list")</a></li>
+   <li><a href="@controllers.admin.routes.Group.index(page = 0, count = 10)">@Messages("admin.group.menu.list")</a></li>
+   <li><a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.menu.list")</a></li>
+   <li><a href="@controllers.admin.routes.Role.index(page = 0, count = 10)">@Messages("admin.role.menu.list")</a></li>
   </ul>
  </div>
  <div class="span6">
   <ul class="nav nav-list">
    <li class="nav-header"><i class="icon-book"></i>@Messages("admin.projects")</li>
-   <li><a href="@controllers.admin.routes.Workflow.index()">@Messages("admin.workflow.list")</a></li>
-   <li><a href="@controllers.routes.Project.index()">@Messages("admin.project.list")</a></li>
+   <li><a href="@controllers.admin.routes.Workflow.index()">@Messages("admin.workflow.menu.list")</a></li>
+   <li><a href="@controllers.routes.Project.index()">@Messages("admin.project.menu.list")</a></li>
   </ul>
  </div>
 </div>
@@ -28,6 +28,7 @@
    <li><a href="@controllers.admin.routes.TicketLinkType.index(page = 0, count = 10)">@Messages("admin.ticket_link_type.menu.list")</a></li>
    <li><a href="@controllers.admin.routes.TicketPriority.index(page = 0, count = 10)">@Messages("admin.ticket_priority.menu.list")</a></li>
    <li><a href="@controllers.admin.routes.TicketSeverity.index(page = 0, count = 10)">@Messages("admin.ticket_severity.menu.list")</a></li>
+   <li><a href="@controllers.admin.routes.TicketStatus.index(page = 0, count = 10)">@Messages("admin.ticket_status.menu.list")</a></li>
   </ul>
  </div>
 </div>

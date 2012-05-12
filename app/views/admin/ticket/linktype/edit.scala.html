@@ -14,7 +14,7 @@
  <li class="active">@Messages("ticket_link_type.with.id", id)</li>
 </ul>
 <h1>@Messages("admin.ticket_link_type.edit")</h1>
-@helper.form(action = controllers.admin.routes.TicketType.update(id)) {
+@helper.form(action = controllers.admin.routes.TicketLinkType.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_type.name"))
   <div class="form-actions">

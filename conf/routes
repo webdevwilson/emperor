@@ -44,6 +44,13 @@ POST    /admin/ticket/severity/:id      controllers.admin.TicketSeverity.update(
 GET     /admin/ticket/severity/edit/:id controllers.admin.TicketSeverity.edit(id: Long)
 POST    /admin/ticket/severity          controllers.admin.TicketSeverity.add
 
+GET     /admin/ticket/status            controllers.admin.TicketStatus.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/status/create     controllers.admin.TicketStatus.create
+GET     /admin/ticket/status/:id        controllers.admin.TicketStatus.item(id: Long)
+POST    /admin/ticket/status/:id        controllers.admin.TicketStatus.update(id: Long)
+GET     /admin/ticket/status/edit/:id   controllers.admin.TicketStatus.edit(id: Long)
+POST    /admin/ticket/status            controllers.admin.TicketStatus.add
+
 GET     /admin/ticket/type              controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/type/create       controllers.admin.TicketType.create
 GET     /admin/ticket/type/:id          controllers.admin.TicketType.item(id: Long)
