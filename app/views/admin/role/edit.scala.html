@@ -1,0 +1,26 @@
+@(id: Long, objForm: Form[(Role)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main(Messages("admin.role.edit")) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.role.list")</a> <span class="divider">/</span>
+ </li>
+ <li class="active">@Messages("admin.role.with.id", "XXX")</li>
+</ul>
+<h1>@Messages("admin.role.edit")</h1>
+@helper.form(action = controllers.admin.routes.Group.update(id)) {
+ <fieldset>
+  @helper.inputText(objForm("name"), '_label -> Messages("role.name"))
+  <div class="form-actions">
+   <a href="@controllers.admin.routes.Group.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}

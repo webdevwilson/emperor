@@ -16,6 +16,13 @@ POST    /admin/group/:id                controllers.admin.Group.update(id: Long)
 GET     /admin/group/edit/:id           controllers.admin.Group.edit(id: Long)
 POST    /admin/group                    controllers.admin.Group.add
 
+GET     /admin/role                     controllers.admin.Role.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/role/create              controllers.admin.Role.create
+GET     /admin/role/:id                 controllers.admin.Role.item(id: Long)
+POST    /admin/role/:id                 controllers.admin.Role.update(id: Long)
+GET     /admin/role/edit/:id            controllers.admin.Role.edit(id: Long)
+POST    /admin/role                     controllers.admin.Role.add
+
 GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/linktype/create   controllers.admin.TicketLinkType.create
 GET     /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.item(id: Long)
@@ -36,7 +43,6 @@ GET     /admin/ticket/severity/:id      controllers.admin.TicketSeverity.item(id
 POST    /admin/ticket/severity/:id      controllers.admin.TicketSeverity.update(id: Long)
 GET     /admin/ticket/severity/edit/:id controllers.admin.TicketSeverity.edit(id: Long)
 POST    /admin/ticket/severity          controllers.admin.TicketSeverity.add
-
 
 GET     /admin/ticket/type              controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/ticket/type/create       controllers.admin.TicketType.create

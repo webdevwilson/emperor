@@ -36,6 +36,7 @@ object Ticket extends Controller {
       "project_id"    -> longNumber,
       "priority_id"   -> longNumber,
       "resolution_id" -> optional(longNumber),
+      "proposed_resolution_id" -> optional(longNumber),
       "severity_id"   -> longNumber,
       "status_id"     -> longNumber,
       "type_id"       -> longNumber,

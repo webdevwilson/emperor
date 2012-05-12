@@ -8,6 +8,10 @@ admin.group.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
 
+admin.role.add=Add Role
+
+admin.role.list=Roles
+
 admin.tickets=Tickets
 
 admin.ticket_link_type.add=Add Ticket Link Type
@@ -62,6 +66,9 @@ project.list=Projects
 project.name=Name
 project.key=Key
 project.with.id=Project {0}
+
+role.description=Description
+role.name=Name
 
 ticket.add=Add Ticket
 ticket.description=Description

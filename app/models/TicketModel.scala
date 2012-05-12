@@ -13,8 +13,9 @@ case class InitialTicket(
 
 case class Ticket(
   id: Pk[Long] = NotAssigned, projectId: Long, priorityId: Long,
-  resolutionId: Option[Long], statusId: Long, severityId: Long, typeId: Long,
-  position: Option[Long], summary: String, description: Option[String]
+  resolutionId: Option[Long], proposedResolutionId: Option[Long],
+  severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
+  summary: String, description: Option[String]
 )
 
 object TicketModel {
@@ -23,23 +24,24 @@ object TicketModel {
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
-  val insertQuery = SQL("INSERT INTO tickets (project_id, ticket_priority_id, ticket_severity_id, ticket_status_id, ticket_type_id, position, summary, description) VALUES ({project_id}, {ticket_priority_id}, {ticket_severity_id}, {ticket_status_id}, {ticket_type_id}, {position}, {summary}, {description})")
-  val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, ticket_priority_id={ticket_priority_id}, ticket_resolution_id={ticket_resolution_id}, ticket_severity_id={ticket_severity_id}, ticket_status_id={ticket_status_id}, ticket_type_id={ticket_type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
+  val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val ticket = {
     get[Pk[Long]]("id") ~
     get[Long]("project_id") ~
-    get[Long]("ticket_priority_id") ~
-    get[Option[Long]]("ticket_resolution_id") ~
-    get[Long]("ticket_status_id") ~
-    get[Long]("ticket_severity_id") ~
-    get[Long]("ticket_type_id") ~
+    get[Long]("priority_id") ~
+    get[Option[Long]]("resolution_id") ~
+    get[Option[Long]]("proposed_resolution_id") ~
+    get[Long]("severity_id") ~
+    get[Long]("status_id") ~
+    get[Long]("type_id") ~
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") map {
-      case id~projectId~priorityId~resolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
-        id, projectId, priorityId, resolutionId, severityId, statusId, typeId, position, summary, description
+      case id~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
+        id, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description
       )
     }
   }
@@ -48,14 +50,14 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
-        'project_id         -> ticket.projectId,
-        'ticket_priority_id -> ticket.priorityId,
-        'ticket_severity_id -> ticket.severityId,
-        'ticket_status_id   -> 1, // XXX should not be hardcoded
-        'ticket_type_id     -> ticket.typeId,
-        'description        -> ticket.description,
-        'position           -> ticket.position,
-        'summary            -> ticket.summary
+        'project_id   -> ticket.projectId,
+        'priority_id  -> ticket.priorityId,
+        'severity_id  -> ticket.severityId,
+        'status_id    -> 1, // XXX should not be hardcoded
+        'type_id      -> ticket.typeId,
+        'description  -> ticket.description,
+        'position     -> ticket.position,
+        'summary      -> ticket.summary
       ).execute
 
       val id = lastInsertQuery.as(scalar[Long].single)
@@ -102,15 +104,16 @@ object TicketModel {
 
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(
-        'id         -> id,
-        'ticket_priority_id   -> ticket.priorityId,
-        'ticket_resolution_id -> ticket.resolutionId,
-        'ticket_severity_id   -> ticket.severityId,
-        'ticket_status_id     -> ticket.statusId,
-        'ticket_type_id       -> ticket.typeId,
-        'description          -> ticket.description,
-        'position             -> ticket.position,
-        'summary              -> ticket.summary
+        'id                     -> id,
+        'priority_id            -> ticket.priorityId,
+        'resolution_id          -> ticket.resolutionId,
+        'proposed_resolution_id -> ticket.proposedResolutionId,
+        'severity_id            -> ticket.severityId,
+        'status_id              -> ticket.statusId,
+        'type_id                -> ticket.typeId,
+        'description            -> ticket.description,
+        'position               -> ticket.position,
+        'summary                -> ticket.summary
       ).executeUpdate
     }
   }
