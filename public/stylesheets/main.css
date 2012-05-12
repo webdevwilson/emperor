@@ -14,6 +14,9 @@ ul.bordered li {
     margin-bottom: 5px;
     padding: 6px 8px;
 }
+li.draggable {
+    cursor: move;
+}
 table td.actions {
     white-space: nowrap;
     width: 1%;

@@ -66,6 +66,19 @@ object Workflow extends Controller {
     
   }
   
+  
+  def modify(workflowId: Long) = Action { implicit request =>
+    
+    val workflow = WorkflowModel.findById(workflowId)
+    val statuses = WorkflowModel.findStatuses(workflowId)
+
+    workflow match {
+      case Some(value) => Ok(views.html.admin.workflow.modify(workflowId, value, statuses)(request))
+      case None => NotFound
+    }
+    
+  }
+  
   def update(workflowId: Long) = Action { implicit request =>
 
     objForm.bindFromRequest.fold(
@@ -76,5 +89,10 @@ object Workflow extends Controller {
         Redirect("/admin/workflow") // XXX
       }
     )
+  }
+
+  def save(workflowId: Long) = Action { implicit request =>
+
+    Redirect("/admin/workflow") // XXX
   }
 }

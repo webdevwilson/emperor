@@ -72,7 +72,9 @@ GET     /admin/workflow/create          controllers.admin.Workflow.create
 GET     /admin/workflow/:id             controllers.admin.Workflow.item(id: Long)
 POST    /admin/workflow/:id             controllers.admin.Workflow.update(id: Long)
 GET     /admin/workflow/edit/:id        controllers.admin.Workflow.edit(id: Long)
-POST    /admin/workflow                 controllers.admin.Workflow.add
+GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Long)
+GET     /admin/workflow                 controllers.admin.Workflow.add
+POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
 GET     /project                        controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
 GET     /project/create                 controllers.Project.create

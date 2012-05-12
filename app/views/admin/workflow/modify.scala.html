@@ -1,0 +1,59 @@
+@(id: Long, workflow: models.Workflow, statuses: Seq[models.WorkflowStatus])(implicit request: Request[AnyContent])
+@main(Messages("admin.workflow.with.id", workflow.name)) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.Workflow.index(page = 0, count = 10)">@Messages("admin.workflow.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li class="active">@Messages(workflow.name)</li>
+</ul>
+@helper.form(action = controllers.admin.routes.Workflow.save(id)) {
+<div class="row" id="statuses">
+ <div class="span6">
+  <h2>@Messages("admin.workflow.modify.available")</h2>
+  <ul class="bordered unstyled" id="list1">
+  @statuses.map { item =>
+   <li class="draggable">@Messages(item.name)</li>
+  }
+  </ul>
+ </div>
+ <div class="span6">
+  <h2>@Messages("admin.workflow.modify.final")</h2>
+  <ul class="bordered unstyled" id="list2">
+  @statuses.map { item =>
+   <li class="draggable">@Messages(item.name)</li>
+  }
+  </ul>
+ </div>
+</div>
+<div class="form-actions">
+ <a href="@controllers.admin.routes.Workflow.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+ <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+</div>
+}
+<script type="text/javascript">
+YUI().use('dd-constrain', 'sortable', function(Y) {
+    var list1 = new Y.Sortable({
+        container: '#list1',
+        nodes: 'li',
+        opacity: '.1'
+    });
+
+    var list2 = new Y.Sortable({
+        container: '#list2',
+        nodes: 'li',
+        opacity: '.1'
+    });
+
+    list1.delegate.dd.plug(Y.Plugin.DDConstrained, {
+        constrain2node: '#statuses'
+    });
+    list2.delegate.dd.plug(Y.Plugin.DDConstrained, {
+        constrain2node: '#statuses'
+    });
+    list1.join(list2, 'outer');
+});
+</script>
+}

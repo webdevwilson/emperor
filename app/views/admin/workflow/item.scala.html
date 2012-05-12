@@ -7,11 +7,11 @@
  <li>
   <a href="@controllers.admin.routes.Workflow.index(page = 0, count = 10)">@Messages("admin.workflow.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@workflow.name</li>
+ <li class="active">@Messages(workflow.name)</li>
 </ul>
 <ul>
  @statuses.map { item =>
-   <li>@item.name</li>
+   <li>@Messages(item.name)</li>
  }
 </ul>
 }

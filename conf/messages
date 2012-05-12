@@ -59,6 +59,9 @@ admin.workflow.add=Add Workflow
 admin.workflow.edit=Edit Workflow
 admin.workflow.list=Workflows
 admin.workflow.menu.list=Workflows
+admin.workflow.modify=Modify Statuses
+admin.workflow.modify.available=Available Statuses
+admin.workflow.modify.final=Final Workflow
 
 form.cancel=Cancel
 form.submit=Submit
@@ -137,6 +140,8 @@ TICK_STATUS_CLOSED=Closed
 TICK_TYPE_BUG=Bug
 TICK_TYPE_IMPROVEMENT=Improvement
 TICK_TYPE_MILESTONE=Milestone
+
+WORK_EMP_DEFAULT=Emperor Default
 
 workflow.name=Name
 workflow.description=Description

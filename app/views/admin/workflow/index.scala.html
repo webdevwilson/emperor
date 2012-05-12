@@ -20,11 +20,12 @@
  <tbody>
   @items.map { item =>
   <tr>
-   <td><a href="@controllers.admin.routes.Workflow.item(item.id.get)">@item.name</a></td>
+   <td><a href="@controllers.admin.routes.Workflow.item(item.id.get)">@Messages(item.name)</a></td>
    <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@controllers.admin.routes.Workflow.edit(item.id.get)">@Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@controllers.admin.routes.Workflow.edit(item.id.get)"><i class="icon-edit"></i> @Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@controllers.admin.routes.Workflow.modify(item.id.get)"><i class="icon-cog"></i> @Messages("admin.workflow.modify")</a>
      </div>
      <div class="btn-group">
        <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>
