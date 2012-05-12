@@ -6,7 +6,7 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
-case class Project(id: Pk[Long] = NotAssigned, name: String)
+case class Project(id: Pk[Long] = NotAssigned, name: String, key: String)
 
 object ProjectModel {
 
@@ -14,13 +14,14 @@ object ProjectModel {
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
   val listQuery = SQL("SELECT * FROM projects LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects")
-  val insertQuery = SQL("INSERT INTO projects (name) VALUES ({name})")
+  val insertQuery = SQL("INSERT INTO projects (name, pkey) VALUES ({name}, {pkey})")
   val updateQuery = SQL("UPDATE projects SET name={name} WHERE id={id}")
 
   val project = {
     get[Pk[Long]]("id") ~
-    get[String]("name") map {
-      case id~name => Project(id, name)
+    get[String]("name") ~
+    get[String]("pkey") map {
+      case id~name~pkey => Project(id, name, pkey)
     }
   }
 
@@ -28,7 +29,8 @@ object ProjectModel {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
-        'name   -> project.name
+        'name   -> project.name,
+        'pkey   -> project.key
       ).executeUpdate
     }
     

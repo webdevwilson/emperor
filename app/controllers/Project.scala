@@ -12,8 +12,9 @@ object Project extends Controller {
 
   val projectForm = Form(
     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
-      "name" -> nonEmptyText
+      "id"  -> ignored(NotAssigned:Pk[Long]),
+      "name"-> nonEmptyText,
+      "key" -> nonEmptyText // XXX needs better checking, length, etc
     )(models.Project.apply)(models.Project.unapply)
   )
 

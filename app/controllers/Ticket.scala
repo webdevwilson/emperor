@@ -7,6 +7,7 @@ import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
+import models.ProjectModel
 import models.TicketModel
 import models.TicketPriorityModel
 import models.TicketSeverityModel
@@ -14,49 +15,58 @@ import models.TicketTypeModel
 
 object Ticket extends Controller {
 
-  val ticketForm = Form(
+  val initialTicketForm = Form(
     mapping(
+      "project_id"  -> longNumber,
       "priority_id" -> longNumber,
       "severity_id" -> longNumber,
-      "type_id" -> longNumber,
-      "position" -> optional(longNumber),
-      "summary" -> nonEmptyText,
+      "type_id"     -> longNumber,
+      "position"    -> optional(longNumber),
+      "summary"     -> nonEmptyText,
       "description" -> optional(text)
     )(models.InitialTicket.apply)(models.InitialTicket.unapply)
   )
 
+  val ticketForm = Form(
+    mapping(
+      "id"            -> ignored(NotAssigned:Pk[Long]),
+      "project_id"    -> longNumber,
+      "priority_id"   -> longNumber,
+      "resolution_id" -> optional(longNumber),
+      "severity_id"   -> longNumber,
+      "status_id"     -> longNumber,
+      "type_id"       -> longNumber,
+      "position"      -> optional(longNumber),
+      "summary"       -> nonEmptyText,
+      "description"   -> optional(text)
+    )(models.Ticket.apply)(models.Ticket.unapply)
+  )
+
   def add = Action { implicit request =>
 
+    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-    ticketForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.ticket.create(errors, ttypes, prios, sevs)),
+    initialTicketForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.ticket.create(errors, projs, ttypes, prios, sevs)),
       {
         case ticket: models.InitialTicket =>
-        
-        val realTick = models.Ticket(
-          id = NotAssigned, priorityId = ticket.priorityId, resolutionId = None,
-          statusId = 1.toLong, // XXX This shouldn't be hardcoded
-          severityId = ticket.severityId, typeId = ticket.typeId,
-          position = ticket.position, summary = ticket.summary,
-          description = ticket.description
-        )
-        
-        TicketModel.create(realTick)
-        Redirect("/ticket") // XXX
+          TicketModel.create(ticket)
+          Redirect("/ticket") // XXX
       }
     )
   }
   
   def create = Action { implicit request =>
 
+    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-    Ok(views.html.ticket.create(ticketForm, ttypes, prios, sevs)(request))
+    Ok(views.html.ticket.create(initialTicketForm, projs, ttypes, prios, sevs)(request))
   }
 
   def index(page: Int, count: Int) = Action { implicit request =>

@@ -1,6 +1,6 @@
 @(page: chc.Page[models.Ticket])(implicit request: Request[AnyContent])
 @import util._
-@main("ticket.list") {
+@main(Messages("ticket.list")) {
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.routes.Ticket.create" class="btn"><i class="icon-plus"></i> @Messages("ticket.add")</a>
 </div>
@@ -8,26 +8,17 @@
 @Option(page.items).filterNot(_.isEmpty).map { tickets =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("ticket.name")</th>
+  <th>@Messages("ticket.summary")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
   @tickets.map { ticket =>
   <tr>
-   <td><a href="@controllers.routes.Ticket.item(ticket.id.get)">@ticket.id</a></td>
-   <td>
+   <td><a href="@controllers.routes.Ticket.item(ticket.id.get)">@ticket.summary</a></td>
+   <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
       <a class="btn btn-mini" href="@routes.Ticket.edit(ticket.id.get)">@Messages("general.edit")</a>
-     </div>
-     <div class="btn-group">
-       <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>
-       <button class="btn btn-danger btn-mini dropdown-toggle" data-toggle="dropdown">
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-        <li>@Messages("general.delete")</li>
-       </ul>
      </div>
     </div>
    </td>

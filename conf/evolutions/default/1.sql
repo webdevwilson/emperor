@@ -3,6 +3,7 @@
 CREATE TABLE projects (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
+    pkey VARCHAR(16) NOT NULL UNIQUE,
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
@@ -90,14 +91,20 @@ INSERT INTO ticket_priorities (name, position) VALUES ("TICK_PRIO_LOW", 33);
 
 CREATE TABLE tickets (
     id INT UNSIGNED AUTO_INCREMENT,
+    project_id INT UNSIGNED NOT NULL,
+    ticket_priority_id INT UNSIGNED NOT NULL,
     ticket_resolution_id INT UNSIGNED,
+    ticket_severity_id INT UNSIGNED NOT NULL,
     ticket_status_id INT UNSIGNED NOT NULL,
     ticket_type_id INT UNSIGNED NOT NULL,
     position INT,
     summary VARCHAR(255) NOT NULL,
     description TEXT,
     PRIMARY KEY(id),
+    FOREIGN KEY (project_id) REFERENCES projects(id),
+    FOREIGN KEY (ticket_priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (ticket_resolution_id) REFERENCES ticket_resolutions(id),
+    FOREIGN KEY (ticket_severity_id) REFERENCES ticket_severities(id),
     FOREIGN KEY (ticket_status_id) REFERENCES ticket_statuses(id),
     FOREIGN KEY (ticket_type_id) REFERENCES ticket_types(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
