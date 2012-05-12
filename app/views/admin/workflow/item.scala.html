@@ -1,0 +1,12 @@
+@(workflow: models.Workflow)(implicit request: Request[AnyContent])
+@main(Messages("admin.workflow.with.id", workflow.name)) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.Group.index(page = 0, count = 10)">@Messages("admin.workflow.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li class="active">@workflow.name</li>
+</ul>
+}

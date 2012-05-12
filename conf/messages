@@ -1,3 +1,5 @@
+breadcrumb.divider=/
+
 admin.title=Administration
 
 admin.people=People
@@ -7,6 +9,8 @@ admin.group.edit=Edit Group
 admin.group.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
+
+admin.projects=Projects
 
 admin.role.add=Add Role
 
@@ -41,6 +45,8 @@ admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
 admin.user.with.id=User {0}
+
+admin.workflows=Workflows
 
 form.cancel=Cancel
 form.submit=Submit

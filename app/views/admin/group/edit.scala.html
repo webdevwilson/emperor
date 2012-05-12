@@ -1,4 +1,4 @@
-@(id: Long, groupForm: Form[(Group)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(Group)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -6,17 +6,17 @@
 @main(Messages("admin.group.edit")) {
 <ul class="breadcrumb">
  <li>
-  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.group.list")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.group.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("admin.group.with.id", "XXX")</li>
 </ul>
 <h1>@Messages("admin.group.edit")</h1>
 @helper.form(action = controllers.admin.routes.Group.update(id)) {
  <fieldset>
-  @helper.inputText(groupForm("name"), '_label -> Messages("group.name"))
+  @helper.inputText(objForm("name"), '_label -> Messages("group.name"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.Group.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>

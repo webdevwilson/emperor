@@ -1,20 +1,20 @@
-@(page: chc.Page[models.Group])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.Workflow])(implicit request: Request[AnyContent])
 @import util._
-@main(Messages("admin.group.list")) {
+@main(Messages("admin.workflow.list")) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages("admin.group.list")</li>
+ <li class="active">@Messages("admin.workflow.list")</li>
 </ul>
 <div class="btn-group btn-group-above-table pull-right">
- <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.group.add")</a>
+ <a href="@controllers.admin.routes.Group.create" class="btn"><i class="icon-plus"></i> @Messages("admin.workflow.add")</a>
 </div>
-<h1>@Messages("admin.group.list")</h1>
+<h1>@Messages("admin.workflow.list")</h1>
 @Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
-  <th>@Messages("group.name")</th>
+  <th>@Messages("workflow.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>

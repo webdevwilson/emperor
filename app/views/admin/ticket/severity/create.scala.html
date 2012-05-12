@@ -6,10 +6,10 @@
 @main("admin.ticket_severity.add") {
 <ul class="breadcrumb">
  <li>
-  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">/</span>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.TicketSeverity.index(page = 0, count = 10)">@Messages("admin.ticket_severity.list")</a> <span class="divider">/</span>
+  <a href="@controllers.admin.routes.TicketSeverity.index(page = 0, count = 10)">@Messages("admin.ticket_severity.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("admin.ticket_severity.add")</li>
 </ul>

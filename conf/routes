@@ -60,6 +60,13 @@ PUT     /admin/user/:id/group/:gid      controllers.admin.User.addToGroup(id: Lo
 DELETE  /admin/user/:id/group/:gid      controllers.admin.User.removeFromGroup(id: Long, gid: Long)
 POST    /admin/user                     controllers.admin.User.add
 
+GET     /admin/workflow                 controllers.admin.Workflow.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/workflow/create          controllers.admin.Workflow.create
+GET     /admin/workflow/:id             controllers.admin.Workflow.item(id: Long)
+POST    /admin/workflow/:id             controllers.admin.Workflow.update(id: Long)
+GET     /admin/workflow/edit/:id        controllers.admin.Workflow.edit(id: Long)
+POST    /admin/workflow                 controllers.admin.Workflow.add
+
 GET     /project                        controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
 GET     /project/create                 controllers.Project.create
 GET     /project/:id                    controllers.Project.item(id: Long)

@@ -1,0 +1,26 @@
+@(objForm: Form[(Workflow)])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@main(Messages("admin.workflow.add")) {
+<ul class="breadcrumb">
+ <li>
+  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li>
+  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.workflow.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+ </li>
+ <li class="active">@Messages("admin.workflow.add")</li>
+</ul>
+<h1>@Messages("admin.workflow.add")</h1>
+@helper.form(action = controllers.admin.routes.Workflow.add) {
+ <fieldset>
+  @helper.inputText(objForm("name"), '_label -> Messages("workflow.name"))
+  <div class="form-actions">
+   <a href="@routes.Admin.index" class="btn">@Messages("form.cancel")</a>
+   <button type="submit" class="btn btn-primary">@Messages("form.submit")</button>
+  </div>
+ </fieldset>
+}
+}
