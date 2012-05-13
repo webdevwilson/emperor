@@ -83,9 +83,13 @@ object Ticket extends Controller {
   def edit(ticketId: Long) = Action { implicit request =>
 
     val ticket = TicketModel.findById(ticketId)
+    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
     ticket match {
-      case Some(value) => Ok(views.html.ticket.edit(ticketId, ticketForm.fill(value))(request))
+      case Some(value) => Ok(views.html.ticket.edit(ticketId, ticketForm.fill(value), projs, ttypes, prios, sevs)(request))
       case None => NotFound
     }
   }
@@ -108,8 +112,14 @@ object Ticket extends Controller {
   def update(ticketId: Long) = Action { implicit request =>
 
     ticketForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.ticket.edit(ticketId, errors)),
-      {
+      errors => {
+        val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+        BadRequest(views.html.ticket.edit(ticketId, errors, projs, ttypes, prios, sevs))
+      }, {
         case ticket: models.Ticket =>
         TicketModel.update(ticketId, ticket)
         Redirect("/admin") // XXX

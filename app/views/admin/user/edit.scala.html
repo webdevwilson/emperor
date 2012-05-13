@@ -1,4 +1,4 @@
-@(id: Long, userForm: Form[(User)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(User)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -16,10 +16,10 @@
 <h1>@Messages("admin.user.edit")</h1>
 @helper.form(action = controllers.admin.routes.User.update(id)) {
  <fieldset>
-  @helper.inputText(userForm("username"), '_label -> Messages("Username"))
-  @helper.inputPassword(userForm("password"), '_label -> Messages("Password"))
-  @helper.inputText(userForm("realName"), '_label -> Messages("Real Name"))
-  @helper.input(userForm("email"), '_label -> Messages("Email")) { (id, name, value, args) =>
+  @helper.inputText(objForm("username"), '_label -> Messages("Username"))
+  @helper.inputPassword(objForm("password"), '_label -> Messages("Password"))
+  @helper.inputText(objForm("realName"), '_label -> Messages("Real Name"))
+  @helper.input(objForm("email"), '_label -> Messages("Email")) { (id, name, value, args) =>
       <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
   }
   <div class="form-actions">

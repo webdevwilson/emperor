@@ -6,22 +6,24 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
-case class Project(id: Pk[Long] = NotAssigned, name: String, key: String)
+case class Project(id: Pk[Long] = NotAssigned, workflowId: Long, name: String, key: String)
 
 object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects")
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
+  val getByWorkflow = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id}")
   val listQuery = SQL("SELECT * FROM projects LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects")
-  val insertQuery = SQL("INSERT INTO projects (name, pkey) VALUES ({name}, {pkey})")
-  val updateQuery = SQL("UPDATE projects SET name={name} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id) VALUES ({name}, {pkey}, {workflow_id})")
+  val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
 
   val project = {
     get[Pk[Long]]("id") ~
+    get[Long]("workflow_id") ~
     get[String]("name") ~
     get[String]("pkey") map {
-      case id~name~pkey => Project(id, name, pkey)
+      case id~workflowId~name~pkey => Project(id, workflowId, name, pkey)
     }
   }
 
@@ -29,8 +31,9 @@ object ProjectModel {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
-        'name   -> project.name,
-        'pkey   -> project.key
+        'name         -> project.name,
+        'pkey         -> project.key,
+        'workflow_id  -> project.workflowId
       ).executeUpdate
     }
     
@@ -55,6 +58,13 @@ object ProjectModel {
     }
   }
 
+  def findWithWorkflow(id: Long) : Seq[Project] = {
+    
+    DB.withConnection { implicit conn => 
+      getByWorkflow.on('workflow_id -> id).as(project *)
+    }
+  }
+
   def list(page: Int = 0, count: Int = 10) : Page[Project] = {
 
       val offset = count * page
@@ -76,7 +86,8 @@ object ProjectModel {
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
-        'name       -> project.name
+        'name       -> project.name,
+        'workflow_id-> project.workflowId
       ).executeUpdate
     }
   }

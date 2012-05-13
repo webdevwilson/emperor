@@ -1,4 +1,4 @@
-@(userForm: Form[(TicketType)])(implicit request: Request[AnyContent])
+@(objForm: Form[(TicketType)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -16,7 +16,7 @@
 <h1>@Messages("admin.ticket_type.add")</h1>
 @helper.form(action = controllers.admin.routes.TicketType.add) {
  <fieldset>
-  @helper.inputText(userForm("name"), '_label -> Messages("ticket_type.name"))
+  @helper.inputText(objForm("name"), '_label -> Messages("ticket_type.name"))
   <div class="form-actions">
    <a href="@routes.Admin.index" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>

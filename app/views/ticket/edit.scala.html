@@ -1,4 +1,4 @@
-@(id: Long, ticketForm: Form[(Ticket)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(Ticket)], projs: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -7,7 +7,12 @@
 <h1>@Messages("ticket.edit")</h1>
 @helper.form(action = routes.Ticket.update(id)) {
  <fieldset>
-  @helper.inputText(ticketForm("name"), '_label -> Messages("ticket.name"))
+  @helper.inputText(field = objForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
+  @helper.textarea(field = objForm("description"), args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
+  @helper.select(field = objForm("project_id"), options = projs, args = 'disabled -> true, '_label -> Messages("ticket.project"))
+  @helper.select(field = objForm("type_id"), options = ttypes, args = 'class -> "foo", '_label -> Messages("ticket.type"))
+  @helper.select(field = objForm("priority_id"), options = priorities, args = 'class -> "foo", '_label -> Messages("ticket.priority"))
+  @helper.select(field = objForm("severity_id"), options = severities, args = 'class -> "foo", '_label -> Messages("ticket.severity"))
   <div class="form-actions">
    <a href="@controllers.routes.Ticket.index(page = 0, count = 10)" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>

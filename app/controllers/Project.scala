@@ -4,15 +4,17 @@ import anorm._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
-import models.ProjectModel
+import models.{ProjectModel,WorkflowModel}
 
 object Project extends Controller {
 
   val projectForm = Form(
     mapping(
       "id"  -> ignored(NotAssigned:Pk[Long]),
+      "workflow_id" -> longNumber,
       "name"-> nonEmptyText,
       "key" -> nonEmptyText // XXX needs better checking, length, etc
     )(models.Project.apply)(models.Project.unapply)
@@ -21,8 +23,10 @@ object Project extends Controller {
   def add = Action { implicit request =>
 
     projectForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.project.create(errors)),
-      {
+      errors => {
+        val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        BadRequest(views.html.project.create(errors, workflows))
+      }, {
         case project: models.Project =>
         ProjectModel.create(project)
         Redirect("/project") // XXX
@@ -32,7 +36,9 @@ object Project extends Controller {
   
   def create = Action { implicit request =>
 
-    Ok(views.html.project.create(projectForm)(request))
+    val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+    Ok(views.html.project.create(projectForm, workflows)(request))
   }
 
   def index(page: Int, count: Int) = Action { implicit request =>
@@ -45,9 +51,10 @@ object Project extends Controller {
   def edit(projectId: Long) = Action { implicit request =>
 
     val project = ProjectModel.findById(projectId)
+    val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
     project match {
-      case Some(value) => Ok(views.html.project.edit(projectId, projectForm.fill(value))(request))
+      case Some(value) => Ok(views.html.project.edit(projectId, projectForm.fill(value), workflows)(request))
       case None => NotFound
     }
   }
@@ -66,8 +73,10 @@ object Project extends Controller {
   def update(projectId: Long) = Action { implicit request =>
 
     projectForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.project.edit(projectId, errors)),
-      {
+      errors => {
+        val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        BadRequest(views.html.project.edit(projectId, errors, workflows))
+      }, {
         case project: models.Project =>
         ProjectModel.update(projectId, project)
         Redirect("/admin") // XXX

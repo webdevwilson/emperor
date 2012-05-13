@@ -1,4 +1,4 @@
-@(userForm: Form[(Project)])(implicit request: Request[AnyContent])
+@(objForm: Form[(Project)], workflows: List[(String,String)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -7,8 +7,9 @@
 <h1>@Messages("project.add")</h1>
 @helper.form(action = controllers.routes.Project.add) {
  <fieldset>
-  @helper.inputText(userForm("name"), '_label -> Messages("project.name"))
-  @helper.inputText(userForm("key"), '_label -> Messages("project.key"))
+  @helper.inputText(objForm("name"), '_label -> Messages("project.name"))
+  @helper.inputText(objForm("key"), '_label -> Messages("project.key"))
+  @helper.select(field = objForm("workflow_id"), options = workflows, args = 'class -> "foo", '_label -> Messages("project.workflow"))
   <div class="form-actions">
    <a href="@controllers.routes.Project.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
