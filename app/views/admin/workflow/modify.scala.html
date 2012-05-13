@@ -24,7 +24,7 @@
   <h2>@Messages("admin.workflow.modify.final")</h2>
   <ul class="bordered unstyled well" id="list2">
   @statuses.map { item =>
-   <li class="draggable"><input type="hidden" name="@item.statusId" value="@item.statusId">@Messages(item.name)</li>
+   <li class="draggable"><input type="hidden" name="@item.statusId" value="@item.statusId"><i class="icon-resize-vertical"></i> @Messages(item.name)</li>
   }
   </ul>
  </div>
@@ -36,25 +36,25 @@
 }
 <script type="text/javascript">
 YUI().use('dd-constrain', 'sortable', function(Y) {
-    var list1 = new Y.Sortable({
-        container: '#list1',
-        nodes: 'li',
-        opacity: '.1'
-    });
+  var list1 = new Y.Sortable({
+    container: '#list1',
+    nodes: 'li',
+    opacity: '.2'
+  });
 
-    var list2 = new Y.Sortable({
-        container: '#list2',
-        nodes: 'li',
-        opacity: '.1'
-    });
+  var list2 = new Y.Sortable({
+    container: '#list2',
+    nodes: 'li',
+    opacity: '.2'
+  });
 
-    list1.delegate.dd.plug(Y.Plugin.DDConstrained, {
-        constrain2node: '#statuses'
-    });
-    list2.delegate.dd.plug(Y.Plugin.DDConstrained, {
-        constrain2node: '#statuses'
-    });
-    list1.join(list2);
+  list1.delegate.dd.plug(Y.Plugin.DDConstrained, {
+    constrain2node: '#statuses'
+  });
+  list2.delegate.dd.plug(Y.Plugin.DDConstrained, {
+    constrain2node: '#statuses'
+  });
+  list1.join(list2);
 });
 </script>
 }

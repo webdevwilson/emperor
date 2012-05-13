@@ -9,9 +9,11 @@
  </li>
  <li class="active">@Messages(workflow.name)</li>
 </ul>
-<ul>
+<div class="well">
+ <ul class="bordered unstyled">
  @statuses.map { item =>
-   <li>@Messages(item.name)</li>
+  <li>@Messages(item.name)</li>
  }
-</ul>
+ </ul>
+</div>
 }
