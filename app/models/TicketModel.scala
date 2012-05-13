@@ -81,16 +81,31 @@ object TicketModel {
   def create(ticket: InitialTicket): Option[Ticket] = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
-        'project_id   -> ticket.projectId,
-        'priority_id  -> ticket.priorityId,
-        'severity_id  -> ticket.severityId,
-        'status_id    -> 1, // XXX should not be hardcoded
-        'type_id      -> ticket.typeId,
-        'description  -> ticket.description,
-        'position     -> ticket.position,
-        'summary      -> ticket.summary
-      ).execute
+
+      val project = ProjectModel.findById(ticket.projectId)
+      
+      // Fetch the starting status we should use for the project's workflow.
+      val startingStatus = project match {
+        case Some(x) => WorkflowModel.getStartingStatus(x.workflowId)
+        case None => return None
+      }
+      // XXX Should log something up there, really
+
+      startingStatus match {
+        case Some(status) => {
+          insertQuery.on(
+            'project_id   -> ticket.projectId,
+            'priority_id  -> ticket.priorityId,
+            'severity_id  -> ticket.severityId,
+            'status_id    -> status.id,
+            'type_id      -> ticket.typeId,
+            'description  -> ticket.description,
+            'position     -> ticket.position,
+            'summary      -> ticket.summary
+          ).execute
+        }
+        case None => return None
+      }
 
       val id = lastInsertQuery.as(scalar[Long].single)
       

@@ -16,11 +16,13 @@ object WorkflowModel {
   val allQuery = SQL("SELECT * FROM workflows")
   val allStatuses = SQL("SELECT ws.id, ts.id, ts.name, ws.position FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
+  val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_status WHERE id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
   val addQuery = SQL("INSERT INTO workflows (name, description) VALUES ({name}, {description})")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
+  val getStartingStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON ts.id = ws.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
 
   val workflow = {
     get[Pk[Long]]("id") ~
@@ -64,10 +66,31 @@ object WorkflowModel {
     }
   }
 
+  def findWorkflowStatusById(id: Long): Option[WorkflowStatus] = {
+    
+    DB.withConnection { implicit conn =>
+      getWorkflowStatusByIdQuery.on('id -> id).as(WorkflowModel.workflowStatus.singleOpt)
+    }
+  }
+
   def findStatuses(id: Long) : Seq[WorkflowStatus] = {
     
     DB.withConnection { implicit conn =>
       allStatuses.on('id -> id).as(workflowStatus *)
+    }
+  }
+
+  def getPreviousStatus(ticket: models.Ticket) = {
+    
+    // DB.withConnection { implicit conn =>
+    // 
+    // }
+  }
+
+  def getStartingStatus(workflowId: Long) : Option[WorkflowStatus] = {
+    
+    DB.withConnection { implicit conn =>
+      getStartingStatus.on('id -> workflowId).as(WorkflowModel.workflowStatus.singleOpt)
     }
   }
 

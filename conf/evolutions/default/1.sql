@@ -155,7 +155,7 @@ CREATE TABLE tickets (
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
     FOREIGN KEY (severity_id) REFERENCES ticket_severities(id),
-    FOREIGN KEY (status_id) REFERENCES ticket_statuses(id),
+    FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
     FOREIGN KEY (type_id) REFERENCES ticket_types(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
