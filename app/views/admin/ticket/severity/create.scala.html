@@ -18,7 +18,7 @@
  <fieldset>
   @helper.inputText(userForm("name"), '_label -> Messages("ticket_severity.name"))
   <div class="form-actions">
-   <a href="@routes.Admin.index" class="btn">@Messages("form.cancel")</a>
+   <a href="@routes.Admin.index" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
   </div>
  </fieldset>
