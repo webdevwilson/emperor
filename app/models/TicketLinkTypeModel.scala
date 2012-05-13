@@ -42,7 +42,7 @@ object TicketLinkTypeModel {
   def findById(id: Long) : Option[TicketLinkType] = {
       
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(TicketLinkTypeModel.ticket_link_type.singleOpt)
+      getByIdQuery.on('id -> id).as(ticket_link_type.singleOpt)
     }
   }
 

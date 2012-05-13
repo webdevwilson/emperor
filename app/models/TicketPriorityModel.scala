@@ -44,7 +44,7 @@ object TicketPriorityModel {
   def findById(id: Long) : Option[TicketPriority] = {
       
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(TicketPriorityModel.ticket_priority.singleOpt)
+      getByIdQuery.on('id -> id).as(ticket_priority.singleOpt)
     }
   }
 

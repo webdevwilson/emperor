@@ -9,20 +9,22 @@ import play.Logger
 
 case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String])
 
-case class WorkflowStatus(id: Pk[Long], statusId: Long, name: String, position: Int)
+case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: String, position: Int)
 
 object WorkflowModel {
 
   val allQuery = SQL("SELECT * FROM workflows")
   val allStatuses = SQL("SELECT ws.id, ts.id, ts.name, ws.position FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
-  val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_status WHERE id={id}")
+  val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE ws.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
   val addQuery = SQL("INSERT INTO workflows (name, description) VALUES ({name}, {description})")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON ts.id = ws.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
+  val getPrevStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE position < {position} AND workflow_id={workflow_id} ORDER BY position DESC LIMIT 1")
+  val getNextStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE position > {position} AND workflow_id={workflow_id} ORDER BY position ASC LIMIT 1")
 
   val workflow = {
     get[Pk[Long]]("id") ~
@@ -34,10 +36,11 @@ object WorkflowModel {
   
   val workflowStatus = {
     get[Pk[Long]]("workflow_statuses.id") ~
+    get[Long]("workflow_statuses.workflow_id") ~
     get[Long]("ticket_statuses.id") ~
     get[String]("ticket_statuses.name") ~
     get[Int]("workflow_statuses.position") map {
-      case id~statusId~name~position => WorkflowStatus(id, statusId, name, position)
+      case id~workflowId~statusId~name~position => WorkflowStatus(id, workflowId, statusId, name, position)
     }
   }
   
@@ -62,14 +65,14 @@ object WorkflowModel {
   def findById(id: Long) : Option[Workflow] = {
       
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(WorkflowModel.workflow.singleOpt)
+      getByIdQuery.on('id -> id).as(workflow.singleOpt)
     }
   }
 
-  def findWorkflowStatusById(id: Long): Option[WorkflowStatus] = {
+  def findStatusById(id: Long): Option[WorkflowStatus] = {
     
     DB.withConnection { implicit conn =>
-      getWorkflowStatusByIdQuery.on('id -> id).as(WorkflowModel.workflowStatus.singleOpt)
+      getWorkflowStatusByIdQuery.on('id -> id).as(workflowStatus.singleOpt)
     }
   }
 
@@ -80,17 +83,46 @@ object WorkflowModel {
     }
   }
 
-  def getPreviousStatus(ticket: models.Ticket) = {
+  def getPreviousStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
     
-    // DB.withConnection { implicit conn =>
-    // 
-    // }
+    val ws = this.findStatusById(workflowStatusId)
+    
+    ws match {
+      case Some(status) => {
+        DB.withConnection { implicit conn =>
+
+          getPrevStatus.on(
+            'position   -> status.position,
+            'workflow_id-> status.workflowId
+          ).as(workflowStatus.singleOpt)
+        }
+      }
+      case None => None
+    }
+  }
+
+  def getNextStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
+    
+    val ws = this.findStatusById(workflowStatusId)
+    
+    ws match {
+      case Some(status) => {
+        DB.withConnection { implicit conn =>
+
+          getNextStatus.on(
+            'position   -> status.position,
+            'workflow_id-> status.workflowId
+          ).as(workflowStatus.singleOpt)
+        }
+      }
+      case None => None
+    }
   }
 
   def getStartingStatus(workflowId: Long) : Option[WorkflowStatus] = {
     
     DB.withConnection { implicit conn =>
-      getStartingStatus.on('id -> workflowId).as(WorkflowModel.workflowStatus.singleOpt)
+      getStartingStatus.on('id -> workflowId).as(workflowStatus.singleOpt)
     }
   }
 

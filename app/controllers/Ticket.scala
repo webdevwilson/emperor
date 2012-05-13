@@ -8,10 +8,7 @@ import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
 import models.ProjectModel
-import models.TicketModel
-import models.TicketPriorityModel
-import models.TicketSeverityModel
-import models.TicketTypeModel
+import models._
 import org.clapper.markwrap._
 
 object Ticket extends Controller {
@@ -100,8 +97,10 @@ object Ticket extends Controller {
 
     ticket match {
       case Some(value) => {
-        
-        Ok(views.html.ticket.item(value, mdParser)(request))
+
+        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)        
+        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)        
+        Ok(views.html.ticket.item(value, mdParser, prevStatus, nextStatus)(request))
       }
       case None => NotFound
     }

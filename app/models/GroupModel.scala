@@ -72,7 +72,7 @@ object GroupModel {
   def findById(id: Long) : Option[Group] = {
       
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(GroupModel.group.singleOpt)
+      getByIdQuery.on('id -> id).as(group.singleOpt)
     }
   }
 

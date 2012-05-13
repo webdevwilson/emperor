@@ -94,13 +94,17 @@ role.description=Description
 role.name=Name
 
 ticket.add=Add Ticket
+ticket.advance=Advance to {0}
+ticket.advance.end=At End
 ticket.description=Description
 ticket.edit=Edit Ticket
 ticket.list=Tickets
+ticket.priority=Priority
 ticket.project=Project
+ticket.revert=Revert to {0}
+ticket.revert.start=At Start
 ticket.summary=Summary
 ticket.type=Type
-ticket.priority=Priority
 ticket.severity=Severity
 ticket.status=Status
 

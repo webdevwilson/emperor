@@ -47,7 +47,7 @@ object ProjectModel {
   def findById(id: Long) : Option[Project] = {
       
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(ProjectModel.project.singleOpt)
+      getByIdQuery.on('id -> id).as(project.singleOpt)
     }
   }
 

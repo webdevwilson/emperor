@@ -1,8 +1,24 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser)(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus])(implicit request: Request[AnyContent])
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <div class="btn-group pull-right">
+ @prevStatus match {
+   case Some(status) => {
+ <a href="#" class="btn btn-warning"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+   }
+   case None => {
+ <a href="#" class="btn disabled"><i class="icon-arrow-left"></i> @Messages("ticket.revert.start")</a>
+   }
+ }
  <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
+ @nextStatus match {
+   case Some(status) => {
+ <a href="#" class="btn btn-primary">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+   }
+   case None => {
+ <a href="#" class="btn">@Messages("ticket.advance.end") <i class="icon-arrow-right"></i></a>
+   }
+ }
 </div>
 <div style="clear: both" class="row well">
  <div class="span6">
