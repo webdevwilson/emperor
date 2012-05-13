@@ -18,10 +18,19 @@ case class Ticket(
   summary: String, description: Option[String]
 )
 
+case class FullTicket(
+  id: Pk[Long] = NotAssigned, projectId: Long, projectName: String,
+  priorityId: Long, priorityName: String, resolutionId: Option[Long],
+  proposedResolutionId: Option[Long], severityId: Long, severityName: String,
+  statusId: Long, statusName: String, typeId: Long, typeName: String, position: Option[Long],
+  summary: String, description: Option[String]
+)
+
 object TicketModel {
 
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
+  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN ticket_statuses st ON st.id = t.status_id JOIN ticket_types tt ON tt.id = t.type_id WHERE t.id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
@@ -42,6 +51,29 @@ object TicketModel {
     get[Option[String]]("description") map {
       case id~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
         id, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description
+      )
+    }
+  }
+
+  val fullTicket = {
+    get[Pk[Long]]("tickets.id") ~
+    get[Long]("tickets.project_id") ~
+    get[String]("projects.name") ~
+    get[Long]("tickets.priority_id") ~
+    get[String]("ticket_priorities.name") ~
+    get[Option[Long]]("tickets.resolution_id") ~
+    get[Option[Long]]("tickets.proposed_resolution_id") ~
+    get[Long]("tickets.severity_id") ~
+    get[String]("ticket_severities.name") ~
+    get[Long]("tickets.status_id") ~
+    get[String]("ticket_statuses.name") ~
+    get[Long]("tickets.type_id") ~
+    get[String]("ticket_types.name") ~
+    get[Option[Long]]("tickets.position") ~
+    get[String]("tickets.summary") ~
+    get[Option[String]]("tickets.description") map {
+      case id~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~statusId~statusName~typeId~typeName~position~summary~description => FullTicket(
+        id, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, statusId, statusName, typeId, typeName, position, summary, description
       )
     }
   }
@@ -77,6 +109,13 @@ object TicketModel {
     }
   }
 
+  def findFullById(id: Long) : Option[FullTicket] = {
+      
+    DB.withConnection { implicit conn =>
+      getFullByIdQuery.on('id -> id).as(TicketModel.fullTicket.singleOpt)
+    }
+  }
+  
   def getAll: List[Ticket] = {
       
     DB.withConnection { implicit conn =>

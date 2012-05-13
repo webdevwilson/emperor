@@ -96,13 +96,12 @@ object Ticket extends Controller {
 
   def item(ticketId: Long) = Action { implicit request =>
     
-    val ticket = TicketModel.findById(ticketId)
+    val ticket = TicketModel.findFullById(ticketId)
 
     ticket match {
       case Some(value) => {
-        val ttype = TicketTypeModel.findById(value.typeId)
         
-        Ok(views.html.ticket.item(value, mdParser, ttype.get)(request))
+        Ok(views.html.ticket.item(value, mdParser)(request))
       }
       case None => NotFound
     }

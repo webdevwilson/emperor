@@ -102,6 +102,7 @@ ticket.summary=Summary
 ticket.type=Type
 ticket.priority=Priority
 ticket.severity=Severity
+ticket.status=Status
 
 ticket_link_type.name=Name
 
@@ -142,6 +143,10 @@ TICK_STATUS_CLOSED=Closed
 TICK_TYPE_BUG=Bug
 TICK_TYPE_IMPROVEMENT=Improvement
 TICK_TYPE_MILESTONE=Milestone
+
+TICK_PRIO_LOW=Low
+TICK_PRIO_NORMAL=Normal
+TICK_PRIO_HIGH=High
 
 WORK_EMP_DEFAULT=Emperor Default
 

@@ -1,10 +1,26 @@
-@(ticket: models.Ticket, mdParser: org.clapper.markwrap.MarkWrapParser, ttype: models.TicketType)(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser)(implicit request: Request[AnyContent])
 @main(Messages("ticket.with.id", ticket.id)) {
-<h2 class="pull-left"><span class="label">@Messages(ttype.name)</span> @ticket.summary</h2>
+<h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <div class="btn-group pull-right">
  <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
 </div>
-<div style="clear: both" class="well">
-@{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+<div style="clear: both" class="row well">
+ <div class="span6">
+  <dl class="dl-horizontal">
+   <dt>@Messages("ticket.project")</dt>
+   <dd>@ticket.projectName</dd>
+   <dt>@Messages("ticket.priority")</dt>
+   <dd>@Messages(ticket.priorityName)</dd>
+  </dl>
+ </div>
+ <div class="span6">
+  <dl class="dl-horizontal">
+   <dt>@Messages("ticket.severity")</dt>
+   <dd>@Messages(ticket.severityName)</dd>
+   <dt>@Messages("ticket.status")</dt>
+   <dd>@Messages(ticket.statusName)</dd>
+  </dl>
+ </div>
 </div>
+@{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 }
