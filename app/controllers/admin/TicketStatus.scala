@@ -69,7 +69,7 @@ object TicketStatus extends Controller {
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.edit(statusId, errors)),
       {
-        case status: models.TicketSeverity =>
+        case status: models.TicketStatus =>
         TicketStatusModel.update(statusId, status)
         Redirect("/admin/ticket/status") // XXX
       }
