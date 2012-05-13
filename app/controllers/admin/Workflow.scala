@@ -8,6 +8,7 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import models.TicketStatusModel
 import models.WorkflowModel
 
 object Workflow extends Controller {
@@ -63,20 +64,18 @@ object Workflow extends Controller {
       case Some(value) => Ok(views.html.admin.workflow.item(value, statuses)(request))
       case None => NotFound
     }
-    
   }
-  
   
   def modify(workflowId: Long) = Action { implicit request =>
     
     val workflow = WorkflowModel.findById(workflowId)
     val statuses = WorkflowModel.findStatuses(workflowId)
+    val unused = TicketStatusModel.getAll filterNot { status => statuses exists { ws => ws.statusId == status.id.get } }
 
     workflow match {
-      case Some(value) => Ok(views.html.admin.workflow.modify(workflowId, value, statuses)(request))
+      case Some(value) => Ok(views.html.admin.workflow.modify(workflowId, value, statuses, unused)(request))
       case None => NotFound
     }
-    
   }
   
   def update(workflowId: Long) = Action { implicit request =>

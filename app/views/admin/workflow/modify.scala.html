@@ -1,4 +1,4 @@
-@(id: Long, workflow: models.Workflow, statuses: Seq[models.WorkflowStatus])(implicit request: Request[AnyContent])
+@(id: Long, workflow: models.Workflow, statuses: Seq[models.WorkflowStatus], unused: Seq[models.TicketStatus])(implicit request: Request[AnyContent])
 @main(Messages("admin.workflow.with.id", workflow.name)) {
 <ul class="breadcrumb">
  <li>
@@ -9,21 +9,22 @@
  </li>
  <li class="active">@Messages(workflow.name)</li>
 </ul>
+<p>@Messages("admin.workflow.modify.help")</p>
 @helper.form(action = controllers.admin.routes.Workflow.save(id)) {
 <div class="row" id="statuses">
- <div class="span6">
+ <div class="span3">
   <h2>@Messages("admin.workflow.modify.available")</h2>
-  <ul class="bordered unstyled" id="list1">
-  @statuses.map { item =>
-   <li class="draggable">@Messages(item.name)</li>
+  <ul class="bordered unstyled well" id="list1">
+  @unused.map { item =>
+   <li class="draggable"><input type="hidden" name="@item.id" value="@item.id">@Messages(item.name)</li>
   }
   </ul>
  </div>
- <div class="span6">
+ <div class="span9">
   <h2>@Messages("admin.workflow.modify.final")</h2>
-  <ul class="bordered unstyled" id="list2">
+  <ul class="bordered unstyled well" id="list2">
   @statuses.map { item =>
-   <li class="draggable">@Messages(item.name)</li>
+   <li class="draggable"><input type="hidden" name="@item.statusId" value="@item.statusId">@Messages(item.name)</li>
   }
   </ul>
  </div>
@@ -53,7 +54,7 @@ YUI().use('dd-constrain', 'sortable', function(Y) {
     list2.delegate.dd.plug(Y.Plugin.DDConstrained, {
         constrain2node: '#statuses'
     });
-    list1.join(list2, 'outer');
+    list1.join(list2);
 });
 </script>
 }

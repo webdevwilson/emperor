@@ -62,6 +62,7 @@ admin.workflow.menu.list=Workflows
 admin.workflow.modify=Modify Statuses
 admin.workflow.modify.available=Available Statuses
 admin.workflow.modify.final=Final Workflow
+admin.workflow.modify.help=You may drag items from the available list on the left to the final list on the right, remove items by dragging them from right to left or reorder them.
 
 form.cancel=Cancel
 form.submit=Submit
