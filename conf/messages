@@ -107,6 +107,7 @@ ticket.summary=Summary
 ticket.type=Type
 ticket.severity=Severity
 ticket.status=Status
+ticket.with.id=Ticket {0}
 
 ticket_link_type.name=Name
 

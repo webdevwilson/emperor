@@ -169,3 +169,13 @@ CREATE TABLE ticket_links (
     FOREIGN KEY(parent_ticket_id) REFERENCES tickets(id),
     FOREIGN KEY(child_ticket_id) REFERENCES tickets(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE ticket_comments (
+  id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  ticket_id INT UNSIGNED NOT NULL,
+  user_id INT UNSIGNED NOT NULL,
+  contents TEXT,
+  PRIMARY KEY(id),
+  FOREIGN KEY(ticket_id) REFERENCES tickets(id),
+  FOREIGN KEY(user_id) REFERENCES users(id)
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;

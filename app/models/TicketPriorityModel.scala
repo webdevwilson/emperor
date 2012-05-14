@@ -38,7 +38,7 @@ object TicketPriorityModel {
   }
   
   def delete(id: Long) {
-      
+      // XXX
   }
 
   def findById(id: Long) : Option[TicketPriority] = {
