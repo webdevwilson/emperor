@@ -14,7 +14,7 @@ case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: 
 object WorkflowModel {
 
   val allQuery = SQL("SELECT * FROM workflows")
-  val allStatuses = SQL("SELECT ws.id, ts.id, ts.name, ws.position FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
+  val allStatuses = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE ws.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
