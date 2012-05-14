@@ -11,6 +11,10 @@ case class InitialTicket(
   position: Option[Long], summary: String, description: Option[String]
 )
 
+case class Comment(
+  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long, content: String
+)
+
 case class Ticket(
   id: Pk[Long] = NotAssigned, projectId: Long, priorityId: Long,
   resolutionId: Option[Long], proposedResolutionId: Option[Long],
@@ -37,6 +41,7 @@ object TicketModel {
   val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
   val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
+  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -77,6 +82,15 @@ object TicketModel {
       case id~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description => FullTicket(
         id, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description
       )
+    }
+  }
+
+  val comment = {
+    get[Pk[Long]]("id") ~
+    get[Long]("user_id") ~
+    get[Long]("ticket_id") ~
+    get[String]("content") map {
+      case id~userId~ticketId~content => Comment(id, userId, ticketId, content)
     }
   }
 
