@@ -45,9 +45,10 @@
 </div>
 <script>
 // Create a new YUI instance and populate it with the required modules.
-YUI().use('event', 'panel', function (Y) {
+YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
 
   var panel = new Y.Panel({
+    buttons : [ { section : 'header', label : 'x', classNames : [ 'closer' ] } ],
     centered: true,
     headerContent: "@Messages("ticket.advance")",
     modal: true,
@@ -58,17 +59,20 @@ YUI().use('event', 'panel', function (Y) {
     width: 250,
     zIndex: 100
   });
+
   panel.addButton({
-    value  : "@Messages("ticket.advance")",
+    value  : "@Messages("general.cancel")",
     section: Y.WidgetStdMod.FOOTER,
+    classNames: [ "btn" ],
     action : function (e) {
       e.preventDefault();
     }
   });
 
   panel.addButton({
-    value  : "@Messages("general.cancel")",
+    value  : "@Messages("ticket.advance")",
     section: Y.WidgetStdMod.FOOTER,
+    classNames: [ "btn", "btn-primary" ],
     action : function (e) {
       e.preventDefault();
     }
