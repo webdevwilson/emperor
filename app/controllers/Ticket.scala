@@ -7,6 +7,7 @@ import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
+import play.api.libs.json.Json._
 import models.ProjectModel
 import models._
 import org.clapper.markwrap._
@@ -14,6 +15,11 @@ import org.clapper.markwrap._
 object Ticket extends Controller {
 
   val mdParser = MarkWrap.parserFor(MarkupType.Markdown)
+
+  val commentForm = Form(tuple(
+    "contents" -> nonEmptyText,
+    "stupid" -> optional(text)
+  ))
 
   val initialTicketForm = Form(
     mapping(
@@ -57,6 +63,14 @@ object Ticket extends Controller {
           TicketModel.create(ticket)
           Redirect("/ticket") // XXX
       }
+    )
+  }
+
+  def comment(ticketId: Long) = Action { implicit request =>
+
+    commentForm.bindFromRequest.fold(
+      errors => BadRequest("Missing parameter 'content'"),
+      values => Ok(toJson(Map("status" -> "OK")))
     )
   }
   

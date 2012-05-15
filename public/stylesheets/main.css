@@ -46,3 +46,39 @@ table tfoot .pagination {
     margin-bottom: 0;
     margin-top: 0;
 }
+.yui3-panel {
+    background-color: #fff;
+    border: 1px solid #585858;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    outline: none;
+}
+.yui3-panel-content .yui3-widget-hd {
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    padding: 15px;
+}
+.yui3-panel-content .yui3-widget-bd {
+    padding: 15px;
+}
+.yui3-panel-content .yui3-widget-ft {
+    background-color: #f5f5f5;
+    text-align: right;
+}
+.yui3-panel-content label {
+    margin-right: 30px;
+}
+.yui3-panel-content fieldset {
+    border: none;
+    padding: 0;
+}
+.yui3-panel-content input[type="text"] {
+    border: none;
+    border: 1px solid #ccc;
+    padding: 3px 7px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    font-size: 100%;
+    width: 200px;
+}

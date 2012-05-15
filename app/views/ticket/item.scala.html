@@ -4,7 +4,7 @@
 <div class="btn-group pull-right">
  @prevStatus match {
    case Some(status) => {
- <a href="#" class="btn btn-warning"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+ <a id="ticketRevert" href="#" class="btn btn-warning"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
    }
    case None => {
  <a href="#" class="btn disabled"><i class="icon-arrow-left"></i> @Messages("ticket.revert.start")</a>
@@ -13,7 +13,7 @@
  <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
  @nextStatus match {
    case Some(status) => {
- <a href="#" class="btn btn-primary">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+ <a id="ticketAdvance" href="#" class="btn btn-primary">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
    }
    case None => {
  <a href="#" class="btn">@Messages("ticket.advance.end") <i class="icon-arrow-right"></i></a>
@@ -40,3 +40,43 @@
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 }
+<div id="advancer">
+    <div class="yui3-widget-bd">Overlay Body</div>
+</div>
+<script>
+// Create a new YUI instance and populate it with the required modules.
+YUI().use('event', 'panel', function (Y) {
+
+  var panel = new Y.Panel({
+    centered: true,
+    headerContent: "@Messages("ticket.advance")",
+    modal: true,
+    plugins: [Y.Plugin.Drag],
+    render: true,
+    srcNode: "#advancer",
+    visible: false,
+    width: 250,
+    zIndex: 100
+  });
+  panel.addButton({
+    value  : "@Messages("ticket.advance")",
+    section: Y.WidgetStdMod.FOOTER,
+    action : function (e) {
+      e.preventDefault();
+    }
+  });
+
+  panel.addButton({
+    value  : "@Messages("general.cancel")",
+    section: Y.WidgetStdMod.FOOTER,
+    action : function (e) {
+      e.preventDefault();
+    }
+  });
+
+  Y.one("#ticketAdvance").on("click", function(e) {
+   Y.log("toggling ticket advancer");
+   panel.show();
+  })
+});
+</script>
