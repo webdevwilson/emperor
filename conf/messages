@@ -69,6 +69,7 @@ form.submit=Submit
 
 general.actions=Actions
 general.admin=Administration
+general.cancel=Cancel
 general.delete=Delete
 general.disable=Disable
 general.edit=Edit

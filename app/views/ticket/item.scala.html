@@ -41,16 +41,20 @@
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 }
 <div id="advancer">
-    <div class="yui3-widget-bd">Overlay Body</div>
+    <div class="yui3-widget-bd">Overlay Body XXX Flicker?!</div>
 </div>
 <script>
 // Create a new YUI instance and populate it with the required modules.
 YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
 
-  var panel = new Y.Panel({
-    buttons : [ { section : 'header', label : 'x', classNames : [ 'closer' ] } ],
+  var advPanel = new Y.Panel({
+    buttons : [ { section : 'header', label : '×', classNames : [ 'closer' ] } ],
     centered: true,
     headerContent: "@Messages("ticket.advance")",
+    hideOn: [
+      { eventName: 'clickoutside' },
+      { node: Y.one('.closer'), eventName: 'click' }
+    ],
     modal: true,
     plugins: [Y.Plugin.Drag],
     render: true,
@@ -60,16 +64,17 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
     zIndex: 100
   });
 
-  panel.addButton({
+  advPanel.addButton({
     value  : "@Messages("general.cancel")",
     section: Y.WidgetStdMod.FOOTER,
     classNames: [ "btn" ],
     action : function (e) {
       e.preventDefault();
+      advPanel.hide();
     }
   });
 
-  panel.addButton({
+  advPanel.addButton({
     value  : "@Messages("ticket.advance")",
     section: Y.WidgetStdMod.FOOTER,
     classNames: [ "btn", "btn-primary" ],
@@ -80,7 +85,7 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
 
   Y.one("#ticketAdvance").on("click", function(e) {
    Y.log("toggling ticket advancer");
-   panel.show();
+   advPanel.show();
   })
 });
 </script>
