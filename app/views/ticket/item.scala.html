@@ -1,4 +1,4 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[(String, Option[String])], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus])(implicit request: Request[AnyContent])
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <div class="btn-group pull-right">
@@ -39,6 +39,13 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+@helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+  <fieldset>
+    @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+   <div class="form-actions">
+    <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+   </div>
+  </fieldset>  
 }
 <div id="advancer">
     <div class="yui3-widget-bd">Overlay Body XXX Flicker?!</div>
@@ -52,7 +59,7 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
     centered: true,
     headerContent: "@Messages("ticket.advance")",
     hideOn: [
-      { eventName: 'clickoutside' },
+      // { eventName: 'clickoutside' },
       { node: Y.one('.closer'), eventName: 'click' }
     ],
     modal: true,
@@ -63,17 +70,17 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
     width: 250,
     zIndex: 100
   });
-
+  
   advPanel.addButton({
     value  : "@Messages("general.cancel")",
     section: Y.WidgetStdMod.FOOTER,
     classNames: [ "btn" ],
     action : function (e) {
       e.preventDefault();
-      advPanel.hide();
+      // advPanel.hide();
     }
   });
-
+  
   advPanel.addButton({
     value  : "@Messages("ticket.advance")",
     section: Y.WidgetStdMod.FOOTER,
@@ -82,10 +89,11 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
       e.preventDefault();
     }
   });
-
+  
   Y.one("#ticketAdvance").on("click", function(e) {
    Y.log("toggling ticket advancer");
    advPanel.show();
   })
 });
 </script>
+}

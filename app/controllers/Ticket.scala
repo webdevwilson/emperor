@@ -114,7 +114,7 @@ object Ticket extends Controller {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)        
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)        
-        Ok(views.html.ticket.item(value, mdParser, prevStatus, nextStatus)(request))
+        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
       }
       case None => NotFound
     }
