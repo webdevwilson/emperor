@@ -6,6 +6,14 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
+case class TicketChanger(
+  statusId: Long, comment: Option[String]
+)
+
+case class InitialComment(
+  content: String
+)
+
 case class InitialTicket(
   projectId: Long, priorityId: Long, severityId: Long, typeId: Long,
   position: Option[Long], summary: String, description: Option[String]
@@ -94,21 +102,40 @@ object TicketModel {
     }
   }
 
+  def addComment(ticketId: Long, userId: Long, contents: String) : Boolean = {
+    
+    val ticket = this.findById(ticketId)
+    
+    ticket match {
+      case Some(ticket) => {
+        DB.withConnection { implicit conn =>
+          insertCommentQuery.on(
+            'user_id    -> userId,
+            'ticket_id  -> ticketId,
+            'contents   -> contents
+          ).execute
+        }
+      }
+      case None => return false
+    }
+
+    true
+  }
+
   def create(ticket: InitialTicket): Option[Ticket] = {
 
-    DB.withConnection { implicit conn =>
+    val project = ProjectModel.findById(ticket.projectId)
+    
+    // Fetch the starting status we should use for the project's workflow.
+    val startingStatus = project match {
+      case Some(x) => WorkflowModel.getStartingStatus(x.workflowId)
+      case None => None
+    }
+    // XXX Should log something up there, really
 
-      val project = ProjectModel.findById(ticket.projectId)
-      
-      // Fetch the starting status we should use for the project's workflow.
-      val startingStatus = project match {
-        case Some(x) => WorkflowModel.getStartingStatus(x.workflowId)
-        case None => return None
-      }
-      // XXX Should log something up there, really
-
-      startingStatus match {
-        case Some(status) => {
+    val result = startingStatus match {
+      case Some(status) => {
+        DB.withConnection { implicit conn =>
           insertQuery.on(
             'project_id   -> ticket.projectId,
             'priority_id  -> ticket.priorityId,
@@ -119,14 +146,14 @@ object TicketModel {
             'position     -> ticket.position,
             'summary      -> ticket.summary
           ).execute
+          val id = lastInsertQuery.as(scalar[Long].single)
+          this.findById(id)
         }
-        case None => return None
       }
-
-      val id = lastInsertQuery.as(scalar[Long].single)
-      
-      this.findById(id)
+      case None => None
     }
+
+    result
   }
   
   def delete(id: Long) {

@@ -16,10 +16,18 @@ object Ticket extends Controller {
 
   val mdParser = MarkWrap.parserFor(MarkupType.Markdown)
 
-  val commentForm = Form(tuple(
-    "contents" -> nonEmptyText,
-    "stupid" -> optional(text)
-  ))
+  val statusChangeForm = Form(
+    mapping(
+      "status_id" -> longNumber,
+      "comment"   -> optional(text)
+    )(models.TicketChanger.apply)(models.TicketChanger.unapply)
+  )
+
+  val commentForm = Form(
+    mapping(
+      "contents" -> nonEmptyText
+    )(models.InitialComment.apply)(models.InitialComment.unapply)
+  )
 
   val initialTicketForm = Form(
     mapping(
@@ -94,6 +102,7 @@ object Ticket extends Controller {
   def edit(ticketId: Long) = Action { implicit request =>
 
     val ticket = TicketModel.findById(ticketId)
+    // XXX Should really match this here and return if it's not found
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -112,8 +121,8 @@ object Ticket extends Controller {
     ticket match {
       case Some(value) => {
 
-        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)        
-        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)        
+        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
+        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)    
         Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
       }
       case None => NotFound

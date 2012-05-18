@@ -96,7 +96,9 @@ role.name=Name
 
 ticket.add=Add Ticket
 ticket.advance=Advance to {0}
+ticket.advance.confirm=Advance
 ticket.advance.end=At End
+ticket.comment=Comment
 ticket.description=Description
 ticket.edit=Edit Ticket
 ticket.list=Tickets
