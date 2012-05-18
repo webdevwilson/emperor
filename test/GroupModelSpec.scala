@@ -15,13 +15,13 @@ class GroupModelSpec extends Specification {
     "create and retrieve" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
-        // val group = models.Group(NotAssigned, "Test Group!")
-        // val newGroup = GroupModel.create(group)
-        // println(newGroup.id)
-        //   
-        // val retGroup = GroupModel.findById(newGroup.id.get)
-        // retGroup must beSome
-        // retGroup.get.name mustEqual group.name
+        val group = models.Group(NotAssigned, "Test Group!")
+        val newGroup = GroupModel.create(group)
+        println(newGroup.id)
+
+        val retGroup = GroupModel.findById(newGroup.id.get)
+        retGroup must beSome
+        retGroup.get.name mustEqual group.name
         1 mustEqual 1
       }
     }

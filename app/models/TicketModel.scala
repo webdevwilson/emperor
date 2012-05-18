@@ -6,21 +6,21 @@ import chc._
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketChanger(
-  statusId: Long, comment: Option[String]
-)
-
 case class InitialComment(
   content: String
+)
+
+case class Comment(
+  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long, content: String
+)
+
+case class StatusChange(
+  statusId: Long, comment: Option[String]
 )
 
 case class InitialTicket(
   projectId: Long, priorityId: Long, severityId: Long, typeId: Long,
   position: Option[Long], summary: String, description: Option[String]
-)
-
-case class Comment(
-  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long, content: String
 )
 
 case class Ticket(
@@ -48,6 +48,7 @@ object TicketModel {
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
   val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
+  val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE ticket_id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
 
@@ -120,6 +121,17 @@ object TicketModel {
     }
 
     true
+  }
+
+  def advance(ticketId: Long, statusId: Long) = {
+    
+    DB.withConnection { implicit conn =>
+      updateStatusQuery.on(
+        'status_id  -> statusId,
+        'ticket_id  -> ticketId
+      ).execute
+      // XXX history! need userId!
+    }
   }
 
   def create(ticket: InitialTicket): Option[Ticket] = {

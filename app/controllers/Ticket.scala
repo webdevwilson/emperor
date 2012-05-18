@@ -20,7 +20,7 @@ object Ticket extends Controller {
     mapping(
       "status_id" -> longNumber,
       "comment"   -> optional(text)
-    )(models.TicketChanger.apply)(models.TicketChanger.unapply)
+    )(models.StatusChange.apply)(models.StatusChange.unapply)
   )
 
   val commentForm = Form(
@@ -57,16 +57,32 @@ object Ticket extends Controller {
     )(models.Ticket.apply)(models.Ticket.unapply)
   )
 
+  def advance(ticketId: Long) = Action { implicit request =>
+
+    statusChangeForm.bindFromRequest.fold(
+      errors => {
+        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
+        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)    
+        BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
+      }, {
+        case statusChange: models.StatusChange =>
+          TicketModel.advance(ticketId, statusChange.statusId)
+          Redirect("/ticket") // XXX
+      }
+    )
+  }
+
   def add = Action { implicit request =>
 
-    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-
     initialTicketForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.ticket.create(errors, projs, ttypes, prios, sevs)),
-      {
+      errors => {
+        val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+        BadRequest(views.html.ticket.create(errors, projs, ttypes, prios, sevs))
+      },{
         case ticket: models.InitialTicket =>
           TicketModel.create(ticket)
           Redirect("/ticket") // XXX
