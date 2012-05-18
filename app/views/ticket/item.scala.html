@@ -1,4 +1,7 @@
 @(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus])(implicit request: Request[AnyContent])
+
+@import helper.bootstrap._
+
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <div class="btn-group pull-right">
@@ -47,15 +50,14 @@
    </div>
   </fieldset>  
 }
-<div id="advancer" style="display: none">
-  <div class="yui3-widget-bd">
-
-    @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-    <fieldset>
-      @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-    </fieldset>
-    }
+<div id="advancer">
+  <div class="yui-widget-bd">
+   @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+   <fieldset>
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+   </fieldset>
   </div>
+  }
 </div>
 <script>
 YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
@@ -71,7 +73,7 @@ YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
     modal: true,
     plugins: [Y.Plugin.Drag],
     render: true,
-    bodyContent: Y.one("#advancer").getHTML(),
+    srcNode: "#advancer",
     visible: false,
     width: 250,
     zIndex: 100
