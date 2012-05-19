@@ -9,7 +9,11 @@
  </li>
  <li class="active">@Messages(workflow.name)</li>
 </ul>
-<div class="well">
+<div class="btn-group btn-group-above-table pull-right">
+ <a href="@controllers.admin.routes.Workflow.edit(workflow.id.get)" class="btn"><i class="icon-edit"></i> @Messages("admin.workflow.edit")</a>
+</div>
+<h1>@Messages("admin.workflow.with.id", Messages(workflow.name))</h1>
+<div class="well" style="clear: both">
  <ul class="bordered unstyled">
  @statuses.map { item =>
   <li>@Messages(item.name)</li>
