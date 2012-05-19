@@ -9,7 +9,13 @@ import play.api.Play.current
 
 case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String)
 
+case class EditUser(username: String, realName: String, email: String)
+
+case class InitialUser(username: String, password: String, realName: String, email: String)
+
 case class LoginUser(username: String, password: String)
+
+case class NewPassword(password: String, password2: String)
 
 object UserModel {
 
@@ -19,7 +25,8 @@ object UserModel {
   val listQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
-  val updateQuery = SQL("UPDATE users SET username={username}, password={password}, realname={realname}, email={email} WHERE id={id}")
+  val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
+  val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -56,14 +63,6 @@ object UserModel {
     }
   }
 
-  // def findUsersInGroup(id: Long, page: Int = 0, count: = 10) : Page[models.User] = {
-  //     
-  //   val offset = count * page
-  // 
-  //   DB.withConnection { implicit conn =>
-  //   }
-  // }
-
   def getAll: List[User] = {
       
     DB.withConnection { implicit conn =>
@@ -87,17 +86,26 @@ object UserModel {
       }
   }
   
-  def update(id: Long, user: User) = {
-
-    val hashedPass = BCrypt.hashpw(user.password, BCrypt.gensalt(12))
+  def update(id: Long, user: EditUser) = {
 
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
         'username   -> user.username,
-        'password   -> hashedPass,
         'realname   -> user.realName,
         'email      -> user.email
+      ).executeUpdate
+    }
+  }
+
+  def updatePassword(id: Long, np: NewPassword) = {
+
+    val hashedPass = BCrypt.hashpw(np.password, BCrypt.gensalt(12))
+
+    DB.withTransaction { implicit conn =>
+      val foo = updatePassQuery.on(
+        'id         -> id,
+        'password   -> hashedPass
       ).executeUpdate
     }
   }

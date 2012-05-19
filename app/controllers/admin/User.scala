@@ -15,21 +15,35 @@ import org.mindrot.jbcrypt.BCrypt
 
 object User extends Controller {
 
-  val userForm = Form(
+  val newForm = Form(
     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
       "username" -> nonEmptyText,
       "password" -> nonEmptyText,
       "realName" -> nonEmptyText,
-      "email"    -> nonEmptyText
-    )(models.User.apply)(models.User.unapply)
+      "email"    -> email
+    )(models.InitialUser.apply)(models.InitialUser.unapply)
   )
-  
+
+  val editForm = Form(
+    mapping(
+      "username" -> nonEmptyText,
+      "realName" -> nonEmptyText,
+      "email"    -> email
+    )(models.EditUser.apply)(models.EditUser.unapply)
+  )
+
+  val passwordForm = Form(
+    mapping(
+      "password" -> nonEmptyText,
+      "password2"-> nonEmptyText // XXX should match
+    )(models.NewPassword.apply)(models.NewPassword.unapply)
+  )
+
   def add = Action { implicit request =>
 
     // val (username, password, realName, email) = userForm.bindFromRequest.get
 
-    userForm.bindFromRequest.fold(
+    newForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
       {
         case user: models.User => {
@@ -74,7 +88,7 @@ object User extends Controller {
   
   def create = Action { implicit request =>
 
-    Ok(views.html.admin.user.create(userForm)(request))
+    Ok(views.html.admin.user.create(newForm)(request))
   }
 
   def index(page: Int, count: Int) = Action { implicit request =>
@@ -89,7 +103,10 @@ object User extends Controller {
     val user = UserModel.findById(userId)
 
     user match {
-      case Some(value) => Ok(views.html.admin.user.edit(userId, userForm.fill(value))(request))
+      case Some(value) => {
+        val editUser = new models.EditUser(value.username, value.realName, value.email)
+        Ok(views.html.admin.user.edit(userId, editForm.fill(editUser), passwordForm)(request))
+      }
       case None => NotFound
     }
   }
@@ -109,13 +126,34 @@ object User extends Controller {
   
   def update(userId: Long) = Action { implicit request =>
 
-    userForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.admin.user.edit(userId, errors)),
+    editForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.admin.user.edit(userId, errors, passwordForm)),
       {
-        case user: models.User =>
+        case user: models.EditUser =>
         UserModel.update(userId, user)
         Redirect("/admin/user")
       }
     )
+  }
+
+  def updatePassword(userId: Long) = Action { implicit request =>
+
+    val user = UserModel.findById(userId)
+
+    user match {
+      case Some(value) => {
+        passwordForm.bindFromRequest.fold(
+          errors => {
+            val editUser = new models.EditUser(value.username, value.realName, value.email)
+            BadRequest(views.html.admin.user.edit(userId, editForm.fill(editUser), errors))
+          }, {
+            case np: models.NewPassword =>
+            UserModel.updatePassword(userId, np)
+            Redirect("/admin/user")
+          }
+        )
+      }
+      case None => NotFound
+    }
   }
 }

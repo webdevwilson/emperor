@@ -66,6 +66,7 @@ GET     /admin/user/edit/:id            controllers.admin.User.edit(id: Long)
 PUT     /admin/user/:id/group/:gid      controllers.admin.User.addToGroup(id: Long, gid: Long)
 DELETE  /admin/user/:id/group/:gid      controllers.admin.User.removeFromGroup(id: Long, gid: Long)
 POST    /admin/user                     controllers.admin.User.add
+POST    /admin/user/:id/password        controllers.admin.User.updatePassword(id: Long)
 
 GET     /admin/workflow                 controllers.admin.Workflow.index(page: Int ?= 0, count: Int ?= 10)
 GET     /admin/workflow/create          controllers.admin.Workflow.create

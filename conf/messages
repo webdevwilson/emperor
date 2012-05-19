@@ -49,6 +49,7 @@ admin.ticket_type.menu.list=Types
 admin.ticket_type.with.id=Ticket Type {0}
 
 admin.user.add=Add User
+admin.user.changepassword=Change Password
 admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
@@ -132,11 +133,11 @@ ticket_status.with.id=Ticket Status {0}
 ticket_type.name=Name
 
 user=User
-user.specific=User {0}
 user.email=Email
-
 user.password=Password
+user.password.confirm=Confirm Password
 user.realname=Real Name
+user.with.id=User {0}
 user.username=Username
 
 TICK_RESO_FIXED=Fixed
