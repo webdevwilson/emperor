@@ -5,8 +5,13 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import models.LoginUser
+import models.UserModel
+import org.mindrot.jbcrypt.BCrypt
+import org.slf4j.{Logger,LoggerFactory}
 
 object Auth extends Controller {
+
+  val logger = LoggerFactory.getLogger("application")
 
   val loginForm = Form(
     mapping(
@@ -26,7 +31,21 @@ object Auth extends Controller {
       errors => {
         BadRequest(views.html.auth.login(errors)(request))
       }, {
-        case loginUser => Redirect("/") // XXX
+        case loginUser => {
+          val maybeUser = UserModel.getByUsername(loginUser.username)
+          maybeUser match {
+            case Some(user) => {
+              if(BCrypt.checkpw(loginUser.password, user.password)) {
+                Redirect("/").withSession(Security.username -> user.username) // XXX                
+              } else {
+                BadRequest(views.html.auth.login(loginForm)(request)) // XXX message!
+              }
+            }
+            case None => {
+              BadRequest(views.html.auth.login(loginForm)(request)) // XXX Some sort of message
+            }
+          }
+        }
       }
     )
   }
