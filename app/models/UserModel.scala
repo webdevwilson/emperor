@@ -9,6 +9,8 @@ import play.api.Play.current
 
 case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String)
 
+case class LoginUser(username: String, password: String)
+
 object UserModel {
 
   val allQuery = SQL("SELECT * FROM users")

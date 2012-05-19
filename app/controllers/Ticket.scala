@@ -101,6 +101,7 @@ object Ticket extends Controller {
 
     initialTicketForm.bindFromRequest.fold(
       errors => {
+        // Should be i18ned in the view
         val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -125,6 +126,7 @@ object Ticket extends Controller {
   
   def create = Action { implicit request =>
 
+    // Should be i18ned in the view
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }

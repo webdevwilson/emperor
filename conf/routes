@@ -76,6 +76,9 @@ GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Lo
 GET     /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
+GET     /auth/login                     controllers.Auth.login
+POST    /auth/login                     controllers.Auth.doLogin
+
 GET     /project                        controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
 GET     /project/create                 controllers.Project.create
 GET     /project/:id                    controllers.Project.item(id: Long)

@@ -74,8 +74,10 @@ general.delete=Delete
 general.disable=Disable
 general.edit=Edit
 general.home=Home
+general.password=Password
 general.project=Projects
 general.ticket=Tickets
+general.username=Username
 
 group.name=Name
 
