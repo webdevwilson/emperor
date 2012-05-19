@@ -57,16 +57,25 @@ object Ticket extends Controller {
     )(models.Ticket.apply)(models.Ticket.unapply)
   )
 
-  def advance(ticketId: Long) = Action { implicit request =>
+  def newStatus(ticketId: Long, statusId: Long) = Action { implicit request =>
     
     val ticket = TicketModel.findFullById(ticketId)
-    val nextStatus = WorkflowModel.getNextStatus(ticket.get.workflowStatusId)
+    val newStatus = WorkflowModel.findStatusById(statusId)
     // XXX some sort of check too many gets!
     
-    Ok(views.html.ticket.advance(ticketId, commentForm, nextStatus)(request))
+    ticket match {
+      case Some(value) => {
+        newStatus match {
+          case Some(status) => Ok(views.html.ticket.newstatus(ticketId, value, status, commentForm)(request))
+          case None => BadRequest(views.html.ticket.error(request))
+        }
+      }
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+
   }
 
-  def doAdvance(ticketId: Long) = Action { implicit request =>
+  def status(ticketId: Long) = Action { implicit request =>
 
     val ticket = TicketModel.findFullById(ticketId)
 

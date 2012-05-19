@@ -1,0 +1,12 @@
+@(ticketId: Long, ticket: models.FullTicket, status: models.WorkflowStatus, commentForm: Form[models.InitialComment])(implicit request: Request[AnyContent])
+
+@import helper.bootstrap._
+
+<div>
+   @helper.form(action = routes.Ticket.status(ticketId), args = 'method -> "POST") {
+   <fieldset>
+     <input type="hidden" name="status_id" value="@status.id.get">
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+   </fieldset>
+  }
+</div>

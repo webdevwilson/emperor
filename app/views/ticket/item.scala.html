@@ -4,22 +4,21 @@
 
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
+<a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
 <div class="btn-group pull-right">
  @prevStatus match {
    case Some(status) => {
- <a id="ticketRevert" href="#" class="btn btn-warning"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+ <a href="@routes.Ticket.newStatus(ticket.id.get, prevStatus.get.id.get)" class="btn btn-warning remote-dialog" data-async="true" title="@Messages("ticket.revert", Messages(prevStatus.get.name))"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
    }
-   case None => {
- <a href="#" class="btn disabled"><i class="icon-arrow-left"></i> @Messages("ticket.revert.start")</a>
-   }
+   case None => { }
  }
- <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
+ <a href="#" class="btn disabled">@Messages(ticket.statusName)</a>
  @nextStatus match {
    case Some(status) => {
- <a id="ticketAdvance" href="@routes.Ticket.advance(ticket.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+ <a href="@routes.Ticket.newStatus(ticket.id.get, nextStatus.get.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
    }
    case None => {
- <a href="#" class="btn disabled">@Messages("ticket.advance.end") <i class="icon-arrow-right"></i></a>
+ <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
    }
  }
 </div>

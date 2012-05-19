@@ -25,6 +25,7 @@ object WorkflowModel {
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON ts.id = ws.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
   val getPrevStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE position < {position} AND workflow_id={workflow_id} ORDER BY position DESC LIMIT 1")
   val getNextStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE position > {position} AND workflow_id={workflow_id} ORDER BY position ASC LIMIT 1")
+  val verifyStatusInWorkflow = SQL("SELECT count(*) FROM workflow_statuses WHERE status_id={status_id} AND workflow_id={workflow_id}")
 
   val workflow = {
     get[Pk[Long]]("id") ~
@@ -157,6 +158,25 @@ object WorkflowModel {
         'name       -> workflow.name,
         'description-> workflow.description
       ).executeUpdate
+    }
+  }
+  
+  /** Verify that given status is a member of the given workflow.
+   *
+   * Selects a count where status_id and workflow_id equal the given
+   * arguments. Returns true if any are found, otherwise false.
+   */
+  def verifyStatusInWorkflow(workflowId: Long, statusId: Long) : Boolean = {
+    DB.withTransaction { implicit conn =>
+      val count = verifyStatusInWorkflow.on(
+        'workflow_id-> workflowId,
+        'status_id  -> statusId
+      ).as(scalar[Long].single)
+      
+      count match {
+        case 0 => false
+        case _ => true
+      }
     }
   }
 }
