@@ -89,6 +89,8 @@ GET     /ticket/:id                     controllers.Ticket.item(id: Long)
 POST    /ticket/:id                     controllers.Ticket.update(id: Long)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: Long)
 POST    /ticket                         controllers.Ticket.add
+GET     /ticket/advance/:id             controllers.Ticket.advance(id: Long)
+POST    /ticket/advance/:id             controllers.Ticket.doAdvance(id: Long)
 GET     /ticket/comment/:id             controllers.Ticket.comment(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path

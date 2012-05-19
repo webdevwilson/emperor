@@ -58,18 +58,34 @@ object Ticket extends Controller {
   )
 
   def advance(ticketId: Long) = Action { implicit request =>
+    
+    val ticket = TicketModel.findFullById(ticketId)
+    val nextStatus = WorkflowModel.getNextStatus(ticket.get.workflowStatusId)
+    // XXX some sort of check too many gets!
+    
+    Ok(views.html.ticket.advance(ticketId, commentForm, nextStatus)(request))
+  }
 
-    statusChangeForm.bindFromRequest.fold(
-      errors => {
-        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
-        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)    
-        BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
-      }, {
-        case statusChange: models.StatusChange =>
-          TicketModel.advance(ticketId, statusChange.statusId)
-          Redirect("/ticket") // XXX
+  def doAdvance(ticketId: Long) = Action { implicit request =>
+
+    val ticket = TicketModel.findFullById(ticketId)
+
+    ticket match {
+      case Some(value) => {
+        statusChangeForm.bindFromRequest.fold(
+          errors => {
+            val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
+            val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
+            BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
+          }, {
+            case statusChange: models.StatusChange =>
+              TicketModel.advance(ticketId, statusChange.statusId)
+              Redirect("/ticket") // XXX
+          }
+        )
       }
-    )
+      case None => NotFound
+    }
   }
 
   def add = Action { implicit request =>

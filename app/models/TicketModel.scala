@@ -48,7 +48,7 @@ object TicketModel {
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
   val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
-  val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE ticket_id={ticket_id}")
+  val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
 

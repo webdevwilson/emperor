@@ -16,10 +16,10 @@
  <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
  @nextStatus match {
    case Some(status) => {
- <a id="ticketAdvance" href="#" class="btn btn-primary">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+ <a id="ticketAdvance" href="@routes.Ticket.advance(ticket.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
    }
    case None => {
- <a href="#" class="btn">@Messages("ticket.advance.end") <i class="icon-arrow-right"></i></a>
+ <a href="#" class="btn disabled">@Messages("ticket.advance.end") <i class="icon-arrow-right"></i></a>
    }
  }
 </div>
@@ -50,57 +50,4 @@
    </div>
   </fieldset>  
 }
-<div id="advancer">
-  <div class="yui-widget-bd">
-   @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-   <fieldset>
-     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-   </fieldset>
-  </div>
-  }
-</div>
-<script>
-YUI({ fetchCSS: false }).use('event', 'panel', function (Y) {
-
-  var advPanel = new Y.Panel({
-    buttons : [ { section : 'header', label : '×', classNames : [ 'closer' ] } ],
-    centered: true,
-    headerContent: "@Messages("ticket.advance", Messages(nextStatus.get.name))",
-    hideOn: [
-      // { eventName: 'clickoutside' },
-      { node: Y.one('.closer'), eventName: 'click' }
-    ],
-    modal: true,
-    plugins: [Y.Plugin.Drag],
-    render: true,
-    srcNode: "#advancer",
-    visible: false,
-    width: 250,
-    zIndex: 100
-  });
-  
-  advPanel.addButton({
-    value  : "@Messages("general.cancel")",
-    section: Y.WidgetStdMod.FOOTER,
-    classNames: [ "btn" ],
-    action : function (e) {
-      e.preventDefault();
-      // advPanel.hide();
-    }
-  });
-  
-  advPanel.addButton({
-    value  : "@Messages("ticket.advance.confirm")",
-    section: Y.WidgetStdMod.FOOTER,
-    classNames: [ "btn", "btn-primary" ],
-    action : function (e) {
-      e.preventDefault();
-    }
-  });
-  
-  Y.one("#ticketAdvance").on("click", function(e) {
-   advPanel.show();
-  })
-});
-</script>
 }
