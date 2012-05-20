@@ -38,11 +38,11 @@ object Auth extends Controller {
               if(BCrypt.checkpw(loginUser.password, user.password)) {
                 Redirect("/").withSession(Security.username -> user.username).flashing("success" -> "auth.success") // XXX
               } else {
-                BadRequest(views.html.auth.login(loginForm)(request)).flashing("error" -> "auth.failure") // XXX no redirect
+                BadRequest(views.html.auth.login(loginForm)(request)) // XXX no redirect
               }
             }
             case None => {
-              BadRequest(views.html.auth.login(loginForm)(request)).flashing("error" -> "auth.failure") // XXX no redirect
+              BadRequest(views.html.auth.login(loginForm)(request)) // XXX no redirect
             }
           }
         }
