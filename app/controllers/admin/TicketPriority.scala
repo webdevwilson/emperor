@@ -8,9 +8,10 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketPriorityModel
 
-object TicketPriority extends Controller {
+object TicketPriority extends Controller with Secured {
 
   val priorityForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object TicketPriority extends Controller {
     )(models.TicketPriority.apply)(models.TicketPriority.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.create(errors)),
@@ -32,19 +33,19 @@ object TicketPriority extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.priority.create(priorityForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val priorities = TicketPriorityModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.priority.index(priorities)(request))
   }
 
-  def edit(priorityId: Long) = Action { implicit request =>
+  def edit(priorityId: Long) = IsAuthenticated { implicit request =>
 
     val priority = TicketPriorityModel.findById(priorityId)
 
@@ -54,7 +55,7 @@ object TicketPriority extends Controller {
     }
   }
 
-  def item(priorityId: Long) = Action { implicit request =>
+  def item(priorityId: Long) = IsAuthenticated { implicit request =>
     
     val priority = TicketPriorityModel.findById(priorityId)
 
@@ -65,7 +66,7 @@ object TicketPriority extends Controller {
     
   }
   
-  def update(priorityId: Long) = Action { implicit request =>
+  def update(priorityId: Long) = IsAuthenticated { implicit request =>
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.edit(priorityId, errors)),

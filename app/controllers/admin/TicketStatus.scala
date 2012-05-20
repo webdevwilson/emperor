@@ -8,9 +8,10 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketStatusModel
 
-object TicketStatus extends Controller {
+object TicketStatus extends Controller with Secured {
 
   val statusForm = Form(
     mapping(
@@ -19,7 +20,7 @@ object TicketStatus extends Controller {
     )(models.TicketStatus.apply)(models.TicketStatus.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.create(errors)),
@@ -31,19 +32,19 @@ object TicketStatus extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.status.create(statusForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val statuses = TicketStatusModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.status.index(statuses)(request))
   }
 
-  def edit(statusId: Long) = Action { implicit request =>
+  def edit(statusId: Long) = IsAuthenticated { implicit request =>
 
     val status = TicketStatusModel.findById(statusId)
 
@@ -53,7 +54,7 @@ object TicketStatus extends Controller {
     }
   }
 
-  def item(statusId: Long) = Action { implicit request =>
+  def item(statusId: Long) = IsAuthenticated { implicit request =>
     
     val status = TicketStatusModel.findById(statusId)
 
@@ -64,7 +65,7 @@ object TicketStatus extends Controller {
     
   }
   
-  def update(statusId: Long) = Action { implicit request =>
+  def update(statusId: Long) = IsAuthenticated { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.edit(statusId, errors)),

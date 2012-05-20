@@ -8,10 +8,11 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketTypeModel
 import org.mindrot.jbcrypt.BCrypt
 
-object TicketType extends Controller {
+object TicketType extends Controller with Secured {
 
   val typeForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object TicketType extends Controller {
     )(models.TicketType.apply)(models.TicketType.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.create(errors)),
@@ -32,19 +33,19 @@ object TicketType extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.ttype.create(typeForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val types = TicketTypeModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.ttype.index(types)(request))
   }
 
-  def edit(typeId: Long) = Action { implicit request =>
+  def edit(typeId: Long) = IsAuthenticated { implicit request =>
 
     val ttype = TicketTypeModel.findById(typeId)
 
@@ -54,7 +55,7 @@ object TicketType extends Controller {
     }
   }
 
-  def item(typeId: Long) = Action { implicit request =>
+  def item(typeId: Long) = IsAuthenticated { implicit request =>
     
     val ttype = TicketTypeModel.findById(typeId)
 
@@ -65,7 +66,7 @@ object TicketType extends Controller {
     
   }
   
-  def update(typeId: Long) = Action { implicit request =>
+  def update(typeId: Long) = IsAuthenticated { implicit request =>
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.edit(typeId, errors)),

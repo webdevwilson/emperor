@@ -8,9 +8,10 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.RoleModel
 
-object Role extends Controller {
+object Role extends Controller with Secured {
 
   val objForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object Role extends Controller {
     )(models.Role.apply)(models.Role.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.create(errors)),
@@ -32,19 +33,19 @@ object Role extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.role.create(objForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val roles = RoleModel.list(page = page, count = count)
 
     Ok(views.html.admin.role.index(roles)(request))
   }
 
-  def edit(roleId: Long) = Action { implicit request =>
+  def edit(roleId: Long) = IsAuthenticated { implicit request =>
 
     val role = RoleModel.findById(roleId)
 
@@ -54,7 +55,7 @@ object Role extends Controller {
     }
   }
 
-  def item(roleId: Long) = Action { implicit request =>
+  def item(roleId: Long) = IsAuthenticated { implicit request =>
     
     val role = RoleModel.findById(roleId)
 
@@ -65,7 +66,7 @@ object Role extends Controller {
     
   }
   
-  def update(roleId: Long) = Action { implicit request =>
+  def update(roleId: Long) = IsAuthenticated { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.edit(roleId, errors)),

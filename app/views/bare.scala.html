@@ -43,7 +43,34 @@
         </div>
       </div>
     </div>
-
+    <div class="container">
+      @{ request.flash.get("success") match {
+        case Some(message) => {
+          <div class="alert alert-success">
+           { Messages(message) }
+          </div>
+        }
+        case None => { }
+      }
+      }
+      @{ request.flash.get("error") match {
+        case Some(message) => {
+          <div class="alert alert-error">
+           { Messages(message) }
+          </div>
+        }
+        case None => { }
+      }
+      }
+      @{ request.flash.get("info") match {
+        case Some(message) => {
+          <div class="alert alert-info">
+           { Messages(message) }
+          </div>
+        }
+        case None => { }
+      }
+      }
     <div class="container">
      @content
     </div>

@@ -8,10 +8,11 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketLinkTypeModel
 import org.mindrot.jbcrypt.BCrypt
 
-object TicketLinkType extends Controller {
+object TicketLinkType extends Controller with Secured {
 
   val ltypeForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object TicketLinkType extends Controller {
     )(models.TicketLinkType.apply)(models.TicketLinkType.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.create(errors)),
@@ -32,19 +33,19 @@ object TicketLinkType extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.linktype.create(ltypeForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val types = TicketLinkTypeModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.linktype.index(types)(request))
   }
 
-  def edit(ltypeId: Long) = Action { implicit request =>
+  def edit(ltypeId: Long) = IsAuthenticated { implicit request =>
 
     val tltype = TicketLinkTypeModel.findById(ltypeId)
 
@@ -54,7 +55,7 @@ object TicketLinkType extends Controller {
     }
   }
 
-  def item(ltypeId: Long) = Action { implicit request =>
+  def item(ltypeId: Long) = IsAuthenticated { implicit request =>
     
     val tltype = TicketLinkTypeModel.findById(ltypeId)
 
@@ -65,7 +66,7 @@ object TicketLinkType extends Controller {
     
   }
   
-  def update(ltypeId: Long) = Action { implicit request =>
+  def update(ltypeId: Long) = IsAuthenticated { implicit request =>
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.edit(ltypeId, errors)),

@@ -6,9 +6,9 @@ import play.api.libs.json.Json
 import com.codahale.jerkson.Json._
 import models.GroupModel
 
-object Group extends Controller {
+object Group extends Controller with Secured {
 
-  def startsWith() = Action { implicit request =>
+  def startsWith() = IsAuthenticated { implicit request =>
 
     val param = request.queryString.get("query");
     

@@ -8,10 +8,11 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketStatusModel
 import models.WorkflowModel
 
-object Workflow extends Controller {
+object Workflow extends Controller with Secured {
 
   val objForm = Form(
     mapping(
@@ -21,7 +22,7 @@ object Workflow extends Controller {
     )(models.Workflow.apply)(models.Workflow.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.create(errors)),
@@ -33,19 +34,19 @@ object Workflow extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.workflow.create(objForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val workflows = WorkflowModel.list(page = page, count = count)
 
     Ok(views.html.admin.workflow.index(workflows)(request))
   }
 
-  def edit(workflowId: Long) = Action { implicit request =>
+  def edit(workflowId: Long) = IsAuthenticated { implicit request =>
 
     val workflow = WorkflowModel.findById(workflowId)
 
@@ -55,7 +56,7 @@ object Workflow extends Controller {
     }
   }
 
-  def item(workflowId: Long) = Action { implicit request =>
+  def item(workflowId: Long) = IsAuthenticated { implicit request =>
     
     val workflow = WorkflowModel.findById(workflowId)
     val statuses = WorkflowModel.findStatuses(workflowId)
@@ -66,7 +67,7 @@ object Workflow extends Controller {
     }
   }
   
-  def modify(workflowId: Long) = Action { implicit request =>
+  def modify(workflowId: Long) = IsAuthenticated { implicit request =>
     
     val workflow = WorkflowModel.findById(workflowId)
     val statuses = WorkflowModel.findStatuses(workflowId)
@@ -78,7 +79,7 @@ object Workflow extends Controller {
     }
   }
   
-  def update(workflowId: Long) = Action { implicit request =>
+  def update(workflowId: Long) = IsAuthenticated { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.edit(workflowId, errors)),
@@ -90,7 +91,7 @@ object Workflow extends Controller {
     )
   }
 
-  def save(workflowId: Long) = Action { implicit request =>
+  def save(workflowId: Long) = IsAuthenticated { implicit request =>
 
     Redirect("/admin/workflow") // XXX
   }

@@ -9,11 +9,12 @@ import play.api.libs.json.Json._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.GroupModel
 import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
 
-object User extends Controller {
+object User extends Controller with Secured {
 
   val newForm = Form(
     mapping(
@@ -39,14 +40,14 @@ object User extends Controller {
     )(models.NewPassword.apply)(models.NewPassword.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     // val (username, password, realName, email) = userForm.bindFromRequest.get
 
     newForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
       {
-        case user: models.User => {
+        case user: models.InitialUser => {
           UserModel.create(user)
           Redirect("/admin/user")
         }
@@ -54,7 +55,7 @@ object User extends Controller {
     )
   }
   
-  def addToGroup(userId: Long, groupId: Long) = Action { implicit request =>
+  def addToGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.findById(userId)
 
@@ -70,7 +71,7 @@ object User extends Controller {
     ))
   }
   
-  def removeFromGroup(userId: Long, groupId: Long) = Action { implicit request =>
+  def removeFromGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.findById(userId)
 
@@ -86,19 +87,19 @@ object User extends Controller {
     ))
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.user.create(newForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val users = UserModel.list(page = page, count = count)
 
     Ok(views.html.admin.user.index(users)(request))
   }
 
-  def edit(userId: Long) = Action { implicit request =>
+  def edit(userId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.findById(userId)
 
@@ -111,7 +112,7 @@ object User extends Controller {
     }
   }
 
-  def item(userId: Long) = Action { implicit request =>
+  def item(userId: Long) = IsAuthenticated { implicit request =>
     
     val user = UserModel.findById(userId)
     val allGroups = GroupModel.getAll
@@ -124,7 +125,7 @@ object User extends Controller {
     
   }
   
-  def update(userId: Long) = Action { implicit request =>
+  def update(userId: Long) = IsAuthenticated { implicit request =>
 
     editForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.edit(userId, errors, passwordForm)),
@@ -136,7 +137,7 @@ object User extends Controller {
     )
   }
 
-  def updatePassword(userId: Long) = Action { implicit request =>
+  def updatePassword(userId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.findById(userId)
 

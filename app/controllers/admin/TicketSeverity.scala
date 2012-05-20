@@ -8,9 +8,10 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.TicketSeverityModel
 
-object TicketSeverity extends Controller {
+object TicketSeverity extends Controller with Secured {
 
   val severityForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object TicketSeverity extends Controller {
     )(models.TicketSeverity.apply)(models.TicketSeverity.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.create(errors)),
@@ -32,19 +33,19 @@ object TicketSeverity extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.severity.create(severityForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val severities = TicketSeverityModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.severity.index(severities)(request))
   }
 
-  def edit(severityId: Long) = Action { implicit request =>
+  def edit(severityId: Long) = IsAuthenticated { implicit request =>
 
     val severity = TicketSeverityModel.findById(severityId)
 
@@ -54,7 +55,7 @@ object TicketSeverity extends Controller {
     }
   }
 
-  def item(severityId: Long) = Action { implicit request =>
+  def item(severityId: Long) = IsAuthenticated { implicit request =>
     
     val severity = TicketSeverityModel.findById(severityId)
 
@@ -65,7 +66,7 @@ object TicketSeverity extends Controller {
     
   }
   
-  def update(severityId: Long) = Action { implicit request =>
+  def update(severityId: Long) = IsAuthenticated { implicit request =>
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.edit(severityId, errors)),

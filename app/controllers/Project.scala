@@ -9,7 +9,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import models.{ProjectModel,WorkflowModel}
 
-object Project extends Controller {
+object Project extends Controller with Secured {
 
   val projectForm = Form(
     mapping(
@@ -20,7 +20,7 @@ object Project extends Controller {
     )(models.Project.apply)(models.Project.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     projectForm.bindFromRequest.fold(
       errors => {
@@ -34,21 +34,21 @@ object Project extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
     Ok(views.html.project.create(projectForm, workflows)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val groups = ProjectModel.list(page = page, count = count)
 
     Ok(views.html.project.index(groups)(request))
   }
 
-  def edit(projectId: Long) = Action { implicit request =>
+  def edit(projectId: Long) = IsAuthenticated { implicit request =>
 
     val project = ProjectModel.findById(projectId)
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -59,7 +59,7 @@ object Project extends Controller {
     }
   }
 
-  def item(projectId: Long) = Action { implicit request =>
+  def item(projectId: Long) = IsAuthenticated { implicit request =>
     
     val project = ProjectModel.findById(projectId)
 
@@ -70,7 +70,7 @@ object Project extends Controller {
     
   }
   
-  def update(projectId: Long) = Action { implicit request =>
+  def update(projectId: Long) = IsAuthenticated { implicit request =>
 
     projectForm.bindFromRequest.fold(
       errors => {

@@ -12,7 +12,7 @@ import models.ProjectModel
 import models._
 import org.clapper.markwrap._
 
-object Ticket extends Controller {
+object Ticket extends Controller with Secured {
 
   val mdParser = MarkWrap.parserFor(MarkupType.Markdown)
 
@@ -57,7 +57,7 @@ object Ticket extends Controller {
     )(models.Ticket.apply)(models.Ticket.unapply)
   )
 
-  def newStatus(ticketId: Long, statusId: Long) = Action { implicit request =>
+  def newStatus(ticketId: Long, statusId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.findFullById(ticketId)
     val newStatus = WorkflowModel.findStatusById(statusId)
@@ -75,7 +75,7 @@ object Ticket extends Controller {
 
   }
 
-  def status(ticketId: Long) = Action { implicit request =>
+  def status(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.findFullById(ticketId)
 
@@ -97,7 +97,7 @@ object Ticket extends Controller {
     }
   }
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     initialTicketForm.bindFromRequest.fold(
       errors => {
@@ -116,7 +116,7 @@ object Ticket extends Controller {
     )
   }
 
-  def comment(ticketId: Long) = Action { implicit request =>
+  def comment(ticketId: Long) = IsAuthenticated { implicit request =>
 
     commentForm.bindFromRequest.fold(
       errors => BadRequest("Missing parameter 'content'"),
@@ -124,7 +124,7 @@ object Ticket extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     // Should be i18ned in the view
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -135,14 +135,14 @@ object Ticket extends Controller {
     Ok(views.html.ticket.create(initialTicketForm, projs, ttypes, prios, sevs)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val groups = TicketModel.list(page = page, count = count)
 
     Ok(views.html.ticket.index(groups)(request))
   }
 
-  def edit(ticketId: Long) = Action { implicit request =>
+  def edit(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.findById(ticketId)
     // XXX Should really match this here and return if it's not found
@@ -157,7 +157,7 @@ object Ticket extends Controller {
     }
   }
 
-  def item(ticketId: Long) = Action { implicit request =>
+  def item(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.findFullById(ticketId)
 
@@ -173,7 +173,7 @@ object Ticket extends Controller {
     
   }
   
-  def update(ticketId: Long) = Action { implicit request =>
+  def update(ticketId: Long) = IsAuthenticated { implicit request =>
 
     ticketForm.bindFromRequest.fold(
       errors => {

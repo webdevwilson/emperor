@@ -18,6 +18,8 @@ CREATE TABLE users (
     PRIMARY KEY(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
+INSERT INTO users (username, password, realname, email) VALUES ('admin', '$2a$12$kjx926AcdoK38pJBotfoROSVJxNkIkwxqHVHODiSLhfv94a4KPKuW', 'admin', 'admin@admin.com');
+
 CREATE TABLE groups (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,

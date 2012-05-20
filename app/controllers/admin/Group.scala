@@ -8,10 +8,11 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import chc._
+import controllers._
 import models.GroupModel
 import models.UserModel
 
-object Group extends Controller {
+object Group extends Controller with Secured {
 
   val groupForm = Form(
     mapping(
@@ -20,7 +21,7 @@ object Group extends Controller {
     )(models.Group.apply)(models.Group.unapply)
   )
 
-  def add = Action { implicit request =>
+  def add = IsAuthenticated { implicit request =>
 
     groupForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.create(errors)),
@@ -32,19 +33,19 @@ object Group extends Controller {
     )
   }
   
-  def create = Action { implicit request =>
+  def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.group.create(groupForm)(request))
   }
 
-  def index(page: Int, count: Int) = Action { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
     val groups = GroupModel.list(page = page, count = count)
 
     Ok(views.html.admin.group.index(groups)(request))
   }
 
-  def edit(groupId: Long) = Action { implicit request =>
+  def edit(groupId: Long) = IsAuthenticated { implicit request =>
 
     val group = GroupModel.findById(groupId)
 
@@ -54,7 +55,7 @@ object Group extends Controller {
     }
   }
 
-  def item(groupId: Long) = Action { implicit request =>
+  def item(groupId: Long) = IsAuthenticated { implicit request =>
     
     val group = GroupModel.findById(groupId)
     val allUsers = UserModel.getAll
@@ -67,7 +68,7 @@ object Group extends Controller {
     
   }
   
-  def update(groupId: Long) = Action { implicit request =>
+  def update(groupId: Long) = IsAuthenticated { implicit request =>
 
     groupForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.edit(groupId, errors)),

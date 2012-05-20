@@ -28,6 +28,7 @@ object UserModel {
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
+  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -39,7 +40,7 @@ object UserModel {
     }
   }
 
-  def create(user: User): User = {
+  def create(user: InitialUser): User = {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
@@ -48,9 +49,10 @@ object UserModel {
         'realname   -> user.realName,
         'email      -> user.email
       ).executeUpdate
+
+      val id = lastInsertQuery.as(scalar[Long].single)
+      this.findById(id).get
     }
-    
-    user
   }
   
   def delete(id: Long) {

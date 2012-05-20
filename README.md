@@ -18,7 +18,7 @@ Emperor aims to have the following features:
 * Email notification
 * Ticket history
 * First-class milestones
-* Multiple-projects
+* Multiple projects
 * No-nonsense UI with great user experience
 * Markdown formatting
 * Customizable workflow
