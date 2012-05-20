@@ -4,7 +4,9 @@
 @import helper.bootstrap._
 
 @bare("Home") {
-
+  @objForm.globalError.map { error =>
+    <div class="alert alert-error">@Messages(error.message)</div>
+  }
   @helper.form(action = controllers.routes.Auth.doLogin) {
    <fieldset>
     @helper.inputText(objForm("username"), '_label -> Messages("general.username"))

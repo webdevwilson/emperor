@@ -18,6 +18,16 @@ object Auth extends Controller {
       "username" -> nonEmptyText,
       "password" -> nonEmptyText
     )(LoginUser.apply)(LoginUser.unapply)
+    .verifying("auth.failure", params => UserModel.getByUsername(params.username) != None)
+    .verifying("auth.failure", params => {
+      val maybeUser = UserModel.getByUsername(params.username)
+      maybeUser match {
+        case Some(user) => {
+          BCrypt.checkpw(params.password, user.password) == true          
+        }
+        case None => false
+      }
+    })
   )
 
   def login = Action { implicit request =>
@@ -32,19 +42,7 @@ object Auth extends Controller {
         BadRequest(views.html.auth.login(errors)(request))
       }, {
         case loginUser => {
-          val maybeUser = UserModel.getByUsername(loginUser.username)
-          maybeUser match {
-            case Some(user) => {
-              if(BCrypt.checkpw(loginUser.password, user.password)) {
-                Redirect("/").withSession(Security.username -> user.username).flashing("success" -> "auth.success") // XXX
-              } else {
-                BadRequest(views.html.auth.login(loginForm)(request)) // XXX no redirect
-              }
-            }
-            case None => {
-              BadRequest(views.html.auth.login(loginForm)(request)) // XXX no redirect
-            }
-          }
+          Redirect("/").withSession(Security.username -> loginUser.username).flashing("success" -> "auth.success")
         }
       }
     )
