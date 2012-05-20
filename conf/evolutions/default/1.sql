@@ -4,7 +4,8 @@ CREATE TABLE workflows (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO workflows (name) VALUES ('WORK_EMP_DEFAULT');
@@ -15,7 +16,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     realname VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(username)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO users (username, password, realname, email) VALUES ('admin', '$2a$12$kjx926AcdoK38pJBotfoROSVJxNkIkwxqHVHODiSLhfv94a4KPKuW', 'admin', 'admin@admin.com');
@@ -23,7 +25,8 @@ INSERT INTO users (username, password, realname, email) VALUES ('admin', '$2a$12
 CREATE TABLE groups (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE group_users (
@@ -39,7 +42,8 @@ CREATE TABLE roles (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO roles (name) VALUES ('QA');
@@ -49,7 +53,8 @@ INSERT INTO roles (name) VALUES ('Operations');
 CREATE TABLE ticket_resolutions (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_resolutions (name) VALUES ("TICK_RESO_FIXED");
@@ -59,7 +64,8 @@ CREATE TABLE ticket_statuses (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_statuses (name) VALUES ("TICK_STATUS_OPEN");
@@ -69,7 +75,8 @@ INSERT INTO ticket_statuses (name) VALUES ("TICK_STATUS_CLOSED");
 CREATE TABLE ticket_types (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_BUG");
@@ -79,7 +86,8 @@ INSERT INTO ticket_types (name) VALUES ("TICK_TYPE_MILESTONE");
 CREATE TABLE ticket_link_types (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_link_types (name) VALUES ("TICK_LINK_BLOCKS");
@@ -88,7 +96,8 @@ CREATE TABLE ticket_severities (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     position INT NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_severities (name, position) VALUES ("TICK_SEV_DIFFICULT", 100);
@@ -99,7 +108,8 @@ CREATE TABLE ticket_priorities (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     position INT NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO ticket_priorities (name, position) VALUES ("TICK_PRIO_HIGH", 100);
@@ -126,7 +136,8 @@ CREATE TABLE projects (
     pkey VARCHAR(16) NOT NULL UNIQUE,
     workflow_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (workflow_id) REFERENCES workflows(id),
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY(pkey)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE project_role_users (
