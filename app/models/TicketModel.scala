@@ -51,6 +51,7 @@ object TicketModel {
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
+  val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -190,6 +191,13 @@ object TicketModel {
       
     DB.withConnection { implicit conn =>
       allQuery.as(ticket *)
+    }
+  }
+
+  def getOpenCountForProject(projectId: Long) : Long = {
+    
+    DB.withConnection { implicit conn =>
+      getOpenCountForProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 

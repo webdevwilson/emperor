@@ -1,5 +1,6 @@
 @(page: chc.Page[models.Project])(implicit request: Request[AnyContent])
 @import util._
+@import models.TicketModel
 @main("project.list") {
 <div class="btn-group btn-group-above-table pull-right">
  <a href="@controllers.routes.Project.create" class="btn"><i class="icon-plus"></i> @Messages("project.add")</a>
@@ -11,11 +12,11 @@
   <li>
    <h3><a href="@controllers.routes.Project.item(project.id.get)">@project.name</a></h3>
    <dl class="dl-horizontal">
-    <dt>Open Tickets</dt>
+    <dt>@Messages("project.tickets.open")</dt>
+    <dd>@TicketModel.getOpenCountForProject(project.id.get)</dd>
+    <dt>@Messages("project.tickets.today")</dt>
     <dd>XXX</dd>
-    <dt>Tickets Today</dt>
-    <dd>XXX</dd>
-    <dt>Tickets This Week</dt>
+    <dt>@Messages("project.tickets.this_week")</dt>
     <dd>XXX</dd>
    </dl>
    <div class="chart">
