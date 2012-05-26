@@ -13,7 +13,6 @@ object Core extends Controller with Secured {
 
   def index = IsAuthenticated { implicit request =>
 
-    logger.error(username)
     val projects = models.ProjectModel.getAll
 
     Ok(views.html.index(projects))

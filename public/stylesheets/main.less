@@ -1,3 +1,5 @@
+@main-accent-color: #e1e1e8;
+
 .navbar {
   .brand {
     color: #fff;
@@ -24,6 +26,29 @@ ul.bordered li {
 li.draggable {
     cursor: move;
     height: 1.2em;
+}
+ul.boxy {
+  li {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid @main-accent-color;
+    margin: 0 0 1em 1em;
+    float: left;
+    padding: 5px;
+    width: 15em;
+  }
+  li:first-child {
+    margin-left: 0;
+  }
+  h3 {
+    border-bottom: 1px solid @main-accent-color;
+  }
+  dl {
+    margin-bottom: 5px;
+  }
+  .chart {
+    text-align: center;
+  }
 }
 table {
   td.actions {

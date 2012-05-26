@@ -1,0 +1,46 @@
+@(page: chc.Page[models.Project])(implicit request: Request[AnyContent])
+@import util._
+@main("project.list") {
+<div class="btn-group btn-group-above-table pull-right">
+ <a href="@controllers.routes.Project.create" class="btn"><i class="icon-plus"></i> @Messages("project.add")</a>
+</div>
+<h1>@Messages("project.list")</h1>
+@Option(page.items).filterNot(_.isEmpty).map { projects =>
+<table class="table table-bordered table-rounded table-striped">
+ <thead>
+  <th>@Messages("project.name")</th>
+  <th>@Messages("general.actions")</th>
+ </thead>
+ <tbody>
+  @projects.map { project =>
+  <tr>
+   <td><a href="@controllers.routes.Project.item(project.id.get)">@project.name</a></td>
+   <td class="actions">
+    <div class="btn-toolbar">
+     <div class="btn-group">
+      <a class="btn btn-mini" href="@routes.Project.edit(project.id.get)">@Messages("general.edit")</a>
+     </div>
+     <div class="btn-group">
+       <button class="btn btn-danger btn-mini">@Messages("general.disable") XXX</button>
+       <button class="btn btn-danger btn-mini dropdown-toggle" data-toggle="dropdown">
+         <span class="caret"></span>
+       </button>
+       <ul class="dropdown-menu">
+        <li>@Messages("general.delete")</li>
+       </ul>
+     </div>
+    </div>
+   </td>
+  </tr>
+  }
+ </tbody>
+ <tfoot>
+  <tr>
+   <td colspan="4">
+     @pager(page)
+    </td>
+   </tr>
+ </tfoot
+</table>
+}
+}

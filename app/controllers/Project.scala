@@ -69,7 +69,14 @@ object Project extends Controller with Secured {
     }
     
   }
-  
+
+  def list(page: Int, count: Int) = IsAuthenticated { implicit request =>
+
+    val groups = ProjectModel.list(page = page, count = count)
+
+    Ok(views.html.project.list(groups)(request))
+  }
+
   def update(projectId: Long) = IsAuthenticated { implicit request =>
 
     projectForm.bindFromRequest.fold(
