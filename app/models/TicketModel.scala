@@ -273,7 +273,7 @@ object TicketModel {
         'ticket_id -> id
       ).executeUpdate
 
-      val foo = updateQuery.on(
+      updateQuery.on(
         'id                     -> id,
         'reporter_id            -> ticket.reporterId,
         'priority_id            -> ticket.priorityId,
