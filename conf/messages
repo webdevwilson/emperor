@@ -66,8 +66,9 @@ admin.workflow.modify.final=Final Workflow
 admin.workflow.modify.help=You may drag items from the available list on the left to the final list on the right, remove items by dragging them from right to left or reorder them.
 admin.workflow.with.id=Workflow {0}
 
-auth.failure = Login failed.
-auth.success = Successfully logged in.
+auth.failure=Login failed.
+auth.mustlogin=You must log in to perform that action.
+auth.success=Successfully logged in.
 
 form.cancel=Cancel
 form.submit=Submit
