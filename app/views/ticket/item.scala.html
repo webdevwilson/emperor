@@ -42,20 +42,41 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
-@helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-  <fieldset>
-    @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-   <div class="form-actions">
-    <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
-   </div>
-  </fieldset>  
-}
-@Option(comments.items).filterNot(_.isEmpty).map { comms =>
-<ul>
-  @comms.map { comment =>
-    <li>@comment.content</li>
-  }
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">@Messages("ticket.comment.list")</a></li>
+  <li><a href="#">@Messages("ticket.history.list")</a></li>
 </ul>
+@Option(comments.items).filterNot(_.isEmpty).map { comms =>
+<div class="row">
+ <div class="span3">
+   <ul class="nav nav-list">
+     <li class="nav-header">
+       List header
+     </li>
+     <li class="active">
+       <a href="#">Home</a>
+     </li>
+     <li>
+       <a href="#">Library</a>
+     </li>
+   </ul>
+ </div>
+ <div class="span9">
+   @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+     <fieldset>
+       @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+      <div class="form-actions">
+       <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+      </div>
+     </fieldset>  
+   }
+  <ul>
+  @comms.map { comment =>
+   <li>@{ Html(mdParser.parseToHTML(comment.content)) }</li>
+  }
+  </ul>
   @pager(comments)
+ </div>
+</div>
 }
 }
