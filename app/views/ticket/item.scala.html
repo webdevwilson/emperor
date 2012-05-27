@@ -1,4 +1,4 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.Page[models.Comment])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -46,37 +46,52 @@
   <li class="active"><a href="#">@Messages("ticket.comment.list")</a></li>
   <li><a href="#">@Messages("ticket.history.list")</a></li>
 </ul>
-@Option(comments.items).filterNot(_.isEmpty).map { comms =>
 <div class="row">
- <div class="span3">
+@if(comments.pager.items.isEmpty) {
+  @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+    <fieldset>
+      @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+     <div class="form-actions">
+      <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+     </div>
+    </fieldset>  
+  }
+} else {
+ <div class="span2">
+   @Option(comments.facets).filterNot(_.isEmpty).map { facets =>
    <ul class="nav nav-list">
+     @facets.map { facet =>
      <li class="nav-header">
-       List header
+       @facet.name
      </li>
-     <li class="active">
-       <a href="#">Home</a>
-     </li>
+     @facet.items.map { item =>
      <li>
-       <a href="#">Library</a>
+       <a href="#">@item.name <span class="badge">@item.count</span></a>
      </li>
+     }
+    }
    </ul>
+  }
  </div>
- <div class="span9">
+ <div class="span10">
    @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
      <fieldset>
-       @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+       @helper.textarea(field = commentForm("content"), args = 'class -> "input-xxlarge", '_label -> Messages("ticket.comment"), 'rows -> 4)
       <div class="form-actions">
        <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
       </div>
      </fieldset>  
    }
-  <ul>
-  @comms.map { comment =>
-   <li>@{ Html(mdParser.parseToHTML(comment.content)) }</li>
+  <ul class="unstyled events">
+  @comments.pager.items.map { comment =>
+   <li>
+    <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
+    <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix")</div>
+    </li>
   }
   </ul>
-  @pager(comments)
+  @pager(comments.pager)
  </div>
-</div>
 }
+</div>
 }

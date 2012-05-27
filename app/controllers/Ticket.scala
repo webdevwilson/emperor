@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import chc._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -87,11 +88,11 @@ object Ticket extends Controller with Secured {
           errors => {
             val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
             val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-            BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, comments)(request))
+            Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange =>
               TicketModel.advance(ticketId, statusChange.statusId)
-              Redirect("/ticket") // XXX
+              Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.status")
           }
         )
       }
@@ -172,12 +173,16 @@ object Ticket extends Controller with Secured {
     val ticket = TicketModel.findFullById(ticketId)
     val comments = TicketModel.getComments(ticketId)
 
+    TicketModel.getCommentsAsSearchResult(ticketId)
+
     ticket match {
       case Some(value) => {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
-        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)    
-        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, comments)(request))
+        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
+        // val searchComments = SearchResult[Comment](comments, List(Facets("author", "author", List(Facet("admin", "1", 1)))))
+        val searchComments = TicketModel.getCommentsAsSearchResult(ticketId = ticketId)
+        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments)(request))
       }
       case None => NotFound
     }

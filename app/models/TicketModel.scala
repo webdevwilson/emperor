@@ -5,13 +5,15 @@ import anorm.SqlParser._
 import chc._
 import play.api.db.DB
 import play.api.Play.current
+import scala.collection.mutable.ListBuffer
 
 case class InitialComment(
   content: String
 )
 
 case class Comment(
-  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long, content: String
+  id: Pk[Long] = NotAssigned, userId: Long, username: String,
+  realName: String, ticketId: Long, content: String
 )
 
 case class StatusChange(
@@ -62,7 +64,8 @@ object TicketModel {
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content) VALUES ({user_id}, {ticket_id}, {content})")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
-  val getCommentsQuery = SQL("SELECT * FROM ticket_comments WHERE ticket_id={ticket_id}")
+  val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.id ASC") // XXX fix ordering
+  val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.id ASC LIMIT {offset},{count}") // XXX fix ordering
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description FROM tickets t WHERE t.id={ticket_id}")
 
@@ -131,9 +134,11 @@ object TicketModel {
   val comment = {
     get[Pk[Long]]("id") ~
     get[Long]("user_id") ~
+    get[String]("username") ~
+    get[String]("realname") ~
     get[Long]("ticket_id") ~
     get[String]("content") map {
-      case id~userId~ticketId~content => Comment(id, userId, ticketId, content)
+      case id~userId~username~realName~ticketId~content => Comment(id, userId, username, realName, ticketId, content)
     }
   }
 
@@ -233,11 +238,35 @@ object TicketModel {
     val offset = count * page
     
     DB.withConnection { implicit conn =>
-      val comments = getCommentsQuery.on('ticket_id -> ticketId).as(comment *)
+      val comments = getCommentsQuery.on(
+        'ticket_id-> ticketId,
+        'offset   -> offset,
+        'count    -> count
+      ).as(comment *)
       
       val totalRows = getCommentsCountQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
       
       Page(comments, page, count, totalRows)
+    }
+  }
+  
+  def getCommentsAsSearchResult(ticketId: Long, page: Int = 0, count: Int = 10) : SearchResult[Comment] = {
+    
+    DB.withConnection { implicit conn =>
+      val comments = getAllCommentsQuery.on('ticket_id -> ticketId).as(comment *)
+
+      // Facet by author
+      val abits = comments.groupBy( item => item.userId )
+      val afacets = abits.mapValues( bit => bit.length).map(
+        t => Facet(name = t._1.toString, value = t._1.toString, count = t._2)
+      )
+
+      SearchResult(
+        pager = this.getComments(ticketId, page, count),
+        facets = List(
+          Facets(name = "Author", "author", afacets.toSeq)
+        )
+      )
     }
   }
 
