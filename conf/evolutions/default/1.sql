@@ -46,9 +46,8 @@ CREATE TABLE roles (
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO roles (name) VALUES ('QA');
-INSERT INTO roles (name) VALUES ('Developer');
-INSERT INTO roles (name) VALUES ('Operations');
+INSERT INTO roles (name) VALUES ('ROLE_QA');
+INSERT INTO roles (name) VALUES ('ROLE_DEVELOPER');
 
 CREATE TABLE ticket_resolutions (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -157,6 +156,7 @@ CREATE TABLE tickets (
     priority_id INT UNSIGNED NOT NULL,
     resolution_id INT UNSIGNED,
     proposed_resolution_id INT UNSIGNED,
+    reporter_id INT UNSIGNED NOT NULL,
     severity_id INT UNSIGNED NOT NULL,
     status_id INT UNSIGNED NOT NULL,
     type_id INT UNSIGNED NOT NULL,
@@ -167,6 +167,7 @@ CREATE TABLE tickets (
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
+    FOREIGN KEY (reporter_id) REFERENCES users(id),
     FOREIGN KEY (severity_id) REFERENCES ticket_severities(id),
     FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
     FOREIGN KEY (type_id) REFERENCES ticket_types(id)

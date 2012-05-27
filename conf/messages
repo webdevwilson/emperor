@@ -114,12 +114,13 @@ ticket.edit=Edit Ticket
 ticket.list=Tickets
 ticket.priority=Priority
 ticket.project=Project
+ticket.reporter=Reporter
 ticket.revert=Revert to {0}
 ticket.revert.start=At Start
+ticket.type=Type
 ticket.statuschange.error=There was an error changing the ticket's status.
 ticket.statuschange.summary=You are changing ticket {0} from <strong>{1}</strong> to <strong>{2}</strong>.
 ticket.summary=Summary
-ticket.type=Type
 ticket.severity=Severity
 ticket.status=Status
 ticket.with.id=Ticket {0}
@@ -146,6 +147,9 @@ user.password.confirm=Confirm Password
 user.realname=Real Name
 user.with.id=User {0}
 user.username=Username
+
+ROLE_QA=QA
+ROLE_DEVELOPER=Developer
 
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix

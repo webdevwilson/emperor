@@ -1,4 +1,4 @@
-@(id: Long, objForm: Form[(Ticket)], projs: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(Ticket)], users: List[(String,String)], projs: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -9,6 +9,7 @@
  <fieldset>
   @helper.inputText(field = objForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
   @helper.textarea(field = objForm("description"), args = 'class -> "input-xlarge", 'rows -> 5, '_label -> Messages("ticket.description"))
+  @helper.select(field = objForm("user_id"), options = users, args = '_label -> Messages("ticket.reporter"))
   @helper.select(field = objForm("project_id"), options = projs, args = 'disabled -> true, '_label -> Messages("ticket.project"))
   @helper.select(field = objForm("type_id"), options = ttypes, args = 'class -> "foo", '_label -> Messages("ticket.type"))
   @helper.select(field = objForm("priority_id"), options = priorities, args = 'class -> "foo", '_label -> Messages("ticket.priority"))

@@ -19,8 +19,9 @@ case class StatusChange(
 )
 
 case class InitialTicket(
-  projectId: Long, priorityId: Long, severityId: Long, typeId: Long,
-  position: Option[Long], summary: String, description: Option[String]
+  userId: Long, projectId: Long, priorityId: Long, severityId: Long,
+  typeId: Long, position: Option[Long], summary: String,
+  description: Option[String]
 )
 
 case class Ticket(
@@ -46,8 +47,8 @@ object TicketModel {
   val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id WHERE t.id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
-  val insertQuery = SQL("INSERT INTO tickets (project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
-  val updateQuery = SQL("UPDATE tickets SET project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
+  val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
@@ -150,6 +151,7 @@ object TicketModel {
       case Some(status) => {
         DB.withConnection { implicit conn =>
           insertQuery.on(
+            'reporter_id  -> ticket.userId,
             'project_id   -> ticket.projectId,
             'priority_id  -> ticket.priorityId,
             'severity_id  -> ticket.severityId,
