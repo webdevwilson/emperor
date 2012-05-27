@@ -25,19 +25,20 @@ case class InitialTicket(
 )
 
 case class Ticket(
-  id: Pk[Long] = NotAssigned, projectId: Long, priorityId: Long,
-  resolutionId: Option[Long], proposedResolutionId: Option[Long],
-  severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
-  summary: String, description: Option[String]
+  id: Pk[Long] = NotAssigned, reporterId: Long, projectId: Long,
+  priorityId: Long, resolutionId: Option[Long],
+  proposedResolutionId: Option[Long], severityId: Long, statusId: Long,
+  typeId: Long, position: Option[Long], summary: String,
+  description: Option[String]
 )
 
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, projectId: Long, projectName: String,
-  priorityId: Long, priorityName: String, resolutionId: Option[Long],
-  proposedResolutionId: Option[Long], severityId: Long, severityName: String,
-  workflowStatusId: Long, statusId: Long, statusName: String, typeId: Long,
-  typeName: String, position: Option[Long], summary: String,
-  description: Option[String]
+  id: Pk[Long] = NotAssigned, reportId: Long, projectId: Long,
+  projectName: String,  priorityId: Long, priorityName: String,
+  resolutionId: Option[Long],  proposedResolutionId: Option[Long],
+  severityId: Long, severityName: String, workflowStatusId: Long,
+  statusId: Long, statusName: String, typeId: Long, typeName: String,
+  position: Option[Long], summary: String, description: Option[String]
 )
 
 object TicketModel {
@@ -55,9 +56,11 @@ object TicketModel {
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments WHERE ticket_id={ticket_id}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
+  val insertHistoryQuery = SQL("INSERT INTO ticket_history SELECT t.*, {user_id} FROM tickets t WHERE t.id={ticket_id}")
 
   val ticket = {
     get[Pk[Long]]("id") ~
+    get[Long]("reporter_id") ~
     get[Long]("project_id") ~
     get[Long]("priority_id") ~
     get[Option[Long]]("resolution_id") ~
@@ -68,14 +71,15 @@ object TicketModel {
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") map {
-      case id~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
-        id, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description
+      case id~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
+        id, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description
       )
     }
   }
 
   val fullTicket = {
     get[Pk[Long]]("tickets.id") ~
+    get[Long]("tickets.reporter_id") ~
     get[Long]("tickets.project_id") ~
     get[String]("projects.name") ~
     get[Long]("tickets.priority_id") ~
@@ -92,8 +96,8 @@ object TicketModel {
     get[Option[Long]]("tickets.position") ~
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") map {
-      case id~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description => FullTicket(
-        id, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description
+      case id~reporterId~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description => FullTicket(
+        id, reporterId, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description
       )
     }
   }
@@ -234,9 +238,15 @@ object TicketModel {
       }
   }
   
-  def update(id: Long, ticket: Ticket) = {
+  def update(userId: Long, id: Long, ticket: Ticket) = {
 
     DB.withTransaction { implicit conn =>
+
+      insertHistoryQuery.on(
+        'user_id -> userId,
+        'ticket_id -> id
+      ).executeUpdate
+
       val foo = updateQuery.on(
         'id                     -> id,
         'priority_id            -> ticket.priorityId,

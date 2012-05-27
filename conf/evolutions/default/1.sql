@@ -193,3 +193,28 @@ CREATE TABLE ticket_comments (
   FOREIGN KEY(ticket_id) REFERENCES tickets(id),
   FOREIGN KEY(user_id) REFERENCES users(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE ticket_history (
+    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    project_id INT UNSIGNED NOT NULL,
+    priority_id INT UNSIGNED NOT NULL,
+    resolution_id INT UNSIGNED,
+    proposed_resolution_id INT UNSIGNED,
+    reporter_id INT UNSIGNED NOT NULL,
+    severity_id INT UNSIGNED NOT NULL,
+    status_id INT UNSIGNED NOT NULL,
+    type_id INT UNSIGNED NOT NULL,
+    position INT,
+    summary VARCHAR(255) NOT NULL,
+    description TEXT,
+    PRIMARY KEY(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (project_id) REFERENCES projects(id),
+    FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
+    FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
+    FOREIGN KEY (reporter_id) REFERENCES users(id),
+    FOREIGN KEY (severity_id) REFERENCES ticket_severities(id),
+    FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
+    FOREIGN KEY (type_id) REFERENCES ticket_types(id)
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;

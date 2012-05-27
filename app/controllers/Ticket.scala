@@ -45,6 +45,7 @@ object Ticket extends Controller with Secured {
   val ticketForm = Form(
     mapping(
       "id"            -> ignored(NotAssigned:Pk[Long]),
+      "reporter_id"   -> longNumber,
       "project_id"    -> longNumber,
       "priority_id"   -> longNumber,
       "resolution_id" -> optional(longNumber),
@@ -197,7 +198,7 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.edit(ticketId, errors, users, projs, ttypes, prios, sevs))
       }, {
         case ticket: models.Ticket =>
-        TicketModel.update(ticketId, ticket)
+        TicketModel.update(request.session.get("userId").get.toLong, ticketId, ticket)
         Redirect("/admin") // XXX
       }
     )
