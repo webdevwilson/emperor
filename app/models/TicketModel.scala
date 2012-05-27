@@ -51,8 +51,10 @@ object TicketModel {
   val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, project_id={project_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, status_id={status_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
-  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, contents) VALUES ({user_id}, {ticket_id}, {contents})")
+  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content) VALUES ({user_id}, {ticket_id}, {content})")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
+  val getCommentsQuery = SQL("SELECT * FROM ticket_comments WHERE ticket_id={ticket_id}")
+  val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -105,7 +107,7 @@ object TicketModel {
     }
   }
 
-  def addComment(ticketId: Long, userId: Long, contents: String) : Boolean = {
+  def addComment(ticketId: Long, userId: Long, content: String) : Boolean = {
     
     val ticket = this.findById(ticketId)
     
@@ -115,7 +117,7 @@ object TicketModel {
           insertCommentQuery.on(
             'user_id    -> userId,
             'ticket_id  -> ticketId,
-            'contents   -> contents
+            'content    -> content
           ).execute
         }
       }
@@ -193,6 +195,19 @@ object TicketModel {
       
     DB.withConnection { implicit conn =>
       allQuery.as(ticket *)
+    }
+  }
+
+  def getComments(ticketId: Long, page: Int = 0, count: Int = 10) : Page[Comment] = {
+    
+    val offset = count * page
+    
+    DB.withConnection { implicit conn =>
+      val comments = getCommentsQuery.on('ticket_id -> ticketId).as(comment *)
+      
+      val totalRows = getCommentsCountQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
+      
+      Page(comments, page, count, totalRows)
     }
   }
 

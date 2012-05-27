@@ -10,12 +10,12 @@ case class TicketPriority(id: Pk[Long] = NotAssigned, name: String, position: In
 
 object TicketPriorityModel {
 
-  val allQuery = SQL("SELECT * FROM ticket_severities ORDER BY position ASC")
-  val getByIdQuery = SQL("SELECT * FROM ticket_severities WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_severities LIMIT {offset},{count}")
-  val listCountQuery = SQL("SELECT count(*) FROM ticket_severities")
-  val insertQuery = SQL("INSERT INTO ticket_severities (name, position) VALUES ({name}, {position})")
-  val updateQuery = SQL("UPDATE ticket_severities SET name={name}, position={position} WHERE id={id}")
+  val allQuery = SQL("SELECT * FROM ticket_priorities ORDER BY position ASC")
+  val getByIdQuery = SQL("SELECT * FROM ticket_priorities WHERE id={id}")
+  val listQuery = SQL("SELECT * FROM ticket_priorities LIMIT {offset},{count}")
+  val listCountQuery = SQL("SELECT count(*) FROM ticket_priorities")
+  val insertQuery = SQL("INSERT INTO ticket_priorities (name, position) VALUES ({name}, {position})")
+  val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, position={position} WHERE id={id}")
 
   val ticket_priority = {
     get[Pk[Long]]("id") ~

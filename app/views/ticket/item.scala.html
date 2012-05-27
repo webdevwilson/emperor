@@ -1,6 +1,7 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.Page[models.Comment])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
+@import util._
 
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
@@ -48,5 +49,13 @@
     <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
    </div>
   </fieldset>  
+}
+@Option(comments.items).filterNot(_.isEmpty).map { comms =>
+<ul>
+  @comms.map { comment =>
+    <li>@comment.content</li>
+  }
+</ul>
+  @pager(comments)
 }
 }

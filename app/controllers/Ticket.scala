@@ -25,7 +25,7 @@ object Ticket extends Controller with Secured {
 
   val commentForm = Form(
     mapping(
-      "contents" -> nonEmptyText
+      "content" -> nonEmptyText
     )(models.InitialComment.apply)(models.InitialComment.unapply)
   )
 
@@ -79,6 +79,7 @@ object Ticket extends Controller with Secured {
   def status(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.findFullById(ticketId)
+    val comments = TicketModel.getComments(ticketId)
 
     ticket match {
       case Some(value) => {
@@ -86,7 +87,7 @@ object Ticket extends Controller with Secured {
           errors => {
             val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
             val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-            BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
+            BadRequest(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, comments)(request))
           }, {
             case statusChange: models.StatusChange =>
               TicketModel.advance(ticketId, statusChange.statusId)
@@ -121,8 +122,13 @@ object Ticket extends Controller with Secured {
   def comment(ticketId: Long) = IsAuthenticated { implicit request =>
 
     commentForm.bindFromRequest.fold(
-      errors => BadRequest("Missing parameter 'content'"),
-      values => Ok(toJson(Map("status" -> "OK")))
+      errors => {
+        Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.comment.invalid")
+      },
+      value => {
+        TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.content)
+        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.comment.added")
+      }
     )
   }
   
@@ -164,13 +170,14 @@ object Ticket extends Controller with Secured {
   def item(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.findFullById(ticketId)
+    val comments = TicketModel.getComments(ticketId)
 
     ticket match {
       case Some(value) => {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)    
-        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus)(request))
+        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, comments)(request))
       }
       case None => NotFound
     }
