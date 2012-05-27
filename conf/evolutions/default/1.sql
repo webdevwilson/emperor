@@ -196,6 +196,7 @@ CREATE TABLE ticket_comments (
 
 CREATE TABLE ticket_history (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+    ticket_id INT UNSIGNED NOT NULL,
     user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
     priority_id INT UNSIGNED NOT NULL,
@@ -209,6 +210,7 @@ CREATE TABLE ticket_history (
     summary VARCHAR(255) NOT NULL,
     description TEXT,
     PRIMARY KEY(id),
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),

@@ -51,12 +51,11 @@ object Ticket extends Controller with Secured {
       "resolution_id" -> optional(longNumber),
       "proposed_resolution_id" -> optional(longNumber),
       "severity_id"   -> longNumber,
-      "status_id"     -> longNumber,
       "type_id"       -> longNumber,
       "position"      -> optional(longNumber),
       "summary"       -> nonEmptyText,
       "description"   -> optional(text)
-    )(models.Ticket.apply)(models.Ticket.unapply)
+    )(models.EditTicket.apply)(models.EditTicket.unapply)
   )
 
   def newStatus(ticketId: Long, statusId: Long) = IsAuthenticated { implicit request =>
@@ -196,10 +195,11 @@ object Ticket extends Controller with Secured {
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
         BadRequest(views.html.ticket.edit(ticketId, errors, users, projs, ttypes, prios, sevs))
-      }, {
-        case ticket: models.Ticket =>
-        TicketModel.update(request.session.get("userId").get.toLong, ticketId, ticket)
-        Redirect("/admin") // XXX
+      },
+      value => {
+        // case ticket: models.EditTicket =>
+          TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
+          Redirect("/admin") // XXX
       }
     )
   }
