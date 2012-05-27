@@ -3,6 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
@@ -19,7 +20,7 @@ object WorkflowModel {
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE ws.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
-  val addQuery = SQL("INSERT INTO workflows (name, description) VALUES ({name}, {description})")
+  val addQuery = SQL("INSERT INTO workflows (name, description, date_created) VALUES ({name}, {description}, NOW())")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON ts.id = ws.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
@@ -49,8 +50,8 @@ object WorkflowModel {
 
     DB.withConnection { implicit conn =>
       addQuery.on(
-        'name       -> workflow.name,
-        'description-> workflow.description
+        'name         -> workflow.name,
+        'description  -> workflow.description
       ).executeUpdate
 
       val id = lastInsertQuery.as(scalar[Long].single)

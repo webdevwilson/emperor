@@ -4,11 +4,12 @@ CREATE TABLE workflows (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO workflows (name) VALUES ('WORK_EMP_DEFAULT');
+INSERT INTO workflows (name, date_created) VALUES ('WORK_EMP_DEFAULT', NOW());
 
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
