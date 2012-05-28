@@ -27,10 +27,9 @@ object Group extends Controller with Secured {
 
     addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.create(errors)),
-      {
-        case group: models.Group =>
-        GroupModel.create(group)
-        Redirect("/admin/group") // XXX
+      values => {
+        val group = GroupModel.create(values)
+        Redirect(routes.Group.item(group.id.get)).flashing("success" -> "admin.group.add.success")
       }
     )
   }
@@ -74,10 +73,9 @@ object Group extends Controller with Secured {
 
     addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.edit(groupId, errors)),
-      {
-        case group: models.Group =>
-        GroupModel.update(groupId, group)
-        Redirect("/admin/group") // XXX
+      value => {
+        GroupModel.update(groupId, value)
+        Redirect(routes.Group.item(groupId)).flashing("success" -> "admin.group.edit.success")
       }
     )
   }

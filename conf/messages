@@ -10,6 +10,8 @@ admin.group.list=Groups
 admin.group.menu.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
+admin.group.add.success=Group Added
+admin.group.edit.success=Group Updated
 
 admin.projects=Projects
 admin.project.menu.list=Projects
