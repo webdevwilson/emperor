@@ -9,6 +9,7 @@ import play.api.mvc._
 import play.db._
 import chc._
 import controllers._
+import java.util.Date
 import models.TicketStatusModel
 import models.WorkflowModel
 
@@ -16,9 +17,17 @@ object Workflow extends Controller with Secured {
 
   val objForm = Form(
     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
       "description" -> optional(text)
+    )(models.InitialWorkflow.apply)(models.InitialWorkflow.unapply)
+  )
+
+  val editForm = Form(
+    mapping(
+      "id" -> ignored(NotAssigned:Pk[Long]),
+      "name" -> nonEmptyText,
+      "description" -> optional(text),
+      "date_created" -> ignored(new Date()) // A little white lie, ignored anyway
     )(models.Workflow.apply)(models.Workflow.unapply)
   )
 
@@ -51,7 +60,7 @@ object Workflow extends Controller with Secured {
     val workflow = WorkflowModel.findById(workflowId)
 
     workflow match {
-      case Some(value) => Ok(views.html.admin.workflow.edit(workflowId, objForm.fill(value))(request))
+      case Some(value) => Ok(views.html.admin.workflow.edit(workflowId, editForm.fill(value))(request))
       case None => NotFound
     }
   }
@@ -81,12 +90,12 @@ object Workflow extends Controller with Secured {
   
   def update(workflowId: Long) = IsAuthenticated { implicit request =>
 
-    objForm.bindFromRequest.fold(
+    editForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.edit(workflowId, errors)),
       {
         case workflow: models.Workflow =>
-        WorkflowModel.update(workflowId, workflow)
-        Redirect("/admin/workflow") // XXX
+          WorkflowModel.update(workflowId, workflow)
+          Redirect("/admin/workflow") // XXX
       }
     )
   }

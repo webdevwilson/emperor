@@ -8,7 +8,8 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String])
+case class InitialWorkflow(name: String, description: Option[String])
+case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: Date)
 
 case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: String, position: Int)
 
@@ -20,7 +21,7 @@ object WorkflowModel {
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE ws.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
-  val addQuery = SQL("INSERT INTO workflows (name, description, date_created) VALUES ({name}, {description}, NOW())")
+  val addQuery = SQL("INSERT INTO workflows (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON ts.id = ws.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
@@ -31,8 +32,9 @@ object WorkflowModel {
   val workflow = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
-    get[Option[String]]("description") map {
-      case id~name~description => Workflow(id, name, description)
+    get[Option[String]]("description") ~
+    get[Date]("date_created") map {
+      case id~name~description~dateCreated => Workflow(id, name, description, dateCreated)
     }
   }
   

@@ -67,7 +67,7 @@ object TicketModel {
   val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.id ASC") // XXX fix ordering
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.id ASC LIMIT {offset},{count}") // XXX fix ordering
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
-  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description FROM tickets t WHERE t.id={ticket_id}")
+  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description, UTC_TIMESTAMP() FROM tickets t WHERE t.id={ticket_id}")
 
   val ticket = {
     get[Pk[Long]]("id") ~
