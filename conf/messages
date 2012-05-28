@@ -57,14 +57,18 @@ admin.ticket_status.edit=Edit Ticket Status
 admin.ticket_status.edit.success=Ticket Status Updated
 admin.ticket_status.menu.list=Statuses
 admin.ticket_status.list=Ticket Statuses
+admin.ticket_status.with.id=Ticket Status {0}
 
 admin.ticket_type.add=Add Ticket Type
+admin.ticket_type.add.success=Ticket Type Added
 admin.ticket_type.edit=Edit Ticket Type
+admin.ticket_type.edit.success=Ticket Type Added
 admin.ticket_type.list=Ticket Types
 admin.ticket_type.menu.list=Types
 admin.ticket_type.with.id=Ticket Type {0}
 
 admin.user.add=Add User
+admin.user.add.success=User Added
 admin.user.changepassword=Change Password
 admin.user.edit=Edit User
 admin.user.groups.list=Group Membership

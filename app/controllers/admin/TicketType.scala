@@ -27,10 +27,9 @@ object TicketType extends Controller with Secured {
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.create(errors)),
-      {
-        case ttype: models.TicketType =>
-        TicketTypeModel.create(ttype)
-        Redirect("/admin/ticket/type") // XXX
+      value => {
+        val ttype = TicketTypeModel.create(value)
+        Redirect(routes.TicketType.item(ttype.id.get)).flashing("success" -> "admin.ticket_type.add.success")
       }
     )
   }
@@ -72,10 +71,9 @@ object TicketType extends Controller with Secured {
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.edit(typeId, errors)),
-      {
-        case ttype: models.TicketType =>
-        TicketTypeModel.update(typeId, ttype)
-        Redirect("/admin/ticket/type") // XXX
+      value => {
+        TicketTypeModel.update(typeId, value)
+        Redirect(routes.TicketType.item(typeId)).flashing("success" -> "admin.ticket_type.edit.success")
       }
     )
   }

@@ -28,7 +28,7 @@ object TicketStatus extends Controller with Secured {
       errors => BadRequest(views.html.admin.ticket.status.create(errors)),
       value => {
         val status = TicketStatusModel.create(value)
-        Redirect(routes.TicketStatus.item(status.get.id.get)).flashing("success" -> "admin.ticket_status.add.success")
+        Redirect(routes.TicketStatus.item(status.id.get)).flashing("success" -> "admin.ticket_status.add.success")
       }
     )
   }

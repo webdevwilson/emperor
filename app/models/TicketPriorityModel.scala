@@ -28,7 +28,7 @@ object TicketPriorityModel {
     }
   }
 
-  def create(tp: TicketPriority): Option[TicketPriority] = {
+  def create(tp: TicketPriority): TicketPriority = {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
@@ -37,7 +37,7 @@ object TicketPriorityModel {
       ).executeUpdate
 
       val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id)
+      this.getById(id).get
     }
   }
   

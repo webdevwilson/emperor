@@ -17,6 +17,7 @@ object TicketTypeModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_types")
   val insertQuery = SQL("INSERT INTO ticket_types (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_types SET name={name} WHERE id={id}")
+  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val ticket_type = {
     get[Pk[Long]]("id") ~
@@ -26,15 +27,16 @@ object TicketTypeModel {
     }
   }
 
-  def create(ts: TicketType): TicketType = {
+  def create(tt: TicketType): TicketType = {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
-        'name   -> ts.name
+        'name   -> tt.name
       ).executeUpdate
+
+      val id = lastInsertQuery.as(scalar[Long].single)
+      this.getById(id).get
     }
-    
-    ts
   }
   
   def delete(id: Long) {

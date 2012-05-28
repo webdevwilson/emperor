@@ -27,7 +27,7 @@ object TicketResolutionModel {
     }
   }
 
-  def create(tr: TicketResolution): Option[TicketResolution] = {
+  def create(tr: TicketResolution): TicketResolution = {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
@@ -35,7 +35,7 @@ object TicketResolutionModel {
       ).executeUpdate
 
       val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id)
+      this.getById(id).get
     }
   }
   

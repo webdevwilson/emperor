@@ -28,7 +28,7 @@ object TicketPriority extends Controller with Secured {
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.create(errors)),
       value => {
-        val priority = TicketPriorityModel.create(value).get
+        val priority = TicketPriorityModel.create(value)
         Redirect(routes.TicketPriority.item(priority.id.get)).flashing("success" -> "admin.ticket_priority.add.success")
       }
     )

@@ -29,7 +29,7 @@ object TicketSeverity extends Controller with Secured {
       errors => BadRequest(views.html.admin.ticket.severity.create(errors)),
       value => {
         val sev = TicketSeverityModel.create(value)
-        Redirect(routes.TicketSeverity.item(sev.get.id.get)).flashing("success" -> "admin.ticket_severity.add.success")
+        Redirect(routes.TicketSeverity.item(sev.id.get)).flashing("success" -> "admin.ticket_severity.add.success")
       }
     )
   }

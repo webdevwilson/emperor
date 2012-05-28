@@ -28,7 +28,7 @@ object TicketSeverityModel {
     }
   }
 
-  def create(ts: TicketSeverity): Option[TicketSeverity] = {
+  def create(ts: TicketSeverity): TicketSeverity = {
 
     DB.withConnection { implicit conn =>
       insertQuery.on(
@@ -37,7 +37,7 @@ object TicketSeverityModel {
       ).executeUpdate
 
       val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id)
+      this.getById(id).get
     }
     
   }

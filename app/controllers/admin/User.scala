@@ -44,15 +44,11 @@ object User extends Controller with Secured {
 
   def add = IsAuthenticated { implicit request =>
 
-    // val (username, password, realName, email) = userForm.bindFromRequest.get
-
     newForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
-      {
-        case user: models.InitialUser => {
-          UserModel.create(user)
-          Redirect("/admin/user")
-        }
+      value => {
+        val user = UserModel.create(value)
+        Redirect(routes.User.item(user.id.get)).flashing("success" -> "admin.user.add.success")
       }
     )
   }
