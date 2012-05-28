@@ -28,10 +28,9 @@ object Workflow extends Controller with Secured {
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.create(errors)),
-      {
-        case workflow: models.Workflow =>
-          WorkflowModel.create(workflow)
-          Redirect("/admin/workflow") // XXX
+      value => {
+        val workflow = WorkflowModel.create(value)
+        Redirect(routes.Workflow.item(workflow.id.get)).flashing("success" -> "admin.workflow.add.success")
       }
     )
   }
@@ -85,10 +84,9 @@ object Workflow extends Controller with Secured {
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.edit(workflowId, errors)),
-      {
-        case workflow: models.Workflow =>
-          WorkflowModel.update(workflowId, workflow)
-          Redirect("/admin/workflow") // XXX
+      value => {
+        WorkflowModel.update(workflowId, value)
+        Redirect(routes.Workflow.item(workflowId)).flashing("success" -> "admin.workflow.edit.success")
       }
     )
   }

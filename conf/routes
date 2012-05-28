@@ -74,7 +74,7 @@ GET     /admin/workflow/:id             controllers.admin.Workflow.item(id: Long
 POST    /admin/workflow/:id             controllers.admin.Workflow.update(id: Long)
 GET     /admin/workflow/edit/:id        controllers.admin.Workflow.edit(id: Long)
 GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Long)
-GET     /admin/workflow                 controllers.admin.Workflow.add
+POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
 GET     /auth/login                     controllers.Auth.login

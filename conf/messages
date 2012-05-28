@@ -79,7 +79,9 @@ admin.user.password.success=Password Saved
 admin.user.with.id=User {0}
 
 admin.workflow.add=Add Workflow
+admin.workflow.add.success=Workflow Added
 admin.workflow.edit=Edit Workflow
+admin.workflow.edit.success=Workflow Updated
 admin.workflow.list=Workflows
 admin.workflow.menu.list=Workflows
 admin.workflow.modify=Modify Statuses
