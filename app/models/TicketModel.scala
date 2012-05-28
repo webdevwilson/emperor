@@ -72,6 +72,7 @@ object TicketModel {
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description, UTC_TIMESTAMP() FROM tickets t WHERE t.id={ticket_id}")
+  val getCommentFacetUser = SQL("SELECT count(*) as occurrences, u.username, u.id FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} GROUP BY user_id")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -146,6 +147,14 @@ object TicketModel {
     get[String]("content") ~
     get[Date]("date_created") map {
       case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
+    }
+  }
+
+  val authorFacet = {
+    get[String]("users.username") ~
+    get[Long]("users.id") ~
+    get[Long]("occurrences") map {
+      case username~authorId~occurrences => Facet(username, authorId.toString, occurrences)
     }
   }
 
@@ -262,16 +271,12 @@ object TicketModel {
     DB.withConnection { implicit conn =>
       val comments = getAllCommentsQuery.on('ticket_id -> ticketId).as(comment *)
 
-      // Facet by author
-      val abits = comments.groupBy( item => item.userId )
-      val afacets = abits.mapValues( bit => bit.length).map(
-        t => Facet(name = t._1.toString, value = t._1.toString, count = t._2)
-      )
+      val afacets = getCommentFacetUser.on('ticket_id -> ticketId).as(authorFacet *)
 
       SearchResult(
         pager = this.getComments(ticketId, page, count),
         facets = List(
-          Facets(name = "Author", "author", afacets.toSeq)
+          Facets(name = "Author", "author", afacets)
         )
       )
     }

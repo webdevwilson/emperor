@@ -14,7 +14,7 @@ case class Page[+A](items: Seq[A], page: Int, count: Int, total: Long) {
   lazy val lastPage = (total.toDouble / count).ceil.toInt - 1
 }
 
-case class Facet(name: String, value: String, count: Int)
+case class Facet(name: String, value: String, count: Long)
 case class Facets(name: String, param: String, items: Seq[Facet])
 case class SearchResult[A](pager: Page[A], facets: Seq[Facets])
 
