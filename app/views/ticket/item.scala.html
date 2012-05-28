@@ -42,56 +42,72 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#">@Messages("ticket.comment.list")</a></li>
-  <li><a href="#">@Messages("ticket.history.list")</a></li>
-</ul>
-<div class="row">
-@if(comments.pager.items.isEmpty) {
-  @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-    <fieldset>
-      @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-     <div class="form-actions">
-      <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+<div id="ticketTabs" data-toggle="tab">
+ <ul class="nav nav-tabs" data-toggle="tab">
+  <li class="active"><a href="#comments">@Messages("ticket.comment.list")</a></li>
+  <li><a href="#history">@Messages("ticket.history.list")</a></li>
+ </ul>
+  <div class="row">
+   <div class="tab-content">
+     <div class="tab-pane active" id="comments">
+      @if(comments.pager.items.isEmpty) {
+        @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+          <fieldset>
+            @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+           <div class="form-actions">
+            <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+           </div>
+          </fieldset>  
+        }
+      } else {
+       <div class="span2">
+         @Option(comments.facets).filterNot(_.isEmpty).map { facets =>
+         <ul class="nav nav-list">
+           @facets.map { facet =>
+           <li class="nav-header">
+             @facet.name
+           </li>
+           @facet.items.map { item =>
+           <li>
+             <a href="#">@item.name <span class="badge">@item.count</span></a>
+           </li>
+           }
+          }
+         </ul>
+        }
+       </div>
+       <div class="span10">
+         @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+           <fieldset>
+             @helper.textarea(field = commentForm("content"), args = 'class -> "input-xxlarge", '_label -> Messages("ticket.comment"), 'rows -> 4)
+            <div class="form-actions">
+             <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+            </div>
+           </fieldset>  
+         }
+        <ul class="unstyled events">
+        @comments.pager.items.map { comment =>
+         <li>
+          <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
+          <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
+          </li>
+        }
+        </ul>
+        @pager(comments.pager)
+       </div>
+      }
      </div>
-    </fieldset>  
-  }
-} else {
- <div class="span2">
-   @Option(comments.facets).filterNot(_.isEmpty).map { facets =>
-   <ul class="nav nav-list">
-     @facets.map { facet =>
-     <li class="nav-header">
-       @facet.name
-     </li>
-     @facet.items.map { item =>
-     <li>
-       <a href="#">@item.name <span class="badge">@item.count</span></a>
-     </li>
-     }
-    }
-   </ul>
-  }
+   </div>
+   <div class="tab-pane" id="history">
+     History
+   </div>
  </div>
- <div class="span10">
-   @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-     <fieldset>
-       @helper.textarea(field = commentForm("content"), args = 'class -> "input-xxlarge", '_label -> Messages("ticket.comment"), 'rows -> 4)
-      <div class="form-actions">
-       <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
-      </div>
-     </fieldset>  
-   }
-  <ul class="unstyled events">
-  @comments.pager.items.map { comment =>
-   <li>
-    <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
-    <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
-    </li>
-  }
-  </ul>
-  @pager(comments.pager)
- </div>
-}
 </div>
+<script>
+YUI().use('gallery-bootstrap', function (Y) {
+  var tabview = new Y.Bootstrap.Tabview({ node: '#ticketTabs' });
+
+  tabview.selectChild(0); // Select the second tab
+});
+</script>
 }
