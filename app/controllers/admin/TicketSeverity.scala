@@ -27,10 +27,9 @@ object TicketSeverity extends Controller with Secured {
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.create(errors)),
-      {
-        case severity: models.TicketSeverity =>
-        TicketSeverityModel.create(severity)
-        Redirect("/admin/ticket/severity") // XXX
+      value => {
+        val sev = TicketSeverityModel.create(value)
+        Redirect(routes.TicketSeverity.item(sev.get.id.get)).flashing("success" -> "admin.ticket_severity.add.success")
       }
     )
   }
@@ -72,10 +71,9 @@ object TicketSeverity extends Controller with Secured {
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.edit(severityId, errors)),
-      {
-        case severity: models.TicketSeverity =>
-        TicketSeverityModel.update(severityId, severity)
-        Redirect("/admin/ticket/severity") // XXX
+      value => {
+        TicketSeverityModel.update(severityId, value)
+        Redirect(routes.TicketSeverity.item(severityId)).flashing("success" -> "admin.ticket_severity.edit.success")
       }
     )
   }
