@@ -66,6 +66,8 @@ object TicketModel {
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
+  val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
+  val getOpenCountForWeekProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= DATE_SUB(UTC_DATE(), INTERVAL 1 WEEK)")
   val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.date_created ASC")
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
@@ -279,6 +281,20 @@ object TicketModel {
     
     DB.withConnection { implicit conn =>
       getOpenCountForProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
+    }
+  }
+
+  def getOpenCountTodayForProject(projectId: Long) : Long = {
+    
+    DB.withConnection { implicit conn =>
+      getOpenCountForTodayProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
+    }
+  }
+
+  def getOpenCountWeekForProject(projectId: Long) : Long = {
+    
+    DB.withConnection { implicit conn =>
+      getOpenCountForWeekProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 
