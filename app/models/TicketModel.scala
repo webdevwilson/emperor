@@ -66,8 +66,8 @@ object TicketModel {
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
-  val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.id ASC") // XXX fix ordering
-  val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.id ASC LIMIT {offset},{count}") // XXX fix ordering
+  val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.date_created ASC")
+  val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description, UTC_TIMESTAMP() FROM tickets t WHERE t.id={ticket_id}")
 
