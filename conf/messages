@@ -31,11 +31,13 @@ admin.ticket_priority.add=Add Ticket Priority
 admin.ticket_priority.edit=Edit Ticket Priority
 admin.ticket_priority.menu.list=Priorities
 admin.ticket_priority.list=Ticket Priorities
+admin.ticket_priority.with.id=Ticket Priority {0}
 
 admin.ticket_severity.add=Add Ticket Severity
 admin.ticket_severity.edit=Edit Ticket Severity
 admin.ticket_severity.menu.list=Severities
 admin.ticket_severity.list=Ticket Severities
+admin.ticket_severity.with.id=Ticket Priority {0}
 
 admin.ticket_status.add=Add Ticket Status
 admin.ticket_status.edit=Edit Ticket Status
