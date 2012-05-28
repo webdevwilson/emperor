@@ -36,7 +36,9 @@ admin.ticket_link_type.menu.list=Link Types
 admin.ticket_link_type.with.id=Ticket Link Type {0}
 
 admin.ticket_priority.add=Add Ticket Priority
+admin.ticket_priority.add.success=Ticket Priority Added
 admin.ticket_priority.edit=Edit Ticket Priority
+admin.ticket_priority.edit.success=Ticket Priority Saved
 admin.ticket_priority.menu.list=Priorities
 admin.ticket_priority.list=Ticket Priorities
 admin.ticket_priority.with.id=Ticket Priority {0}

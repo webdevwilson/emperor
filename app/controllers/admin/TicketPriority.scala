@@ -27,10 +27,9 @@ object TicketPriority extends Controller with Secured {
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.create(errors)),
-      {
-        case priority: models.TicketPriority =>
-        TicketPriorityModel.create(priority)
-        Redirect("/admin/ticket/priority") // XXX
+      value => {
+        val priority = TicketPriorityModel.create(value).get
+        Redirect(routes.TicketPriority.item(priority.id.get)).flashing("success" -> "admin.ticket_priority.add.success")
       }
     )
   }
@@ -65,17 +64,15 @@ object TicketPriority extends Controller with Secured {
       case Some(value) => Ok(views.html.admin.ticket.priority.item(value)(request))
       case None => NotFound
     }
-    
   }
   
   def update(priorityId: Long) = IsAuthenticated { implicit request =>
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.edit(priorityId, errors)),
-      {
-        case priority: models.TicketPriority =>
-        TicketPriorityModel.update(priorityId, priority)
-        Redirect("/admin/ticket/priority") // XXX
+      value => {
+        TicketPriorityModel.update(priorityId, value)
+        Redirect(routes.TicketPriority.item(priorityId)).flashing("success" -> "admin.ticket_priority.edit.success")
       }
     )
   }
