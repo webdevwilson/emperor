@@ -13,7 +13,7 @@ object TicketPriorityModel {
 
   val allQuery = SQL("SELECT * FROM ticket_priorities ORDER BY position ASC")
   val getByIdQuery = SQL("SELECT * FROM ticket_priorities WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_priorities LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_priorities ORDER BY position ASC LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_priorities")
   val insertQuery = SQL("INSERT INTO ticket_priorities (name, position, date_created) VALUES ({name}, {position}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, position={position} WHERE id={id}")
