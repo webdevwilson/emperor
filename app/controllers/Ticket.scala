@@ -172,7 +172,7 @@ object Ticket extends Controller with Secured {
     
     val ticket = TicketModel.getFullById(ticketId)
     val history = TicketModel.getHistory(ticketId)
-    TicketModel.getChanges(ticketId, history.items)
+    val changes = TicketModel.getChanges(ticketId, history.items)
 
     ticket match {
       case Some(value) => {
@@ -180,7 +180,7 @@ object Ticket extends Controller with Secured {
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
         val searchComments = TicketModel.getCommentsAsSearchResult(ticketId = ticketId)
-        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments)(request))
+        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments, changes)(request))
       }
       case None => NotFound
     }

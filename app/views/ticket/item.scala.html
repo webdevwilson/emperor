@@ -1,4 +1,4 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment], changes: Seq[TicketChanges])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -99,7 +99,7 @@
      </div>
    </div>
    <div class="tab-pane" id="history">
-     History
+     History @changes
    </div>
  </div>
 </div>

@@ -54,7 +54,7 @@ case class Ticket(
 )
 
 case class TicketHistory(
-  id: Pk[Long] = NotAssigned, ticketId: Long, userId: Long,
+  id: Pk[Long] = NotAssigned, ticketId: Long, userId: Long, realName: String,
   reporterId: Long, projectId: Long, priorityId: Long,
   resolutionId: Option[Long],  proposedResolutionId: Option[Long],
   severityId: Long,  statusId: Long, typeId: Long,
@@ -63,7 +63,10 @@ case class TicketHistory(
 )
 
 case class TicketChange(
-  name: String, oldValue: String, newValue: String, dateOccurred: Date
+  name: String, oldValue: String, newValue: String
+)
+case class TicketChanges(
+  userId: Long, realName: String, dateOccurred: Date, changes: Seq[TicketChange]
 )
 
 object TicketModel {
@@ -85,7 +88,7 @@ object TicketModel {
   val getAllHistoryQuery = SQL("SELECT * FROM ticket_history th JOIN users u ON u.id = th.user_id WHERE ticket_id={ticket_id} ORDER BY th.date_created ASC")
   val getHistoryByIdQuery = SQL("SELECT * from ticket_history th WHERE id > {id} AND ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT 1") // XXX id is only safe here if greater ids are always greater in date
   val getFollowingHistoryQuery = SQL("SELECT * from ticket_history th WHERE id={id}")
-  val getHistoryQuery = SQL("SELECT * from ticket_history th WHERE ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT {offset},{count}")
+  val getHistoryQuery = SQL("SELECT * from ticket_history th JOIN users u ON u.id = th.user_id WHERE ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT {offset},{count}")
   val getHistoryCountQuery = SQL("SELECT count(*) FROM ticket_history WHERE ticket_id={ticket_id}")
   val getMostRecentHistoryIdQuery = SQL("SELECT th.id FROM ticket_history th WHERE ticket_id={ticket_id} ORDER BY th.date_occurred DESC LIMIT 1")
 
@@ -163,6 +166,7 @@ object TicketModel {
     get[Pk[Long]]("ticket_history.id") ~
     get[Long]("ticket_history.ticket_id") ~
     get[Long]("ticket_history.user_id") ~
+    get[String]("users.realname") ~
     get[Long]("ticket_history.reporter_id") ~
     get[Long]("ticket_history.project_id") ~
     get[Long]("ticket_history.priority_id") ~
@@ -175,8 +179,8 @@ object TicketModel {
     get[String]("ticket_history.summary") ~
     get[Option[String]]("ticket_history.description") ~
     get[Date]("ticket_history.date_occurred") map {
-      case id~ticketId~userId~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description~dateCreated => TicketHistory(
-        id, ticketId, userId, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description, dateCreated
+      case id~ticketId~userId~realName~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description~dateCreated => TicketHistory(
+        id, ticketId, userId, realName, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description, dateCreated
       )
     }
   }
@@ -348,9 +352,9 @@ object TicketModel {
     }
   }
 
-  def getChanges(ticketId: Long, histories: Seq[TicketHistory]) : Seq[Seq[TicketChange]] = {
+  def getChanges(ticketId: Long, histories: Seq[TicketHistory]) : Seq[TicketChanges] = {
     
-    val firstChanges = DB.withConnection { implicit conn =>
+    val firstChanges : TicketChanges = DB.withConnection { implicit conn =>
       val highest = histories.last
       val newestHistoryId = highest.id.get // XXX last or first?
       val mostRecent = getMostRecentHistoryIdQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
@@ -363,9 +367,11 @@ object TicketModel {
           // compare this history entry to it's predecessor
           val changes = new ListBuffer[TicketChange]
           if(highest.severityId != ticket.severityId) {
-            changes.append(TicketChange("ticket.severity", highest.severityId.toString, ticket.severityId.toString, highest.dateOccurred))
+            changes.append(TicketChange("ticket.severity", highest.severityId.toString, ticket.severityId.toString))
           }
-          changes
+          TicketChanges(
+            userId = highest.userId, realName = highest.realName, dateOccurred = highest.dateOccurred, changes = changes
+          )
         }
         case false => 
           // This isn't the most recent history entry, so fetch the one after
@@ -375,8 +381,8 @@ object TicketModel {
       }
     }
     var lastHistory : Option[TicketHistory] = None
-    val changes = histories.reverseMap { history => {
-      val hcs = lastHistory match {
+    val changes : Seq[TicketChanges] = histories.reverseMap { history => {
+      val hcs : TicketChanges= lastHistory match {
         case Some(old) => this.computeChange(old, history)
         case None => firstChanges
       }
@@ -384,32 +390,34 @@ object TicketModel {
       hcs
     } }
     
-    println(changes)
     changes
   }
   
-  def computeChange(older: TicketHistory, newer: TicketHistory) : Seq[TicketChange] = {
+  def computeChange(older: TicketHistory, newer: TicketHistory) : TicketChanges = {
 
     val changes = new ListBuffer[TicketChange]
     if(older.severityId != newer.severityId) {
       changes.append(
-        TicketChange("ticket.severity", older.severityId.toString, newer.severityId.toString, older.dateOccurred)
+        TicketChange("ticket.severity", older.severityId.toString, newer.severityId.toString)
       )
     }
-    changes
+
+    TicketChanges(
+      userId = older.userId, realName = older.realName, dateOccurred = older.dateOccurred, changes = changes
+    )
   }
 
-  // def getChangesAsSearchResult(ticketId: Long, page: Int = 0, count: Int = 10) : SearchResult[Change] = {
+  // def getChangesAsSearchResult(ticketId: Long, page: Int = 0, count: Int = 10) : SearchResult[TicketChanges] = {
   //   
   //   DB.withConnection { implicit conn =>
-  //     val comments = getAllCommentsQuery.on('ticket_id -> ticketId).as(comment *)
   // 
-  //     val afacets = getCommentFacetUser.on('ticket_id -> ticketId).as(authorFacet *)
+  //     val histories = this.getHistory(ticketId, page, count)
+  //     val changes = this.getChanges(ticketId, histories.items)
   // 
   //     SearchResult(
-  //       pager = this.getHistory(ticketId, page, count),
+  //       pager = Page(changes, page, count, histories.total),
   //       facets = List(
-  //         Facets(name = "Author", "author", afacets)
+  //         Facets("Author", "author", )
   //       )
   //     )
   //   }
