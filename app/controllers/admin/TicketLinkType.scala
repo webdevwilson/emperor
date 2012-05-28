@@ -27,10 +27,9 @@ object TicketLinkType extends Controller with Secured {
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.create(errors)),
-      {
-        case tltype: models.TicketLinkType =>
-        TicketLinkTypeModel.create(tltype)
-        Redirect("/admin/ticket/linktype") // XXX
+      value => {
+        val tltype = TicketLinkTypeModel.create(value)
+        Redirect(routes.TicketLinkType.item(tltype.id.get)).flashing("success" -> "admin.ticket_link_type.add.success")
       }
     )
   }
@@ -72,10 +71,9 @@ object TicketLinkType extends Controller with Secured {
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.edit(ltypeId, errors)),
-      {
-        case ttype: models.TicketLinkType =>
-        TicketLinkTypeModel.update(ltypeId, ttype)
-        Redirect("/admin/ticket/linktype") // XXX
+      value => {
+        TicketLinkTypeModel.update(ltypeId, value)
+        Redirect(routes.TicketLinkType.item(ltypeId)).flashing("success" -> "admin.ticket_link_type.edit.success")
       }
     )
   }

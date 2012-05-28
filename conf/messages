@@ -28,7 +28,9 @@ admin.role.with.id=Role {0}
 admin.tickets=Tickets
 
 admin.ticket_link_type.add=Add Ticket Link Type
+admin.ticket_link_type.add.success=Ticket Link Type Added
 admin.ticket_link_type.edit=Edit Ticket Link Type
+admin.ticket_link_type.edit.success=Ticket Link Type Updated
 admin.ticket_link_type.list=Ticket Link Types
 admin.ticket_link_type.menu.list=Link Types
 admin.ticket_link_type.with.id=Ticket Link Type {0}
