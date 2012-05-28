@@ -171,16 +171,14 @@ object Ticket extends Controller with Secured {
   def item(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
-    val comments = TicketModel.getComments(ticketId)
-
-    TicketModel.getCommentsAsSearchResult(ticketId)
+    val history = TicketModel.getHistory(ticketId)
+    TicketModel.getChanges(ticketId, history.items)
 
     ticket match {
       case Some(value) => {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-        // val searchComments = SearchResult[Comment](comments, List(Facets("author", "author", List(Facet("admin", "1", 1)))))
         val searchComments = TicketModel.getCommentsAsSearchResult(ticketId = ticketId)
         Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments)(request))
       }
