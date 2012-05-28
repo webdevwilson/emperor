@@ -112,10 +112,10 @@ object Ticket extends Controller with Secured {
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
         BadRequest(views.html.ticket.create(errors, users, projs, ttypes, prios, sevs))
-      },{
-        case ticket: models.InitialTicket =>
-          TicketModel.create(ticket)
-          Redirect("/ticket") // XXX
+      },
+      value => {
+        val ticket = TicketModel.create(value)
+        Redirect(routes.Ticket.item(ticket.get.id.get)).flashing("success" -> "ticket.add.success")
       }
     )
   }
@@ -202,9 +202,8 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.edit(ticketId, errors, users, projs, ttypes, prios, sevs))
       },
       value => {
-        // case ticket: models.EditTicket =>
-          TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
-          Redirect("/admin") // XXX
+        TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
+        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )
   }

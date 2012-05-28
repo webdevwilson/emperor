@@ -132,6 +132,7 @@ role.description=Description
 role.name=Name
 
 ticket.add=Add Ticket
+ticket.add.success=Ticket Added
 ticket.advance=Advance to {0}
 ticket.advance.confirm=Advance
 ticket.advance.end=At End
@@ -143,6 +144,7 @@ ticket.comment.invalid=Invalid Comment
 ticket.comment.list=Comments
 ticket.description=Description
 ticket.edit=Edit Ticket
+ticket.edit.success=Ticket Updated
 ticket.error.status=Error Changing Status
 ticket.history.list=History
 ticket.list=Tickets

@@ -4,7 +4,6 @@
 @import helper.bootstrap._
 
 @main(Messages("ticket.edit")) {
-@objForm.errorsAsJson.toString
 <h1>@Messages("ticket.edit")</h1>
 @helper.form(action = routes.Ticket.update(id)) {
  <fieldset>

@@ -93,6 +93,7 @@ object Workflow extends Controller with Secured {
 
   def save(workflowId: Long) = IsAuthenticated { implicit request =>
 
-    Redirect("/admin/workflow") // XXX
+    // XXX Do me!
+    Redirect(routes.Workflow.item(workflowId)).flashing("success" -> "admin.workflow.edit.success")
   }
 }
