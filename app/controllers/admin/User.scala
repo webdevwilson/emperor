@@ -134,7 +134,7 @@ object User extends Controller with Secured {
       {
         case user: models.EditUser =>
         UserModel.update(userId, user)
-        Redirect("/admin/user")
+        Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.edit.success")
       }
     )
   }
@@ -152,7 +152,7 @@ object User extends Controller with Secured {
           }, {
             case np: models.NewPassword =>
             UserModel.updatePassword(userId, np)
-            Redirect("/admin/user")
+            Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.password.success")
           }
         )
       }

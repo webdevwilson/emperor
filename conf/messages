@@ -58,6 +58,8 @@ admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
 admin.user.menu.list=Users
+admin.user.edit.success=User Updated
+admin.user.password.success=Password Saved
 admin.user.with.id=User {0}
 
 admin.workflow.add=Add Workflow

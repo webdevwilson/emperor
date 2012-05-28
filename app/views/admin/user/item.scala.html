@@ -9,7 +9,8 @@
  </li>
  <li class="active">@user.username</li>
 </ul>
-<h1>@Messages("user.specific", user.username)</h1>
+<h1>@Messages("user.with.id", user.username)</h1>
+XXX edit link
 <h2>@Messages("admin.user.groups.list")</h2>
 <ul id="userGroups" class="unstyled bordered">
 @allGroups.map { group =>
