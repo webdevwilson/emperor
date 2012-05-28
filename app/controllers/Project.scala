@@ -28,10 +28,10 @@ object Project extends Controller with Secured {
       errors => {
         val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         BadRequest(views.html.project.create(errors, workflows))
-      }, {
-        case project: models.Project =>
-        ProjectModel.create(project)
-        Redirect("/project") // XXX
+      },
+      value => {
+        val project = ProjectModel.create(value)
+        Redirect(routes.Project.item(project.id.get)).flashing("success" -> "project.add.success")
       }
     )
   }
@@ -85,10 +85,10 @@ object Project extends Controller with Secured {
       errors => {
         val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         BadRequest(views.html.project.edit(projectId, errors, workflows))
-      }, {
-        case project: models.Project =>
-        ProjectModel.update(projectId, project)
-        Redirect("/admin") // XXX
+      },
+      value => {
+        ProjectModel.update(projectId, value)
+        Redirect(routes.Project.item(projectId)).flashing("success" -> "project.edit.success")
       }
     )
   }

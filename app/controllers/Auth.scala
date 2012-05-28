@@ -45,7 +45,7 @@ object Auth extends Controller {
 
           val user = UserModel.getByUsername(loginUser.username).get // We know this exists, so just get it
 
-          Redirect("/").withSession(Security.username -> loginUser.username, "userId" -> user.id.get.toString).flashing("success" -> "auth.success")
+          Redirect(routes.Core.index).withSession(Security.username -> loginUser.username, "userId" -> user.id.get.toString).flashing("success" -> "auth.success")
         }
       }
     )

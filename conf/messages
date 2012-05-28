@@ -116,7 +116,9 @@ pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
 
 project.add=Add Project
+project.add.success=Project Added
 project.edit=Edit Project
+project.edit.success=Project Updated
 project.list=Projects
 project.name=Name
 project.key=Key
