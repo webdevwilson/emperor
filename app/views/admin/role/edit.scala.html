@@ -9,12 +9,12 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.role.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.Role.index(page = 0, count = 10)">@Messages("admin.role.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("admin.role.with.id", "XXX")</li>
 </ul>
 <h1>@Messages("admin.role.edit")</h1>
-@helper.form(action = controllers.admin.routes.Group.update(id)) {
+@helper.form(action = controllers.admin.routes.Role.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("role.name"))
   <div class="form-actions">

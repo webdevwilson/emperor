@@ -18,8 +18,12 @@ admin.project.menu.list=Projects
 
 admin.role.add=Add Role
 
+admin.role.add.success=Role Added
+admin.role.edit=Edit Role
+admin.role.edit.success=Role Updated
 admin.role.list=Roles
 admin.role.menu.list=Roles
+admin.role.with.id=Role {0}
 
 admin.tickets=Tickets
 

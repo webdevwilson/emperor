@@ -27,10 +27,9 @@ object Role extends Controller with Secured {
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.create(errors)),
-      {
-        case role: models.Role =>
-        RoleModel.create(role)
-        Redirect("/admin/role") // XXX
+      value => {
+        val role = RoleModel.create(value)
+        Redirect(routes.Role.item(role.id.get)).flashing("success" -> "admin.role.add.success")
       }
     )
   }
@@ -72,10 +71,9 @@ object Role extends Controller with Secured {
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.edit(roleId, errors)),
-      {
-        case role: models.Role =>
-        RoleModel.update(roleId, role)
-        Redirect("/admin/role") // XXX
+      value => {
+        RoleModel.update(roleId, value)
+        Redirect(routes.Role.item(roleId)).flashing("success" -> "admin.role.edit.success")
       }
     )
   }
