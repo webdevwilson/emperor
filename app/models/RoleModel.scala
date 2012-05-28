@@ -47,7 +47,7 @@ object RoleModel {
       // XXX
   }
 
-  def findById(id: Long) : Option[Role] = {
+  def getById(id: Long) : Option[Role] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(role.singleOpt)

@@ -149,7 +149,7 @@ object TicketModel {
 
   def addComment(ticketId: Long, userId: Long, content: String) : Boolean = {
     
-    val ticket = this.findById(ticketId)
+    val ticket = this.getById(ticketId)
     
     ticket match {
       case Some(ticket) => {
@@ -180,7 +180,7 @@ object TicketModel {
 
   def create(ticket: InitialTicket): Option[EditTicket] = {
 
-    val project = ProjectModel.findById(ticket.projectId)
+    val project = ProjectModel.getById(ticket.projectId)
     
     // Fetch the starting status we should use for the project's workflow.
     val startingStatus = project match {
@@ -204,7 +204,7 @@ object TicketModel {
             'summary      -> ticket.summary
           ).execute
           val id = lastInsertQuery.as(scalar[Long].single)
-          this.findById(id)
+          this.getById(id)
         }
       }
       case None => None
@@ -217,14 +217,14 @@ object TicketModel {
       
   }
 
-  def findById(id: Long) : Option[EditTicket] = {
+  def getById(id: Long) : Option[EditTicket] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(editTicket.singleOpt)
     }
   }
 
-  def findFullById(id: Long) : Option[FullTicket] = {
+  def getFullById(id: Long) : Option[FullTicket] = {
       
     DB.withConnection { implicit conn =>
       getFullByIdQuery.on('id -> id).as(fullTicket.singleOpt)

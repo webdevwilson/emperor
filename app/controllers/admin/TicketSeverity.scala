@@ -49,7 +49,7 @@ object TicketSeverity extends Controller with Secured {
 
   def edit(severityId: Long) = IsAuthenticated { implicit request =>
 
-    val severity = TicketSeverityModel.findById(severityId)
+    val severity = TicketSeverityModel.getById(severityId)
 
     severity match {
       case Some(value) => Ok(views.html.admin.ticket.severity.edit(severityId, severityForm.fill(value))(request))
@@ -59,7 +59,7 @@ object TicketSeverity extends Controller with Secured {
 
   def item(severityId: Long) = IsAuthenticated { implicit request =>
     
-    val severity = TicketSeverityModel.findById(severityId)
+    val severity = TicketSeverityModel.getById(severityId)
 
     severity match {
       case Some(value) => Ok(views.html.admin.ticket.severity.item(value)(request))

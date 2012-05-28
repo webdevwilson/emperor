@@ -52,7 +52,7 @@ object Project extends Controller with Secured {
 
   def edit(projectId: Long) = IsAuthenticated { implicit request =>
 
-    val project = ProjectModel.findById(projectId)
+    val project = ProjectModel.getById(projectId)
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
     project match {
@@ -63,7 +63,7 @@ object Project extends Controller with Secured {
 
   def item(projectId: Long) = IsAuthenticated { implicit request =>
     
-    val project = ProjectModel.findById(projectId)
+    val project = ProjectModel.getById(projectId)
 
     project match {
       case Some(value) => Ok(views.html.project.item(value)(request))

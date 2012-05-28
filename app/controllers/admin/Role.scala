@@ -49,7 +49,7 @@ object Role extends Controller with Secured {
 
   def edit(roleId: Long) = IsAuthenticated { implicit request =>
 
-    val role = RoleModel.findById(roleId)
+    val role = RoleModel.getById(roleId)
 
     role match {
       case Some(value) => Ok(views.html.admin.role.edit(roleId, objForm.fill(value))(request))
@@ -59,7 +59,7 @@ object Role extends Controller with Secured {
 
   def item(roleId: Long) = IsAuthenticated { implicit request =>
     
-    val role = RoleModel.findById(roleId)
+    val role = RoleModel.getById(roleId)
 
     role match {
       case Some(value) => Ok(views.html.admin.role.item(value)(request))

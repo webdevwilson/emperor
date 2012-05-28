@@ -59,7 +59,7 @@ object User extends Controller with Secured {
   
   def addToGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
-    val user = UserModel.findById(userId)
+    val user = UserModel.getById(userId)
 
     user match {
       case Some(value) => // #nothing
@@ -75,7 +75,7 @@ object User extends Controller with Secured {
   
   def removeFromGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
-    val user = UserModel.findById(userId)
+    val user = UserModel.getById(userId)
 
     user match {
       case Some(value) => // #nothing
@@ -103,7 +103,7 @@ object User extends Controller with Secured {
 
   def edit(userId: Long) = IsAuthenticated { implicit request =>
 
-    val user = UserModel.findById(userId)
+    val user = UserModel.getById(userId)
 
     user match {
       case Some(value) => {
@@ -116,9 +116,9 @@ object User extends Controller with Secured {
 
   def item(userId: Long) = IsAuthenticated { implicit request =>
     
-    val user = UserModel.findById(userId)
+    val user = UserModel.getById(userId)
     val allGroups = GroupModel.getAll
-    val groupUsers = GroupModel.findGroupUsersForUser(userId)
+    val groupUsers = GroupModel.getGroupUsersForUser(userId)
 
     user match {
       case Some(value) => Ok(views.html.admin.user.item(value, allGroups, groupUsers)(request))
@@ -141,7 +141,7 @@ object User extends Controller with Secured {
 
   def updatePassword(userId: Long) = IsAuthenticated { implicit request =>
 
-    val user = UserModel.findById(userId)
+    val user = UserModel.getById(userId)
 
     user match {
       case Some(value) => {

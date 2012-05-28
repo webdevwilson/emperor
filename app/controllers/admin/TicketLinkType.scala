@@ -49,7 +49,7 @@ object TicketLinkType extends Controller with Secured {
 
   def edit(ltypeId: Long) = IsAuthenticated { implicit request =>
 
-    val tltype = TicketLinkTypeModel.findById(ltypeId)
+    val tltype = TicketLinkTypeModel.getById(ltypeId)
 
     tltype match {
       case Some(value) => Ok(views.html.admin.ticket.linktype.edit(ltypeId, ltypeForm.fill(value))(request))
@@ -59,7 +59,7 @@ object TicketLinkType extends Controller with Secured {
 
   def item(ltypeId: Long) = IsAuthenticated { implicit request =>
     
-    val tltype = TicketLinkTypeModel.findById(ltypeId)
+    val tltype = TicketLinkTypeModel.getById(ltypeId)
 
     tltype match {
       case Some(value) => Ok(views.html.admin.ticket.linktype.item(value)(request))

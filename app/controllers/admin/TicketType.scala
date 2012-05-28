@@ -49,7 +49,7 @@ object TicketType extends Controller with Secured {
 
   def edit(typeId: Long) = IsAuthenticated { implicit request =>
 
-    val ttype = TicketTypeModel.findById(typeId)
+    val ttype = TicketTypeModel.getById(typeId)
 
     ttype match {
       case Some(value) => Ok(views.html.admin.ticket.ttype.edit(typeId, typeForm.fill(value))(request))
@@ -59,7 +59,7 @@ object TicketType extends Controller with Secured {
 
   def item(typeId: Long) = IsAuthenticated { implicit request =>
     
-    val ttype = TicketTypeModel.findById(typeId)
+    val ttype = TicketTypeModel.getById(typeId)
 
     ttype match {
       case Some(value) => Ok(views.html.admin.ticket.ttype.item(value)(request))

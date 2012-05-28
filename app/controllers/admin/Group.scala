@@ -49,7 +49,7 @@ object Group extends Controller with Secured {
 
   def edit(groupId: Long) = IsAuthenticated { implicit request =>
 
-    val group = GroupModel.findById(groupId)
+    val group = GroupModel.getById(groupId)
 
     group match {
       case Some(value) => Ok(views.html.admin.group.edit(groupId, addForm.fill(value))(request))
@@ -59,9 +59,9 @@ object Group extends Controller with Secured {
 
   def item(groupId: Long) = IsAuthenticated { implicit request =>
     
-    val group = GroupModel.findById(groupId)
+    val group = GroupModel.getById(groupId)
     val allUsers = UserModel.getAll
-    val userGroups = GroupModel.findGroupUsersForGroup(groupId)
+    val userGroups = GroupModel.getGroupUsersForGroup(groupId)
 
     group match {
       case Some(value) => Ok(views.html.admin.group.item(value, allUsers, userGroups)(request))

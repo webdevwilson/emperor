@@ -13,7 +13,7 @@ object Group extends Controller with Secured {
     val param = request.queryString.get("query");
     
     param match {
-      case Some(query) => Ok(generate(GroupModel.findStartsWith(query.head)))
+      case Some(query) => Ok(generate(GroupModel.getStartsWith(query.head)))
       case None => NotFound
     }    
   }

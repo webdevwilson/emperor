@@ -71,14 +71,14 @@ object GroupModel {
       // XXX
   }
 
-  def findById(id: Long) : Option[Group] = {
+  def getById(id: Long) : Option[Group] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(group.singleOpt)
     }
   }
 
-  def findStartsWith(query: String) : Seq[Group] = {
+  def getStartsWith(query: String) : Seq[Group] = {
     
     val likeQuery = query + "%"
     
@@ -98,21 +98,21 @@ object GroupModel {
     }
   }
 
-  def findGroupUsersForUser(userId: Long): List[GroupUser] = {
+  def getGroupUsersForUser(userId: Long): List[GroupUser] = {
     
     DB.withConnection { implicit conn =>
       allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
     }
   }
 
-  def findGroupUsersForGroup(groupId: Long): List[GroupUser] = {
+  def getGroupUsersForGroup(groupId: Long): List[GroupUser] = {
     
     DB.withConnection { implicit conn =>
       allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser *)
     }
   }
   
-  def findForUser(userId: Long): List[Group] = {
+  def getForUser(userId: Long): List[Group] = {
     
     DB.withConnection { implicit conn =>
       allForUserQuery.on('userId -> userId).as(group *)

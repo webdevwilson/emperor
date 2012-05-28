@@ -46,7 +46,7 @@ object ProjectModel {
       
   }
 
-  def findById(id: Long) : Option[Project] = {
+  def getById(id: Long) : Option[Project] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(project.singleOpt)
@@ -60,7 +60,7 @@ object ProjectModel {
     }
   }
 
-  def findWithWorkflow(id: Long) : Seq[Project] = {
+  def getWithWorkflow(id: Long) : Seq[Project] = {
     
     DB.withConnection { implicit conn => 
       getByWorkflow.on('workflow_id -> id).as(project *)

@@ -50,7 +50,7 @@ object Workflow extends Controller with Secured {
 
   def edit(workflowId: Long) = IsAuthenticated { implicit request =>
 
-    val workflow = WorkflowModel.findById(workflowId)
+    val workflow = WorkflowModel.getById(workflowId)
 
     workflow match {
       case Some(value) => Ok(views.html.admin.workflow.edit(workflowId, objForm.fill(value))(request))
@@ -60,8 +60,8 @@ object Workflow extends Controller with Secured {
 
   def item(workflowId: Long) = IsAuthenticated { implicit request =>
     
-    val workflow = WorkflowModel.findById(workflowId)
-    val statuses = WorkflowModel.findStatuses(workflowId)
+    val workflow = WorkflowModel.getById(workflowId)
+    val statuses = WorkflowModel.getStatuses(workflowId)
 
     workflow match {
       case Some(value) => Ok(views.html.admin.workflow.item(value, statuses)(request))
@@ -71,8 +71,8 @@ object Workflow extends Controller with Secured {
   
   def modify(workflowId: Long) = IsAuthenticated { implicit request =>
     
-    val workflow = WorkflowModel.findById(workflowId)
-    val statuses = WorkflowModel.findStatuses(workflowId)
+    val workflow = WorkflowModel.getById(workflowId)
+    val statuses = WorkflowModel.getStatuses(workflowId)
     val unused = TicketStatusModel.getAll filterNot { status => statuses exists { ws => ws.statusId == status.id.get } }
 
     workflow match {

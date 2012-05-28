@@ -48,7 +48,7 @@ object TicketStatus extends Controller with Secured {
 
   def edit(statusId: Long) = IsAuthenticated { implicit request =>
 
-    val status = TicketStatusModel.findById(statusId)
+    val status = TicketStatusModel.getById(statusId)
 
     status match {
       case Some(value) => Ok(views.html.admin.ticket.status.edit(statusId, statusForm.fill(value))(request))
@@ -58,7 +58,7 @@ object TicketStatus extends Controller with Secured {
 
   def item(statusId: Long) = IsAuthenticated { implicit request =>
     
-    val status = TicketStatusModel.findById(statusId)
+    val status = TicketStatusModel.getById(statusId)
 
     status match {
       case Some(value) => Ok(views.html.admin.ticket.status.item(value)(request))

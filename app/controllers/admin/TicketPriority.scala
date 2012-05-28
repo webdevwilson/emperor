@@ -49,7 +49,7 @@ object TicketPriority extends Controller with Secured {
 
   def edit(priorityId: Long) = IsAuthenticated { implicit request =>
 
-    val priority = TicketPriorityModel.findById(priorityId)
+    val priority = TicketPriorityModel.getById(priorityId)
 
     priority match {
       case Some(value) => Ok(views.html.admin.ticket.priority.edit(priorityId, priorityForm.fill(value))(request))
@@ -59,7 +59,7 @@ object TicketPriority extends Controller with Secured {
 
   def item(priorityId: Long) = IsAuthenticated { implicit request =>
     
-    val priority = TicketPriorityModel.findById(priorityId)
+    val priority = TicketPriorityModel.getById(priorityId)
 
     priority match {
       case Some(value) => Ok(views.html.admin.ticket.priority.item(value)(request))

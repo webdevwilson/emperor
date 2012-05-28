@@ -53,7 +53,7 @@ object UserModel {
       ).executeUpdate
 
       val id = lastInsertQuery.as(scalar[Long].single)
-      this.findById(id).get
+      this.getById(id).get
     }
   }
   
@@ -61,7 +61,7 @@ object UserModel {
       
   }
 
-  def findById(id: Long) : Option[User] = {
+  def getById(id: Long) : Option[User] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(UserModel.user.singleOpt)

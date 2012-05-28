@@ -43,7 +43,7 @@ object TicketSeverityModel {
       
   }
 
-  def findById(id: Long) : Option[TicketSeverity] = {
+  def getById(id: Long) : Option[TicketSeverity] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_severity.singleOpt)

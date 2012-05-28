@@ -65,21 +65,21 @@ object WorkflowModel {
       // XXX
   }
 
-  def findById(id: Long) : Option[Workflow] = {
+  def getById(id: Long) : Option[Workflow] = {
       
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(workflow.singleOpt)
     }
   }
 
-  def findStatusById(id: Long): Option[WorkflowStatus] = {
+  def getStatusById(id: Long): Option[WorkflowStatus] = {
     
     DB.withConnection { implicit conn =>
       getWorkflowStatusByIdQuery.on('id -> id).as(workflowStatus.singleOpt)
     }
   }
 
-  def findStatuses(id: Long) : Seq[WorkflowStatus] = {
+  def getStatuses(id: Long) : Seq[WorkflowStatus] = {
     
     DB.withConnection { implicit conn =>
       allStatuses.on('id -> id).as(workflowStatus *)
@@ -88,7 +88,7 @@ object WorkflowModel {
 
   def getPreviousStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
     
-    val ws = this.findStatusById(workflowStatusId)
+    val ws = this.getStatusById(workflowStatusId)
     
     ws match {
       case Some(status) => {
@@ -106,7 +106,7 @@ object WorkflowModel {
 
   def getNextStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
     
-    val ws = this.findStatusById(workflowStatusId)
+    val ws = this.getStatusById(workflowStatusId)
     
     ws match {
       case Some(status) => {

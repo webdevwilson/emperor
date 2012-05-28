@@ -19,7 +19,7 @@ class GroupModelSpec extends Specification {
         val newGroup = GroupModel.create(group)
         println(newGroup.id)
 
-        val retGroup = GroupModel.findById(newGroup.id.get)
+        val retGroup = GroupModel.getById(newGroup.id.get)
         retGroup must beSome
         retGroup.get.name mustEqual group.name
         1 mustEqual 1

@@ -61,8 +61,8 @@ object Ticket extends Controller with Secured {
 
   def newStatus(ticketId: Long, statusId: Long) = IsAuthenticated { implicit request =>
     
-    val ticket = TicketModel.findFullById(ticketId)
-    val newStatus = WorkflowModel.findStatusById(statusId)
+    val ticket = TicketModel.getFullById(ticketId)
+    val newStatus = WorkflowModel.getStatusById(statusId)
     // XXX some sort of check too many gets!
     
     ticket match {
@@ -79,7 +79,7 @@ object Ticket extends Controller with Secured {
 
   def status(ticketId: Long) = IsAuthenticated { implicit request =>
 
-    val ticket = TicketModel.findFullById(ticketId)
+    val ticket = TicketModel.getFullById(ticketId)
     val comments = TicketModel.getComments(ticketId)
 
     ticket match {
@@ -155,7 +155,7 @@ object Ticket extends Controller with Secured {
   def edit(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
-    val ticket = TicketModel.findById(ticketId)
+    val ticket = TicketModel.getById(ticketId)
     // XXX Should really match this here and return if it's not found
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -170,7 +170,7 @@ object Ticket extends Controller with Secured {
 
   def item(ticketId: Long) = IsAuthenticated { implicit request =>
     
-    val ticket = TicketModel.findFullById(ticketId)
+    val ticket = TicketModel.getFullById(ticketId)
     val comments = TicketModel.getComments(ticketId)
 
     TicketModel.getCommentsAsSearchResult(ticketId)
