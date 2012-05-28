@@ -8,7 +8,6 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class InitialWorkflow(name: String, description: Option[String])
 case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: Date)
 
 case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: String, position: Int)

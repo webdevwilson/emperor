@@ -3,10 +3,11 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketStatus(id: Pk[Long] = NotAssigned, name: String)
+case class TicketStatus(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 
 object TicketStatusModel {
 
@@ -14,13 +15,14 @@ object TicketStatusModel {
   val getByIdQuery = SQL("SELECT * FROM ticket_statuses WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_statuses LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_statuses")
-  val insertQuery = SQL("INSERT INTO ticket_statuses (name) VALUES ({name})")
+  val insertQuery = SQL("INSERT INTO ticket_statuses (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_statuses SET name={name} WHERE id={id}")
 
   val ticket_status = {
     get[Pk[Long]]("id") ~
-    get[String]("name") map {
-      case id~name => TicketStatus(id, name)
+    get[String]("name") ~
+    get[Date]("date_created") map {
+      case id~name~dateCreated => TicketStatus(id, name, dateCreated)
     }
   }
 

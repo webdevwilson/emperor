@@ -3,11 +3,12 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String])
+case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: Date)
 
 object RoleModel {
 
@@ -15,15 +16,16 @@ object RoleModel {
   val getByIdQuery = SQL("SELECT * FROM roles WHERE id={id}")
   val listQuery = SQL("SELECT * FROM roles LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM roles")
-  val addQuery = SQL("INSERT INTO roles (name, description) VALUES ({name}, {description})")
+  val addQuery = SQL("INSERT INTO roles (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE roles SET name={name}, description={description} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val role = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
-    get[Option[String]]("description") map {
-      case id~name~description => Role(id, name, description)
+    get[Option[String]]("description") ~
+    get[Date]("date_created") map {
+      case id~name~description~dateCreated => Role(id, name, description, dateCreated)
     }
   }
   

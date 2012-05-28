@@ -1,15 +1,16 @@
 package controllers.admin
 
 import anorm._
+import chc._
+import controllers._
+import java.util.Date
+import models.RoleModel
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
-import chc._
-import controllers._
-import models.RoleModel
 
 object Role extends Controller with Secured {
 
@@ -17,7 +18,8 @@ object Role extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
-      "description" -> optional(text)
+      "description" -> optional(text),
+      "date_created" -> ignored(new Date())
     )(models.Role.apply)(models.Role.unapply)
   )
 

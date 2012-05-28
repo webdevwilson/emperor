@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import java.util.Date
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -16,7 +17,8 @@ object Project extends Controller with Secured {
       "id"  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id" -> longNumber,
       "name"-> nonEmptyText,
-      "key" -> nonEmptyText // XXX needs better checking, length, etc
+      "key" -> nonEmptyText, // XXX needs better checking, length, etc
+      "date_created" -> ignored(new Date())
     )(models.Project.apply)(models.Project.unapply)
   )
 

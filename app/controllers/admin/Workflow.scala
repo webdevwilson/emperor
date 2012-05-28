@@ -17,17 +17,10 @@ object Workflow extends Controller with Secured {
 
   val objForm = Form(
     mapping(
-      "name" -> nonEmptyText,
-      "description" -> optional(text)
-    )(models.InitialWorkflow.apply)(models.InitialWorkflow.unapply)
-  )
-
-  val editForm = Form(
-    mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "date_created" -> ignored(new Date()) // A little white lie, ignored anyway
+      "date_created" -> ignored(new Date())
     )(models.Workflow.apply)(models.Workflow.unapply)
   )
 
@@ -60,7 +53,7 @@ object Workflow extends Controller with Secured {
     val workflow = WorkflowModel.findById(workflowId)
 
     workflow match {
-      case Some(value) => Ok(views.html.admin.workflow.edit(workflowId, editForm.fill(value))(request))
+      case Some(value) => Ok(views.html.admin.workflow.edit(workflowId, objForm.fill(value))(request))
       case None => NotFound
     }
   }
@@ -90,7 +83,7 @@ object Workflow extends Controller with Secured {
   
   def update(workflowId: Long) = IsAuthenticated { implicit request =>
 
-    editForm.bindFromRequest.fold(
+    objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.edit(workflowId, errors)),
       {
         case workflow: models.Workflow =>

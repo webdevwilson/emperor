@@ -3,6 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 import scala.collection.mutable.ListBuffer
@@ -13,7 +14,7 @@ case class InitialComment(
 
 case class Comment(
   id: Pk[Long] = NotAssigned, userId: Long, username: String,
-  realName: String, ticketId: Long, content: String
+  realName: String, ticketId: Long, content: String, dateCreated: Date
 )
 
 case class StatusChange(
@@ -39,7 +40,7 @@ case class Ticket(
   priorityId: Long, resolutionId: Option[Long],
   proposedResolutionId: Option[Long], severityId: Long, statusId: Long,
   typeId: Long, position: Option[Long], summary: String,
-  description: Option[String]
+  description: Option[String], dateCreated: Date
 )
 
 case class FullTicket(
@@ -48,7 +49,8 @@ case class FullTicket(
   resolutionId: Option[Long],  proposedResolutionId: Option[Long],
   severityId: Long, severityName: String, workflowStatusId: Long,
   statusId: Long, statusName: String, typeId: Long, typeName: String,
-  position: Option[Long], summary: String, description: Option[String]
+  position: Option[Long], summary: String, description: Option[String],
+  dateCreated: Date
 )
 
 object TicketModel {
@@ -58,11 +60,11 @@ object TicketModel {
   val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id WHERE t.id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
-  val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
+  val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
-  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content) VALUES ({user_id}, {ticket_id}, {content})")
+  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
   val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.id ASC") // XXX fix ordering
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.id ASC LIMIT {offset},{count}") // XXX fix ordering
@@ -81,9 +83,10 @@ object TicketModel {
     get[Long]("type_id") ~
     get[Option[Long]]("position") ~
     get[String]("summary") ~
-    get[Option[String]]("description") map {
-      case id~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description => Ticket(
-        id, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description
+    get[Option[String]]("description") ~
+    get[Date]("date_created") map {
+      case id~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description~dateCreated => Ticket(
+        id, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description, dateCreated
       )
     }
   }
@@ -124,9 +127,10 @@ object TicketModel {
     get[String]("ticket_types.name") ~
     get[Option[Long]]("tickets.position") ~
     get[String]("tickets.summary") ~
-    get[Option[String]]("tickets.description") map {
-      case id~reporterId~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description => FullTicket(
-        id, reporterId, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description
+    get[Option[String]]("tickets.description") ~
+    get[Date]("tickets.date_created") map {
+      case id~reporterId~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description~dateCreated => FullTicket(
+        id, reporterId, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description, dateCreated
       )
     }
   }
@@ -137,8 +141,9 @@ object TicketModel {
     get[String]("username") ~
     get[String]("realname") ~
     get[Long]("ticket_id") ~
-    get[String]("content") map {
-      case id~userId~username~realName~ticketId~content => Comment(id, userId, username, realName, ticketId, content)
+    get[String]("content") ~
+    get[Date]("date_created") map {
+      case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
     }
   }
 

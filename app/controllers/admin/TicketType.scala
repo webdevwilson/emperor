@@ -1,23 +1,25 @@
 package controllers.admin
 
 import anorm._
+import chc._
+import controllers._
+import java.util.Date
+import models.TicketTypeModel
+import org.mindrot.jbcrypt.BCrypt
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
-import chc._
-import controllers._
-import models.TicketTypeModel
-import org.mindrot.jbcrypt.BCrypt
 
 object TicketType extends Controller with Secured {
 
   val typeForm = Form(
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
-      "name" -> nonEmptyText
+      "name" -> nonEmptyText,
+      "date_created" -> ignored(new Date())      
     )(models.TicketType.apply)(models.TicketType.unapply)
   )
 

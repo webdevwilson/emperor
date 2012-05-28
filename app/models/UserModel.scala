@@ -3,15 +3,16 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.DB
 import play.api.Play.current
 
-case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String)
+case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String, dateCreated: Date)
 
 case class EditUser(username: String, realName: String, email: String)
 
-case class InitialUser(username: String, password: String, realName: String, email: String)
+case class InitialUser(username: String, password: String, realName: String, email: String, dateCreated: Date)
 
 case class LoginUser(username: String, password: String)
 
@@ -25,7 +26,7 @@ object UserModel {
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
   val listQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
-  val insertQuery = SQL("INSERT INTO users (username, password, realname, email) VALUES ({username}, {password}, {realname}, {email})")
+  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
@@ -35,8 +36,9 @@ object UserModel {
     get[String]("username") ~
     get[String]("password") ~
     get[String]("realName") ~
-    get[String]("email") map {
-      case id~username~password~realName~email => User(id, username, password, realName, email)
+    get[String]("email") ~
+    get[Date]("date_created") map {
+      case id~username~password~realName~email~dateCreated => User(id, username, password, realName, email, dateCreated)
     }
   }
 

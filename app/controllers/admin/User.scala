@@ -1,6 +1,12 @@
 package controllers.admin
 
 import anorm._
+import chc._
+import controllers._
+import java.util.Date
+import models.GroupModel
+import models.UserModel
+import org.mindrot.jbcrypt.BCrypt
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -8,11 +14,6 @@ import play.api.data.format.Formats._
 import play.api.libs.json.Json._
 import play.api.mvc._
 import play.db._
-import chc._
-import controllers._
-import models.GroupModel
-import models.UserModel
-import org.mindrot.jbcrypt.BCrypt
 
 object User extends Controller with Secured {
 
@@ -21,7 +22,8 @@ object User extends Controller with Secured {
       "username" -> nonEmptyText,
       "password" -> nonEmptyText,
       "realName" -> nonEmptyText,
-      "email"    -> email
+      "email"    -> email,
+      "date_created" -> ignored(new Date())
     )(models.InitialUser.apply)(models.InitialUser.unapply)
   )
 

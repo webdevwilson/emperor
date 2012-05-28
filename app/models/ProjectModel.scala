@@ -3,10 +3,11 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class Project(id: Pk[Long] = NotAssigned, workflowId: Long, name: String, key: String)
+case class Project(id: Pk[Long] = NotAssigned, workflowId: Long, name: String, key: String, dateCreated: Date)
 
 object ProjectModel {
 
@@ -15,15 +16,16 @@ object ProjectModel {
   val getByWorkflow = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id}")
   val listQuery = SQL("SELECT * FROM projects LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects")
-  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id) VALUES ({name}, {pkey}, {workflow_id})")
+  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, date_created) VALUES ({name}, {pkey}, {workflow_id}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
 
   val project = {
     get[Pk[Long]]("id") ~
     get[Long]("workflow_id") ~
     get[String]("name") ~
-    get[String]("pkey") map {
-      case id~workflowId~name~pkey => Project(id, workflowId, name, pkey)
+    get[String]("pkey") ~
+    get[Date]("date_created") map {
+      case id~workflowId~name~pkey~dateCreated => Project(id, workflowId, name, pkey, dateCreated)
     }
   }
 

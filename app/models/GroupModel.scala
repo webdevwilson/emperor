@@ -3,11 +3,12 @@ package models
 import anorm._
 import anorm.SqlParser._
 import chc._
+import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class Group(id: Pk[Long] = NotAssigned, name: String)
+case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 
 case class GroupUser(id: Pk[Long] = NotAssigned, user_id: Long, group_id: Long)
 
@@ -19,18 +20,19 @@ object GroupModel {
   val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users WHERE group_id={groupId}")
   val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users WHERE user_id={userId}")
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.id WHERE gu.user_id={userId}")
-  val findStartsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
+  val startsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
-  val addQuery = SQL("INSERT INTO groups (name) VALUES ({name})")
+  val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
   val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val group = {
     get[Pk[Long]]("id") ~
-    get[String]("name") map {
-      case id~name => Group(id, name)
+    get[String]("name") ~
+    get[Date]("date_created") map {
+      case id~name~dateCreated => Group(id, name, dateCreated)
     }
   }
   
@@ -55,7 +57,7 @@ object GroupModel {
   def create(group: Group): Group = {
 
     DB.withConnection { implicit conn =>
-      addQuery.on(
+      insertQuery.on(
         'name   -> group.name
       ).executeUpdate
 
@@ -81,7 +83,7 @@ object GroupModel {
     val likeQuery = query + "%"
     
     DB.withConnection { implicit conn =>
-      val groups = findStartsWithQuery.on(
+      val groups = startsWithQuery.on(
         'name -> likeQuery
       ).as(group *)
 

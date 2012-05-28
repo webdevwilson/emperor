@@ -9,21 +9,23 @@ import play.api.mvc._
 import play.db._
 import chc._
 import controllers._
+import java.util.Date
 import models.GroupModel
 import models.UserModel
 
 object Group extends Controller with Secured {
 
-  val groupForm = Form(
+  val addForm = Form(
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
-      "name" -> nonEmptyText
+      "name" -> nonEmptyText,
+      "date_created" -> ignored(new Date())
     )(models.Group.apply)(models.Group.unapply)
   )
 
   def add = IsAuthenticated { implicit request =>
 
-    groupForm.bindFromRequest.fold(
+    addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.create(errors)),
       {
         case group: models.Group =>
@@ -35,7 +37,7 @@ object Group extends Controller with Secured {
   
   def create = IsAuthenticated { implicit request =>
 
-    Ok(views.html.admin.group.create(groupForm)(request))
+    Ok(views.html.admin.group.create(addForm)(request))
   }
 
   def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
@@ -50,7 +52,7 @@ object Group extends Controller with Secured {
     val group = GroupModel.findById(groupId)
 
     group match {
-      case Some(value) => Ok(views.html.admin.group.edit(groupId, groupForm.fill(value))(request))
+      case Some(value) => Ok(views.html.admin.group.edit(groupId, addForm.fill(value))(request))
       case None => NotFound
     }
   }
@@ -70,7 +72,7 @@ object Group extends Controller with Secured {
   
   def update(groupId: Long) = IsAuthenticated { implicit request =>
 
-    groupForm.bindFromRequest.fold(
+    addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.edit(groupId, errors)),
       {
         case group: models.Group =>
