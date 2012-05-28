@@ -1,7 +1,7 @@
 (function() {
     var filter = (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'min',
         cdn = 'http://yui.shirley.im/combo?',
-        gallery = 'ii-gallery-2012.05.14';
+        gallery = 'ii-gallery-2012.05.16';
 
     // YUI Config.
     YUI_config = {

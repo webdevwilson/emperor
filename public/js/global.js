@@ -1,4 +1,4 @@
-YUI().use('array-extras', 'anim', 'gallery-dynamic-dialog', function(Y) {
+YUI().use('array-extras', 'anim', 'gallery-dynamic-dialog', 'gallery-bootstrap', function(Y) {
 
   var Aeach = Y.Array.each;
 

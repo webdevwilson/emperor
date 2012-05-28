@@ -91,6 +91,8 @@ admin.workflow.modify.help=You may drag items from the available list on the lef
 admin.workflow.with.id=Workflow {0}
 
 auth.failure=Login failed.
+auth.logout=Logout
+auth.logout.success=You have been logged out.
 auth.mustlogin=You must log in to perform that action.
 auth.success=Successfully logged in.
 
@@ -138,7 +140,7 @@ ticket.advance.confirm=Advance
 ticket.advance.end=At End
 ticket.comment=Comment
 ticket.comment.added=Comment Added
-ticket.comment.attribution.postfix=on {0}XXXtime
+ticket.comment.attribution.postfix=on {0}
 ticket.comment.attribution.prefix=by
 ticket.comment.invalid=Invalid Comment
 ticket.comment.list=Comments

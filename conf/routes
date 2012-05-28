@@ -78,6 +78,7 @@ POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
 GET     /auth/login                     controllers.Auth.login
+GET     /auth/logout                    controllers.Auth.logout
 POST    /auth/login                     controllers.Auth.doLogin
 
 GET     /project/create                 controllers.Project.create

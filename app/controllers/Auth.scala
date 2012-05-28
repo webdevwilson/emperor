@@ -34,6 +34,11 @@ object Auth extends Controller {
 
     Ok(views.html.auth.login(loginForm)(request))
   }
+  
+  def logout = Action { implicit request =>
+    
+    Redirect(routes.Auth.login).withNewSession.flashing("error" -> "auth.logout.success")
+  }
 
   def doLogin = Action { implicit request =>
 

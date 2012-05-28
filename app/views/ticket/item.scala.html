@@ -86,7 +86,7 @@
   @comments.pager.items.map { comment =>
    <li>
     <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
-    <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix")</div>
+    <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
     </li>
   }
   </ul>
