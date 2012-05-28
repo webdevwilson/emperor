@@ -52,7 +52,9 @@ admin.ticket_severity.list=Ticket Severities
 admin.ticket_severity.with.id=Ticket Priority {0}
 
 admin.ticket_status.add=Add Ticket Status
+admin.ticket_status.add.success=Ticket Status Added
 admin.ticket_status.edit=Edit Ticket Status
+admin.ticket_status.edit.success=Ticket Status Updated
 admin.ticket_status.menu.list=Statuses
 admin.ticket_status.list=Ticket Statuses
 

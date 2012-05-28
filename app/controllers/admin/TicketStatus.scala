@@ -26,10 +26,9 @@ object TicketStatus extends Controller with Secured {
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.create(errors)),
-      {
-        case status: models.TicketStatus =>
-        TicketStatusModel.create(status)
-        Redirect("/admin/ticket/status") // XXX
+      value => {
+        val status = TicketStatusModel.create(value)
+        Redirect(routes.TicketStatus.item(status.get.id.get)).flashing("success" -> "admin.ticket_status.add.success")
       }
     )
   }
@@ -74,7 +73,7 @@ object TicketStatus extends Controller with Secured {
       {
         case status: models.TicketStatus =>
         TicketStatusModel.update(statusId, status)
-        Redirect("/admin/ticket/status") // XXX
+        Redirect(routes.TicketStatus.item(statusId)).flashing("success" -> "admin.ticket_status.edit.success")
       }
     )
   }
