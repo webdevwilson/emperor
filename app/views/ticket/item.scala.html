@@ -1,4 +1,7 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser, commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus], nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment], changes: Seq[TicketChanges])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
+  commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus],
+  nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment],
+  histories: Seq[TicketChanges])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -90,7 +93,7 @@
          <li>
           <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
           <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
-          </li>
+         </li>
         }
         </ul>
         @pager(comments.pager)
@@ -99,7 +102,21 @@
      </div>
    </div>
    <div class="tab-pane" id="history">
-     History @changes
+    History
+    <ul class="unstyled events">
+     @histories.map { history =>
+      <li>
+       <blockquote>
+        <ul>
+         @history.changes.map { change =>
+         <li class="change">@Html(Messages("ticket.history.change", Messages(change.name), change.oldValue, change.newValue))</li>
+         }
+        </ul>
+       </blockquote>
+       <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@history.realName</a> @Messages("ticket.history.attribution.postfix", history.dateOccurred)</div>
+      </li>
+     }
+    </ul>
    </div>
  </div>
 </div>
