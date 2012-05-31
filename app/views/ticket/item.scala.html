@@ -109,7 +109,7 @@
        <blockquote>
         <ul>
          @history.changes.map { change =>
-         <li class="change">@Html(Messages("ticket.history.change", Messages(change.name), change.oldValue, change.newValue))</li>
+         <li class="change">@Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
          }
         </ul>
        </blockquote>

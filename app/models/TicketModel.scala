@@ -365,13 +365,7 @@ object TicketModel {
           val ticket = this.getById(ticketId).get
           // Now we've got to return None so that the map that follows will
           // compare this history entry to it's predecessor
-          val changes = new ListBuffer[TicketChange]
-          if(highest.severityId != ticket.severityId) {
-            changes.append(TicketChange("ticket.severity", highest.severityId.toString, ticket.severityId.toString))
-          }
-          TicketChanges(
-            userId = highest.userId, realName = highest.realName, dateOccurred = highest.dateOccurred, changes = changes
-          )
+          this.computeChangeFromTicket(highest, ticket)
         }
         case false => 
           // This isn't the most recent history entry, so fetch the one after
@@ -393,17 +387,35 @@ object TicketModel {
     changes
   }
   
+  // This is either going to be a nasty, cache-needing slog (to look up each
+  // fk's real info) or an 8 table join. The nullable proposed_resolution
+  // HAS to be checked this way and fetched because it can be null.
   def computeChange(older: TicketHistory, newer: TicketHistory) : TicketChanges = {
 
     val changes = new ListBuffer[TicketChange]
     if(older.severityId != newer.severityId) {
+      val oldSev = TicketSeverityModel.getById(older.severityId).get
+      val newSev = TicketSeverityModel.getById(newer.severityId).get
       changes.append(
-        TicketChange("ticket.severity", older.severityId.toString, newer.severityId.toString)
+        TicketChange("ticket.severity", oldSev.name, newSev.name)
       )
     }
 
     TicketChanges(
       userId = older.userId, realName = older.realName, dateOccurred = older.dateOccurred, changes = changes
+    )
+  }
+  
+  def computeChangeFromTicket(history: TicketHistory, ticket: EditTicket) : TicketChanges = {
+
+    val changes = new ListBuffer[TicketChange]
+    if(history.severityId != ticket.severityId) {
+      val oldSev = TicketSeverityModel.getById(history.severityId).get
+      val newSev = TicketSeverityModel.getById(ticket.severityId).get
+      changes.append(TicketChange("ticket.severity", oldSev.name, newSev.name))
+    }
+    TicketChanges(
+      userId = history.userId, realName = history.realName, dateOccurred = history.dateOccurred, changes = changes
     )
   }
 

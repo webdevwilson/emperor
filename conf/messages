@@ -148,7 +148,7 @@ ticket.description=Description
 ticket.edit=Edit Ticket
 ticket.edit.success=Ticket Updated
 ticket.error.status=Error Changing Status
-ticket.history.change={0} from <span class="badge badge-old">{1}</span> to <span class="badge badge-new">{2}</span>
+ticket.history.change=Changed <strong>{0}</strong> from <span class="badge badge-old">{1}</span> to <span class="badge badge-new">{2}</span>
 ticket.history.attribution.postfix=on {0}
 ticket.history.attribution.prefix=by
 ticket.history.list=History
