@@ -36,13 +36,13 @@ case class EditTicket(
 )
 
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, reporterId: Long, projectId: Long,
-  projectName: String,  priorityId: Long, priorityName: String,
-  resolutionId: Option[Long],  proposedResolutionId: Option[Long],
-  severityId: Long, severityName: String, workflowStatusId: Long,
-  statusId: Long, statusName: String, typeId: Long, typeName: String,
-  position: Option[Long], summary: String, description: Option[String],
-  dateCreated: Date
+  id: Pk[Long] = NotAssigned, reporterId: Long, reporterName: String,
+  projectId: Long, projectName: String,  priorityId: Long,
+  priorityName: String, resolutionId: Option[Long],
+  proposedResolutionId: Option[Long], severityId: Long, severityName: String,
+  workflowStatusId: Long, statusId: Long, statusName: String, typeId: Long,
+  typeName: String, position: Option[Long], summary: String,
+  description: Option[String], dateCreated: Date
 )
 
 case class Ticket(
@@ -53,11 +53,19 @@ case class Ticket(
   description: Option[String], dateCreated: Date
 )
 
+case class TicketForThing(
+  id: Long, name: String
+)
+
+case class TicketForOptThing(
+  id: Option[Long], name: Option[String]
+)
+
 case class TicketHistory(
-  id: Pk[Long] = NotAssigned, ticketId: Long, userId: Long, realName: String,
-  reporterId: Long, projectId: Long, priorityId: Long,
-  resolutionId: Option[Long],  proposedResolutionId: Option[Long],
-  severityId: Long,  statusId: Long, typeId: Long,
+  id: Pk[Long] = NotAssigned, ticketId: Long, projectId: Long,
+  user: TicketForThing, reporter: TicketForThing, priority: TicketForThing,
+  resolution: TicketForOptThing, proposedResolution: TicketForOptThing,
+  severity: TicketForThing,  status: TicketForThing, ttype: TicketForThing,
   position: Option[Long], summary: String, description: Option[String],
   dateOccurred: Date
 )
@@ -73,7 +81,7 @@ object TicketModel {
 
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
-  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id WHERE t.id={id}")
+  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id WHERE t.id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
@@ -88,7 +96,8 @@ object TicketModel {
   val getAllHistoryQuery = SQL("SELECT * FROM ticket_history th JOIN users u ON u.id = th.user_id WHERE ticket_id={ticket_id} ORDER BY th.date_created ASC")
   val getHistoryByIdQuery = SQL("SELECT * from ticket_history th WHERE id > {id} AND ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT 1") // XXX id is only safe here if greater ids are always greater in date
   val getFollowingHistoryQuery = SQL("SELECT * from ticket_history th WHERE id={id}")
-  val getHistoryQuery = SQL("SELECT * from ticket_history th JOIN users u ON u.id = th.user_id WHERE ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT {offset},{count}")
+  // This is the nasty one for the big history join
+  val getHistoryQuery = SQL("SELECT * from ticket_history th JOIN users u ON u.id = th.user_id JOIN ticket_priorities tp ON tp.id = th.priority_id JOIN ticket_severities ts ON ts.id = th.severity_id JOIN ticket_statuses tss ON tss.id = th.status_id JOIN ticket_types tt ON tt.id = th.type_id LEFT JOIN ticket_resolutions tr ON tr.id = th.resolution_id WHERE ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT {offset},{count}")
   val getHistoryCountQuery = SQL("SELECT count(*) FROM ticket_history WHERE ticket_id={ticket_id}")
   val getMostRecentHistoryIdQuery = SQL("SELECT th.id FROM ticket_history th WHERE ticket_id={ticket_id} ORDER BY th.date_occurred DESC LIMIT 1")
 
@@ -139,6 +148,7 @@ object TicketModel {
   val fullTicket = {
     get[Pk[Long]]("tickets.id") ~
     get[Long]("tickets.reporter_id") ~
+    get[String]("users.realname") ~
     get[Long]("tickets.project_id") ~
     get[String]("projects.name") ~
     get[Long]("tickets.priority_id") ~
@@ -156,9 +166,29 @@ object TicketModel {
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") ~
     get[Date]("tickets.date_created") map {
-      case id~reporterId~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description~dateCreated => FullTicket(
-        id, reporterId, projectId, projectName, priorityId, priorityName, resolutionId, proposedResolutionId, severityId, severityName, workflowStatusId, statusId, statusName, typeId, typeName, position, summary, description, dateCreated
-      )
+      case id~reporterId~reporterName~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
+        FullTicket(
+          id = id,
+          reporterId = reporterId,
+          reporterName = reporterName,
+          projectId = projectId,
+          projectName = projectName,
+          priorityId = priorityId,
+          priorityName = priorityName,
+          resolutionId = resolutionId,
+          proposedResolutionId = proposedResolutionId,
+          severityId = severityId,
+          severityName = severityName,
+          workflowStatusId = workflowStatusId,
+          statusId = statusId,
+          statusName = statusName,
+          typeId = typeId,
+          typeName = typeName,
+          position = position,
+          summary = summary,
+          description = description,
+          dateCreated = dateCreated
+        )
     }
   }
 
@@ -168,20 +198,44 @@ object TicketModel {
     get[Long]("ticket_history.user_id") ~
     get[String]("users.realname") ~
     get[Long]("ticket_history.reporter_id") ~
+    get[String]("users.realname") ~ // XXX rep.name
     get[Long]("ticket_history.project_id") ~
     get[Long]("ticket_history.priority_id") ~
+    get[String]("ticket_priorities.name") ~
     get[Option[Long]]("ticket_history.resolution_id") ~
+    get[Option[String]]("ticket_resolutions.name") ~
     get[Option[Long]]("ticket_history.proposed_resolution_id") ~
+    get[Option[String]]("ticket_resolutions.name") ~ // XXX tpr.name
     get[Long]("ticket_history.severity_id") ~
+    get[String]("ticket_severities.name") ~
     get[Long]("ticket_history.status_id") ~
+    get[String]("ticket_statuses.name") ~
     get[Long]("ticket_history.type_id") ~
+    get[String]("ticket_types.name") ~
     get[Option[Long]]("ticket_history.position") ~
     get[String]("ticket_history.summary") ~
     get[Option[String]]("ticket_history.description") ~
     get[Date]("ticket_history.date_occurred") map {
-      case id~ticketId~userId~realName~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description~dateCreated => TicketHistory(
-        id, ticketId, userId, realName, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description, dateCreated
-      )
+      case id~ticketId~userId~realName~repId~repRealName~projectId~prioId~prioName~resId~resName~propResId~propResName~sevId~sevName~statId~statName~typeId~typeName~position~summary~description~dateOccurred => {
+        
+        TicketHistory(
+          id = id,
+          ticketId = ticketId,
+          projectId = projectId, 
+          user = TicketForThing(userId, realName),
+          reporter = TicketForThing(repId, repRealName),
+          priority = TicketForThing(prioId, prioName),
+          resolution = TicketForOptThing(resId, resName),
+          proposedResolution = TicketForOptThing(propResId, propResName),
+          severity = TicketForThing(sevId, sevName),
+          status = TicketForThing(statId, statName),
+          ttype = TicketForThing(typeId, typeName),
+          position = position,
+          summary = summary,
+          description = description,
+          dateOccurred = dateOccurred
+        )
+      }
     }
   }
 
@@ -393,29 +447,36 @@ object TicketModel {
   def computeChange(older: TicketHistory, newer: TicketHistory) : TicketChanges = {
 
     val changes = new ListBuffer[TicketChange]
-    if(older.severityId != newer.severityId) {
-      val oldSev = TicketSeverityModel.getById(older.severityId).get
-      val newSev = TicketSeverityModel.getById(newer.severityId).get
+    if(older.severity.id != newer.severity.id) {
       changes.append(
-        TicketChange("ticket.severity", oldSev.name, newSev.name)
+        TicketChange("ticket.severity", older.severity.name, newer.severity.name)
       )
     }
 
     TicketChanges(
-      userId = older.userId, realName = older.realName, dateOccurred = older.dateOccurred, changes = changes
+      userId = older.user.id, realName = older.user.name, dateOccurred = older.dateOccurred, changes = changes
     )
   }
   
   def computeChangeFromTicket(history: TicketHistory, ticket: EditTicket) : TicketChanges = {
 
+    // Get the full ticket to save later queries
+    val fullTick = this.getFullById(ticket.id.get).get;
+
+    // reporter, proposed reso, reso, status, type, summary, descr, position
     val changes = new ListBuffer[TicketChange]
-    if(history.severityId != ticket.severityId) {
-      val oldSev = TicketSeverityModel.getById(history.severityId).get
-      val newSev = TicketSeverityModel.getById(ticket.severityId).get
-      changes.append(TicketChange("ticket.severity", oldSev.name, newSev.name))
+    if(history.severity.id != fullTick.severityId) {
+      changes.append(TicketChange("ticket.severity", history.severity.name, fullTick.severityName))
+    }
+    if(history.priority.id != fullTick.priorityId) {
+      changes.append(TicketChange("ticket.priority", history.priority.name, fullTick.priorityName))
+    }
+    // XX Be nice to have this decorated with some sort of link metadata, but not sure
+    if(history.reporter.id != fullTick.reporterId) {
+      changes.append(TicketChange("ticket.reporter", history.reporter.name, fullTick.reporterName))
     }
     TicketChanges(
-      userId = history.userId, realName = history.realName, dateOccurred = history.dateOccurred, changes = changes
+      userId = history.user.id, realName = history.user.name, dateOccurred = history.dateOccurred, changes = changes
     )
   }
 
