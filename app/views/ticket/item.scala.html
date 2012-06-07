@@ -1,7 +1,7 @@
 @(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
   commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus],
   nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment],
-  histories: Seq[TicketChanges])(implicit request: Request[AnyContent])
+  histories: Option[Seq[TicketChanges]])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -103,8 +103,10 @@
    </div>
    <div class="tab-pane" id="history">
     History
+    @histories match {
+       case Some(hist) => {
     <ul class="unstyled events">
-     @histories.map { history =>
+     @hist.map { history =>
       <li>
        <blockquote>
         <ul>
@@ -117,6 +119,11 @@
       </li>
      }
     </ul>
+      }
+      case None => {
+        @Messages("ticket.history.none")
+      }
+    }
    </div>
  </div>
 </div>

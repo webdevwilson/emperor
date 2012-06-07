@@ -410,7 +410,11 @@ object TicketModel {
     }
   }
 
-  def getChanges(ticketId: Long, histories: Seq[TicketHistory]) : Seq[TicketChanges] = {
+  def getChanges(ticketId: Long, histories: Seq[TicketHistory]) : Option[Seq[TicketChanges]] = {
+    
+    if(histories.isEmpty) {
+      return None
+    }
     
     val firstChanges : TicketChanges = DB.withConnection { implicit conn =>
       val highest = histories.last
@@ -442,7 +446,7 @@ object TicketModel {
       hcs
     } }
     
-    changes
+    Some(changes)
   }
   
   // This is either going to be a nasty, cache-needing slog (to look up each

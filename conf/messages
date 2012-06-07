@@ -152,6 +152,7 @@ ticket.history.change=Changed <strong>{0}</strong> from <span class="badge badge
 ticket.history.attribution.postfix=on {0}
 ticket.history.attribution.prefix=by
 ticket.history.list=History
+ticket.history.none=No History
 ticket.list=Tickets
 ticket.priority=Priority
 ticket.project=Project
