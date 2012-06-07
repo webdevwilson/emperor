@@ -91,7 +91,7 @@ object Ticket extends Controller with Secured {
             Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange =>
-              TicketModel.advance(ticketId, statusChange.statusId)
+              TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong)
               Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.status")
           }
         )

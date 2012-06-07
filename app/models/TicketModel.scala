@@ -279,14 +279,18 @@ object TicketModel {
     true
   }
 
-  def advance(ticketId: Long, statusId: Long) = {
+  def changeStatus(ticketId: Long, statusId: Long, userId: Long) = {
     
-    DB.withConnection { implicit conn =>
+    DB.withTransaction { implicit conn =>
+      insertHistoryQuery.on(
+        'user_id -> userId,
+        'ticket_id -> ticketId
+      ).executeUpdate
+
       updateStatusQuery.on(
         'status_id  -> statusId,
         'ticket_id  -> ticketId
       ).execute
-      // XXX history! need userId!
     }
   }
 
