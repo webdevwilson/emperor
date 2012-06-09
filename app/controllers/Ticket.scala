@@ -9,7 +9,6 @@ import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
-import models.ProjectModel
 import models._
 import org.clapper.markwrap._
 
