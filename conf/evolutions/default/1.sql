@@ -238,3 +238,14 @@ CREATE TABLE ticket_history (
     FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
     FOREIGN KEY (type_id) REFERENCES ticket_types(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE ticket_stacks (
+    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    ticket_id INT UNSIGNED NOT NULL,
+    position INT NOT NULL,
+    date_created DATETIME NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(ticket_id) REFERENCES tickets(id)
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;

@@ -45,7 +45,7 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
-<div id="ticketTabs" data-toggle="tab">
+<div id="ticketTabs" class="tabview" data-toggle="tab">
  <ul class="nav nav-tabs" data-toggle="tab">
   <li class="active"><a href="#comments">@Messages("ticket.comment.list")</a></li>
   <li><a href="#history">@Messages("ticket.history.list")</a></li>
@@ -127,11 +127,4 @@
    </div>
  </div>
 </div>
-<script>
-YUI().use('gallery-bootstrap', function (Y) {
-  var tabview = new Y.Bootstrap.Tabview({ node: '#ticketTabs' });
-
-  tabview.selectChild(0); // Select the second tab
-});
-</script>
 }
