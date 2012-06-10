@@ -135,6 +135,7 @@ role.name=Name
 
 ticket.add=Add Ticket
 ticket.add.success=Ticket Added
+ticket.add.failure=Error Creating Ticket XXX
 ticket.advance=Advance to {0}
 ticket.advance.confirm=Advance
 ticket.advance.end=At End

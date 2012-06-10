@@ -8,6 +8,9 @@
   <li @if(request.path.startsWith("/admin")) { class="active" }><a href="@routes.Admin.index">@Messages("general.admin")</a></li>
  </ul>
  <a class="btn btn-primary" href="@controllers.routes.Ticket.create">@Messages("ticket.add")</a>
+ <form class="navbar-search">
+   <input type="text" class="search-query" placeholder="Search">
+ </form>
  <div class="btn-group pull-right">
    <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
      @request.session.get("username")

@@ -114,7 +114,13 @@ object Ticket extends Controller with Secured {
       },
       value => {
         val ticket = TicketModel.create(value)
-        Redirect(routes.Ticket.item(ticket.get.id.get)).flashing("success" -> "ticket.add.success")
+        ticket match {
+          case Some(t) => {
+            SearchModel.indexTicket(TicketModel.getFullById(t.id.get).get) // XXX actors, elsewhere?!!
+            Redirect(routes.Ticket.item(t.id.get)).flashing("success" -> "ticket.add.success")
+          }
+          case None => Redirect(routes.Ticket.item(ticket.get.id.get)).flashing("error" -> "ticket.add.failure")
+        }
       }
     )
   }
@@ -200,6 +206,7 @@ object Ticket extends Controller with Secured {
       },
       value => {
         TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
+        SearchModel.indexTicket(TicketModel.getFullById(ticketId).get) // XXX actors, elsewhere?!!
         Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )

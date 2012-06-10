@@ -38,11 +38,11 @@ case class EditTicket(
 case class FullTicket(
   id: Pk[Long] = NotAssigned, reporterId: Long, reporterName: String,
   projectId: Long, projectName: String,  priorityId: Long,
-  priorityName: String, resolutionId: Option[Long],
-  proposedResolutionId: Option[Long], severityId: Long, severityName: String,
-  workflowStatusId: Long, statusId: Long, statusName: String, typeId: Long,
-  typeName: String, position: Option[Long], summary: String,
-  description: Option[String], dateCreated: Date
+  priorityName: String, resolutionId: Option[Long], resolutionName: Option[String],
+  proposedResolutionId: Option[Long], // proposedResolutionName: Option[String],
+  severityId: Long, severityName: String, workflowStatusId: Long, statusId: Long,
+  statusName: String, typeId: Long, typeName: String, position: Option[Long],
+  summary: String, description: Option[String], dateCreated: Date
 )
 
 case class Ticket(
@@ -81,7 +81,8 @@ object TicketModel {
 
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
-  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id WHERE t.id={id}")
+  // XX Missing proposed resolution :( due to lack of aliases
+  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
@@ -154,6 +155,7 @@ object TicketModel {
     get[Long]("tickets.priority_id") ~
     get[String]("ticket_priorities.name") ~
     get[Option[Long]]("tickets.resolution_id") ~
+    get[Option[String]]("ticket_resolutions.name") ~
     get[Option[Long]]("tickets.proposed_resolution_id") ~
     get[Long]("tickets.severity_id") ~
     get[String]("ticket_severities.name") ~
@@ -166,19 +168,20 @@ object TicketModel {
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") ~
     get[Date]("tickets.date_created") map {
-      case id~reporterId~reporterName~projectId~projectName~priorityId~priorityName~resolutionId~proposedResolutionId~severityId~severityName~workflowStatusId~statusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
+      case id~repId~repName~projectId~projectName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
-          reporterId = reporterId,
-          reporterName = reporterName,
+          reporterId = repId,
+          reporterName = repName,
           projectId = projectId,
           projectName = projectName,
-          priorityId = priorityId,
-          priorityName = priorityName,
-          resolutionId = resolutionId,
-          proposedResolutionId = proposedResolutionId,
-          severityId = severityId,
-          severityName = severityName,
+          priorityId = priId,
+          priorityName = priName,
+          resolutionId = resId,
+          resolutionName = resName,
+          proposedResolutionId = propResId,
+          severityId = sevId,
+          severityName = sevName,
           workflowStatusId = workflowStatusId,
           statusId = statusId,
           statusName = statusName,
@@ -560,6 +563,7 @@ object TicketModel {
 
     DB.withTransaction { implicit conn =>
 
+      // XXX needs to NOT create an entry if there are no differences!
       insertHistoryQuery.on(
         'user_id -> userId,
         'ticket_id -> id
