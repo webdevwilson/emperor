@@ -89,6 +89,8 @@ POST    /project/:id                    controllers.Project.update(id: Long)
 GET     /project                        controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
 POST    /project                        controllers.Project.add
 
+GET     /search                         controllers.Search.index(page: Int ?= 0, count: Int ?= 10, query ?= "*")
+
 GET     /stack                          controllers.Stack.index
 
 GET     /ticket                         controllers.Ticket.index(page: Int ?= 0, count: Int ?= 10)

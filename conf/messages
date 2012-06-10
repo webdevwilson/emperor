@@ -133,6 +133,8 @@ project.tickets.this_week=Tickets This Week
 role.description=Description
 role.name=Name
 
+search.results=Search Results
+
 ticket.add=Add Ticket
 ticket.add.success=Ticket Added
 ticket.add.failure=Error Creating Ticket XXX

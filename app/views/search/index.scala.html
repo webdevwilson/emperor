@@ -1,0 +1,47 @@
+@(results: chc.Page[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
+
+@import util._
+
+@main("search.results") {
+  <ul class="nav nav-list well">
+    XXX do the is empty thing here
+    <li class="nav-header">
+      List header
+    </li>
+    <li class="active">
+      <a href="#">Home</a>
+    </li>
+    <li>
+      <a href="#">Library</a>
+    </li>
+    ...
+  </ul>
+
+  <table class="table table-bordered table-rounded table-striped">
+   <thead>
+    <th>@Messages("ticket.summary")</th>
+    <th>@Messages("general.actions")</th>
+   </thead>
+   <tbody>
+    @results.items.map { hit =>
+    <tr>
+     <td><a href="@controllers.routes.Ticket.item(hit.getId.toLong)">@hit.field("summary").getValue.toString</a></td>
+     <td class="actions">
+      <div class="btn-toolbar">
+       <div class="btn-group">
+        <a class="btn btn-mini" href="@routes.Ticket.edit(hit.getId.toLong)"><i class="icon-edit"></i> @Messages("general.edit")</a>
+       </div>
+      </div>
+     </td>
+    </tr>
+    }
+   </tbody>
+   <tfoot>
+    <tr>
+     <td colspan="4">
+       @pager(results)
+      </td>
+     </tr>
+   </tfoot
+  </table>
+}

@@ -1,6 +1,11 @@
 package models
 
+import chc._
 import com.traackr.scalastic.elasticsearch.Indexer
+import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.facet.FacetBuilders._
+import org.elasticsearch.index.query.QueryBuilders._
 import play.api.libs.json.Json._
 
 object SearchModel {
@@ -130,5 +135,17 @@ object SearchModel {
     )
 
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
+  }
+  
+  def searchTicket(page: Int, count: Int, query: String) : Page[SearchHit] = {
+    
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+    val response = indexer.search(
+      query = queryString(query),
+      facets = Seq(termsFacet("Type").field("type_name")),
+      fields = List("summary")
+    )
+    
+    Page(response.hits.hits, page, count, response.hits.totalHits)
   }
 }
