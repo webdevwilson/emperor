@@ -138,10 +138,17 @@ object SearchModel {
   
   def searchTicket(page: Int, count: Int, query: String) : SearchResponse = {
     
+    // This shouldn't have to live here. It annoys me. Surely there's a better
+    // way.
+    var q = query
+    if(q.isEmpty) {
+      q = "*"
+    }
+    
     // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.search(
-      query = queryString(query),
+      query = queryString(q),
       facets = Seq(
         termsFacet("search.facet.type").field("type_name"),
         termsFacet("search.facet.project").field("project_name"),
