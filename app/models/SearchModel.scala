@@ -156,7 +156,13 @@ object SearchModel {
         termsFacet("search.facet.severity").field("severity_name"),
         termsFacet("search.facet.status").field("status_name")
       ),
-      fields = List("summary")
+      fields = List("summary"),
+      size = Some(count),
+      from = page match {
+        case 0 => Some(0)
+        case 1 => Some(0)
+        case _ => Some((page * count) - 1)
+      }
     )
   }
 }
