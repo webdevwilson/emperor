@@ -1,22 +1,21 @@
-@(results: chc.Page[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
+@(results: chc.Page[org.elasticsearch.search.SearchHit], facets: scala.collection.mutable.Buffer[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet])(implicit request: Request[AnyContent])
 
 @import util._
 
-@main("search.results") {
+@main(Messages("search.results")) {
+  XXX do something with empty
+<div class="row-fluid">
+ <div class="span2">
   <ul class="nav nav-list well">
-    XXX do the is empty thing here
-    <li class="nav-header">
-      List header
-    </li>
-    <li class="active">
-      <a href="#">Home</a>
-    </li>
-    <li>
-      <a href="#">Library</a>
-    </li>
-    ...
+    @facets.map { facet =>
+      <li class="nav-header">@Messages(facet.getName)</li>
+      @facet.entries.map { entry =>
+        <li><a href="#">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+      }
+    }
   </ul>
-
+ </div>
+ <div class="span10">
   <table class="table table-bordered table-rounded table-striped">
    <thead>
     <th>@Messages("ticket.summary")</th>
@@ -44,4 +43,5 @@
      </tr>
    </tfoot
   </table>
+</div>
 }

@@ -133,6 +133,11 @@ project.tickets.this_week=Tickets This Week
 role.description=Description
 role.name=Name
 
+search.facet.priority=Priority
+search.facet.project=Project
+search.facet.severity=Severity
+search.facet.status=Status
+search.facet.type=Type
 search.results=Search Results
 
 ticket.add=Add Ticket

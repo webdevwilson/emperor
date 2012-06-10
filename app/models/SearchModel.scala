@@ -1,6 +1,5 @@
 package models
 
-import chc._
 import com.traackr.scalastic.elasticsearch.Indexer
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.SearchHit
@@ -76,7 +75,7 @@ object SearchModel {
           "type": "long",
           "index": "not_analyzed"
         },
-        "type_id": {
+        "type_name": {
           "type": "string",
           "index": "not_analyzed"
         },
@@ -137,15 +136,20 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
-  def searchTicket(page: Int, count: Int, query: String) : Page[SearchHit] = {
+  def searchTicket(page: Int, count: Int, query: String) : SearchResponse = {
     
+    // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    val response = indexer.search(
+    indexer.search(
       query = queryString(query),
-      facets = Seq(termsFacet("Type").field("type_name")),
+      facets = Seq(
+        termsFacet("search.facet.type").field("type_name"),
+        termsFacet("search.facet.project").field("project_name"),
+        termsFacet("search.facet.priority").field("priority_name"),
+        termsFacet("search.facet.severity").field("severity_name"),
+        termsFacet("search.facet.status").field("status_name")
+      ),
       fields = List("summary")
     )
-    
-    Page(response.hits.hits, page, count, response.hits.totalHits)
   }
 }
