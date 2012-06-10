@@ -34,4 +34,18 @@ object Library {
     
     request.path + "?" + qs
   }
+
+  def filterLink(request: Request[AnyContent], name: String, value: String) : String = {
+
+    var q = request.queryString
+    q += name -> List(value)
+
+    val qs = q.foldLeft("")(
+      (acc, value) => acc + value._2.foldLeft("")(
+        (acc2, param) => acc2 + value._1 + "=" + param + "&"
+      )
+    )
+    
+    request.path + "?" + qs
+  }
 }
