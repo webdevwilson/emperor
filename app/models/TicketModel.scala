@@ -103,6 +103,7 @@ object TicketModel {
   val getMostRecentHistoryIdQuery = SQL("SELECT th.id FROM ticket_history th WHERE ticket_id={ticket_id} ORDER BY th.date_occurred DESC LIMIT 1")
 
   val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.date_created ASC")
+  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description, UTC_TIMESTAMP() FROM tickets t WHERE t.id={ticket_id}")
@@ -263,7 +264,7 @@ object TicketModel {
     }
   }
 
-  def addComment(ticketId: Long, userId: Long, content: String) : Boolean = {
+  def addComment(ticketId: Long, userId: Long, content: String) : Option[Comment] = {
     
     val ticket = this.getById(ticketId)
     
@@ -275,12 +276,12 @@ object TicketModel {
             'ticket_id  -> ticketId,
             'content    -> content
           ).execute
+          val id = lastInsertQuery.as(scalar[Long].single)
+          this.getCommentById(id)
         }
       }
-      case None => return false
+      case None => return None
     }
-
-    true
   }
 
   def changeStatus(ticketId: Long, statusId: Long, userId: Long) = {
@@ -335,6 +336,13 @@ object TicketModel {
   
   def delete(id: Long) {
       
+  }
+
+  def getCommentById(id: Long) : Option[Comment] = {
+      
+    DB.withConnection { implicit conn =>
+      getCommentByIdQuery.on('id -> id).as(comment.singleOpt)
+    }
   }
 
   def getById(id: Long) : Option[EditTicket] = {

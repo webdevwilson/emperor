@@ -45,7 +45,7 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
-<div id="ticketTabs" class="tabview" data-toggle="tab">
+<div id="ticketTabsXX" class="tabviewXX" data-toggle="tabXXX">
  <ul class="nav nav-tabs" data-toggle="tab">
   <li class="active"><a href="#comments">@Messages("ticket.comment.list")</a></li>
   <li><a href="#history">@Messages("ticket.history.list")</a></li>

@@ -8,6 +8,7 @@ import org.elasticsearch.index.query.{BaseQueryBuilder,FilterBuilder}
 import org.elasticsearch.index.query.FilterBuilders._
 import org.elasticsearch.index.query.QueryBuilders._
 import play.api.libs.json.Json._
+import play.api.libs.json._
 
 object SearchModel {
   
@@ -285,30 +286,46 @@ object SearchModel {
     }
     // indexer.refresh()
   }
+
+  def indexComment(comment: Comment) {
+
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+
+    val cdoc: Map[String,JsValue] = Map(
+      "ticket_id" -> JsNumber(comment.ticketId),
+      "user_id" -> JsNumber(comment.userId),
+      "user_realname" -> JsString(comment.realName),
+      "content" -> JsString(comment.content)
+      // XXX date_created
+    )
+
+    indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
+  }
   
   def indexTicket(ticket: FullTicket) {
 
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
 
-    val tdoc: Map[String,String] = Map(
-      "project_id" -> ticket.projectId.toString,
-      "project_name" -> ticket.projectName,
-      "priority_id" -> ticket.priorityId.toString,
-      "priority_name" -> ticket.priorityName,
+    val tdoc: Map[String,JsValue] = Map(
+      "project_id" -> JsNumber(ticket.projectId),
+      "project_name" -> JsString(ticket.projectName),
+      "priority_id" -> JsNumber(ticket.priorityId),
+      "priority_name" -> JsString(ticket.priorityName),
       // "resolution_id" -> ticket.resolutionId.toString,
-      "resolution_name" -> ticket.resolutionName.getOrElse(""),
+      "resolution_name" -> JsString(ticket.resolutionName.getOrElse("")),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
-      "reporter_id" -> ticket.reporterId.toString,
-      "reporter_name" -> ticket.reporterName,
-      "severity_id" -> ticket.severityId.toString,
-      "severity_name" -> ticket.severityName,
-      "status_id" -> ticket.statusId.toString,
-      "status_name" -> ticket.statusName,
-      "type_id" -> ticket.typeId.toString,
-      "type_name" -> ticket.typeName,
-      "summary" -> ticket.summary,
-      "description" -> ticket.description.getOrElse("")
+      "reporter_id" -> JsNumber(ticket.reporterId),
+      "reporter_name" -> JsString(ticket.reporterName),
+      "severity_id" -> JsNumber(ticket.severityId),
+      "severity_name" -> JsString(ticket.severityName),
+      "status_id" -> JsNumber(ticket.statusId),
+      "status_name" -> JsString(ticket.statusName),
+      "type_id" -> JsNumber(ticket.typeId),
+      "type_name" -> JsString(ticket.typeName),
+      "summary" -> JsString(ticket.summary),
+      "description" -> JsString(ticket.description.getOrElse(""))
+      // XXX date_created
     )
 
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
@@ -359,35 +376,36 @@ object SearchModel {
       case _ => true // true otherwise!
     }
 
-    val hdoc: Map[String,Any] = Map(
-      "ticket_id" -> ticket.id.get,
-      "project_id" -> ticket.projectId.toString,
-      "project_name" -> ticket.projectName,
-      "project_changed" -> projChanged,
-      "priority_id" -> ticket.priorityId.toString,
-      "priority_name" -> ticket.priorityName,
-      "priorityChanged" -> prioChanged,
+    val hdoc: Map[String,JsValue] = Map(
+      "ticket_id" -> JsNumber(ticket.id.get),
+      "project_id" -> JsNumber(ticket.projectId),
+      "project_name" -> JsString(ticket.projectName),
+      "project_changed" -> JsBoolean(projChanged),
+      "priority_id" -> JsNumber(ticket.priorityId),
+      "priority_name" -> JsString(ticket.priorityName),
+      "priorityChanged" -> JsBoolean(prioChanged),
       // "resolution_id" -> ticket.resolutionId.toString,
-      "resolution_name" -> ticket.resolutionName.getOrElse(""),
-      "resolution_changed" -> resoChanged,
+      "resolution_name" -> JsString(ticket.resolutionName.getOrElse("")),
+      "resolution_changed" -> JsBoolean(resoChanged),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
-      "reporter_id" -> ticket.reporterId.toString,
-      "reporter_name" -> ticket.reporterName,
-      "reporter_changed" -> repChanged,
-      "severity_id" -> ticket.severityId.toString,
-      "severity_name" -> ticket.severityName,
-      "severity_changed" -> sevChanged,
-      "status_id" -> ticket.statusId.toString,
-      "status_name" -> ticket.statusName,
-      "status_changed" -> statChanged,
-      "type_id" -> ticket.typeId.toString,
-      "type_name" -> ticket.typeName,
-      "type_changed" -> typeChanged,
-      "summary" -> ticket.summary,
-      "summary_changed" -> summChanged,
-      "description" -> ticket.description.getOrElse(""),
-      "description_changed" -> descChanged
+      "reporter_id" -> JsNumber(ticket.reporterId),
+      "reporter_name" -> JsString(ticket.reporterName),
+      "reporter_changed" -> JsBoolean(repChanged),
+      "severity_id" -> JsNumber(ticket.severityId),
+      "severity_name" -> JsString(ticket.severityName),
+      "severity_changed" -> JsBoolean(sevChanged),
+      "status_id" -> JsNumber(ticket.statusId),
+      "status_name" -> JsString(ticket.statusName),
+      "status_changed" -> JsBoolean(statChanged),
+      "type_id" -> JsNumber(ticket.typeId),
+      "type_name" -> JsString(ticket.typeName),
+      "type_changed" -> JsBoolean(typeChanged),
+      "summary" -> JsString(ticket.summary),
+      "summary_changed" -> JsBoolean(summChanged),
+      "description" -> JsString(ticket.description.getOrElse("")),
+      "description_changed" -> JsBoolean(descChanged)
+      // XXX date_occurred
     )
     
     indexer.index(ticketHistoryIndex, ticketHistoryType, ticket.id.get.toString, toJson(hdoc).toString)

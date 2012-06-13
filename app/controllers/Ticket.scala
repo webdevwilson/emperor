@@ -132,7 +132,8 @@ object Ticket extends Controller with Secured {
         Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
-        TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.content)
+        val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.content)
+        SearchModel.indexComment(comm.get) // XXX actors? handle None!
         Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.comment.added")
       }
     )
