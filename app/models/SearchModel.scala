@@ -314,6 +314,85 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
+  def indexHistory(ticket: FullTicket, old: FullTicket) {
+    
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+    
+    val projChanged = ticket.projectId match {
+      case old.projectId => false
+      case _ => true
+    }
+    val prioChanged = ticket.priorityId match {
+      case old.priorityId => false
+      case _ => true
+    }
+    val resoChanged = ticket.resolutionId match {
+      case Some(res) if old.resolutionId.isEmpty => true // We have one now, true!
+      case Some(res) if !old.resolutionId.isEmpty => res != old.resolutionId.get // True if changed
+      case None if old.resolutionId.isEmpty => false // nothing and nothing, false
+      case _ => true // true otherwise!
+    }
+    val repChanged = ticket.reporterId match {
+      case old.reporterId => false
+      case _ => true
+    }
+    val sevChanged = ticket.severityId match {
+      case old.severityId => false
+      case _ => true
+    }
+    val statChanged = ticket.statusId match {
+      case old.statusId => false
+      case _ => true
+    }
+    val typeChanged = ticket.typeId match {
+      case old.statusId => false
+      case _ => true
+    }
+    val summChanged = ticket.summary match {
+      case old.summary => false
+      case _ => true
+    }
+    val descChanged = ticket.description match {
+      case Some(res) if old.description.isEmpty => true // We have one now, true!
+      case Some(res) if !old.description.isEmpty => res != old.description.get // True if changed
+      case None if old.description.isEmpty => false // nothing and nothing, false
+      case _ => true // true otherwise!
+    }
+
+    val hdoc: Map[String,Any] = Map(
+      "ticket_id" -> ticket.id.get,
+      "project_id" -> ticket.projectId.toString,
+      "project_name" -> ticket.projectName,
+      "project_changed" -> projChanged,
+      "priority_id" -> ticket.priorityId.toString,
+      "priority_name" -> ticket.priorityName,
+      "priorityChanged" -> prioChanged,
+      // "resolution_id" -> ticket.resolutionId.toString,
+      "resolution_name" -> ticket.resolutionName.getOrElse(""),
+      "resolution_changed" -> resoChanged,
+      // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
+      // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
+      "reporter_id" -> ticket.reporterId.toString,
+      "reporter_name" -> ticket.reporterName,
+      "reporter_changed" -> repChanged,
+      "severity_id" -> ticket.severityId.toString,
+      "severity_name" -> ticket.severityName,
+      "severity_changed" -> sevChanged,
+      "status_id" -> ticket.statusId.toString,
+      "status_name" -> ticket.statusName,
+      "status_changed" -> statChanged,
+      "type_id" -> ticket.typeId.toString,
+      "type_name" -> ticket.typeName,
+      "type_changed" -> typeChanged,
+      "summary" -> ticket.summary,
+      "summary_changed" -> summChanged,
+      "description" -> ticket.description.getOrElse(""),
+      "description_changed" -> descChanged
+    )
+    
+    indexer.index(ticketHistoryIndex, ticketHistoryType, ticket.id.get.toString, toJson(hdoc).toString)
+  }
+  
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
     
     // This shouldn't have to live here. It annoys me. Surely there's a better

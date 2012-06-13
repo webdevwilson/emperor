@@ -106,6 +106,7 @@ object TicketModel {
   val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
   val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) SELECT {user_id}, t.id, t.project_id, t.priority_id, t.resolution_id, t.proposed_resolution_id, t.reporter_id, t.severity_id, t.status_id, t.type_id, t.position, t.summary, t.description, UTC_TIMESTAMP() FROM tickets t WHERE t.id={ticket_id}")
+  val insertHistoryQuery2 = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {priority_id}, {resolution_id}, {proposed_resolution_id}, {reporter_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentFacetUser = SQL("SELECT count(*) as occurrences, u.username, u.id FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} GROUP BY user_id")
 
   val ticket = {
@@ -563,10 +564,23 @@ object TicketModel {
 
     DB.withTransaction { implicit conn =>
 
+      val oldTicket = this.getFullById(id).get
+      
       // XXX needs to NOT create an entry if there are no differences!
-      insertHistoryQuery.on(
-        'user_id -> userId,
-        'ticket_id -> id
+      insertHistoryQuery2.on(
+        'user_id      -> userId,
+        'ticket_id    -> id,
+        'project_id   -> oldTicket.projectId,
+        'priority_id  -> oldTicket.priorityId,
+        'resolution_id -> oldTicket.resolutionId,
+        'proposed_resolution_id -> oldTicket.proposedResolutionId,
+        'reporter_id  -> oldTicket.reporterId,
+        'severity_id  -> oldTicket.severityId,
+        'status_id    -> oldTicket.statusId,
+        'type_id      -> oldTicket.typeId,
+        'description  -> oldTicket.description,
+        'position     -> oldTicket.position,
+        'summary      -> oldTicket.summary
       ).executeUpdate
 
       updateQuery.on(
@@ -581,6 +595,10 @@ object TicketModel {
         'position               -> ticket.position,
         'summary                -> ticket.summary
       ).executeUpdate
+      
+      val newTicket = this.getFullById(id).get
+      
+      SearchModel.indexHistory(newTicket, oldTicket)
     }
   }
 }
