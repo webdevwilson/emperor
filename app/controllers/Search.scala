@@ -34,6 +34,6 @@ object Search extends Controller with Secured {
       }
     } filter { f => f.entries.size > 1 }
 
-    Ok(views.html.search.index(pager, termfacets)(request))
+    Ok(views.html.search.index(pager, filters, termfacets)(request))
   }
 }

@@ -31,7 +31,7 @@ object Library {
         (acc2, param) => acc2 + value._1 + "=" + param + "&"
       )
     )
-    
+
     request.path + "?" + qs
   }
 
@@ -40,7 +40,13 @@ object Library {
     var q = request.queryString
     q += name -> List(value)
 
-    val qs = q.foldLeft("")(
+    // Filter out any empty values
+    val clean = q.filterNot { p =>
+      val vals = p._2.filter { v => v != "" }
+      vals.isEmpty
+    }
+
+    val qs = clean.foldLeft("")(
       (acc, value) => acc + value._2.foldLeft("")(
         (acc2, param) => acc2 + value._1 + "=" + param + "&"
       )
