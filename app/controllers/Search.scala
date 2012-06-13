@@ -15,7 +15,7 @@ object Search extends Controller with Secured {
         case "severity" => true
         case "type"     => true
         case "priority" => true
-        case _ => false // Nothing else if useful as a filter
+        case _ => false // Nothing else is useful as a filter
       }
     }
 

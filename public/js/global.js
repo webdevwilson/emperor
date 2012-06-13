@@ -15,4 +15,6 @@ YUI().use('array-extras', 'anim', 'gallery-dynamic-dialog', 'gallery-bootstrap',
       }
     });
   });
+  
+  Y.all('.tabview').each(function(el) { new Y.Bootstrap.TabView({ node: el }) })
 });

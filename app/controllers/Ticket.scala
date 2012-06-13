@@ -185,8 +185,7 @@ object Ticket extends Controller with Secured {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-        // XXX use real params
-        val searchComments = SearchModel.searchComment(page = 0, count = 10, query = "", filters = Map("ticket_id" -> Seq(ticketId.toString)))
+        val searchComments = TicketModel.getCommentsAsSearchResult(ticketId = ticketId)
         Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments, changes)(request))
       }
       case None => NotFound
