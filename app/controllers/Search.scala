@@ -24,7 +24,6 @@ object Search extends Controller with Secured {
         case t: InternalStringTermsFacet => t
       }
     } filter { f => f.entries.size > 1 }
-    println(termfacets)
 
     Ok(views.html.search.index(pager, termfacets)(request))
   }

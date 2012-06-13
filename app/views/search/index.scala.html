@@ -9,7 +9,7 @@
  <div class="span2">
   <ul class="nav nav-list well">
     @facets.map { facet =>
-      <li class="nav-header">@Messages(facet.getName)</li>
+      <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
       @facet.entries.map { entry =>
         <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
       }

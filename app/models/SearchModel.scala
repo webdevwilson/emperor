@@ -96,6 +96,172 @@ object SearchModel {
   }
   """
 
+  val ticketCommentIndex = "ticket_comments"
+  val ticketCommentType = "ticket_comment"
+  val ticketCommentMapping = """
+  {
+    "ticket": {
+      "properties": {
+        "ticket_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "user_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "user_realname": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "content": {
+          "type": "string",
+          "index": "analyzed"
+        },
+        "date_created": {
+          "type": "date",
+          "format": "basic_date_time_no_millis"
+        }
+      }
+    }
+  }
+  """
+
+  val ticketHistoryIndex = "ticket_histories"
+  val ticketHistoryType = "ticket_history"
+  val ticketHistoryMapping = """
+  {
+  "ticket_history": {
+    "properties": {
+      "ticket_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "user_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "project_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "project_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "project_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "priority_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "priority_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "priority_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "resolution_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "resolution_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "resolution_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "proposed_resolution_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "proposed_resolution_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "proposed_resolution_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "reporter_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "reporter_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "reporter_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "severity_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "severity_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "severity_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "status_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "status_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "severity_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "type_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "type_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "type_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "summary": {
+        "type": "string",
+        "index": "analyzed"
+      },
+      "summary_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "description": {
+        "type": "string",
+        "index": "analyzed"
+      },
+      "description_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "date_occured": {
+        "type": "date",
+        "format": "basic_date_time_no_millis"
+      }
+    }
+  }
+  }
+  """
+
   def foo = {
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     
@@ -104,6 +270,16 @@ object SearchModel {
       indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(ticketIndex, ticketType, ticketMapping)
+    }
+    if(!indexer.exists(ticketCommentIndex)) {
+      indexer.createIndex(ticketCommentIndex, settings = Map("number_of_shards" -> "1"))
+      indexer.waitTillActive()
+      indexer.putMapping(ticketCommentIndex, ticketCommentType, ticketCommentMapping)
+    }
+    if(!indexer.exists(ticketHistoryIndex)) {
+      indexer.createIndex(ticketHistoryIndex, settings = Map("number_of_shards" -> "1"))
+      indexer.waitTillActive()
+      indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
     }
     // indexer.refresh()
   }
@@ -150,11 +326,11 @@ object SearchModel {
     indexer.search(
       query = queryString(q),
       facets = Seq(
-        termsFacet("search.facet.type").field("type_name"),
-        termsFacet("search.facet.project").field("project_name"),
-        termsFacet("search.facet.priority").field("priority_name"),
-        termsFacet("search.facet.severity").field("severity_name"),
-        termsFacet("search.facet.status").field("status_name")
+        termsFacet("type").field("type_name"),
+        termsFacet("project").field("project_name"),
+        termsFacet("priority").field("priority_name"),
+        termsFacet("severity").field("severity_name"),
+        termsFacet("status").field("status_name")
       ),
       fields = List("summary"),
       size = Some(count),
