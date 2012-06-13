@@ -10,7 +10,16 @@ object Search extends Controller with Secured {
 
   def index(page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
 
-    val response = SearchModel.searchTicket(page, count, query)
+    val filters = request.queryString filterKeys { key =>
+      key match {
+        case "severity" => true
+        case "type"     => true
+        case "priority" => true
+        case _ => false // Nothing else if useful as a filter
+      }
+    }
+
+    val response = SearchModel.searchTicket(page, count, query, filters)
 
     val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
     

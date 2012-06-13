@@ -4,6 +4,8 @@ import com.traackr.scalastic.elasticsearch.Indexer
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.facet.FacetBuilders._
+import org.elasticsearch.index.query.{BaseQueryBuilder,FilterBuilder}
+import org.elasticsearch.index.query.FilterBuilders._
 import org.elasticsearch.index.query.QueryBuilders._
 import play.api.libs.json.Json._
 
@@ -312,7 +314,7 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
-  def searchTicket(page: Int, count: Int, query: String) : SearchResponse = {
+  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
     
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -321,10 +323,21 @@ object SearchModel {
       q = "*"
     }
     
+    var actualQuery : BaseQueryBuilder = queryString(q)
+    
+    // If we have filters, build up a filterquery and swap out our actualQuery
+    // with a filtered version!
+    if(!filters.isEmpty) {
+      val fqs : Iterable[FilterBuilder] = filters map {
+        case (key, values) => termFilter(key + "_name", values.head).asInstanceOf[FilterBuilder]
+      }
+      actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
+    }
+    
     // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.search(
-      query = queryString(q),
+      query = actualQuery,
       facets = Seq(
         termsFacet("type").field("type_name"),
         termsFacet("project").field("project_name"),
