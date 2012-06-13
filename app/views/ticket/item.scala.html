@@ -1,7 +1,8 @@
 @(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
   commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus],
-  nextStatus: Option[models.WorkflowStatus], comments: chc.SearchResult[models.Comment],
-  histories: Option[Seq[TicketChanges]])(implicit request: Request[AnyContent])
+  nextStatus: Option[models.WorkflowStatus], comments: org.elasticsearch.action.search.SearchResponse,
+  histories: Option[Seq[TicketChanges]])(implicit request: Request[AnyContent]
+)
 
 @import helper.bootstrap._
 @import util._
