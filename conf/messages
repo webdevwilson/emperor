@@ -150,6 +150,7 @@ ticket.comment=Comment
 ticket.comment.added=Comment Added
 ticket.comment.attribution.postfix=on {0}
 ticket.comment.attribution.prefix=by
+ticket.comment.facet.user_id=User
 ticket.comment.invalid=Invalid Comment
 ticket.comment.list=Comments
 ticket.description=Description
