@@ -4,10 +4,12 @@
   prevStatus: Option[models.WorkflowStatus],
   nextStatus: Option[models.WorkflowStatus],
 	history: chc.Page[org.elasticsearch.search.SearchHit],
+	facets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
 	response: org.elasticsearch.action.search.SearchResponse
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
+@import chc._
 @import util._
 
 @item(ticket, markdown, prevStatus, nextStatus) {
@@ -19,17 +21,24 @@
    <div class="tab-pane active" id="history">
     <div class="row">
      <div class="span2">
-      <ul class="nav nav-list">
-       <li class="nav-header">header</li>
-       <li><a href="#">Facet <span class="badge">3</span></a></li>
-      </ul>
+       <ul class="unstyled events">
+         @facets.map { facet =>
+           <li class="nav-header">@Messages("comments.facet." + facet.getName)</li>
+           @facet.entries.map { entry =>
+             <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+           }
+         }
+       </ul>
      </div>
      <div class="span10">
-      <ul class="unstyled events">
-       @history.items.map { change =>
-       <li class="change">Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
-       }
-      </ul>
+       <ul class="unstyled events">
+        @history.items.map { change =>
+        <li>
+  	     <blockquote>@change</blockquote>
+         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@change.field("user_id")</a> @Messages("ticket.history.attribution.postfix", "XXX")</div>
+        </li>
+        }
+       </ul>
       @pager(history)
      </div>
     </div>

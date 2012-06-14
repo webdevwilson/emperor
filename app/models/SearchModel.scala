@@ -331,7 +331,7 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
-  def indexHistory(ticket: FullTicket, old: FullTicket) {
+  def indexHistory(changeId: Long, ticket: FullTicket, old: FullTicket) {
     
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     
@@ -407,8 +407,8 @@ object SearchModel {
       "description_changed" -> JsBoolean(descChanged)
       // XXX date_occurred
     )
-    
-    indexer.index(ticketHistoryIndex, ticketHistoryType, ticket.id.get.toString, toJson(hdoc).toString)
+    println(toJson(hdoc).toString)
+    indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
   }
 
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -436,14 +436,15 @@ object SearchModel {
     indexer.search(
       query = actualQuery,
       indices = Seq("ticket_histories"),
-      // facets = Seq(
-      //   termsFacet("type").field("type_name"),
-      //   termsFacet("project").field("project_name"),
-      //   termsFacet("priority").field("priority_name"),
-      //   termsFacet("severity").field("severity_name"),
-      //   termsFacet("status").field("status_name")
-      // ),
-      fields = List("ticket_id"),
+      facets = Seq(
+        // termsFacet("user_id").field("user_id"), // XXX readd this
+        termsFacet("priority_changed").field("priority_changed"),
+        termsFacet("reporter_changed").field("reporter_changed"),
+        termsFacet("resolution_changed").field("resolution_changed"),
+        termsFacet("severity_changed").field("severity_changed"),
+        termsFacet("status_changed").field("status_changed")
+      ),
+      fields = List("ticket_id", "user_id"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)
@@ -478,13 +479,9 @@ object SearchModel {
     indexer.search(
       query = actualQuery,
       indices = Seq("ticket_comments"),
-      // facets = Seq(
-      //   termsFacet("type").field("type_name"),
-      //   termsFacet("project").field("project_name"),
-      //   termsFacet("priority").field("priority_name"),
-      //   termsFacet("severity").field("severity_name"),
-      //   termsFacet("status").field("status_name")
-      // ),
+      facets = Seq(
+        termsFacet("user_id").field("user_id")
+      ),
       fields = List("content", "user_realname"),
       size = Some(count),
       from = page match {

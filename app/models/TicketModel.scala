@@ -590,6 +590,7 @@ object TicketModel {
         'position     -> oldTicket.position,
         'summary      -> oldTicket.summary
       ).executeUpdate
+      val cid = lastInsertQuery.as(scalar[Long].single)
 
       updateQuery.on(
         'id                     -> id,
@@ -606,7 +607,7 @@ object TicketModel {
       
       val newTicket = this.getFullById(id).get
       
-      SearchModel.indexHistory(newTicket, oldTicket)
+      SearchModel.indexHistory(cid, newTicket, oldTicket)
     }
   }
 }

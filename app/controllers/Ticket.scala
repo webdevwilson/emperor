@@ -2,6 +2,7 @@ package controllers
 
 import anorm._
 import chc._
+import collection.JavaConversions._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -11,6 +12,10 @@ import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import models._
 import org.clapper.markwrap._
+import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
+import org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet
+
+import com.codahale.jerkson.Json._
 
 object Ticket extends Controller with Secured {
 
@@ -193,13 +198,20 @@ object Ticket extends Controller with Secured {
               0, 10, "", Map("ticketId" -> Seq(ticketId.toString)) // XXX real params
             )
             val pager = Page(response.hits.hits, 0, 10, response.hits.totalHits) // real params
-            
+
+            val termfacets = response.facets.facets.map { facet =>
+              facet match {
+                case t: InternalStringTermsFacet => t
+              }
+            } //filter { f => f.entries.size > 1 }
+
             Ok(views.html.ticket.history(
               ticket = value,
               markdown = mdParser,
               prevStatus = prevStatus,
               nextStatus = nextStatus,
               history = pager,
+              facets = termfacets,
               response = response
             )(request))
           }
@@ -210,6 +222,12 @@ object Ticket extends Controller with Secured {
             )
             val pager = Page(response.hits.hits, 0, 10, response.hits.totalHits) // XXX real params
 
+            val termfacets = response.facets.facets.map { facet =>
+              facet match {
+                case t: InternalLongTermsFacet => t
+              }
+            } filter { f => f.entries.size > 1 }
+
             Ok(views.html.ticket.comments(
               ticket = value,
               markdown = mdParser,
@@ -217,6 +235,7 @@ object Ticket extends Controller with Secured {
               nextStatus = nextStatus,
               commentForm = commentForm,
               comments = pager,
+              facets = termfacets,
               response = response
             )(request))
           }

@@ -1,14 +1,16 @@
 @(
   ticket: models.FullTicket,
-	markdown: org.clapper.markwrap.MarkWrapParser,
+  markdown: org.clapper.markwrap.MarkWrapParser,
   prevStatus: Option[models.WorkflowStatus],
   nextStatus: Option[models.WorkflowStatus],
 	commentForm: Form[models.InitialComment],
 	comments: chc.Page[org.elasticsearch.search.SearchHit],
+	facets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
 	response: org.elasticsearch.action.search.SearchResponse
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
+@import chc._
 @import util._
 
 @item(ticket, markdown, prevStatus, nextStatus) {
@@ -32,7 +34,12 @@
     <div class="span2">
      <ul class="nav nav-list">
       <li class="nav-header">header</li>
-      <li><a href="#">Facet <span class="badge">3</span></a></li>
+      @facets.map { facet =>
+        <li class="nav-header">@Messages("comments.facet." + facet.getName)</li>
+        @facet.entries.map { entry =>
+          <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+        }
+      }
      </ul>
     </div>
     <div class="span10">
