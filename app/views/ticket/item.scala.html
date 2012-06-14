@@ -45,6 +45,7 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+XXX Need loading thingie here
 <div id="tabarea">
  @content
 </div>
