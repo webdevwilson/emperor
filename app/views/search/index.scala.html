@@ -28,7 +28,7 @@
    <tbody>
     @results.items.map { hit =>
     <tr>
-     <td><a href="@controllers.routes.Ticket.item(hit.getId.toLong)">@hit.field("summary").getValue.toString</a></td>
+     <td><a href="@controllers.routes.Ticket.item("comments", hit.getId.toLong)">@hit.field("summary").getValue.toString</a></td>
      <td class="actions">
       <div class="btn-toolbar">
        <div class="btn-group">

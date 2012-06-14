@@ -1,8 +1,7 @@
 @(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
   prevStatus: Option[models.WorkflowStatus],
-  nextStatus: Option[models.WorkflowStatus],
-  histories: Option[Seq[TicketChanges]]
-)(implicit request: Request[AnyContent])
+  nextStatus: Option[models.WorkflowStatus]
+)(content: Html)(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -46,18 +45,16 @@
  </div>
 </div>
 @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
-<div id="ticketTabs" class="tabview" data-toggle="tab">
- <ul class="nav nav-tabs">
-  <li class="active"><a href="#comments">@Messages("ticket.comment.list")</a></li>
-  <li><a href="#history">@Messages("ticket.history.list")</a></li>
- </ul>
- <div class="tab-content">
-  <div class="tab-pane active" id="comments">
-   Comments
-  </div>
-  <div class="tab-pane" id="history">
-   History
-  </div>
- </div>
+<div id="tabarea">
+ @content
 </div>
 }
+<script>
+YUI().use('pjax', function (Y) {
+    new Y.Pjax({
+      container: '#tabarea',
+      addPjaxParam: true,
+      contentSelector: '.tabcontent'
+    });
+});
+</script>

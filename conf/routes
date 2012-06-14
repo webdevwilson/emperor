@@ -95,15 +95,19 @@ GET     /stack                          controllers.Stack.index
 
 GET     /ticket                         controllers.Ticket.index(page: Int ?= 0, count: Int ?= 10)
 GET     /ticket/create                  controllers.Ticket.create
-GET     /ticket/:id                     controllers.Ticket.item(id: Long)
+GET     /ticket/:id                     controllers.Ticket.item(page = "comments", id: Long)
+GET     /ticket/comments/:id            controllers.Ticket.item(page = "comments", id: Long)
+GET     /ticket/history/:id             controllers.Ticket.item(page = "history", id: Long)
+
 POST    /ticket/:id                     controllers.Ticket.update(id: Long)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: Long)
 POST    /ticket                         controllers.Ticket.add
 GET     /ticket/newstatus/:id/:sid      controllers.Ticket.newStatus(id: Long, sid: Long)
 POST    /ticket/status/:id              controllers.Ticket.status(id: Long)
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: Long)
-GET     /ticket/comments/:id            controllers.Ticket.comments(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
-GET     /ticket/history/:id             controllers.Ticket.history(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
+
+# GET     /ticket/comments/:id            controllers.Ticket.comments(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
+# GET     /ticket/history/:id             controllers.Ticket.history(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                 controllers.Assets.at(path="/public", file)

@@ -1,6 +1,8 @@
 @(
-	ticketId: Long,
-	mdParser: org.clapper.markwrap.MarkWrapParser,
+  ticket: models.FullTicket,
+	markdown: org.clapper.markwrap.MarkWrapParser,
+  prevStatus: Option[models.WorkflowStatus],
+  nextStatus: Option[models.WorkflowStatus],
 	commentForm: Form[models.InitialComment],
 	comments: chc.Page[org.elasticsearch.search.SearchHit],
 	response: org.elasticsearch.action.search.SearchResponse
@@ -9,35 +11,44 @@
 @import helper.bootstrap._
 @import util._
 
-<div class="tab-pane active" id="comments">
- @if(comments.items.isEmpty) {
-  @helper.form(action = routes.Ticket.comment(ticketId)) {
-   <fieldset>
-    @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-    <div class="form-actions">
-     <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+@item(ticket, markdown, prevStatus, nextStatus) {
+<div id="ticketTabs" class="tabcontent">
+ <ul class="nav nav-tabs">
+  <li class="active"><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+  <li><a href="@routes.Ticket.item("history", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+ </ul>
+ <div class="tab-pane active" id="comments">
+  @if(comments.items.isEmpty) {
+   @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
+    <fieldset>
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+     <div class="form-actions">
+      <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+     </div>
+    </fieldset>  
+   }
+  } else {
+ 	 <div class="row">
+    <div class="span2">
+     <ul class="nav nav-list">
+      <li class="nav-header">header</li>
+      <li><a href="#">Facet <span class="badge">3</span></a></li>
+     </ul>
     </div>
-   </fieldset>  
+    <div class="span10">
+     <ul class="unstyled events">
+      @comments.items.map { comment =>
+      <li>
+	     <blockquote>@{ Html(markdown.parseToHTML(comment.field("content").getValue.toString)) }</blockquote>
+       <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", "XXX")</div>
+      </li>
+      }
+     </ul>
+     @pager(comments)
+    </div>
+   </div>
   }
- } else {
-	<div class="row">
-   <div class="span2">
-    <ul class="nav nav-list">
-     <li class="nav-header">header</li>
-     <li><a href="#">Facet <span class="badge">3</span></a></li>
-    </ul>
-   </div>
-   <div class="span10">
-    <ul class="unstyled events">
-     @comments.items.map { comment =>
-     <li>
-	  <blockquote>@{ Html(mdParser.parseToHTML(comment.field("content").getValue.toString)) }</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", "XXX")</div>
-     </li>
-     }
-    </ul>
-    @pager(comments)
-   </div>
-  </div>
- }
+ </div>
 </div>
+}
+ 

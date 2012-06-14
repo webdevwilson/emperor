@@ -87,11 +87,13 @@ object Ticket extends Controller with Secured {
           errors => {
             val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
             val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-            Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.error.status")
+            // XXX page!
+            Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange =>
               TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong)
-              Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.status")
+              // XXX page!
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
           }
         )
       }
@@ -117,9 +119,9 @@ object Ticket extends Controller with Secured {
         ticket match {
           case Some(t) => {
             SearchModel.indexTicket(TicketModel.getFullById(t.id.get).get) // XXX actors, elsewhere?!!
-            Redirect(routes.Ticket.item(t.id.get)).flashing("success" -> "ticket.add.success")
+            Redirect(routes.Ticket.item("comments", t.id.get)).flashing("success" -> "ticket.add.success")
           }
-          case None => Redirect(routes.Ticket.item(ticket.get.id.get)).flashing("error" -> "ticket.add.failure")
+          case None => Redirect(routes.Ticket.item("comments", ticket.get.id.get)).flashing("error" -> "ticket.add.failure")
         }
       }
     )
@@ -129,22 +131,14 @@ object Ticket extends Controller with Secured {
 
     commentForm.bindFromRequest.fold(
       errors => {
-        Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.comment.invalid")
+        Redirect(routes.Ticket.item("comment", ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
         val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.content)
         SearchModel.indexComment(comm.get) // XXX actors? handle None!
-        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.comment.added")
+        Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
       }
     )
-  }
-  
-  def comments(ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
-    
-    val response = SearchModel.searchComment(page, count, query, Map("ticketId" -> Seq(ticketId.toString)))
-    val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
-    
-    Ok(views.html.ticket.comments(ticketId, mdParser, commentForm, pager, response)(request))
   }
   
   def create = IsAuthenticated { implicit request =>
@@ -182,30 +176,54 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def history(ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
-    
-    val response = SearchModel.searchChange(page, count, query, Map("ticketId" -> Seq(ticketId.toString)))
-    val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
-    
-    Ok(views.html.ticket.history(ticketId, mdParser, pager, response)(request))
-  }
-
-  def item(ticketId: Long) = IsAuthenticated { implicit request =>
+  def item(page: String, ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
-    val history = TicketModel.getHistory(ticketId)
-    val changes = TicketModel.getChanges(ticketId, history.items)
 
     ticket match {
       case Some(value) => {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-        Ok(views.html.ticket.item(value, mdParser, prevStatus, nextStatus, changes)(request))
+        
+        page match {
+          case "history"  => {
+
+            val response = SearchModel.searchChange(
+              0, 10, "", Map("ticketId" -> Seq(ticketId.toString)) // XXX real params
+            )
+            val pager = Page(response.hits.hits, 0, 10, response.hits.totalHits) // real params
+            
+            Ok(views.html.ticket.history(
+              ticket = value,
+              markdown = mdParser,
+              prevStatus = prevStatus,
+              nextStatus = nextStatus,
+              history = pager,
+              response = response
+            )(request))
+          }
+          case _ => {
+
+            val response = SearchModel.searchComment(
+              0, 10, "", Map("ticketId" -> Seq(ticketId.toString))
+            )
+            val pager = Page(response.hits.hits, 0, 10, response.hits.totalHits) // XXX real params
+
+            Ok(views.html.ticket.comments(
+              ticket = value,
+              markdown = mdParser,
+              prevStatus = prevStatus,
+              nextStatus = nextStatus,
+              commentForm = commentForm,
+              comments = pager,
+              response = response
+            )(request))
+          }
+        }
       }
       case None => NotFound
     }
-    
   }
   
   def update(ticketId: Long) = IsAuthenticated { implicit request =>
@@ -223,7 +241,7 @@ object Ticket extends Controller with Secured {
       value => {
         TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
         SearchModel.indexTicket(TicketModel.getFullById(ticketId).get) // XXX actors, elsewhere?!!
-        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.edit.success")
+        Redirect(routes.Ticket.item("history", ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )
   }

@@ -1,28 +1,38 @@
 @(
-	ticketId: Long,
-	mdParser: org.clapper.markwrap.MarkWrapParser,
-	changes: chc.Page[org.elasticsearch.search.SearchHit],
+  ticket: models.FullTicket,
+  markdown: org.clapper.markwrap.MarkWrapParser,
+  prevStatus: Option[models.WorkflowStatus],
+  nextStatus: Option[models.WorkflowStatus],
+	history: chc.Page[org.elasticsearch.search.SearchHit],
 	response: org.elasticsearch.action.search.SearchResponse
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
 
-<div class="tab-pane active" id="comments">
-  <div class="row">
-   <div class="span2">
-    <ul class="nav nav-list">
-     <li class="nav-header">header</li>
-     <li><a href="#">Facet <span class="badge">3</span></a></li>
-    </ul>
-   </div>
-   <div class="span10">
-    <ul class="unstyled events">
-              @changes.items.map { change =>
-              <li class="change">Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
-              }
-    </ul>
-    @pager(changes)
+@item(ticket, markdown, prevStatus, nextStatus) {
+  <div id="ticketTabs" class="tabcontent">
+   <ul class="nav nav-tabs">
+    <li><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+    <li class="active"><a href="@routes.Ticket.item("history", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+   </ul>
+   <div class="tab-pane active" id="history">
+    <div class="row">
+     <div class="span2">
+      <ul class="nav nav-list">
+       <li class="nav-header">header</li>
+       <li><a href="#">Facet <span class="badge">3</span></a></li>
+      </ul>
+     </div>
+     <div class="span10">
+      <ul class="unstyled events">
+       @history.items.map { change =>
+       <li class="change">Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
+       }
+      </ul>
+      @pager(history)
+     </div>
+    </div>
    </div>
   </div>
-</div>
+}
