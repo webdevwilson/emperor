@@ -95,9 +95,9 @@ GET     /stack                          controllers.Stack.index
 
 GET     /ticket                         controllers.Ticket.index(page: Int ?= 0, count: Int ?= 10)
 GET     /ticket/create                  controllers.Ticket.create
-GET     /ticket/:id                     controllers.Ticket.item(page = "comments", id: Long)
-GET     /ticket/comments/:id            controllers.Ticket.item(page = "comments", id: Long)
-GET     /ticket/history/:id             controllers.Ticket.item(page = "history", id: Long)
+GET     /ticket/:id                     controllers.Ticket.item(page = "comments", id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/comments/:id            controllers.Ticket.item(page = "comments", id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/history/:id             controllers.Ticket.item(page = "history",  id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: Long)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: Long)
