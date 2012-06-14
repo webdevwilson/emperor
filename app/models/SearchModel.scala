@@ -410,6 +410,48 @@ object SearchModel {
     
     indexer.index(ticketHistoryIndex, ticketHistoryType, ticket.id.get.toString, toJson(hdoc).toString)
   }
+
+  def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+    
+    // This shouldn't have to live here. It annoys me. Surely there's a better
+    // way.
+    var q = query
+    if(q.isEmpty) {
+      q = "*"
+    }
+    
+    var actualQuery : BaseQueryBuilder = queryString(q)
+    
+    // If we have filters, build up a filterquery and swap out our actualQuery
+    // with a filtered version!
+    // if(!filters.isEmpty) {
+    //   val fqs : Iterable[FilterBuilder] = filters map {
+    //     case (key, values) => termFilter(key + "_name", values.head).asInstanceOf[FilterBuilder]
+    //   }
+    //   actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
+    // }
+    
+    // XXX use page and count
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+    indexer.search(
+      query = actualQuery,
+      indices = Seq("ticket_histories"),
+      // facets = Seq(
+      //   termsFacet("type").field("type_name"),
+      //   termsFacet("project").field("project_name"),
+      //   termsFacet("priority").field("priority_name"),
+      //   termsFacet("severity").field("severity_name"),
+      //   termsFacet("status").field("status_name")
+      // ),
+      fields = List("ticket_id"),
+      size = Some(count),
+      from = page match {
+        case 0 => Some(0)
+        case 1 => Some(0)
+        case _ => Some((page * count) - 1)
+      }
+    )
+  }
   
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
     
@@ -443,7 +485,7 @@ object SearchModel {
       //   termsFacet("severity").field("severity_name"),
       //   termsFacet("status").field("status_name")
       // ),
-      fields = List("content"),
+      fields = List("content", "user_realname"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)

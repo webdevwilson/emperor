@@ -1,0 +1,28 @@
+@(
+	ticketId: Long,
+	mdParser: org.clapper.markwrap.MarkWrapParser,
+	changes: chc.Page[org.elasticsearch.search.SearchHit],
+	response: org.elasticsearch.action.search.SearchResponse
+)(implicit request: Request[AnyContent])
+
+@import helper.bootstrap._
+@import util._
+
+<div class="tab-pane active" id="comments">
+  <div class="row">
+   <div class="span2">
+    <ul class="nav nav-list">
+     <li class="nav-header">header</li>
+     <li><a href="#">Facet <span class="badge">3</span></a></li>
+    </ul>
+   </div>
+   <div class="span10">
+    <ul class="unstyled events">
+              @changes.items.map { change =>
+              <li class="change">Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
+              }
+    </ul>
+    @pager(changes)
+   </div>
+  </div>
+</div>

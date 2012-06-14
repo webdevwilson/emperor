@@ -1,9 +1,8 @@
 @(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
-  commentForm: Form[models.InitialComment], prevStatus: Option[models.WorkflowStatus],
+  prevStatus: Option[models.WorkflowStatus],
   nextStatus: Option[models.WorkflowStatus],
-  comments: chc.SearchResult[models.Comment],
-  histories: Option[Seq[TicketChanges]])(implicit request: Request[AnyContent]
-)
+  histories: Option[Seq[TicketChanges]]
+)(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -54,66 +53,10 @@
  </ul>
  <div class="tab-content">
   <div class="tab-pane active" id="comments">
-   @if(comments.pager.items.isEmpty) {
-    @helper.form(action = routes.Ticket.comment(ticket.id.get)) {
-     <fieldset>
-      @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
-      <div class="form-actions">
-       <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
-      </div>
-     </fieldset>  
-    }
-   } else {
-	<div class="row">
-     <div class="span2">
-      @Option(comments.facets).filterNot(_.isEmpty).map { facets =>
-      <ul class="nav nav-list">
-       @facets.map { facet =>
-        <li class="nav-header">@facet.name</li>
-        @facet.items.map { item =>
-         <li><a href="#">@item.name <span class="badge">@item.count</span></a></li>
-        }
-       }
-       </ul>
-      }
-     </div>
-     <div class="span10">
-      <ul class="unstyled events">
-       @comments.pager.items.map { comment =>
-       <li>
- 	    <blockquote>@{ Html(mdParser.parseToHTML(comment.content)) }</blockquote>
-        <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
-       </li>
-       }
-      </ul>
-      @pager(comments.pager)
-     </div>
-    </div>
-   }
+   Comments
   </div>
   <div class="tab-pane" id="history">
    History
-   @histories match {
-     case Some(hist) => {
-      <ul class="unstyled events">
-       @hist.map { history =>
-        <li>
-         <blockquote>
-          <ul>
-           @history.changes.map { change =>
-           <li class="change">@Html(Messages("ticket.history.change", Messages(change.name), Messages(change.oldValue), Messages(change.newValue)))</li>
-           }
-          </ul>
-         </blockquote>
-         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@history.realName</a> @Messages("ticket.history.attribution.postfix", history.dateOccurred)</div>
-        </li>
-       }
-      </ul>
-     }
-     case None => {
-        @Messages("ticket.history.none")
-     }
-   }
   </div>
  </div>
 </div>

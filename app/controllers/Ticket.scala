@@ -139,6 +139,14 @@ object Ticket extends Controller with Secured {
     )
   }
   
+  def comments(ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+    
+    val response = SearchModel.searchComment(page, count, query, Map("ticketId" -> Seq(ticketId.toString)))
+    val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
+    
+    Ok(views.html.ticket.comments(ticketId, mdParser, commentForm, pager, response)(request))
+  }
+  
   def create = IsAuthenticated { implicit request =>
 
     // Should be i18ned in the view
@@ -174,6 +182,14 @@ object Ticket extends Controller with Secured {
     }
   }
 
+  def history(ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+    
+    val response = SearchModel.searchChange(page, count, query, Map("ticketId" -> Seq(ticketId.toString)))
+    val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
+    
+    Ok(views.html.ticket.history(ticketId, mdParser, pager, response)(request))
+  }
+
   def item(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
@@ -185,8 +201,7 @@ object Ticket extends Controller with Secured {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-        val searchComments = TicketModel.getCommentsAsSearchResult(ticketId = ticketId)
-        Ok(views.html.ticket.item(value, mdParser, commentForm, prevStatus, nextStatus, searchComments, changes)(request))
+        Ok(views.html.ticket.item(value, mdParser, prevStatus, nextStatus, changes)(request))
       }
       case None => NotFound
     }
