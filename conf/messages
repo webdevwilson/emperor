@@ -156,9 +156,14 @@ ticket.description=Description
 ticket.edit=Edit Ticket
 ticket.edit.success=Ticket Updated
 ticket.error.status=Error Changing Status
-ticket.history.change=Changed <strong>{0}</strong> from <span class="badge badge-old">{1}</span> to <span class="badge badge-new">{2}</span>
 ticket.history.attribution.postfix=on {0}
 ticket.history.attribution.prefix=by
+ticket.history.facet.changed_priority=Priority: {0}
+ticket.history.facet.changed_reporter=Reporter: {0}
+ticket.history.facet.changed_resolution=Resolution: {0}
+ticket.history.facet.changed_severity=Severity: {0}
+ticket.history.facet.changed_status=Status: {0}
+ticket.history.facet.fields=Changed Fields
 ticket.history.list=History
 ticket.history.none=No History
 ticket.list=Tickets

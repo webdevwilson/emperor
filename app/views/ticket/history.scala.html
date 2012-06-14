@@ -4,7 +4,7 @@
   prevStatus: Option[models.WorkflowStatus],
   nextStatus: Option[models.WorkflowStatus],
 	history: chc.Page[org.elasticsearch.search.SearchHit],
-	facets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
+	changeFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
 	response: org.elasticsearch.action.search.SearchResponse
 )(implicit request: Request[AnyContent])
 
@@ -21,13 +21,13 @@
    <div class="tab-pane active" id="history">
     <div class="row">
      <div class="span2">
-       <ul class="unstyled events">
-         @facets.map { facet =>
-           <li class="nav-header">@Messages("comments.facet." + facet.getName)</li>
-           @facet.entries.map { entry =>
-             <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages("history.facet." + entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
-           }
-         }
+      <ul class="nav nav-list">
+       <li class="nav-header">@Messages("ticket.history.facet.fields")</li>
+       @changeFacets.map { facet =>
+        @facet.entries.map { entry =>
+        <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages("ticket.history.facet." + facet.getName, entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+        }
+       }
        </ul>
      </div>
      <div class="span10">

@@ -353,8 +353,6 @@ object SearchModel {
       case x if x == old.reporterId => false
       case _ => true
     }
-    println("######## " + repChanged)
-    println(ticket.reporterId + " : " + old.reporterId)
     val sevChanged = ticket.severityId match {
       case x if x == old.severityId => false
       case _ => true
@@ -440,13 +438,13 @@ object SearchModel {
       indices = Seq("ticket_histories"),
       facets = Seq(
         // termsFacet("user_id").field("user_id"), // XXX readd this
-        termsFacet("priority_changed").field("priority_changed"),
-        termsFacet("reporter_changed").field("reporter_changed"),
-        termsFacet("resolution_changed").field("resolution_changed"),
-        termsFacet("severity_changed").field("severity_changed"),
-        termsFacet("status_changed").field("status_changed")
+        termsFacet("changed_priority").field("priority_changed"),
+        termsFacet("changed_reporter").field("reporter_changed"),
+        termsFacet("changed_resolution").field("resolution_changed"),
+        termsFacet("changed_severity").field("severity_changed"),
+        termsFacet("changed_status").field("status_changed")
       ),
-      fields = List("ticket_id", "user_id"),
+      fields = List("*"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)

@@ -569,10 +569,11 @@ object TicketModel {
   
   def update(userId: Long, id: Long, ticket: EditTicket) = {
 
-    DB.withTransaction { implicit conn =>
+    val oldTicket = DB.withConnection { implicit conn =>
+      this.getFullById(id).get
+    }
 
-      val oldTicket = this.getFullById(id).get
-      println(oldTicket)
+    val cid = DB.withTransaction { implicit conn =>
       
       // XXX needs to NOT create an entry if there are no differences!
       val cid = insertHistoryQuery.on(
@@ -605,13 +606,13 @@ object TicketModel {
         'position               -> ticket.position,
         'summary                -> ticket.summary
       ).executeUpdate
-      Thread.sleep(1000)
-      val newTicket = this.getFullById(id).get
-      println("##### " + cid)
-      println(newTicket)
-      println("passed in")
-      println(ticket)
-      
+
+      cid
+    }
+    
+    DB.withConnection { implicit conn =>
+
+      val newTicket = this.getFullById(id).get      
       SearchModel.indexHistory(cid.get, newTicket, oldTicket)
     }
   }

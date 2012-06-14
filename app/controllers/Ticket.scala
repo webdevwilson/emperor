@@ -199,7 +199,7 @@ object Ticket extends Controller with Secured {
             )
             val pager = Page(response.hits.hits, 0, 10, response.hits.totalHits) // real params
 
-            val termfacets = response.facets.facets.map { facet =>
+            val changeFacets = response.facets.facets.map { facet =>
               facet match {
                 case t: InternalStringTermsFacet => t
               }
@@ -211,7 +211,7 @@ object Ticket extends Controller with Secured {
               prevStatus = prevStatus,
               nextStatus = nextStatus,
               history = pager,
-              facets = termfacets,
+              changeFacets = changeFacets,
               response = response
             )(request))
           }
