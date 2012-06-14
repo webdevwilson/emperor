@@ -350,11 +350,13 @@ object SearchModel {
       case _ => true // true otherwise!
     }
     val repChanged = ticket.reporterId match {
-      case old.reporterId => false
+      case x if x == old.reporterId => false
       case _ => true
     }
+    println("######## " + repChanged)
+    println(ticket.reporterId + " : " + old.reporterId)
     val sevChanged = ticket.severityId match {
-      case old.severityId => false
+      case x if x == old.severityId => false
       case _ => true
     }
     val statChanged = ticket.statusId match {
@@ -451,7 +453,7 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
       }
-    )
+    ) // XXX order
   }
   
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -489,7 +491,7 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
       }
-    )
+    ) // order!!
   }
   
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -531,6 +533,6 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
       }
-    )
+    ) // order!!
   }
 }
