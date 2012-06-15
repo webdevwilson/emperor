@@ -14,11 +14,17 @@
 
 @item(ticket, markdown, prevStatus, nextStatus) {
   XXX Need empty stuff @Messages("ticket.history.none")
-  <div id="ticketTabs" class="tabcontent">
-   <ul class="nav nav-tabs">
-    <li><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
-    <li class="active"><a href="@routes.Ticket.item("history", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
-   </ul>
+<div class="tabcontent">
+  <div class="navbar">
+   <div class="navbar-inner">
+    <div class="container">
+     <ul class="nav">
+      <li><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+      <li class="active"><a href="@routes.Ticket.item("history", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+     </ul>
+    </div>
+   </div>
+  </div>
    <div class="tab-pane active" id="history">
     <div class="row">
      <div class="span2">
