@@ -535,7 +535,7 @@ object SearchModel {
       query = actualQuery,
       indices = Seq("ticket_histories"),
       facets = Seq(
-        // termsFacet("user_id").field("user_id"), // XXX readd this
+        // termsFacet("user_id").field("user_id"), // XXX Broken due to differing classes
         termsFacet("changed_priority").field("priority_changed"),
         termsFacet("changed_reporter").field("reporter_changed"),
         termsFacet("changed_resolution").field("resolution_changed"),

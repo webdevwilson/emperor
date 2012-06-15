@@ -186,6 +186,14 @@ object Ticket extends Controller with Secured {
         tab match {
           case "history"  => {
 
+            var filters = request.queryString.map { param =>
+              val p = param._1
+              p match {
+                case "user_id" => p -> request.queryString.get(p).get
+              }
+            }
+            filters += "ticket_id" -> Seq(ticketId.toString)
+
             val response = SearchModel.searchChange(
               page, count, "", Map("ticket_id" -> Seq(ticketId.toString))
             )
@@ -209,8 +217,16 @@ object Ticket extends Controller with Secured {
           }
           case _ => {
 
+            var filters = request.queryString.map { param =>
+              val p = param._1
+              p match {
+                case "user_id" => p -> request.queryString.get(p).get
+              }
+            }
+            filters += "ticket_id" -> Seq(ticketId.toString)
+
             val response = SearchModel.searchComment(
-              page, count, "", Map("ticket_id" -> Seq(ticketId.toString))
+              page, count, "", filters
             )
             val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
