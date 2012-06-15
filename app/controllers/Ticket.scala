@@ -228,7 +228,7 @@ object Ticket extends Controller with Secured {
             val filters = Map("ticket_id" -> Seq(ticketId.toString))
 
             val response = SearchModel.searchComment(
-              page, count, "", filters
+              page, count, query, filters
             )
             val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
