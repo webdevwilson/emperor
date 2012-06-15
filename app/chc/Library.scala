@@ -7,11 +7,11 @@ import scala.collection.mutable.ListBuffer
  * Helper for pagination.
  */
 case class Page[+A](items: Seq[A], page: Int, count: Int, total: Long) {
-  lazy val offset = count * page
-  lazy val prev = Option(page - 1).filter(_ >= 0)
-  lazy val next = Option(page + 1).filter(_ => ((count * page) + items.size) < total)
+  lazy val offset = count * (page - 1)
+  lazy val prev = Option(page - 1).filter(_ >= 1)
+  lazy val next = Option(page + 1).filter(_ => ((count * (page - 1)) + items.size) < total)
   val firstPage = 0
-  lazy val lastPage = (total.toDouble / count).ceil.toInt - 1
+  lazy val lastPage = (total.toDouble / count).ceil.toInt 
 }
 
 case class Facet(name: String, value: String, count: Long)

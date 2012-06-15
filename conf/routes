@@ -9,56 +9,56 @@ GET     /group/startswith               controllers.Group.startsWith
 
 GET     /admin                          controllers.Admin.index
 
-GET     /admin/group                    controllers.admin.Group.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/group                    controllers.admin.Group.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/group/create             controllers.admin.Group.create
 GET     /admin/group/:id                controllers.admin.Group.item(id: Long)
 POST    /admin/group/:id                controllers.admin.Group.update(id: Long)
 GET     /admin/group/edit/:id           controllers.admin.Group.edit(id: Long)
 POST    /admin/group                    controllers.admin.Group.add
 
-GET     /admin/role                     controllers.admin.Role.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/role                     controllers.admin.Role.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/role/create              controllers.admin.Role.create
 GET     /admin/role/:id                 controllers.admin.Role.item(id: Long)
 POST    /admin/role/:id                 controllers.admin.Role.update(id: Long)
 GET     /admin/role/edit/:id            controllers.admin.Role.edit(id: Long)
 POST    /admin/role                     controllers.admin.Role.add
 
-GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/linktype/create   controllers.admin.TicketLinkType.create
 GET     /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.item(id: Long)
 POST    /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.update(id: Long)
 GET     /admin/ticket/linktype/edit/:id controllers.admin.TicketLinkType.edit(id: Long)
 POST    /admin/ticket/linktype          controllers.admin.TicketLinkType.add
 
-GET     /admin/ticket/priority          controllers.admin.TicketPriority.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/priority          controllers.admin.TicketPriority.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/priority/create   controllers.admin.TicketPriority.create
 GET     /admin/ticket/priority/:id      controllers.admin.TicketPriority.item(id: Long)
 POST    /admin/ticket/priority/:id      controllers.admin.TicketPriority.update(id: Long)
 GET     /admin/ticket/priority/edit/:id controllers.admin.TicketPriority.edit(id: Long)
 POST    /admin/ticket/priority          controllers.admin.TicketPriority.add
 
-GET     /admin/ticket/severity          controllers.admin.TicketSeverity.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/severity          controllers.admin.TicketSeverity.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/severity/create   controllers.admin.TicketSeverity.create
 GET     /admin/ticket/severity/:id      controllers.admin.TicketSeverity.item(id: Long)
 POST    /admin/ticket/severity/:id      controllers.admin.TicketSeverity.update(id: Long)
 GET     /admin/ticket/severity/edit/:id controllers.admin.TicketSeverity.edit(id: Long)
 POST    /admin/ticket/severity          controllers.admin.TicketSeverity.add
 
-GET     /admin/ticket/status            controllers.admin.TicketStatus.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/status            controllers.admin.TicketStatus.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/status/create     controllers.admin.TicketStatus.create
 GET     /admin/ticket/status/:id        controllers.admin.TicketStatus.item(id: Long)
 POST    /admin/ticket/status/:id        controllers.admin.TicketStatus.update(id: Long)
 GET     /admin/ticket/status/edit/:id   controllers.admin.TicketStatus.edit(id: Long)
 POST    /admin/ticket/status            controllers.admin.TicketStatus.add
 
-GET     /admin/ticket/type              controllers.admin.TicketType.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/ticket/type              controllers.admin.TicketType.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/type/create       controllers.admin.TicketType.create
 GET     /admin/ticket/type/:id          controllers.admin.TicketType.item(id: Long)
 POST    /admin/ticket/type/:id          controllers.admin.TicketType.update(id: Long)
 GET     /admin/ticket/type/edit/:id     controllers.admin.TicketType.edit(id: Long)
 POST    /admin/ticket/type              controllers.admin.TicketType.add
 
-GET     /admin/user                     controllers.admin.User.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/user                     controllers.admin.User.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/user/create              controllers.admin.User.create
 GET     /admin/user/:id                 controllers.admin.User.item(id: Long)
 POST    /admin/user/:id                 controllers.admin.User.update(id: Long)
@@ -68,7 +68,7 @@ DELETE  /admin/user/:id/group/:gid      controllers.admin.User.removeFromGroup(i
 POST    /admin/user                     controllers.admin.User.add
 POST    /admin/user/:id/password        controllers.admin.User.updatePassword(id: Long)
 
-GET     /admin/workflow                 controllers.admin.Workflow.index(page: Int ?= 0, count: Int ?= 10)
+GET     /admin/workflow                 controllers.admin.Workflow.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/workflow/create          controllers.admin.Workflow.create
 GET     /admin/workflow/:id             controllers.admin.Workflow.item(id: Long)
 POST    /admin/workflow/:id             controllers.admin.Workflow.update(id: Long)
@@ -83,21 +83,21 @@ POST    /auth/login                     controllers.Auth.doLogin
 
 GET     /project/create                 controllers.Project.create
 GET     /project/edit/:id               controllers.Project.edit(id: Long)
-GET     /project/list                   controllers.Project.list(page: Int ?= 0, count: Int ?= 10)
+GET     /project/list                   controllers.Project.list(page: Int ?= 1, count: Int ?= 10)
 GET     /project/:id                    controllers.Project.item(id: Long)
 POST    /project/:id                    controllers.Project.update(id: Long)
-GET     /project                        controllers.Project.index(page: Int ?= 0, count: Int ?= 10)
+GET     /project                        controllers.Project.index(page: Int ?= 1, count: Int ?= 10)
 POST    /project                        controllers.Project.add
 
-GET     /search                         controllers.Search.index(page: Int ?= 0, count: Int ?= 10, query: String ?= "*")
+GET     /search                         controllers.Search.index(page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 GET     /stack                          controllers.Stack.index
 
-GET     /ticket                         controllers.Ticket.index(page: Int ?= 0, count: Int ?= 10)
+GET     /ticket                         controllers.Ticket.index(page: Int ?= 1, count: Int ?= 10)
 GET     /ticket/create                  controllers.Ticket.create
-GET     /ticket/:id                     controllers.Ticket.item(page = "comments", id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
-GET     /ticket/comments/:id            controllers.Ticket.item(page = "comments", id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
-GET     /ticket/history/:id             controllers.Ticket.item(page = "history",  id: Long, pageNum: Int ?= 0, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/:id                     controllers.Ticket.item(tab = "comments", id: Long, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/comments/:id            controllers.Ticket.item(tab = "comments", id: Long, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/history/:id             controllers.Ticket.item(tab = "history",  id: Long, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: Long)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: Long)
@@ -106,8 +106,8 @@ GET     /ticket/newstatus/:id/:sid      controllers.Ticket.newStatus(id: Long, s
 POST    /ticket/status/:id              controllers.Ticket.status(id: Long)
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: Long)
 
-# GET     /ticket/comments/:id            controllers.Ticket.comments(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
-# GET     /ticket/history/:id             controllers.Ticket.history(id: Long, page: Int ?= 0, count: Int ?= 10, query: String = "*")
+# GET     /ticket/comments/:id            controllers.Ticket.comments(id: Long, page: Int ?= 1, count: Int ?= 10, query: String = "*")
+# GET     /ticket/history/:id             controllers.Ticket.history(id: Long, page: Int ?= 1, count: Int ?= 10, query: String = "*")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                 controllers.Assets.at(path="/public", file)

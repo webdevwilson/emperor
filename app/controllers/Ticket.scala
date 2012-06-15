@@ -181,7 +181,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def item(page: String, ticketId: Long, pageNum: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+  def item(tab: String, ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -191,13 +191,13 @@ object Ticket extends Controller with Secured {
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
         
-        page match {
+        tab match {
           case "history"  => {
 
             val response = SearchModel.searchChange(
-              pageNum, count, "", Map("ticketId" -> Seq(ticketId.toString))
+              page, count, "", Map("ticketId" -> Seq(ticketId.toString))
             )
-            val pager = Page(response.hits.hits, pageNum, count, response.hits.totalHits)
+            val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
             val changeFacets = response.facets.facets.map { facet =>
               facet match {
@@ -220,7 +220,7 @@ object Ticket extends Controller with Secured {
             val response = SearchModel.searchComment(
               0, 10, "", Map("ticketId" -> Seq(ticketId.toString))
             )
-            val pager = Page(response.hits.hits, pageNum, count, response.hits.totalHits) // XXX real params
+            val pager = Page(response.hits.hits, page, count, response.hits.totalHits) // XXX real params
 
             val termfacets = response.facets.facets.map { facet =>
               facet match {
