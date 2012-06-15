@@ -96,6 +96,14 @@ object Ticket extends Controller with Secured {
           }, {
             case statusChange: models.StatusChange =>
               TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong)
+              statusChange.comment match {
+                case Some(content) => {
+                  val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, content)
+                  SearchModel.indexComment(comm.get) // XXX actors? handle None!
+                }
+                case None => //
+              }
+
               // XXX page!
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
           }

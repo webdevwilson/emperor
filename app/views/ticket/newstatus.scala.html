@@ -7,7 +7,7 @@
    <p>@Html(Messages("ticket.statuschange.summary", ticket.id.get, Messages(ticket.statusName), Messages(status.name)))</p>
    <fieldset>
      <input type="hidden" name="status_id" value="@status.id.get">
-     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
    </fieldset>
   }
 </div>
