@@ -9,7 +9,7 @@
  </ul>
  <a class="btn btn-primary" href="@controllers.routes.Ticket.create">@Messages("ticket.add")</a>
  @helper.form(action = routes.Search.index(page = 1, count = 10), 'class -> "navbar-search") {
-  <input type="text" name="query" class="search-query" placeholder="Search">
+  <input type="text" name="query" class="search-query" placeholder="@Messages("search.placeholder")">
  }
  <div class="btn-group pull-right">
    <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">

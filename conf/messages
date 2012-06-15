@@ -133,6 +133,7 @@ project.tickets.this_week=Tickets This Week
 role.description=Description
 role.name=Name
 
+search.placeholder=Search
 search.facet.priority=Priority
 search.facet.project=Project
 search.facet.severity=Severity
@@ -153,6 +154,7 @@ ticket.comment.attribution.prefix=by
 ticket.comment.facet.user_id=User
 ticket.comment.invalid=Invalid Comment
 ticket.comment.list=Comments
+ticket.comment.search.placeholder=Search Comments
 ticket.description=Description
 ticket.edit=Edit Ticket
 ticket.edit.success=Ticket Updated
