@@ -88,7 +88,6 @@ object TicketModel {
   val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
   val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
@@ -270,13 +269,12 @@ object TicketModel {
     ticket match {
       case Some(ticket) => {
         DB.withConnection { implicit conn =>
-          insertCommentQuery.on(
+          val id = insertCommentQuery.on(
             'user_id    -> userId,
             'ticket_id  -> ticketId,
             'content    -> content
-          ).execute
-          val id = lastInsertQuery.as(scalar[Long].single)
-          this.getCommentById(id)
+          ).executeInsert()
+          this.getCommentById(id.get)
         }
       }
       case None => return None
@@ -312,7 +310,7 @@ object TicketModel {
     val result = startingStatus match {
       case Some(status) => {
         DB.withConnection { implicit conn =>
-          insertQuery.on(
+          val id = insertQuery.on(
             'reporter_id  -> ticket.userId,
             'project_id   -> ticket.projectId,
             'priority_id  -> ticket.priorityId,
@@ -322,9 +320,8 @@ object TicketModel {
             'description  -> ticket.description,
             'position     -> ticket.position,
             'summary      -> ticket.summary
-          ).execute
-          val id = lastInsertQuery.as(scalar[Long].single)
-          this.getById(id)
+          ).executeInsert()
+          this.getById(id.get)
         }
       }
       case None => None

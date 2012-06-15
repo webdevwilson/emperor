@@ -17,7 +17,6 @@ object TicketResolutionModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_resolutions")
   val insertQuery = SQL("INSERT INTO ticket_resolutions (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_resolutions SET name={name} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val ticket_resolution = {
     get[Pk[Long]]("id") ~
@@ -30,12 +29,11 @@ object TicketResolutionModel {
   def create(tr: TicketResolution): TicketResolution = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
+      val id = insertQuery.on(
         'name   -> tr.name
-      ).executeUpdate
+      ).executeInsert()
 
-      val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id).get
+      this.getById(id.get).get
     }
   }
   

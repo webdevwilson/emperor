@@ -29,7 +29,6 @@ object UserModel {
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -45,15 +44,14 @@ object UserModel {
   def create(user: InitialUser): User = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
+      val id = insertQuery.on(
         'username   -> user.username,
         'password   -> BCrypt.hashpw(user.password, BCrypt.gensalt(12)),
         'realname   -> user.realName,
         'email      -> user.email
-      ).executeUpdate
+      ).executeInsert()
 
-      val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id).get
+      this.getById(id.get).get
     }
   }
   

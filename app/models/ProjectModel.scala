@@ -18,7 +18,6 @@ object ProjectModel {
   val listCountQuery = SQL("SELECT count(*) FROM projects")
   val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, date_created) VALUES ({name}, {pkey}, {workflow_id}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val project = {
     get[Pk[Long]]("id") ~
@@ -33,14 +32,13 @@ object ProjectModel {
   def create(project: Project): Project = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
+      val id = insertQuery.on(
         'name         -> project.name,
         'pkey         -> project.key,
         'workflow_id  -> project.workflowId
-      ).executeUpdate
+      ).executeInsert()
 
-      val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id).get
+      this.getById(id.get).get
     }
   }
   

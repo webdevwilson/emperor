@@ -18,7 +18,6 @@ object RoleModel {
   val listCountQuery = SQL("SELECT count(*) FROM roles")
   val addQuery = SQL("INSERT INTO roles (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE roles SET name={name}, description={description} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val role = {
     get[Pk[Long]]("id") ~
@@ -31,16 +30,14 @@ object RoleModel {
   
   def create(role: Role): Role = {
 
-    DB.withConnection { implicit conn =>
+    val id = DB.withConnection { implicit conn =>
       addQuery.on(
         'name       -> role.name,
         'description-> role.description
-      ).executeUpdate
-
-      val id = lastInsertQuery.as(scalar[Long].single)
-
-      role.copy(id = new Id(id))
+      ).executeInsert()
     }
+    
+    role.copy(id = new Id(id.get))
   }
   
   def delete(id: Long) {

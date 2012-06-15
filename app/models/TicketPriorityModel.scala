@@ -17,7 +17,6 @@ object TicketPriorityModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_priorities")
   val insertQuery = SQL("INSERT INTO ticket_priorities (name, position, date_created) VALUES ({name}, {position}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, position={position} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val ticket_priority = {
     get[Pk[Long]]("id") ~
@@ -31,13 +30,12 @@ object TicketPriorityModel {
   def create(tp: TicketPriority): TicketPriority = {
 
     DB.withConnection { implicit conn =>
-      insertQuery.on(
+      val id = insertQuery.on(
         'name     -> tp.name,
         'position -> tp.position
-      ).executeUpdate
+      ).executeInsert()
 
-      val id = lastInsertQuery.as(scalar[Long].single)
-      this.getById(id).get
+      this.getById(id.get).get
     }
   }
   

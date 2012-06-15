@@ -26,7 +26,6 @@ object GroupModel {
   val listCountQuery = SQL("SELECT count(*) FROM groups")
   val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
 
   val group = {
     get[Pk[Long]]("id") ~
@@ -56,15 +55,12 @@ object GroupModel {
 
   def create(group: Group): Group = {
 
-    DB.withConnection { implicit conn =>
+    val id = DB.withConnection { implicit conn =>
       insertQuery.on(
         'name   -> group.name
-      ).executeUpdate
-
-      val id = lastInsertQuery.as(scalar[Long].single)
-
-      group.copy(id = new Id(id))
+      ).executeInsert()
     }
+    group.copy(id = new Id(id.get))
   }
   
   def delete(id: Long) {
