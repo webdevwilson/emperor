@@ -84,7 +84,6 @@ object Ticket extends Controller with Secured {
   def status(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.getFullById(ticketId)
-    val comments = TicketModel.getComments(ticketId)
 
     ticket match {
       case Some(value) => {

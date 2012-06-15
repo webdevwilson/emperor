@@ -144,11 +144,23 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "user_realname" {
+        "type": "sttring",
+        "index": "not_analyzed"
+      },
       "project_id": {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_project_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "project_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_project_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -160,7 +172,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_priority_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "priority_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_priority_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -172,7 +192,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_resolution_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "resolution_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_resolution_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -184,7 +212,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_proposed_resolution_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "proposed_resolution_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_proposed_resolution_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -196,7 +232,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_reporter_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "reporter_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_reporter_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -208,7 +252,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_severity_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "severity_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_severity_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -220,7 +272,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_status_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "status_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_status_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -232,7 +292,15 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
+      "old_type_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
       "type_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_type_name": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -244,11 +312,19 @@ object SearchModel {
         "type": "string",
         "index": "analyzed"
       },
+      "old_summary": {
+        "type": "string",
+        "index": "analyzed"
+      },
       "summary_changed": {
         "type": "boolean",
         "index": "not_analyzed"
       },
       "description": {
+        "type": "string",
+        "index": "analyzed"
+      },
+      "old_description": {
         "type": "string",
         "index": "analyzed"
       },
@@ -331,7 +407,7 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
-  def indexHistory(changeId: Long, ticket: FullTicket, old: FullTicket) {
+  def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
     
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     
@@ -362,7 +438,7 @@ object SearchModel {
       case _ => true
     }
     val typeChanged = ticket.typeId match {
-      case old.statusId => false
+      case old.typeId => false
       case _ => true
     }
     val summChanged = ticket.summary match {
@@ -377,33 +453,51 @@ object SearchModel {
     }
 
     val hdoc: Map[String,JsValue] = Map(
-      "ticket_id" -> JsNumber(ticket.id.get),
-      "project_id" -> JsNumber(ticket.projectId),
-      "project_name" -> JsString(ticket.projectName),
-      "project_changed" -> JsBoolean(projChanged),
-      "priority_id" -> JsNumber(ticket.priorityId),
-      "priority_name" -> JsString(ticket.priorityName),
-      "priorityChanged" -> JsBoolean(prioChanged),
-      // "resolution_id" -> ticket.resolutionId.toString,
-      "resolution_name" -> JsString(ticket.resolutionName.getOrElse("")),
-      "resolution_changed" -> JsBoolean(resoChanged),
-      // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
-      // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
-      "reporter_id" -> JsNumber(ticket.reporterId),
-      "reporter_name" -> JsString(ticket.reporterName),
-      "reporter_changed" -> JsBoolean(repChanged),
-      "severity_id" -> JsNumber(ticket.severityId),
-      "severity_name" -> JsString(ticket.severityName),
-      "severity_changed" -> JsBoolean(sevChanged),
-      "status_id" -> JsNumber(ticket.statusId),
-      "status_name" -> JsString(ticket.statusName),
-      "status_changed" -> JsBoolean(statChanged),
-      "type_id" -> JsNumber(ticket.typeId),
-      "type_name" -> JsString(ticket.typeName),
-      "type_changed" -> JsBoolean(typeChanged),
-      "summary" -> JsString(ticket.summary),
-      "summary_changed" -> JsBoolean(summChanged),
-      "description" -> JsString(ticket.description.getOrElse("")),
+      "ticket_id"         -> JsNumber(ticket.id.get),
+      "user_id"           -> JsNumber(userId),
+      "user_realname"     -> JsString(userRealName),
+      "project_id"        -> JsNumber(ticket.projectId),
+      "old_project_id"    -> JsNumber(old.projectId),
+      "project_name"      -> JsString(ticket.projectName),
+      "old_project_name"  -> JsString(old.projectName),
+      "project_changed"   -> JsBoolean(projChanged),
+      "priority_id"       -> JsNumber(ticket.priorityId),
+      "old_priority_id"   -> JsNumber(old.priorityId),
+      "priority_name"     -> JsString(ticket.priorityName),
+      "old_priority_name" -> JsString(old.priorityName),
+      "priorityChanged"   -> JsBoolean(prioChanged),
+      // "resolution_id"     -> JsNumber(ticket.resolutionId.getOrElse("")), XXX
+      // "old_resolution_id" -> JsNumber(old.resolutionId.getOrElse("")), XXX
+      "resolution_name"   -> JsString(ticket.resolutionName.getOrElse("")),
+      "old_resolution_name" -> JsString(old.resolutionName.getOrElse("")),
+      "resolution_changed"-> JsBoolean(resoChanged),
+      // "proposed_resolution_id" -> ticket.proposedResolutionId.toString, XXX
+      // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""), XXX
+      "reporter_id"       -> JsNumber(ticket.reporterId),
+      "old_reporter_id"   -> JsNumber(old.reporterId),
+      "reporter_name"     -> JsString(ticket.reporterName),
+      "old_reporter_name" -> JsString(old.reporterName),
+      "reporter_changed"  -> JsBoolean(repChanged),
+      "severity_id"       -> JsNumber(ticket.severityId),
+      "old_severity_id"   -> JsNumber(old.severityId),
+      "severity_name"     -> JsString(ticket.severityName),
+      "old_severity_name" -> JsString(old.severityName),
+      "severity_changed"  -> JsBoolean(sevChanged),
+      "status_id"         -> JsNumber(ticket.statusId),
+      "old_status_id"     -> JsNumber(old.statusId),
+      "status_name"       -> JsString(ticket.statusName),
+      "old_status_name"   -> JsString(old.statusName),
+      "status_changed"    -> JsBoolean(statChanged),
+      "type_id"           -> JsNumber(ticket.typeId),
+      "old_type_id"       -> JsNumber(old.typeId),
+      "type_name"         -> JsString(ticket.typeName),
+      "old_type_name"     -> JsString(old.typeName),
+      "type_changed"      -> JsBoolean(typeChanged),
+      "summary"           -> JsString(ticket.summary),
+      "old_summary"       -> JsString(old.summary),
+      "summary_changed"   -> JsBoolean(summChanged),
+      "description"       -> JsString(ticket.description.getOrElse("")),
+      "old_description"   -> JsString(old.description.getOrElse("")),
       "description_changed" -> JsBoolean(descChanged)
       // XXX date_occurred
     )
@@ -444,7 +538,6 @@ object SearchModel {
         termsFacet("changed_severity").field("severity_changed"),
         termsFacet("changed_status").field("status_changed")
       ),
-      fields = List("*"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)

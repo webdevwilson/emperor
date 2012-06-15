@@ -13,6 +13,7 @@
 @import util._
 
 @item(ticket, markdown, prevStatus, nextStatus) {
+  XXX Need empty stuff @Messages("ticket.history.none")
   <div id="ticketTabs" class="tabcontent">
    <ul class="nav nav-tabs">
     <li><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
@@ -34,8 +35,36 @@
        <ul class="unstyled events">
         @history.items.map { change =>
         <li>
-  	     <blockquote>@change</blockquote>
-         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@change.field("user_id")</a> @Messages("ticket.history.attribution.postfix", "XXX")</div>
+          <ul class="unstyled">
+  	      @if(change.getSource.get("priority_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.priority") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_priority_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("priority_name").asInstanceOf[String])</span></li>
+  	      }
+   	      @if(change.getSource.get("project_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.project") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_project_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("project_name").asInstanceOf[String])</span> XXX Link</li>
+   	      }
+  	      @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span> XXX Link</li>
+  	      }
+  	      @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.resolution") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_resolution_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("resolution_name").asInstanceOf[String])</span></li>
+  	      }
+  	      @if(change.getSource.get("severity_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.severity") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_severity_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("severity_name").asInstanceOf[String])</span></li>
+  	      }
+  	      @if(change.getSource.get("status_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.status") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_status_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("status_name").asInstanceOf[String])</span></li>
+  	      }
+  	      @if(change.getSource.get("type_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.type") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_type_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("type_name").asInstanceOf[String])</span></li>
+  	      }
+  	      @if(change.getSource.get("summary_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.summary") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_summary")</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@change.getSource.get("summary")</span></li>
+  	      }
+  	      @if(change.getSource.get("description_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.description") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_description")</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@change.getSource.get("description")</span></li>
+  	      }
+          </ul>
+         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@change.getSource.get("user_id")</a> @Messages("ticket.history.attribution.postfix", "XXX")</div>
         </li>
         }
        </ul>

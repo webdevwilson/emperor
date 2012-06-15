@@ -70,13 +70,6 @@ case class TicketHistory(
   dateOccurred: Date
 )
 
-case class TicketChange(
-  name: String, oldValue: String, newValue: String
-)
-case class TicketChanges(
-  userId: Long, realName: String, dateOccurred: Date, changes: Seq[TicketChange]
-)
-
 object TicketModel {
 
   val allQuery = SQL("SELECT * FROM tickets")
@@ -88,25 +81,13 @@ object TicketModel {
   val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
+  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
   val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
   val getOpenCountForWeekProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= DATE_SUB(UTC_DATE(), INTERVAL 1 WEEK)")
 
-  val getAllHistoryQuery = SQL("SELECT * FROM ticket_history th JOIN users u ON u.id = th.user_id WHERE ticket_id={ticket_id} ORDER BY th.date_created ASC")
-  val getHistoryByIdQuery = SQL("SELECT * from ticket_history th WHERE id > {id} AND ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT 1") // XXX id is only safe here if greater ids are always greater in date
-  val getFollowingHistoryQuery = SQL("SELECT * from ticket_history th WHERE id={id}")
-  // This is the nasty one for the big history join
-  val getHistoryQuery = SQL("SELECT * from ticket_history th JOIN users u ON u.id = th.user_id JOIN ticket_priorities tp ON tp.id = th.priority_id JOIN ticket_severities ts ON ts.id = th.severity_id JOIN ticket_statuses tss ON tss.id = th.status_id JOIN ticket_types tt ON tt.id = th.type_id LEFT JOIN ticket_resolutions tr ON tr.id = th.resolution_id WHERE ticket_id={ticket_id} ORDER BY th.date_occurred ASC LIMIT {offset},{count}")
-  val getHistoryCountQuery = SQL("SELECT count(*) FROM ticket_history WHERE ticket_id={ticket_id}")
-  val getMostRecentHistoryIdQuery = SQL("SELECT th.id FROM ticket_history th WHERE ticket_id={ticket_id} ORDER BY th.date_occurred DESC LIMIT 1")
-
-  val getAllCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER by tc.date_created ASC")
-  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
-  val getCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} ORDER BY tc.date_created ASC LIMIT {offset},{count}")
-  val getCommentsCountQuery = SQL("SELECT count(*) FROM ticket_comments WHERE ticket_id={ticket_id}")
   val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {priority_id}, {resolution_id}, {proposed_resolution_id}, {reporter_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val getCommentFacetUser = SQL("SELECT count(*) as occurrences, u.username, u.id FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE ticket_id={ticket_id} GROUP BY user_id")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -355,177 +336,12 @@ object TicketModel {
     }
   }
 
-  def getHistoryById(id: Long) : Option[TicketHistory] = {
-    DB.withConnection { implicit conn =>
-      getHistoryByIdQuery.on('id -> id).as(history.singleOpt)
-    }
-  }
-  
   def getAll: List[Ticket] = {
       
     DB.withConnection { implicit conn =>
       allQuery.as(ticket *)
     }
   }
-
-  def getComments(ticketId: Long, page: Int = 0, count: Int = 10) : Page[Comment] = {
-    
-    val offset = count * page
-    
-    DB.withConnection { implicit conn =>
-      val comments = getCommentsQuery.on(
-        'ticket_id-> ticketId,
-        'offset   -> offset,
-        'count    -> count
-      ).as(comment *)
-      
-      val totalRows = getCommentsCountQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
-      
-      Page(comments, page, count, totalRows)
-    }
-  }
-  
-  def getCommentsAsSearchResult(ticketId: Long, page: Int = 0, count: Int = 10) : SearchResult[Comment] = {
-    
-    DB.withConnection { implicit conn =>
-      val comments = getAllCommentsQuery.on('ticket_id -> ticketId).as(comment *)
-
-      val afacets = getCommentFacetUser.on('ticket_id -> ticketId).as(authorFacet *)
-
-      SearchResult(
-        pager = this.getComments(ticketId, page, count),
-        facets = List(
-          Facets(name = "Author", "author", afacets)
-        )
-      )
-    }
-  }
-
-  def getHistory(ticketId: Long, page: Int = 0, count: Int = 10) : Page[TicketHistory] = {
-    
-    val offset = count * page
-    
-    DB.withConnection { implicit conn =>
-      val histories = getHistoryQuery.on(
-        'ticket_id-> ticketId,
-        'offset   -> offset,
-        'count    -> count
-      ).as(history *)
-      
-      val totalRows = getHistoryCountQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
-      
-      Page(histories, page, count, totalRows)
-    }
-  }
-
-  def getChanges(ticketId: Long, histories: Seq[TicketHistory]) : Option[Seq[TicketChanges]] = {
-    
-    if(histories.isEmpty) {
-      return None
-    }
-    
-    val firstChanges : TicketChanges = DB.withConnection { implicit conn =>
-      val highest = histories.last
-      val newestHistoryId = highest.id.get // XXX last or first?
-      val mostRecent = getMostRecentHistoryIdQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
-      (newestHistoryId == mostRecent) match {
-        case true => {
-          // This is the most recent history entry, so we need to fetch the
-          // ticket and make our first change via that comparison
-          val ticket = this.getById(ticketId).get
-          // Now we've got to return None so that the map that follows will
-          // compare this history entry to it's predecessor
-          this.computeChangeFromTicket(highest, ticket)
-        }
-        case false => 
-          // This isn't the most recent history entry, so fetch the one after
-          // this one and use it for our comparison
-          val old  = getHistoryByIdQuery.on('id -> newestHistoryId, 'ticket_id -> ticketId).as(history.singleOpt).get
-          this.computeChange(old, highest)
-      }
-    }
-    var lastHistory : Option[TicketHistory] = None
-    val changes : Seq[TicketChanges] = histories.reverseMap { history => {
-      val hcs : TicketChanges= lastHistory match {
-        case Some(old) => this.computeChange(old, history)
-        case None => firstChanges
-      }
-      lastHistory = Some(history)
-      hcs
-    } }
-    
-    Some(changes)
-  }
-  
-  // This is either going to be a nasty, cache-needing slog (to look up each
-  // fk's real info) or an 8 table join. The nullable proposed_resolution
-  // HAS to be checked this way and fetched because it can be null.
-  def computeChange(older: TicketHistory, newer: TicketHistory) : TicketChanges = {
-
-    val changes = new ListBuffer[TicketChange]
-    if(older.severity.id != newer.severity.id) {
-      changes.append(
-        TicketChange("ticket.severity", older.severity.name, newer.severity.name)
-      )
-    }
-
-    TicketChanges(
-      userId = older.user.id, realName = older.user.name, dateOccurred = older.dateOccurred, changes = changes
-    )
-  }
-  
-  def computeChangeFromTicket(history: TicketHistory, ticket: EditTicket) : TicketChanges = {
-
-    // Get the full ticket to save later queries
-    val fullTick = this.getFullById(ticket.id.get).get;
-
-    // reporter, proposed reso, reso, status, type, summary, descr, position
-    val changes = new ListBuffer[TicketChange]
-    if(history.severity.id != fullTick.severityId) {
-      changes.append(TicketChange("ticket.severity", history.severity.name, fullTick.severityName))
-    }
-    if(history.priority.id != fullTick.priorityId) {
-      changes.append(TicketChange("ticket.priority", history.priority.name, fullTick.priorityName))
-    }
-    // XX Be nice to have this decorated with some sort of link metadata, but not sure
-    if(history.reporter.id != fullTick.reporterId) {
-      changes.append(TicketChange("ticket.reporter", history.reporter.name, fullTick.reporterName))
-    }
-    TicketChanges(
-      userId = history.user.id, realName = history.user.name, dateOccurred = history.dateOccurred, changes = changes
-    )
-  }
-
-  // def getChangesAsSearchResult(ticketId: Long, page: Int = 0, count: Int = 10) : SearchResult[TicketChanges] = {
-  //   
-  //   DB.withConnection { implicit conn =>
-  // 
-  //     val histories = this.getHistory(ticketId, page, count)
-  //     val changes = this.getChanges(ticketId, histories.items)
-  // 
-  //     SearchResult(
-  //       pager = Page(changes, page, count, histories.total),
-  //       facets = List(
-  //         Facets("Author", "author", )
-  //       )
-  //     )
-  //   }
-  // }
-  // 
-  // def getChanges(ticketId: Long, page: Int = 0, count: Int = 10) : Page[Change] = {
-  //   
-  //   DB.withConnection { implicit conn =>
-  //     val changes = getChangesQuery.on(
-  //       'ticket_id-> ticketId,
-  //       'offset   -> offset,
-  //       'count    -> count
-  //     ).as(change *)
-  //   }
-  //   
-  //   val totalRows = getChangesCountQuery.on('ticket_id -> ticketId).as(scalar[Long].single)
-  //   
-  //   Page(changes, page, count, totalRows)
-  // }
 
   def getOpenCountForProject(projectId: Long) : Long = {
     
@@ -565,6 +381,8 @@ object TicketModel {
   }
   
   def update(userId: Long, id: Long, ticket: EditTicket) = {
+
+    val user = UserModel.getById(userId).get
 
     val oldTicket = DB.withConnection { implicit conn =>
       this.getFullById(id).get
@@ -610,7 +428,7 @@ object TicketModel {
     DB.withConnection { implicit conn =>
 
       val newTicket = this.getFullById(id).get      
-      SearchModel.indexHistory(cid.get, newTicket, oldTicket)
+      SearchModel.indexHistory(cid.get, userId, user.realName, newTicket, oldTicket)
     }
   }
 }
