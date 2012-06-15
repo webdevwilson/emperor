@@ -157,13 +157,6 @@ object Ticket extends Controller with Secured {
     Ok(views.html.ticket.create(initialTicketForm, users, projs, ttypes, prios, sevs)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
-
-    val groups = TicketModel.list(page = page, count = count)
-
-    Ok(views.html.ticket.index(groups)(request))
-  }
-
   def edit(ticketId: Long) = IsAuthenticated { implicit request =>
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }

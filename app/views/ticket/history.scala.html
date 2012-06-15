@@ -64,7 +64,7 @@
             <li>@Messages("ticket.description") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_description")</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@change.getSource.get("description")</span></li>
   	      }
           </ul>
-         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@change.getSource.get("user_id")</a> @Messages("ticket.history.attribution.postfix", "XXX")</div>
+         <div class="attr">@Messages("ticket.history.attribution.prefix") <a href="XXX">@change.getSource.get("user_realname")</a> @Messages("ticket.history.attribution.postfix", change.getSource.get("date_occurred"))</div>
         </li>
         }
        </ul>

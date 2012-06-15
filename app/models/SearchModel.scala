@@ -1,16 +1,22 @@
 package models
 
 import com.traackr.scalastic.elasticsearch.Indexer
+import java.text.SimpleDateFormat
+import java.util.{Date,TimeZone}
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.search.SearchHit
-import org.elasticsearch.search.facet.FacetBuilders._
 import org.elasticsearch.index.query.{BaseQueryBuilder,FilterBuilder}
 import org.elasticsearch.index.query.FilterBuilders._
 import org.elasticsearch.index.query.QueryBuilders._
+import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.facet.FacetBuilders._
+import org.elasticsearch.search.sort._
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
 object SearchModel {
+  
+  val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+  dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
   
   val ticketIndex = "tickets"
   val ticketType = "ticket"
@@ -145,7 +151,7 @@ object SearchModel {
         "index": "not_analyzed"
       },
       "user_realname" {
-        "type": "sttring",
+        "type": "string",
         "index": "not_analyzed"
       },
       "project_id": {
@@ -332,7 +338,7 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
-      "date_occured": {
+      "date_occurred": {
         "type": "date",
         "format": "basic_date_time_no_millis"
       }
@@ -368,13 +374,12 @@ object SearchModel {
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
 
     val cdoc: Map[String,JsValue] = Map(
-      "ticket_id" -> JsNumber(comment.ticketId),
-      "user_id" -> JsNumber(comment.userId),
+      "ticket_id"     -> JsNumber(comment.ticketId),
+      "user_id"       -> JsNumber(comment.userId),
       "user_realname" -> JsString(comment.realName),
-      "content" -> JsString(comment.content)
-      // XXX date_created
+      "content"       -> JsString(comment.content),
+      "date_created"  -> JsString(dateFormatter.format(new Date()))
     )
-
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
   }
   
@@ -383,25 +388,25 @@ object SearchModel {
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
 
     val tdoc: Map[String,JsValue] = Map(
-      "project_id" -> JsNumber(ticket.projectId),
-      "project_name" -> JsString(ticket.projectName),
-      "priority_id" -> JsNumber(ticket.priorityId),
-      "priority_name" -> JsString(ticket.priorityName),
+      "project_id"      -> JsNumber(ticket.projectId),
+      "project_name"    -> JsString(ticket.projectName),
+      "priority_id"     -> JsNumber(ticket.priorityId),
+      "priority_name"   -> JsString(ticket.priorityName),
       // "resolution_id" -> ticket.resolutionId.toString,
       "resolution_name" -> JsString(ticket.resolutionName.getOrElse("")),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
-      "reporter_id" -> JsNumber(ticket.reporterId),
-      "reporter_name" -> JsString(ticket.reporterName),
-      "severity_id" -> JsNumber(ticket.severityId),
-      "severity_name" -> JsString(ticket.severityName),
-      "status_id" -> JsNumber(ticket.statusId),
-      "status_name" -> JsString(ticket.statusName),
-      "type_id" -> JsNumber(ticket.typeId),
-      "type_name" -> JsString(ticket.typeName),
-      "summary" -> JsString(ticket.summary),
-      "description" -> JsString(ticket.description.getOrElse(""))
-      // XXX date_created
+      "reporter_id"     -> JsNumber(ticket.reporterId),
+      "reporter_name"   -> JsString(ticket.reporterName),
+      "severity_id"     -> JsNumber(ticket.severityId),
+      "severity_name"   -> JsString(ticket.severityName),
+      "status_id"       -> JsNumber(ticket.statusId),
+      "status_name"     -> JsString(ticket.statusName),
+      "type_id"         -> JsNumber(ticket.typeId),
+      "type_name"       -> JsString(ticket.typeName),
+      "summary"         -> JsString(ticket.summary),
+      "description"     -> JsString(ticket.description.getOrElse("")),
+      "date_created"    -> JsString(dateFormatter.format(new Date()))
     )
 
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
@@ -498,10 +503,9 @@ object SearchModel {
       "summary_changed"   -> JsBoolean(summChanged),
       "description"       -> JsString(ticket.description.getOrElse("")),
       "old_description"   -> JsString(old.description.getOrElse("")),
-      "description_changed" -> JsBoolean(descChanged)
-      // XXX date_occurred
+      "description_changed" -> JsBoolean(descChanged),
+      "date_occurred"     -> JsString(dateFormatter.format(new Date()))
     )
-    println(toJson(hdoc).toString)
     indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
   }
 
@@ -543,8 +547,9 @@ object SearchModel {
         case 0 => Some(0)
         case 1 => Some(0)
         case _ => Some((page - 1)  * count)
-      }
-    ) // XXX order
+      },
+      sorting = Seq("date_occurred" -> SortOrder.DESC)
+    )
   }
   
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -575,14 +580,15 @@ object SearchModel {
       facets = Seq(
         termsFacet("user_id").field("user_id")
       ),
-      fields = List("content", "user_realname"),
+      fields = List("content", "user_id", "user_realname", "date_created"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
-      }
-    ) // order!!
+      },
+      sorting = Seq("date_created" -> SortOrder.DESC)
+    )
   }
   
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {

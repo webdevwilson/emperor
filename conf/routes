@@ -93,7 +93,6 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 
 GET     /stack                          controllers.Stack.index
 
-GET     /ticket                         controllers.Ticket.index(page: Int ?= 1, count: Int ?= 10)
 GET     /ticket/create                  controllers.Ticket.create
 GET     /ticket/:id                     controllers.Ticket.item(tab = "comments", id: Long, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 GET     /ticket/comments/:id            controllers.Ticket.item(tab = "comments", id: Long, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")

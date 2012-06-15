@@ -224,7 +224,7 @@ object TicketModel {
   }
 
   val comment = {
-    get[Pk[Long]]("id") ~
+    get[Pk[Long]]("ticket_comments.id") ~
     get[Long]("user_id") ~
     get[String]("username") ~
     get[String]("realname") ~
@@ -406,8 +406,6 @@ object TicketModel {
         'position     -> oldTicket.position,
         'summary      -> oldTicket.summary
       ).executeInsert()
-      
-      // XXX executeInsert!! use it!
 
       updateQuery.on(
         'id                     -> id,
