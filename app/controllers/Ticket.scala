@@ -187,7 +187,7 @@ object Ticket extends Controller with Secured {
           case "history"  => {
 
             val response = SearchModel.searchChange(
-              page, count, "", Map("ticketId" -> Seq(ticketId.toString))
+              page, count, "", Map("ticket_id" -> Seq(ticketId.toString))
             )
             val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
@@ -210,7 +210,7 @@ object Ticket extends Controller with Secured {
           case _ => {
 
             val response = SearchModel.searchComment(
-              page, count, "", Map("ticketId" -> Seq(ticketId.toString))
+              page, count, "", Map("ticket_id" -> Seq(ticketId.toString))
             )
             val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
