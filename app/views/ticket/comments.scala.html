@@ -54,7 +54,7 @@
       @comments.items.map { comment =>
       <li>
 	     <blockquote>@{ Html(markdown.parseToHTML(comment.field("content").getValue.toString)) }</blockquote>
-       <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", comment.fields)</div>
+       <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", comment.field("date_created").getValue.toString)</div>
       </li>
       }
      </ul>
