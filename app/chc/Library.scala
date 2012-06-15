@@ -6,12 +6,19 @@ import scala.collection.mutable.ListBuffer
 /**
  * Helper for pagination.
  */
-case class Page[+A](items: Seq[A], page: Int, count: Int, total: Long) {
-  lazy val offset = count * (page - 1)
+case class Page[+A](items: Seq[A], requestedPage: Int, count: Int, total: Long) {
+  lazy val lastPage = (total.toDouble / count).ceil.toInt 
+  lazy val page = {
+    if(requestedPage > this.lastPage) {
+      this.lastPage
+    } else {
+      requestedPage
+    }
+  }
   lazy val prev = Option(page - 1).filter(_ >= 1)
   lazy val next = Option(page + 1).filter(_ => ((count * (page - 1)) + items.size) < total)
   val firstPage = 0
-  lazy val lastPage = (total.toDouble / count).ceil.toInt 
+  lazy val offset = count * (page - 1)
 }
 
 case class Facet(name: String, value: String, count: Long)
@@ -20,7 +27,7 @@ case class SearchResult[A](pager: Page[A], facets: Seq[Facets])
 
 object Library {
     
-  def pagerLink(request: Request[AnyContent], page: Int = 0, count: Int = 10) : String = {
+  def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
 
     var q = request.queryString
     q += "page" -> List(page.toString)
@@ -48,7 +55,12 @@ object Library {
 
     val qs = clean.foldLeft("")(
       (acc, value) => acc + value._2.foldLeft("")(
-        (acc2, param) => acc2 + value._1 + "=" + param + "&"
+        (acc2, param) => {
+          value._1 match {
+            case "page" => ""
+            case _ => acc2 + value._1 + "=" + param + "&"
+          }
+        }
       )
     )
     

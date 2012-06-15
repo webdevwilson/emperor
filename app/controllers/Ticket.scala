@@ -218,9 +218,9 @@ object Ticket extends Controller with Secured {
           case _ => {
 
             val response = SearchModel.searchComment(
-              0, 10, "", Map("ticketId" -> Seq(ticketId.toString))
+              page, count, "", Map("ticketId" -> Seq(ticketId.toString))
             )
-            val pager = Page(response.hits.hits, page, count, response.hits.totalHits) // XXX real params
+            val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 
             val termfacets = response.facets.facets.map { facet =>
               facet match {
