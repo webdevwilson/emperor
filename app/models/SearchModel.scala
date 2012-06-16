@@ -366,12 +366,11 @@ object SearchModel {
       indexer.waitTillActive()
       indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
     }
+    indexer.stop
     // indexer.refresh()
   }
 
   def indexComment(comment: Comment) {
-
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
 
     val cdoc: Map[String,JsValue] = Map(
       "ticket_id"     -> JsNumber(comment.ticketId),
@@ -380,12 +379,12 @@ object SearchModel {
       "content"       -> JsString(comment.content),
       "date_created"  -> JsString(dateFormatter.format(new Date()))
     )
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
+    indexer.stop
   }
   
   def indexTicket(ticket: FullTicket) {
-
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
 
     val tdoc: Map[String,JsValue] = Map(
       "project_id"      -> JsNumber(ticket.projectId),
@@ -409,12 +408,12 @@ object SearchModel {
       "date_created"    -> JsString(dateFormatter.format(new Date()))
     )
 
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
+    indexer.stop
   }
   
   def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
-    
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     
     val projChanged = ticket.projectId match {
       case old.projectId => false
@@ -506,7 +505,9 @@ object SearchModel {
       "description_changed" -> JsBoolean(descChanged),
       "date_occurred"     -> JsString(dateFormatter.format(new Date()))
     )
+    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
+    indexer.stop
   }
 
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -529,9 +530,8 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    indexer.search(
+    val resp = indexer.search(
       query = actualQuery,
       indices = Seq("ticket_histories"),
       facets = Seq(
@@ -550,6 +550,8 @@ object SearchModel {
       },
       sorting = Seq("date_occurred" -> SortOrder.DESC)
     )
+    indexer.stop
+    resp
   }
   
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -572,9 +574,8 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    indexer.search(
+    val resp = indexer.search(
       query = actualQuery,
       indices = Seq("ticket_comments"),
       facets = Seq(
@@ -589,6 +590,8 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
+    indexer.stop
+    resp
   }
   
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -611,9 +614,8 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    // XXX use page and count
     val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    indexer.search(
+    val resp = indexer.search(
       query = actualQuery,
       indices = Seq("tickets"),
       facets = Seq(
@@ -629,7 +631,10 @@ object SearchModel {
         case 0 => Some(0)
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
-      }
-    ) // order!!
+      },
+      sorting = Seq("date_created" -> SortOrder.DESC)
+    )
+    indexer.stop
+    resp
   }
 }
