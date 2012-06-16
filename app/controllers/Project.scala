@@ -45,9 +45,9 @@ object Project extends Controller with Secured {
 
   def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
 
-    val groups = ProjectModel.list(page = page, count = count)
+    val projs = ProjectModel.list(page = page, count = count)
 
-    Ok(views.html.project.index(groups)(request))
+    Ok(views.html.project.index(projs)(request))
   }
 
   def edit(projectId: Long) = IsAuthenticated { implicit request =>

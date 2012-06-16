@@ -55,9 +55,9 @@ object TicketResolutionModel {
     }
   }
 
-  def list(page: Int = 0, count: Int = 10) : Page[TicketResolution] = {
+  def list(page: Int = 1, count: Int = 10) : Page[TicketResolution] = {
 
-      val offset = count * page
+      val offset = count * (page - 1)
       
       DB.withConnection { implicit conn =>
         val trs = listQuery.on(

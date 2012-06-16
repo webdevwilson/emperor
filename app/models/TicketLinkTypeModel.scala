@@ -55,9 +55,9 @@ object TicketLinkTypeModel {
     }
   }
 
-  def list(page: Int = 0, count: Int = 10) : Page[TicketLinkType] = {
+  def list(page: Int = 1, count: Int = 10) : Page[TicketLinkType] = {
 
-      val offset = count * page
+      val offset = count * (page - 1)
       
       DB.withConnection { implicit conn =>
         val tss = listQuery.on(

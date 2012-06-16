@@ -80,9 +80,9 @@ object UserModel {
     }
   }
 
-  def list(page: Int = 0, count: Int = 10) : Page[User] = {
+  def list(page: Int = 1, count: Int = 10) : Page[User] = {
 
-      val offset = count * page
+      val offset = count * (page - 1)
       
       DB.withConnection { implicit conn =>
         val users = listQuery.on(
