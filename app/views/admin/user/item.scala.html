@@ -5,7 +5,7 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.User.index()">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@user.username</li>
 </ul>

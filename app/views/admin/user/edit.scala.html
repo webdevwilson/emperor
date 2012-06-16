@@ -9,7 +9,7 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.User.index(page = 0, count = 10)">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.User.index()">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("admin.user.with.id", "XXX")</li>
 </ul>
@@ -24,7 +24,7 @@
         <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
     }
     <div class="form-actions">
-     <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+     <a href="@controllers.admin.routes.User.index()" class="btn">@Messages("form.cancel")</a>
      <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
     </div>
    </fieldset>
@@ -38,7 +38,7 @@
     @helper.inputPassword(passForm("password2"), '_label -> Messages("user.password.confirm"))
    </fieldset>
    <div class="form-actions">
-    <a href="@controllers.admin.routes.User.index(page = 0, count = 10)" class="btn">@Messages("form.cancel")</a>
+    <a href="@controllers.admin.routes.User.index()" class="btn">@Messages("form.cancel")</a>
     <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
    </div>
   }

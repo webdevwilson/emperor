@@ -9,7 +9,7 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)">@Messages("admin.ticket_type.add")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.TicketType.index()">@Messages("admin.ticket_type.add")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("ticket_type.with.id", id)</li>
 </ul>
@@ -18,7 +18,7 @@
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_type.name"))
   <div class="form-actions">
-   <a href="@controllers.admin.routes.TicketType.index(page = 0, count = 10)" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
+   <a href="@controllers.admin.routes.TicketType.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
   </div>
  </fieldset>
