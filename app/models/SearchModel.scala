@@ -18,6 +18,8 @@ object SearchModel {
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
   
+  val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+  
   val ticketIndex = "tickets"
   val ticketType = "ticket"
   val ticketMapping = """
@@ -348,7 +350,6 @@ object SearchModel {
   """
 
   def foo = {
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     
     // indexer.deleteIndex(ticketIndex)
     if(!indexer.exists(ticketIndex)) {
@@ -366,7 +367,6 @@ object SearchModel {
       indexer.waitTillActive()
       indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
     }
-    indexer.stop
     // indexer.refresh()
   }
 
@@ -379,9 +379,7 @@ object SearchModel {
       "content"       -> JsString(comment.content),
       "date_created"  -> JsString(dateFormatter.format(new Date()))
     )
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
-    indexer.stop
   }
   
   def indexTicket(ticket: FullTicket) {
@@ -408,9 +406,7 @@ object SearchModel {
       "date_created"    -> JsString(dateFormatter.format(new Date()))
     )
 
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
-    indexer.stop
   }
   
   def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
@@ -505,9 +501,7 @@ object SearchModel {
       "description_changed" -> JsBoolean(descChanged),
       "date_occurred"     -> JsString(dateFormatter.format(new Date()))
     )
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
     indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
-    indexer.stop
   }
 
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -530,8 +524,7 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    val resp = indexer.search(
+    indexer.search(
       query = actualQuery,
       indices = Seq("ticket_histories"),
       facets = Seq(
@@ -550,8 +543,6 @@ object SearchModel {
       },
       sorting = Seq("date_occurred" -> SortOrder.DESC)
     )
-    indexer.stop
-    resp
   }
   
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -574,8 +565,7 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    val resp = indexer.search(
+    indexer.search(
       query = actualQuery,
       indices = Seq("ticket_comments"),
       facets = Seq(
@@ -590,8 +580,6 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
-    indexer.stop
-    resp
   }
   
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -614,8 +602,7 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
     
-    val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
-    val resp = indexer.search(
+    indexer.search(
       query = actualQuery,
       indices = Seq("tickets"),
       facets = Seq(
@@ -634,7 +621,5 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
-    indexer.stop
-    resp
   }
 }
