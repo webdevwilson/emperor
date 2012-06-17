@@ -1,0 +1,12 @@
+@(ticketId: Long, ticket: models.FullTicket, objForm: Form[models.InitialComment])(implicit request: Request[AnyContent])
+
+@import helper.bootstrap._
+
+<div>
+   @helper.form(action = routes.Ticket.doUnResolve(ticketId), args = 'method -> "POST") {
+   <p>@Html(Messages("ticket.unresolve.summary", ticket.id.get))</p>
+   <fieldset>
+     @helper.textarea(field = objForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+   </fieldset>
+  }
+</div>

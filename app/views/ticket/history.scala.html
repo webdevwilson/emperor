@@ -51,9 +51,13 @@
   	      @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span> XXX Link</li>
   	      }
-  	      XXX Fix null "old" reso
   	      @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
-            <li>@Messages("ticket.resolution") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_resolution_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("resolution_name").asInstanceOf[String])</span></li>
+            <li>
+             @Messages("ticket.resolution") @Messages("ticket.history.change.from")
+             <span class="badge badge-important">@defining(change.getSource.get("old_resolution_name").asInstanceOf[String]) { oldres => @if(oldres.isEmpty) { @Messages("ticket.history.empty") } else { @Messages(oldres) } }</span>
+             @Messages("ticket.history.change.to")
+             <span class="badge badge-success">@defining(change.getSource.get("resolution_name").asInstanceOf[String]) { res => @if(res.isEmpty) { @Messages("ticket.history.empty") } else { @Messages(res) } }</span>
+            </li>
   	      }
   	      @if(change.getSource.get("severity_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.severity") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_severity_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("severity_name").asInstanceOf[String])</span></li>
