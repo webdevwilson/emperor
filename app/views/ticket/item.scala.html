@@ -10,6 +10,7 @@
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
 <div class="btn-toolbar pull-right">
+@if(ticket.resolutionId.isEmpty) {
 <div class="btn-group">
  @prevStatus match {
    case Some(status) => {
@@ -27,6 +28,7 @@
    }
  }
 </div>
+}
 <div class="btn-group">
   @defining(ticket.resolutionId) { resId =>
     @resId match {
