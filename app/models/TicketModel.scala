@@ -267,8 +267,6 @@ object TicketModel {
     }
   }
   
-  // XXX need un-resolve
-  
   def resolve(ticketId: Long, userId: Long, resolutionId: Long) = {
     
     DB.withConnection { implicit conn =>
@@ -278,6 +276,13 @@ object TicketModel {
       
       this.update(userId = userId, id = ticketId, ticket = newTick)
     }
+  }
+  
+  def unresolve(ticketId: Long, userId: Long) = {
+      val tick = this.getById(ticketId).get
+      val newTick = tick.copy(resolutionId = None)
+      
+      this.update(userId = userId, id = ticketId, ticket = newTick)
   }
 
   def changeStatus(ticketId: Long, newStatusId: Long, userId: Long) = {
