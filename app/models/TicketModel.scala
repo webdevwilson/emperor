@@ -83,8 +83,7 @@ object TicketModel {
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (reporter_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({reporter_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, type_id={type_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
-  val updateStatusQuery = SQL("UPDATE tickets SET status_id={status_id} WHERE id={ticket_id}")
+  val updateQuery = SQL("UPDATE tickets SET reporter_id={reporter_id}, priority_id={priority_id}, resolution_id={resolution_id}, severity_id={severity_id}, type_id={type_id}, status_id={status_id}, position={position}, summary={summary}, description={description} WHERE id={id}")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
@@ -126,7 +125,17 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") map {
       case id~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~typeId~position~summary~description => EditTicket(
-        id, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, typeId, position, summary, description
+        id = id,
+        reporterId = reporterId,
+        projectId = projectId,
+        priorityId = priorityId,
+        resolutionId = resolutionId,
+        proposedResolutionId = proposedResolutionId,
+        severityId = severityId,
+        typeId = typeId,
+        position = position,
+        summary = summary,
+        description = description
       )
     }
   }
@@ -239,14 +248,6 @@ object TicketModel {
     }
   }
 
-  val authorFacet = {
-    get[String]("users.username") ~
-    get[Long]("users.id") ~
-    get[Long]("occurrences") map {
-      case username~authorId~occurrences => Facet(username, authorId.toString, occurrences)
-    }
-  }
-
   def addComment(ticketId: Long, userId: Long, content: String) : Option[Comment] = {
     
     val ticket = this.getById(ticketId)
@@ -266,18 +267,13 @@ object TicketModel {
     }
   }
 
-  def changeStatus(ticketId: Long, statusId: Long, userId: Long) = {
+  def changeStatus(ticketId: Long, newStatusId: Long, userId: Long) = {
     
-    DB.withTransaction { implicit conn =>
-      // insertHistoryQuery.on(
-      //   'user_id -> userId,
-      //   'ticket_id -> ticketId
-      // ).executeUpdate
-      // XXX FIX ME!
-      updateStatusQuery.on(
-        'status_id  -> statusId,
-        'ticket_id  -> ticketId
-      ).execute
+    DB.withConnection { implicit conn =>
+
+      val tick = this.getById(ticketId).get
+      
+      this.update(userId = userId, id = ticketId, ticket = tick, statusId = Some(newStatusId))
     }
   }
 
@@ -384,7 +380,7 @@ object TicketModel {
       }
   }
   
-  def update(userId: Long, id: Long, ticket: EditTicket) = {
+  def update(userId: Long, id: Long, ticket: EditTicket, statusId : Option[Long] = None) = {
 
     val user = UserModel.getById(userId).get
 
@@ -415,6 +411,7 @@ object TicketModel {
         'id                     -> id,
         'reporter_id            -> ticket.reporterId,
         'priority_id            -> ticket.priorityId,
+        'status_id              -> statusId.getOrElse(oldTicket.statusId),
         'resolution_id          -> ticket.resolutionId,
         'proposed_resolution_id -> ticket.proposedResolutionId,
         'severity_id            -> ticket.severityId,
