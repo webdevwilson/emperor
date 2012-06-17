@@ -82,6 +82,16 @@ object Ticket extends Controller with Secured {
     }
   }
 
+  def unresolve(ticketId: Long) = IsAuthenticated { implicit request =>
+    
+    val ticket = TicketModel.getFullById(ticketId)
+
+    ticket match {
+      case Some(value) => Ok(views.html.ticket.unresolve(ticketId, value, commentForm)(request))
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+  }
+
   def doResolve(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
@@ -95,6 +105,28 @@ object Ticket extends Controller with Secured {
             case resolution: models.Resolution => {
               TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId)
               Redirect(routes.Ticket.item("history", ticketId)).flashing("success" -> "ticket.success.resolution")
+            }
+          }
+        )
+      }
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+  }
+
+  def doUnResolve(ticketId: Long) = IsAuthenticated { implicit request =>
+    
+    val ticket = TicketModel.getFullById(ticketId)
+    
+    ticket match {
+      case Some(value) => {
+        commentForm.bindFromRequest.fold(
+          errors => {
+            println(errors)
+            BadRequest(views.html.ticket.error(request))
+          }, {
+            case resolution: models.InitialComment => {
+              TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong)
+              Redirect(routes.Ticket.item("history", ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
         )

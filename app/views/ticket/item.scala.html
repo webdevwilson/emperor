@@ -33,7 +33,7 @@
   @defining(ticket.resolutionId) { resId =>
     @resId match {
       case Some(x) => {
-        <a class="btn btn-danger remote-dialog" href="@routes.Ticket.resolve(ticket.id.get)" title="@Messages("ticket.resolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>        
+        <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.id.get)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>        
       }
       case None => {
         <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.id.get)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>        

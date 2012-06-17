@@ -184,11 +184,13 @@ ticket.statuschange.error=There was an error changing the ticket's status.
 ticket.statuschange.summary=You are changing ticket {0} from <strong>{1}</strong> to <strong>{2}</strong>.
 ticket.success.resolution=Ticket Resolved
 ticket.success.status=Ticket Status Changed
+ticket.success.unresolution=Ticket Un-Resolved
 ticket.summary=Summary
 ticket.severity=Severity
 ticket.status=Status
 ticket.type=Type
 ticket.unresolve=Un-Resolve Ticket
+ticket.unresolve.summary=You are un-resolving ticket {0}.
 ticket.with.id=Ticket {0}
 
 ticket_link_type.name=Name
