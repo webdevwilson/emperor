@@ -86,10 +86,19 @@ object Ticket extends Controller with Secured {
     
     val ticket = TicketModel.getFullById(ticketId)
     
-    val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    
     ticket match {
-      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, resolutions, resolveForm)(request))
+      case Some(value) => {
+        resolveForm.bindFromRequest.fold(
+          errors => {
+            BadRequest(views.html.ticket.error(request))
+          }, {
+            case resolution: models.Resolution => {
+              TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId)
+              Redirect(routes.Ticket.item("history", ticketId)).flashing("success" -> "ticket.success.resolution")
+            }
+          }
+        )
+      }
       case None => BadRequest(views.html.ticket.error(request))
     }
   }
@@ -99,6 +108,8 @@ object Ticket extends Controller with Secured {
     val ticket = TicketModel.getFullById(ticketId)
     val newStatus = WorkflowModel.getStatusById(statusId)
     // XXX some sort of check too many gets!
+    
+    // XXX form errors?
     
     ticket match {
       case Some(value) => {
@@ -125,7 +136,7 @@ object Ticket extends Controller with Secured {
             // XXX page!
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
-            case statusChange: models.StatusChange =>
+            case statusChange: models.StatusChange => {
               TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong)
               statusChange.comment match {
                 case Some(content) => {
@@ -134,9 +145,8 @@ object Ticket extends Controller with Secured {
                 }
                 case None => //
               }
-
-              // XXX page!
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
+            }
           }
         )
       }

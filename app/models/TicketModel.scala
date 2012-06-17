@@ -266,6 +266,19 @@ object TicketModel {
       case None => return None
     }
   }
+  
+  // XXX need un-resolve
+  
+  def resolve(ticketId: Long, userId: Long, resolutionId: Long) = {
+    
+    DB.withConnection { implicit conn =>
+      
+      val tick = this.getById(ticketId).get
+      val newTick = tick.copy(resolutionId = Some(resolutionId))
+      
+      this.update(userId = userId, id = ticketId, ticket = newTick)
+    }
+  }
 
   def changeStatus(ticketId: Long, newStatusId: Long, userId: Long) = {
     

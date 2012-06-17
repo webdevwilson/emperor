@@ -184,6 +184,7 @@ ticket.revert.start=At Start
 ticket.type=Type
 ticket.statuschange.error=There was an error changing the ticket's status.
 ticket.statuschange.summary=You are changing ticket {0} from <strong>{1}</strong> to <strong>{2}</strong>.
+ticket.success.resolution=Ticket Resolved
 ticket.success.status=Ticket Status Changed
 ticket.summary=Summary
 ticket.severity=Severity

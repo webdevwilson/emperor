@@ -51,6 +51,7 @@
   	      @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span> XXX Link</li>
   	      }
+  	      XXX Fix null "old" reso
   	      @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.resolution") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_resolution_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("resolution_name").asInstanceOf[String])</span></li>
   	      }
