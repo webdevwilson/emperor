@@ -9,7 +9,8 @@
 @main(Messages("ticket.with.id", ticket.id)) {
 <h2 class="pull-left"><span class="label">@Messages(ticket.typeName)</span> @ticket.summary</h2>
 <a href="@routes.Ticket.edit(ticket.id.get)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
-<div class="btn-group pull-right">
+<div class="btn-toolbar pull-right">
+<div class="btn-group">
  @prevStatus match {
    case Some(status) => {
  <a href="@routes.Ticket.newStatus(ticket.id.get, prevStatus.get.id.get)" class="btn btn-warning remote-dialog" data-async="true" title="@Messages("ticket.revert", Messages(prevStatus.get.name))"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
@@ -25,6 +26,9 @@
  <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
    }
  }
+</div>
+<div class="btn-group">
+  <a class="btn btn-danger remote-dialog" href="@routes.Ticket.resolve(ticket.id.get)">@Messages("ticket.close")</a>
 </div>
 <div style="clear: both" class="row well">
  <div class="span6">

@@ -63,6 +63,28 @@ object Ticket extends Controller with Secured {
     )(models.EditTicket.apply)(models.EditTicket.unapply)
   )
 
+  def resolve(ticketId: Long) = IsAuthenticated { implicit request =>
+    
+    val ticket = TicketModel.getFullById(ticketId)
+    // XXX some sort of check too many gets!
+    
+    ticket match {
+      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, commentForm)(request))
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+  }
+
+  def doResolve(ticketId: Long) = IsAuthenticated { implicit request =>
+    
+    val ticket = TicketModel.getFullById(ticketId)
+    // XXX some sort of check too many gets!
+    
+    ticket match {
+      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, commentForm)(request))
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+  }
+
   def newStatus(ticketId: Long, statusId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)

@@ -102,6 +102,8 @@ POST    /ticket/:id                     controllers.Ticket.update(id: Long)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: Long)
 POST    /ticket                         controllers.Ticket.add
 GET     /ticket/newstatus/:id/:sid      controllers.Ticket.newStatus(id: Long, sid: Long)
+GET     /ticket/resolve/:id             controllers.Ticket.resolve(id: Long)
+POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: Long)
 POST    /ticket/status/:id              controllers.Ticket.status(id: Long)
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: Long)
 

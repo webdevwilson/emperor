@@ -147,6 +147,7 @@ ticket.add.failure=Error Creating Ticket XXX
 ticket.advance=Advance to {0}
 ticket.advance.confirm=Advance
 ticket.advance.end=At End
+ticket.close=Close
 ticket.comment=Comment
 ticket.comment.added=Comment Added
 ticket.comment.attribution.postfix=on {0}
