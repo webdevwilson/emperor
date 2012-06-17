@@ -1,12 +1,13 @@
-@(ticketId: Long, ticket: models.FullTicket, commentForm: Form[models.InitialComment])(implicit request: Request[AnyContent])
+@(ticketId: Long, ticket: models.FullTicket, resolutions: List[(String,String)], objForm: Form[models.Resolution])(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 
 <div>
    @helper.form(action = routes.Ticket.status(ticketId), args = 'method -> "POST") {
-   <p>@Html(Messages("ticket.statuschange.summary", ticket.id.get, Messages(ticket.statusName)))</p>
+   <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
    <fieldset>
-     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+     @helper.select(field = objForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
+     @helper.textarea(field = objForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
    </fieldset>
   }
 </div>

@@ -21,6 +21,10 @@ case class StatusChange(
   statusId: Long, comment: Option[String]
 )
 
+case class Resolution(
+  resolutionId: Long, comment: Option[String]
+)
+
 case class InitialTicket(
   userId: Long, projectId: Long, priorityId: Long, severityId: Long,
   typeId: Long, position: Option[Long], summary: String,

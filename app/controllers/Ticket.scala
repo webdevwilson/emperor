@@ -28,6 +28,13 @@ object Ticket extends Controller with Secured {
     )(models.StatusChange.apply)(models.StatusChange.unapply)
   )
 
+  val resolveForm = Form(
+    mapping(
+      "resolution_id" -> longNumber,
+      "content" -> optional(text)
+    )(models.Resolution.apply)(models.Resolution.unapply)
+  )
+
   val commentForm = Form(
     mapping(
       "content" -> nonEmptyText
@@ -66,10 +73,11 @@ object Ticket extends Controller with Secured {
   def resolve(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
-    // XXX some sort of check too many gets!
+
+    val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     
     ticket match {
-      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, commentForm)(request))
+      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, resolutions, resolveForm)(request))
       case None => BadRequest(views.html.ticket.error(request))
     }
   }
@@ -77,10 +85,11 @@ object Ticket extends Controller with Secured {
   def doResolve(ticketId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
-    // XXX some sort of check too many gets!
+    
+    val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     
     ticket match {
-      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, commentForm)(request))
+      case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, resolutions, resolveForm)(request))
       case None => BadRequest(views.html.ticket.error(request))
     }
   }

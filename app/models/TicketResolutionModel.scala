@@ -11,7 +11,7 @@ case class TicketResolution(id: Pk[Long] = NotAssigned, name: String, dateCreate
 
 object TicketResolutionModel {
 
-  val allQuery = SQL("SELECT * FROM ticket_resolutions")
+  val allQuery = SQL("SELECT * FROM ticket_resolutions ORDER BY id")
   val getByIdQuery = SQL("SELECT * FROM ticket_resolutions WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_resolutions LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_resolutions")
