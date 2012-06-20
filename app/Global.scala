@@ -1,5 +1,6 @@
 import play.api._
 import play.db.DB
+import models.SearchModel
 
 object Global extends GlobalSettings {
 
@@ -9,5 +10,6 @@ object Global extends GlobalSettings {
   
   override def onStop(app: Application) {
     Logger.info("Application shutdown...")
+    SearchModel.shutdown
   }     
 }

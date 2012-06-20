@@ -17,8 +17,11 @@ object SearchModel {
   
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
-  
-  val indexer = Indexer.transport(settings = Map("cluster.name" -> "elasticsearch"), host = "127.0.0.1")
+
+  // Embedded ES
+  // XXX turn off network for this?
+  // XXX set data directory!
+  val indexer = Indexer.local.start
   
   val ticketIndex = "tickets"
   val ticketType = "ticket"
@@ -621,5 +624,9 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
+  }
+  
+  def shutdown {
+    indexer.stop
   }
 }
