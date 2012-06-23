@@ -61,6 +61,22 @@ object SearchModel {
           "type": "string",
           "index": "not_analyzed"
         },
+        "assignee_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "assignee_name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "attention_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "attention_name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "reporter_id": {
           "type": "long",
           "index": "not_analyzed"
@@ -239,6 +255,46 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
+      "assignee_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "old_assignee_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "assignee_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_assignee_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "assignee_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
+      "attention_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "old_attention_id": {
+        "type": "long",
+        "index": "not_analyzed"
+      },
+      "attention_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "old_attention_name": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "attention_changed": {
+        "type": "boolean",
+        "index": "not_analyzed"
+      },
       "reporter_id": {
         "type": "long",
         "index": "not_analyzed"
@@ -388,22 +444,22 @@ object SearchModel {
   def indexTicket(ticket: FullTicket) {
 
     val tdoc: Map[String,JsValue] = Map(
-      "project_id"      -> JsNumber(ticket.projectId),
-      "project_name"    -> JsString(ticket.projectName),
-      "priority_id"     -> JsNumber(ticket.priorityId),
-      "priority_name"   -> JsString(ticket.priorityName),
-      // "resolution_id" -> ticket.resolutionId.toString,
-      "resolution_name" -> JsString(ticket.resolutionName.getOrElse("")),
+      "project_id"      -> JsNumber(ticket.project.id),
+      "project_name"    -> JsString(ticket.project.name),
+      "priority_id"     -> JsNumber(ticket.priority.id),
+      "priority_name"   -> JsString(ticket.priority.name),
+      "resolution_id"   -> JsNumber(ticket.resolution.id.get),
+      "resolution_name" -> JsString(ticket.resolution.name.getOrElse("")),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
-      "reporter_id"     -> JsNumber(ticket.reporterId),
-      "reporter_name"   -> JsString(ticket.reporterName),
-      "severity_id"     -> JsNumber(ticket.severityId),
-      "severity_name"   -> JsString(ticket.severityName),
-      "status_id"       -> JsNumber(ticket.statusId),
-      "status_name"     -> JsString(ticket.statusName),
-      "type_id"         -> JsNumber(ticket.typeId),
-      "type_name"       -> JsString(ticket.typeName),
+      "reporter_id"     -> JsNumber(ticket.reporter.id),
+      "reporter_name"   -> JsString(ticket.reporter.name),
+      "severity_id"     -> JsNumber(ticket.severity.id),
+      "severity_name"   -> JsString(ticket.severity.name),
+      "status_id"       -> JsNumber(ticket.status.id),
+      "status_name"     -> JsString(ticket.status.name),
+      "type_id"         -> JsNumber(ticket.ttype.id),
+      "type_name"       -> JsString(ticket.ttype.name),
       "summary"         -> JsString(ticket.summary),
       "description"     -> JsString(ticket.description.getOrElse("")),
       "date_created"    -> JsString(dateFormatter.format(new Date()))
@@ -414,34 +470,46 @@ object SearchModel {
   
   def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
     
-    val projChanged = ticket.projectId match {
-      case old.projectId => false
+    val projChanged = ticket.project.id match {
+      case old.project.id => false
       case _ => true
     }
-    val prioChanged = ticket.priorityId match {
-      case old.priorityId => false
+    val prioChanged = ticket.priority.id match {
+      case old.priority.id => false
       case _ => true
     }
-    val resoChanged = ticket.resolutionId match {
-      case Some(res) if old.resolutionId.isEmpty => true // We have one now, true!
-      case Some(res) if !old.resolutionId.isEmpty => res != old.resolutionId.get // True if changed
-      case None if old.resolutionId.isEmpty => false // nothing and nothing, false
+    val resoChanged = ticket.resolution.id match {
+      case Some(res) if old.resolution.id.isEmpty => true // We have one now, true!
+      case Some(res) if !old.resolution.id.isEmpty => res != old.resolution.id.get // True if changed
+      case None if old.resolution.id.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val repChanged = ticket.reporterId match {
-      case x if x == old.reporterId => false
+    val assChanged = ticket.assigneeId match {
+      case Some(ass) if old.assigneeId.isEmpty => true // We have one now, true!
+      case Some(ass) if !old.assigneeId.isEmpty => ass != old.assigneeId.get // True if changed
+      case None if old.assigneeId.isEmpty => false // nothing and nothing, false
+      case _ => true // true otherwise!
+    }
+    val attChanged = ticket.attentionId match {
+      case Some(att) if old.attentionId.isEmpty => true // We have one now, true!
+      case Some(att) if !old.attentionId.isEmpty => att != old.attentionId.get // True if changed
+      case None if old.attentionId.isEmpty => false // nothing and nothing, false
+      case _ => true // true otherwise!
+    }
+    val repChanged = ticket.reporter.id match {
+      case x if x == old.reporter.id => false
       case _ => true
     }
-    val sevChanged = ticket.severityId match {
-      case x if x == old.severityId => false
+    val sevChanged = ticket.severity.id match {
+      case x if x == old.severity.id => false
       case _ => true
     }
-    val statChanged = ticket.statusId match {
-      case old.statusId => false
+    val statChanged = ticket.status.id match {
+      case old.status.id => false
       case _ => true
     }
-    val typeChanged = ticket.typeId match {
-      case old.typeId => false
+    val typeChanged = ticket.ttype.id match {
+      case old.ttype.id => false
       case _ => true
     }
     val summChanged = ticket.summary match {
@@ -459,42 +527,48 @@ object SearchModel {
       "ticket_id"         -> JsNumber(ticket.id.get),
       "user_id"           -> JsNumber(userId),
       "user_realname"     -> JsString(userRealName),
-      "project_id"        -> JsNumber(ticket.projectId),
-      "old_project_id"    -> JsNumber(old.projectId),
-      "project_name"      -> JsString(ticket.projectName),
-      "old_project_name"  -> JsString(old.projectName),
+      "project_id"        -> JsNumber(ticket.project.id),
+      "old_project_id"    -> JsNumber(old.project.id),
+      "project_name"      -> JsString(ticket.project.name),
+      "old_project_name"  -> JsString(old.project.name),
       "project_changed"   -> JsBoolean(projChanged),
-      "priority_id"       -> JsNumber(ticket.priorityId),
-      "old_priority_id"   -> JsNumber(old.priorityId),
-      "priority_name"     -> JsString(ticket.priorityName),
-      "old_priority_name" -> JsString(old.priorityName),
+      "priority_id"       -> JsNumber(ticket.priority.id),
+      "old_priority_id"   -> JsNumber(old.priority.id),
+      "priority_name"     -> JsString(ticket.priority.name),
+      "old_priority_name" -> JsString(old.priority.name),
       "priorityChanged"   -> JsBoolean(prioChanged),
       // "resolution_id"     -> JsNumber(ticket.resolutionId.getOrElse("")), XXX
       // "old_resolution_id" -> JsNumber(old.resolutionId.getOrElse("")), XXX
-      "resolution_name"   -> JsString(ticket.resolutionName.getOrElse("")),
-      "old_resolution_name" -> JsString(old.resolutionName.getOrElse("")),
+      "resolution_name"   -> JsString(ticket.resolution.name.getOrElse("")),
+      "old_resolution_name" -> JsString(old.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString, XXX
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""), XXX
-      "reporter_id"       -> JsNumber(ticket.reporterId),
-      "old_reporter_id"   -> JsNumber(old.reporterId),
-      "reporter_name"     -> JsString(ticket.reporterName),
-      "old_reporter_name" -> JsString(old.reporterName),
+      "assignee_id"       -> JsNumber(ticket.assigneeId.get),
+      // "assignee_name"     -> JsString(ticket.assigneeName),
+      "assignee_changed"  -> JsBoolean(assChanged),
+      "attention_id"      -> JsNumber(ticket.attentionId.get),
+      // "attention_name"    -> JsString(ticket.assigneeName),
+      "attention_changed" -> JsBoolean(attChanged),
+      "reporter_id"       -> JsNumber(ticket.reporter.id),
+      "old_reporter_id"   -> JsNumber(old.reporter.id),
+      "reporter_name"     -> JsString(ticket.reporter.name),
+      "old_reporter_name" -> JsString(old.reporter.name),
       "reporter_changed"  -> JsBoolean(repChanged),
-      "severity_id"       -> JsNumber(ticket.severityId),
-      "old_severity_id"   -> JsNumber(old.severityId),
-      "severity_name"     -> JsString(ticket.severityName),
-      "old_severity_name" -> JsString(old.severityName),
+      "severity_id"       -> JsNumber(ticket.severity.id),
+      "old_severity_id"   -> JsNumber(old.severity.id),
+      "severity_name"     -> JsString(ticket.severity.name),
+      "old_severity_name" -> JsString(old.severity.name),
       "severity_changed"  -> JsBoolean(sevChanged),
-      "status_id"         -> JsNumber(ticket.statusId),
-      "old_status_id"     -> JsNumber(old.statusId),
-      "status_name"       -> JsString(ticket.statusName),
-      "old_status_name"   -> JsString(old.statusName),
+      "status_id"         -> JsNumber(ticket.status.id),
+      "old_status_id"     -> JsNumber(old.status.id),
+      "status_name"       -> JsString(ticket.status.name),
+      "old_status_name"   -> JsString(old.status.name),
       "status_changed"    -> JsBoolean(statChanged),
-      "type_id"           -> JsNumber(ticket.typeId),
-      "old_type_id"       -> JsNumber(old.typeId),
-      "type_name"         -> JsString(ticket.typeName),
-      "old_type_name"     -> JsString(old.typeName),
+      "type_id"           -> JsNumber(ticket.ttype.id),
+      "old_type_id"       -> JsNumber(old.ttype.id),
+      "type_name"         -> JsString(ticket.ttype.name),
+      "old_type_name"     -> JsString(old.ttype.name),
       "type_changed"      -> JsBoolean(typeChanged),
       "summary"           -> JsString(ticket.summary),
       "old_summary"       -> JsString(old.summary),

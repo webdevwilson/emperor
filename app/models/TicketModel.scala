@@ -39,22 +39,24 @@ case class EditTicket(
   description: Option[String]
 )
 
+// XXX assignee and attention name
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, reporterId: Long, reporterName: String,
-  projectId: Long, projectName: String,  priorityId: Long,
-  priorityName: String, resolutionId: Option[Long], resolutionName: Option[String],
+  id: Pk[Long] = NotAssigned, reporter: TicketForThing,
+  assigneeId: Option[Long], attentionId: Option[Long],
+  project: TicketForThing,  priority: TicketForThing,
+  resolution: TicketForOptThing,
   proposedResolutionId: Option[Long], // proposedResolutionName: Option[String],
-  severityId: Long, severityName: String, workflowStatusId: Long, statusId: Long,
-  statusName: String, typeId: Long, typeName: String, position: Option[Long],
+  severity: TicketForThing, workflowStatusId: Long, status: TicketForThing,
+  ttype: TicketForThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: Date
 )
 
 case class Ticket(
-  id: Pk[Long] = NotAssigned, reporterId: Long, projectId: Long,
-  priorityId: Long, resolutionId: Option[Long],
-  proposedResolutionId: Option[Long], severityId: Long, statusId: Long,
-  typeId: Long, position: Option[Long], summary: String,
-  description: Option[String], dateCreated: Date
+  id: Pk[Long] = NotAssigned, reporterId: Long, assigneeId: Long,
+  attentionId: Long, projectId: Long, priorityId: Long,
+  resolutionId: Option[Long], proposedResolutionId: Option[Long],
+  severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
+  summary: String, description: Option[String], dateCreated: Date
 )
 
 case class TicketForThing(
@@ -95,6 +97,8 @@ object TicketModel {
   val ticket = {
     get[Pk[Long]]("id") ~
     get[Long]("reporter_id") ~
+    get[Long]("assignee_id") ~
+    get[Long]("attention_id") ~
     get[Long]("project_id") ~
     get[Long]("priority_id") ~
     get[Option[Long]]("resolution_id") ~
@@ -106,8 +110,22 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[Date]("date_created") map {
-      case id~reporterId~projectId~priorityId~resolutionId~proposedResolutionId~severityId~statusId~typeId~position~summary~description~dateCreated => Ticket(
-        id, reporterId, projectId, priorityId, resolutionId, proposedResolutionId, severityId, statusId, typeId, position, summary, description, dateCreated
+      case id~repId~assId~attId~projId~priId~resId~propResId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
+        id = id,
+        reporterId = repId,
+        assigneeId = assId,
+        attentionId = attId,
+        projectId = projId,
+        priorityId = priId,
+        resolutionId = resId,
+        proposedResolutionId = propResId,
+        severityId = sevId,
+        statusId = statId,
+        typeId = typeId,
+        position = position,
+        summary = summary,
+        description = description,
+        dateCreated = dateCreated
       )
     }
   }
@@ -144,6 +162,8 @@ object TicketModel {
     get[Pk[Long]]("tickets.id") ~
     get[Long]("tickets.reporter_id") ~
     get[String]("users.realname") ~
+    get[Option[Long]]("ticket.assigneeId") ~
+    get[Option[Long]]("ticket.attentionId") ~
     get[Long]("tickets.project_id") ~
     get[String]("projects.name") ~
     get[Long]("tickets.priority_id") ~
@@ -162,25 +182,20 @@ object TicketModel {
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") ~
     get[Date]("tickets.date_created") map {
-      case id~repId~repName~projectId~projectName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
+      case id~repId~repName~assId~attId~projectId~projectName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
-          reporterId = repId,
-          reporterName = repName,
-          projectId = projectId,
-          projectName = projectName,
-          priorityId = priId,
-          priorityName = priName,
-          resolutionId = resId,
-          resolutionName = resName,
+          reporter = TicketForThing(repId, repName),
+          assigneeId = assId,
+          attentionId = attId,
+          project = TicketForThing(projectId, projectName),
+          priority = TicketForThing(priId, priName),
+          resolution = TicketForOptThing(resId, resName),
           proposedResolutionId = propResId,
-          severityId = sevId,
-          severityName = sevName,
+          severity = TicketForThing(sevId, sevName),
           workflowStatusId = workflowStatusId,
-          statusId = statusId,
-          statusName = statusName,
-          typeId = typeId,
-          typeName = typeName,
+          status = TicketForThing(statusId, statusName),
+          ttype = TicketForThing(typeId, typeName),
           position = position,
           summary = summary,
           description = description,
@@ -412,14 +427,14 @@ object TicketModel {
       val cid = insertHistoryQuery.on(
         'user_id      -> userId,
         'ticket_id    -> id,
-        'project_id   -> oldTicket.projectId,
-        'priority_id  -> oldTicket.priorityId,
-        'resolution_id -> oldTicket.resolutionId,
+        'project_id   -> oldTicket.project.id,
+        'priority_id  -> oldTicket.priority.id,
+        'resolution_id -> oldTicket.resolution.id,
         'proposed_resolution_id -> oldTicket.proposedResolutionId,
-        'reporter_id  -> oldTicket.reporterId,
-        'severity_id  -> oldTicket.severityId,
-        'status_id    -> oldTicket.statusId,
-        'type_id      -> oldTicket.typeId,
+        'reporter_id  -> oldTicket.reporter.id,
+        'severity_id  -> oldTicket.severity.id,
+        'status_id    -> oldTicket.status.id,
+        'type_id      -> oldTicket.ttype.id,
         'description  -> oldTicket.description,
         'position     -> oldTicket.position,
         'summary      -> oldTicket.summary
@@ -429,7 +444,7 @@ object TicketModel {
         'id                     -> id,
         'reporter_id            -> ticket.reporterId,
         'priority_id            -> ticket.priorityId,
-        'status_id              -> statusId.getOrElse(oldTicket.statusId),
+        'status_id              -> statusId.getOrElse(oldTicket.status.id),
         'resolution_id          -> ticket.resolutionId,
         'proposed_resolution_id -> ticket.proposedResolutionId,
         'severity_id            -> ticket.severityId,
