@@ -141,6 +141,7 @@ role.name=Name
 search.placeholder=Search
 search.facet.priority=Priority
 search.facet.project=Project
+search.facet.resolution=Resolution
 search.facet.severity=Severity
 search.facet.status=Status
 search.facet.type=Type
@@ -228,10 +229,11 @@ user.username=Username
 ROLE_QA=QA
 ROLE_DEVELOPER=Developer
 
+TICK_LINK_BLOCKS=Blocks
+
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix
-
-TICK_LINK_BLOCKS=Blocks
+TICK_RESO_UNRESOLVED=Unresolved
 
 TICK_SEV_DIFFICULT=Difficult
 TICK_SEV_NORMAL=Normal

@@ -296,15 +296,14 @@ object TicketModel {
       val tick = this.getById(ticketId).get
       val newTick = tick.copy(resolutionId = Some(resolutionId))
       
-      this.update(userId = userId, id = ticketId, ticket = newTick)
+      this.update(userId = userId, id = ticketId, ticket = newTick, resolutionId = Some(resolutionId))
     }
   }
   
   def unresolve(ticketId: Long, userId: Long) = {
       val tick = this.getById(ticketId).get
-      val newTick = tick.copy(resolutionId = None)
       
-      this.update(userId = userId, id = ticketId, ticket = newTick)
+      this.update(userId = userId, id = ticketId, ticket = tick)
   }
 
   def changeStatus(ticketId: Long, newStatusId: Long, userId: Long) = {
@@ -435,7 +434,7 @@ object TicketModel {
       }
   }
   
-  def update(userId: Long, id: Long, ticket: EditTicket, statusId : Option[Long] = None) = {
+  def update(userId: Long, id: Long, ticket: EditTicket, resolutionId : Option[Long] = None, statusId : Option[Long] = None) = {
 
     val user = UserModel.getById(userId).get
 
@@ -471,7 +470,7 @@ object TicketModel {
         'attention_id           -> ticket.attentionId,
         'priority_id            -> ticket.priorityId,
         'status_id              -> statusId.getOrElse(oldTicket.status.id),
-        'resolution_id          -> ticket.resolutionId,
+        'resolution_id          -> resolutionId.getOrElse(oldTicket.resolution.id),
         'proposed_resolution_id -> ticket.proposedResolutionId,
         'severity_id            -> ticket.severityId,
         'type_id                -> ticket.typeId,
@@ -487,6 +486,9 @@ object TicketModel {
 
       this.getFullById(id).get      
     }
-    SearchModel.indexHistory(cid.get, userId, user.realName, newTicket, oldTicket)
+    SearchModel.indexHistory(
+      changeId = cid.get, userId = userId, userRealName = user.realName,
+      ticket = newTicket, old = oldTicket
+    )
   }
 }

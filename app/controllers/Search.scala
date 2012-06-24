@@ -12,10 +12,11 @@ object Search extends Controller with Secured {
 
     val filters = request.queryString filterKeys { key =>
       key match {
-        case "severity" => true
-        case "type"     => true
-        case "priority" => true
-        case _ => false // Nothing else is useful as a filter
+        case "priority"   => true
+        case "resolution" => true
+        case "severity"   => true
+        case "type"       => true
+        case _            => false // Nothing else is useful as a filter
       }
     }
 

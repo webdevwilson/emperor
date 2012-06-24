@@ -436,23 +436,29 @@ object SearchModel {
       "user_id"       -> JsNumber(comment.userId),
       "user_realname" -> JsString(comment.realName),
       "content"       -> JsString(comment.content),
-      "date_created"  -> JsString(dateFormatter.format(new Date()))
+      "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
     )
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
   }
   
   def indexTicket(ticket: FullTicket) {
 
+    val resId = ticket.resolution.id match {
+      case Some(id)   => JsNumber(id)
+      case None       => JsNull
+    }
+    val resName = ticket.resolution.name match {
+      case Some(name) => JsString(name)
+      case None       => JsString("TICK_RESO_UNRESOLVED")
+    }
+
     val tdoc: Map[String,JsValue] = Map(
       "project_id"      -> JsNumber(ticket.project.id),
       "project_name"    -> JsString(ticket.project.name),
       "priority_id"     -> JsNumber(ticket.priority.id),
       "priority_name"   -> JsString(ticket.priority.name),
-      "resolution_id"   -> {ticket.resolution.id match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }},
-      "resolution_name" -> JsString(ticket.resolution.name.getOrElse("")),
+      "resolution_id"   -> resId,
+      "resolution_name" -> resName,
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
       "reporter_id"     -> JsNumber(ticket.reporter.id),
@@ -475,12 +481,13 @@ object SearchModel {
       "type_name"       -> JsString(ticket.ttype.name),
       "summary"         -> JsString(ticket.summary),
       "description"     -> JsString(ticket.description.getOrElse("")),
-      "date_created"    -> JsString(dateFormatter.format(new Date()))
+      "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
     )
 
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
+  // XXX This should take the change as it's argument and retrieve the other bits itself.
   def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
     
     val projChanged = ticket.project.id match {
@@ -550,9 +557,15 @@ object SearchModel {
       "priority_name"     -> JsString(ticket.priority.name),
       "old_priority_name" -> JsString(old.priority.name),
       "priorityChanged"   -> JsBoolean(prioChanged),
-      // "resolution_id"     -> JsNumber(ticket.resolutionId.getOrElse("")), XXX
+      "resolution_id"     -> { ticket.resolution.id match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
       // "old_resolution_id" -> JsNumber(old.resolutionId.getOrElse("")), XXX
-      "resolution_name"   -> JsString(ticket.resolution.name.getOrElse("")),
+      "resolution_name"   -> { ticket.resolution.name match {
+        case Some(name) => JsString(name)
+        case None       => JsString("TICK_RESO_UNRESOLVED")
+      } },
       "old_resolution_name" -> JsString(old.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString, XXX
@@ -719,6 +732,7 @@ object SearchModel {
       query = actualQuery,
       indices = Seq("tickets"),
       facets = Seq(
+        termsFacet("resolution").field("resolution_name"),
         termsFacet("type").field("type_name"),
         termsFacet("project").field("project_name"),
         termsFacet("priority").field("priority_name"),
