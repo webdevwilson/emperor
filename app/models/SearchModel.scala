@@ -590,6 +590,14 @@ object SearchModel {
     indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
   }
 
+  def reIndex {
+    TicketModel.getAllFull.foreach { ticket =>
+      indexTicket(ticket)
+    }
+      
+    // XXX Need history!
+  }
+
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
     
     // This shouldn't have to live here. It annoys me. Surely there's a better

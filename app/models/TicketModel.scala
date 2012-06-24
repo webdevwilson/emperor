@@ -79,6 +79,7 @@ case class TicketHistory(
 object TicketModel {
 
   val allQuery = SQL("SELECT * FROM tickets")
+  val allQueryFull = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
   // XX Missing proposed resolution :( due to lack of aliases
   val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.id={id}")
@@ -376,6 +377,13 @@ object TicketModel {
     }
   }
 
+  def getAllFull: List[FullTicket] = {
+      
+    DB.withConnection { implicit conn =>
+      allQueryFull.as(fullTicket *)
+    }
+  }
+
   def getOpenCountForProject(projectId: Long) : Long = {
     
     DB.withConnection { implicit conn =>
@@ -457,10 +465,10 @@ object TicketModel {
       cid
     }
     
-    DB.withConnection { implicit conn =>
+    val newTicket = DB.withConnection { implicit conn =>
 
-      val newTicket = this.getFullById(id).get      
-      SearchModel.indexHistory(cid.get, userId, user.realName, newTicket, oldTicket)
+      this.getFullById(id).get      
     }
+    SearchModel.indexHistory(cid.get, userId, user.realName, newTicket, oldTicket)
   }
 }
