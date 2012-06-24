@@ -4,6 +4,8 @@ admin.title=Administration
 
 admin.people=People
 
+admin.general=XXX General
+
 admin.group.add=Add Group
 admin.group.edit=Edit Group
 admin.group.list=Groups
@@ -15,6 +17,9 @@ admin.group.edit.success=Group Updated
 
 admin.projects=Projects
 admin.project.menu.list=Projects
+
+admin.reindex=XXX Reindex Search
+admin.reindex.success=Search Reindex Successfull
 
 admin.role.add=Add Role
 
@@ -147,6 +152,8 @@ ticket.add.failure=Error Creating Ticket XXX
 ticket.advance=Advance to {0}
 ticket.advance.confirm=Advance
 ticket.advance.end=At End
+ticket.assignee=Assignee
+ticket.attention=Attention
 ticket.comment=Comment
 ticket.comment.added=Comment Added
 ticket.comment.attribution.postfix=on {0}
@@ -190,6 +197,7 @@ ticket.summary=Summary
 ticket.severity=Severity
 ticket.status=Status
 ticket.type=Type
+ticket.unassigned=Nobody
 ticket.unresolve=Un-Resolve Ticket
 ticket.unresolve.summary=You are un-resolving ticket {0}.
 ticket.with.id=Ticket {0}

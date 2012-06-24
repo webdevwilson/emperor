@@ -236,6 +236,8 @@ CREATE TABLE ticket_history (
     PRIMARY KEY(id),
     FOREIGN KEY (ticket_id) REFERENCES tickets(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (assignee_id) REFERENCES users(id),
+    FOREIGN KEY (attention_id) REFERENCES users(id),
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),

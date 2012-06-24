@@ -51,6 +51,12 @@
   	      @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span> XXX Link</li>
   	      }
+  	      @if(change.getSource.get("assignee_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.assignee") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_assignee_id").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("assignee_id").asInstanceOf[String])</span> XXX Name</li>
+  	      }
+  	      @if(change.getSource.get("attention_changed").asInstanceOf[Boolean]) {
+            <li>@Messages("ticket.attention") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_attention_id").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("attention_id").asInstanceOf[String])</span> XXX Name</li>
+  	      }
   	      @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
             <li>
              @Messages("ticket.resolution") @Messages("ticket.history.change.from")

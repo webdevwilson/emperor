@@ -8,6 +8,7 @@ GET     /                               controllers.Core.index
 GET     /group/startswith               controllers.Group.startsWith
 
 GET     /admin                          controllers.Admin.index
+GET     /admin/reindex                  controllers.Admin.reindex
 
 GET     /admin/group                    controllers.admin.Group.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/group/create             controllers.admin.Group.create
@@ -108,9 +109,6 @@ POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: Long)
 POST    /ticket/status/:id              controllers.Ticket.status(id: Long)
 GET     /ticket/unresolve/:id           controllers.Ticket.unresolve(id: Long)
 POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: Long)
-
-# GET     /ticket/comments/:id            controllers.Ticket.comments(id: Long, page: Int ?= 1, count: Int ?= 10, query: String = "*")
-# GET     /ticket/history/:id             controllers.Ticket.history(id: Long, page: Int ?= 1, count: Int ?= 10, query: String = "*")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                 controllers.Assets.at(path="/public", file)

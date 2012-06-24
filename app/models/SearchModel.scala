@@ -457,6 +457,16 @@ object SearchModel {
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
       "reporter_id"     -> JsNumber(ticket.reporter.id),
       "reporter_name"   -> JsString(ticket.reporter.name),
+      "assignee_id"     -> { ticket.assigneeId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
+      // XXX assignee name
+      "attention_id"     -> { ticket.attentionId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
+      // XXX attention name
       "severity_id"     -> JsNumber(ticket.severity.id),
       "severity_name"   -> JsString(ticket.severity.name),
       "status_id"       -> JsNumber(ticket.status.id),

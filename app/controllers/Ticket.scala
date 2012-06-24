@@ -43,7 +43,8 @@ object Ticket extends Controller with Secured {
 
   val initialTicketForm = Form(
     mapping(
-      "user_id"     -> longNumber,
+      "reporter_id" -> longNumber,
+      "assignee_id" -> optional(longNumber),
       "project_id"  -> longNumber,
       "priority_id" -> longNumber,
       "severity_id" -> longNumber,
@@ -58,6 +59,8 @@ object Ticket extends Controller with Secured {
     mapping(
       "id"            -> ignored(NotAssigned:Pk[Long]),
       "reporter_id"   -> longNumber,
+      "assignee_id"   -> optional(longNumber),
+      "attention_id"  -> optional(longNumber),
       "project_id"    -> longNumber,
       "priority_id"   -> longNumber,
       "resolution_id" -> optional(longNumber),
@@ -196,8 +199,9 @@ object Ticket extends Controller with Secured {
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val assignees = ("" -> Messages("ticket.unassigned")) +: users
 
-        BadRequest(views.html.ticket.create(errors, users, projs, ttypes, prios, sevs))
+        BadRequest(views.html.ticket.create(errors, users, assignees, projs, ttypes, prios, sevs))
       },
       value => {
         val ticket = TicketModel.create(value)
@@ -234,8 +238,9 @@ object Ticket extends Controller with Secured {
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val assignees = ("" -> Messages("ticket.unassigned")) +: users
 
-    Ok(views.html.ticket.create(initialTicketForm, users, projs, ttypes, prios, sevs)(request))
+    Ok(views.html.ticket.create(initialTicketForm, users, assignees, projs, ttypes, prios, sevs)(request))
   }
 
   def edit(ticketId: Long) = IsAuthenticated { implicit request =>
@@ -247,9 +252,11 @@ object Ticket extends Controller with Secured {
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val assignees = ("" -> Messages("ticket.unassigned")) +: users
+    val attentions = ("" -> Messages("ticket.unassigned")) +: users
 
     ticket match {
-      case Some(value) => Ok(views.html.ticket.edit(ticketId, ticketForm.fill(value), users, projs, ttypes, prios, sevs)(request))
+      case Some(value) => Ok(views.html.ticket.edit(ticketId, ticketForm.fill(value), users, assignees, attentions, projs, ttypes, prios, sevs)(request))
       case None => NotFound
     }
   }
@@ -345,8 +352,10 @@ object Ticket extends Controller with Secured {
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val assignees = ("" -> Messages("ticket.unassigned")) +: users
+        val attentions = ("" -> Messages("ticket.unassigned")) +: users
 
-        BadRequest(views.html.ticket.edit(ticketId, errors, users, projs, ttypes, prios, sevs))
+        BadRequest(views.html.ticket.edit(ticketId, errors, users, assignees, attentions, projs, ttypes, prios, sevs))
       },
       value => {
         TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
