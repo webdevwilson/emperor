@@ -591,10 +591,19 @@ object SearchModel {
   }
 
   def reIndex {
+    // Nix all the existing documents
+    indexer.deleteByQuery(
+      indices = Seq(ticketIndex, ticketHistoryIndex, ticketCommentIndex),
+      types = Seq(ticketType, ticketHistoryType, ticketCommentType)
+    )
+    // Reindex all tickets
     TicketModel.getAllFull.foreach { ticket =>
       indexTicket(ticket)
     }
-      
+    TicketModel.getAllComments.foreach { comment =>
+      indexComment(comment)
+    }
+
     // XXX Need history!
   }
 

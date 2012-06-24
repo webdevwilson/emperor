@@ -78,8 +78,9 @@ case class TicketHistory(
 
 object TicketModel {
 
+  val allCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
-  val allQueryFull = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id")
+  val allFullQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
   // XX Missing proposed resolution :( due to lack of aliases
   val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.id={id}")
@@ -377,10 +378,17 @@ object TicketModel {
     }
   }
 
+  def getAllComments: List[Comment] = {
+      
+    DB.withConnection { implicit conn =>
+      allCommentsQuery.as(comment *)
+    }
+  }
+
   def getAllFull: List[FullTicket] = {
       
     DB.withConnection { implicit conn =>
-      allQueryFull.as(fullTicket *)
+      allFullQuery.as(fullTicket *)
     }
   }
 
