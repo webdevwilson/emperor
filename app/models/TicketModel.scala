@@ -467,7 +467,7 @@ object TicketModel {
       updateQuery.on(
         'id                     -> id,
         'reporter_id            -> ticket.reporterId,
-        'assigne_id             -> ticket.assigneeId,
+        'assignee_id            -> ticket.assigneeId,
         'attention_id           -> ticket.attentionId,
         'priority_id            -> ticket.priorityId,
         'status_id              -> statusId.getOrElse(oldTicket.status.id),
