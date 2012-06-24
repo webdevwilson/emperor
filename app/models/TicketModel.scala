@@ -162,8 +162,8 @@ object TicketModel {
     get[Pk[Long]]("tickets.id") ~
     get[Long]("tickets.reporter_id") ~
     get[String]("users.realname") ~
-    get[Option[Long]]("ticket.assigneeId") ~
-    get[Option[Long]]("ticket.attentionId") ~
+    get[Option[Long]]("tickets.assignee_id") ~
+    get[Option[Long]]("tickets.attention_id") ~
     get[Long]("tickets.project_id") ~
     get[String]("projects.name") ~
     get[Long]("tickets.priority_id") ~
@@ -182,13 +182,13 @@ object TicketModel {
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") ~
     get[Date]("tickets.date_created") map {
-      case id~repId~repName~assId~attId~projectId~projectName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
+      case id~repId~repName~assId~attId~projId~projName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
           reporter = TicketForThing(repId, repName),
           assigneeId = assId,
           attentionId = attId,
-          project = TicketForThing(projectId, projectName),
+          project = TicketForThing(projId, projName),
           priority = TicketForThing(priId, priName),
           resolution = TicketForOptThing(resId, resName),
           proposedResolutionId = propResId,

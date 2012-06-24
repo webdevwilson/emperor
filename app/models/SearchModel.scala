@@ -448,7 +448,10 @@ object SearchModel {
       "project_name"    -> JsString(ticket.project.name),
       "priority_id"     -> JsNumber(ticket.priority.id),
       "priority_name"   -> JsString(ticket.priority.name),
-      "resolution_id"   -> JsNumber(ticket.resolution.id.get),
+      "resolution_id"   -> {ticket.resolution.id match {
+        case Some(id)   => JsNumber(id)
+        case None       => JsNull
+      }},
       "resolution_name" -> JsString(ticket.resolution.name.getOrElse("")),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
@@ -544,10 +547,16 @@ object SearchModel {
       "resolution_changed"-> JsBoolean(resoChanged),
       // "proposed_resolution_id" -> ticket.proposedResolutionId.toString, XXX
       // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""), XXX
-      "assignee_id"       -> JsNumber(ticket.assigneeId.get),
+      "assignee_id"       -> { ticket.assigneeId match {
+        case Some(assId)=> JsNumber(assId)
+        case None       => JsNull
+      } },
       // "assignee_name"     -> JsString(ticket.assigneeName),
       "assignee_changed"  -> JsBoolean(assChanged),
-      "attention_id"      -> JsNumber(ticket.attentionId.get),
+      "attention_id"      -> { ticket.attentionId match {
+        case Some(attId) => JsNumber(attId)
+        case None        => JsNull
+      } },
       // "attention_name"    -> JsString(ticket.assigneeName),
       "attention_changed" -> JsBoolean(attChanged),
       "reporter_id"       -> JsNumber(ticket.reporter.id),
