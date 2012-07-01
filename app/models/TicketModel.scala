@@ -423,74 +423,115 @@ object TicketModel {
       this.getFullById(id).get
     }
 
-    val cid = DB.withTransaction { implicit conn =>
+    var changed = false
+    if(oldTicket.project.id != ticket.projectId) {
+      changed = true
+    }
+    if(!changed && (oldTicket.priority.id != ticket.priorityId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.resolution.id != ticket.resolutionId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.proposedResolutionId != ticket.proposedResolutionId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.reporter.id != ticket.reporterId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.assigneeId != ticket.assigneeId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.attentionId != ticket.attentionId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.severity.id != ticket.severityId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.status.id != statusId.getOrElse(oldTicket.status.id))) {
+      changed = true
+    }
+    if(!changed && (oldTicket.ttype.id != ticket.typeId)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.description != ticket.description)) {
+      changed = true
+    }
+    if(!changed && (oldTicket.summary != ticket.summary)) {
+      changed = true
+    }
+
+    if(changed) {
+      // Only record something if a change was made.
+      val cid = DB.withTransaction { implicit conn =>
+        
+        // XXX needs to NOT create an entry if there are no differences!
+        val cid = insertHistoryQuery.on(
+          'user_id      -> userId,
+          'ticket_id    -> id,
+          'old_project_id   -> oldTicket.project.id,
+          'project_id       -> ticket.projectId,
+          'old_priority_id  -> oldTicket.priority.id,
+          'priority_id      -> ticket.priorityId,
+          'old_resolution_id -> oldTicket.resolution.id,
+          'resolution_id    -> ticket.resolutionId,
+          'old_proposed_resolution_id -> oldTicket.proposedResolutionId,
+          'proposed_resolution_id -> ticket.proposedResolutionId,
+          'old_reporter_id  -> oldTicket.reporter.id,
+          'reporter_id      -> ticket.reporterId,
+          'old_assignee_id  -> oldTicket.assigneeId,
+          'assignee_id      -> ticket.assigneeId,
+          'old_attention_id -> oldTicket.attentionId,
+          'attention_id     -> ticket.attentionId,
+          'old_severity_id  -> oldTicket.severity.id,
+          'severity_id      -> ticket.severityId,
+          'old_status_id    -> oldTicket.status.id,
+          'status_id        -> statusId.getOrElse(oldTicket.status.id),
+          'old_type_id      -> oldTicket.ttype.id,
+          'type_id          -> ticket.typeId,
+          'old_description  -> oldTicket.description,
+          'description      -> ticket.description,
+          'old_position     -> oldTicket.position,
+          'position         -> ticket.position,
+          'old_summary      -> oldTicket.summary,
+          'summary          -> ticket.summary
+        ).executeInsert()
+
+        updateQuery.on(
+          'id                     -> id,
+          'reporter_id            -> ticket.reporterId,
+          'assignee_id            -> ticket.assigneeId,
+          'attention_id           -> ticket.attentionId,
+          'priority_id            -> ticket.priorityId,
+          'status_id              -> statusId.getOrElse(oldTicket.status.id),
+          'resolution_id          -> resolutionId.getOrElse(oldTicket.resolution.id),
+          'proposed_resolution_id -> ticket.proposedResolutionId,
+          'severity_id            -> ticket.severityId,
+          'type_id                -> ticket.typeId,
+          'description            -> ticket.description,
+          'position               -> ticket.position,
+          'summary                -> ticket.summary
+        ).executeUpdate
+
+        cid
+      }
+
       
-      // XXX needs to NOT create an entry if there are no differences!
-      val cid = insertHistoryQuery.on(
-        'user_id      -> userId,
-        'ticket_id    -> id,
-        'old_project_id   -> oldTicket.project.id,
-        'project_id       -> ticket.projectId,
-        'old_priority_id  -> oldTicket.priority.id,
-        'priority_id      -> ticket.priorityId,
-        'old_resolution_id -> oldTicket.resolution.id,
-        'resolution_id    -> ticket.resolutionId,
-        'old_proposed_resolution_id -> oldTicket.proposedResolutionId,
-        'proposed_resolution_id -> ticket.resolutionId,
-        'old_reporter_id  -> oldTicket.reporter.id,
-        'reporter_id      -> ticket.reporterId,
-        'old_assignee_id  -> oldTicket.assigneeId,
-        'assignee_id      -> ticket.assigneeId,
-        'old_attention_id -> oldTicket.attentionId,
-        'attention_id     -> ticket.attentionId,
-        'old_severity_id  -> oldTicket.severity.id,
-        'severity_id      -> ticket.severityId,
-        'old_status_id    -> oldTicket.status.id,
-        'status_id        -> statusId.getOrElse(oldTicket.status.id),
-        'old_type_id      -> oldTicket.ttype.id,
-        'type_id          -> ticket.typeId,
-        'old_description  -> oldTicket.description,
-        'description      -> ticket.description,
-        'old_position     -> oldTicket.position,
-        'position         -> ticket.position,
-        'old_summary      -> oldTicket.summary,
-        'summary          -> ticket.summary
-      ).executeInsert()
+      val newTicket = DB.withConnection { implicit conn =>
+        getFullById(id).get      
+      }
 
-      updateQuery.on(
-        'id                     -> id,
-        'reporter_id            -> ticket.reporterId,
-        'assignee_id            -> ticket.assigneeId,
-        'attention_id           -> ticket.attentionId,
-        'priority_id            -> ticket.priorityId,
-        'status_id              -> statusId.getOrElse(oldTicket.status.id),
-        'resolution_id          -> resolutionId.getOrElse(oldTicket.resolution.id),
-        'proposed_resolution_id -> ticket.proposedResolutionId,
-        'severity_id            -> ticket.severityId,
-        'type_id                -> ticket.typeId,
-        'description            -> ticket.description,
-        'position               -> ticket.position,
-        'summary                -> ticket.summary
-      ).executeUpdate
+      val change = DB.withConnection { implicit conn =>
+        getHistoryById(id = cid.get).get
+      }
 
-      cid
+      val fullHistory = TicketFullHistory(
+        id = change.id, userId = change.userId, ticketId = change.ticketId,
+        oldTicket = oldTicket, newTicket = newTicket,
+        dateOccurred = change.dateOccurred
+      )
+
+      SearchModel.indexHistory(history = fullHistory)
     }
-
-    
-    val newTicket = DB.withConnection { implicit conn =>
-      getFullById(id).get      
-    }
-
-    val change = DB.withConnection { implicit conn =>
-      getHistoryById(id = cid.get).get
-    }
-
-    val fullHistory = TicketFullHistory(
-      id = change.id, userId = change.userId, ticketId = change.ticketId,
-      oldTicket = oldTicket, newTicket = newTicket,
-      dateOccurred = change.dateOccurred
-    )
-
-    SearchModel.indexHistory(history = fullHistory)
   }
 }
