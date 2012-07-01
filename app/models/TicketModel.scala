@@ -430,7 +430,7 @@ object TicketModel {
     if(!changed && (oldTicket.priority.id != ticket.priorityId)) {
       changed = true
     }
-    if(!changed && (oldTicket.resolution.id != ticket.resolutionId)) {
+    if(!changed && (oldTicket.resolution.id != resolutionId.getOrElse(oldTicket.resolution.id))) {
       changed = true
     }
     if(!changed && (oldTicket.proposedResolutionId != ticket.proposedResolutionId)) {
@@ -474,7 +474,7 @@ object TicketModel {
           'old_priority_id  -> oldTicket.priority.id,
           'priority_id      -> ticket.priorityId,
           'old_resolution_id -> oldTicket.resolution.id,
-          'resolution_id    -> ticket.resolutionId,
+          'resolution_id    -> resolutionId.getOrElse(oldTicket.resolution.id),
           'old_proposed_resolution_id -> oldTicket.proposedResolutionId,
           'proposed_resolution_id -> ticket.proposedResolutionId,
           'old_reporter_id  -> oldTicket.reporter.id,
