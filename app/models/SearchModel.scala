@@ -487,7 +487,6 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
   }
   
-  // XXX This should take the change as it's argument and retrieve the other bits itself.
   def indexHistory(history: TicketFullHistory) {
     
     val ticket = history.newTicket
@@ -626,6 +625,7 @@ object SearchModel {
     TicketModel.getAllFull.foreach { ticket =>
       indexTicket(ticket)
     }
+    // Reindex all ticket comments
     TicketModel.getAllComments.foreach { comment =>
       indexComment(comment)
     }

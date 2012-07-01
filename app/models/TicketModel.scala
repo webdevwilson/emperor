@@ -96,10 +96,10 @@ object TicketModel {
   val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
   val getOpenCountForWeekProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= DATE_SUB(UTC_DATE(), INTERVAL 1 WEEK)")
 
-  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, old_project_id, priority_id, old_priority_id, resolution_id, old_resolution_id, proposed_resolution_id, old_proposed_resolution_id, reporter_id, old_reporter_id, severity_id, old_severity_id, status_id, old_status_id, type_id, old_type_id, position, old_position, summary, old_summary, description, old_description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {priority_id}, {resolution_id}, {proposed_resolution_id}, {reporter_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val getHistoryByIdQuery = SQL("SELECT id, ticket_id, user_id, date_occurred FROM ticket_history WHERE id=?")
-  // val getHistoryOldTicketById = SQL("SELECT old_project_id, old_priority_id, old_resolution_id, old_proposed_resolution_id, old_assignee_id, old_attention_id, old_reporter_id, old_severity_id, old_status_id, old_type_id, old_position, old_summary, old_description FROM ticket_history WHERE id=?")
-  // val getHistoryNewTicketById = SQL("SELECT project_id, priority_id, resolution_id, proposed_resolution_id, assignee_id, attention_id, reporter_id, severity_id, status_id, type_id, position, summary, description FROM ticket_history WHERE id=?")
+  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, old_project_id, priority_id, old_priority_id, resolution_id, old_resolution_id, proposed_resolution_id, old_proposed_resolution_id, reporter_id, old_reporter_id, severity_id, old_severity_id, status_id, old_status_id, type_id, old_type_id, position, old_position, summary, old_summary, description, old_description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {old_project_id}, {priority_id}, {old_priority_id}, {resolution_id}, {old_resolution_id}, {proposed_resolution_id}, {old_proposed_resolution_id}, {reporter_id}, {old_reporter_id}, {severity_id}, {old_severity_id}, {status_id}, {old_status_id}, {type_id}, {old_type_id}, {position}, {old_position}, {summary}, {old_summary}, {description}, {old_description}, UTC_TIMESTAMP())")
+  val getHistoryByIdQuery = SQL("SELECT id, ticket_id, user_id, date_occurred FROM ticket_history WHERE id={id}")
+  // val getHistoryOldTicketById = SQL("SELECT old_project_id, old_priority_id, old_resolution_id, old_proposed_resolution_id, old_assignee_id, old_attention_id, old_reporter_id, old_severity_id, old_status_id, old_type_id, old_position, old_summary, old_description FROM ticket_history WHERE id={id}")
+  // val getHistoryNewTicketById = SQL("SELECT project_id, priority_id, resolution_id, proposed_resolution_id, assignee_id, attention_id, reporter_id, severity_id, status_id, type_id, position, summary, description FROM ticket_history WHERE id={id}")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -423,7 +423,7 @@ object TicketModel {
       this.getFullById(id).get
     }
 
-    val change = DB.withTransaction { implicit conn =>
+    val cid = DB.withTransaction { implicit conn =>
       
       // XXX needs to NOT create an entry if there are no differences!
       val cid = insertHistoryQuery.on(
@@ -473,13 +473,16 @@ object TicketModel {
         'summary                -> ticket.summary
       ).executeUpdate
 
-      // XXX Could fail?
-      getHistoryById(id = cid.get).get
+      cid
     }
+
     
     val newTicket = DB.withConnection { implicit conn =>
+      getFullById(id).get      
+    }
 
-      this.getFullById(id).get      
+    val change = DB.withConnection { implicit conn =>
+      getHistoryById(id = cid.get).get
     }
 
     val fullHistory = TicketFullHistory(
