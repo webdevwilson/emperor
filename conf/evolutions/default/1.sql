@@ -145,6 +145,7 @@ CREATE TABLE projects (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     pkey VARCHAR(16) NOT NULL UNIQUE,
+    sequence_current INT UNSIGNED NOT NULL DEFAULT 1,
     workflow_id INT UNSIGNED NOT NULL,
     date_created DATETIME NOT NULL,
     FOREIGN KEY (workflow_id) REFERENCES workflows(id),
@@ -166,6 +167,8 @@ CREATE TABLE project_role_users (
 
 CREATE TABLE tickets (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+    ticket_id VARCHAR(255) NOT NULL UNIQUE,
+    user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
     priority_id INT UNSIGNED NOT NULL,
     resolution_id INT UNSIGNED,
@@ -184,6 +187,7 @@ CREATE TABLE tickets (
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (assignee_id) REFERENCES users(id),
     FOREIGN KEY (attention_id) REFERENCES users(id),
     FOREIGN KEY (reporter_id) REFERENCES users(id),
@@ -200,7 +204,7 @@ CREATE TABLE ticket_links (
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(link_type_id) REFERENCES ticket_link_types(id),
-    FOREIGN KEY(parent_ticket_id) REFERENCES tickets(id),
+    FOREIGN KEY(parent_ticket_id) REFERENCES tickets(ticket_id),
     FOREIGN KEY(child_ticket_id) REFERENCES tickets(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
@@ -213,38 +217,6 @@ CREATE TABLE ticket_comments (
   PRIMARY KEY(id),
   FOREIGN KEY(ticket_id) REFERENCES tickets(id),
   FOREIGN KEY(user_id) REFERENCES users(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
-CREATE TABLE ticket_history (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    ticket_id INT UNSIGNED NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    project_id INT UNSIGNED NOT NULL,
-    priority_id INT UNSIGNED NOT NULL,
-    resolution_id INT UNSIGNED,
-    proposed_resolution_id INT UNSIGNED,
-    assignee_id INT UNSIGNED,
-    attention_id INT UNSIGNED,
-    reporter_id INT UNSIGNED NOT NULL,
-    severity_id INT UNSIGNED NOT NULL,
-    status_id INT UNSIGNED NOT NULL,
-    type_id INT UNSIGNED NOT NULL,
-    position INT,
-    summary VARCHAR(255) NOT NULL,
-    description TEXT,
-    date_occurred DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY (ticket_id) REFERENCES tickets(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (assignee_id) REFERENCES users(id),
-    FOREIGN KEY (attention_id) REFERENCES users(id),
-    FOREIGN KEY (project_id) REFERENCES projects(id),
-    FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
-    FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
-    FOREIGN KEY (reporter_id) REFERENCES users(id),
-    FOREIGN KEY (severity_id) REFERENCES ticket_severities(id),
-    FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
-    FOREIGN KEY (type_id) REFERENCES ticket_types(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE ticket_stacks (

@@ -16,6 +16,7 @@ object Project extends Controller with Secured {
     mapping(
       "id"  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id" -> longNumber,
+      "sequence_current" -> ignored(1.toLong),
       "name"-> nonEmptyText,
       "key" -> nonEmptyText, // XXX needs better checking, length, etc
       "date_created" -> ignored(new Date())

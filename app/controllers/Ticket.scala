@@ -57,7 +57,7 @@ object Ticket extends Controller with Secured {
 
   val ticketForm = Form(
     mapping(
-      "id"            -> ignored(NotAssigned:Pk[Long]),
+      "ticket_id"     -> text,
       "reporter_id"   -> longNumber,
       "assignee_id"   -> optional(longNumber),
       "attention_id"  -> optional(longNumber),
@@ -73,7 +73,7 @@ object Ticket extends Controller with Secured {
     )(models.EditTicket.apply)(models.EditTicket.unapply)
   )
 
-  def resolve(ticketId: Long) = IsAuthenticated { implicit request =>
+  def resolve(ticketId: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -85,7 +85,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def unresolve(ticketId: Long) = IsAuthenticated { implicit request =>
+  def unresolve(ticketId: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -95,7 +95,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def doResolve(ticketId: Long) = IsAuthenticated { implicit request =>
+  def doResolve(ticketId: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
     
@@ -116,7 +116,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def doUnResolve(ticketId: Long) = IsAuthenticated { implicit request =>
+  def doUnResolve(ticketId: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
     
@@ -138,7 +138,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def newStatus(ticketId: Long, statusId: Long) = IsAuthenticated { implicit request =>
+  def newStatus(ticketId: String, statusId: Long) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
     val newStatus = WorkflowModel.getStatusById(statusId)
@@ -158,7 +158,7 @@ object Ticket extends Controller with Secured {
 
   }
 
-  def status(ticketId: Long) = IsAuthenticated { implicit request =>
+  def status(ticketId: String) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -204,10 +204,10 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.create(errors, users, assignees, projs, ttypes, prios, sevs))
       },
       value => {
-        val ticket = TicketModel.create(value)
+        val ticket = TicketModel.create(userId = request.session.get("userId").get.toLong, ticket = value)
         ticket match {
           case Some(t) => {
-            SearchModel.indexTicket(TicketModel.getFullById(t.id.get).get) // XXX actors, elsewhere?!!
+            SearchModel.indexTicket(TicketModel.getFullById(t.ticketId).get) // XXX actors, elsewhere?!!
             Redirect(routes.Ticket.item("comments", t.id.get)).flashing("success" -> "ticket.add.success")
           }
           case None => Redirect(routes.Ticket.item("comments", ticket.get.id.get)).flashing("error" -> "ticket.add.failure")
@@ -216,7 +216,7 @@ object Ticket extends Controller with Secured {
     )
   }
 
-  def comment(ticketId: Long) = IsAuthenticated { implicit request =>
+  def comment(ticketId: String) = IsAuthenticated { implicit request =>
 
     commentForm.bindFromRequest.fold(
       errors => {
@@ -243,7 +243,7 @@ object Ticket extends Controller with Secured {
     Ok(views.html.ticket.create(initialTicketForm, users, assignees, projs, ttypes, prios, sevs)(request))
   }
 
-  def edit(ticketId: Long) = IsAuthenticated { implicit request =>
+  def edit(ticketId: String) = IsAuthenticated { implicit request =>
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
     val ticket = TicketModel.getById(ticketId)
@@ -261,7 +261,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def item(tab: String, ticketId: Long, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+  def item(tab: String, ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
     
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -343,7 +343,7 @@ object Ticket extends Controller with Secured {
     }
   }
   
-  def update(ticketId: Long) = IsAuthenticated { implicit request =>
+  def update(ticketId: String) = IsAuthenticated { implicit request =>
 
     ticketForm.bindFromRequest.fold(
       errors => {

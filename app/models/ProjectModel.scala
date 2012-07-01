@@ -7,13 +7,17 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class Project(id: Pk[Long] = NotAssigned, workflowId: Long, name: String, key: String, dateCreated: Date)
+case class Project(
+  id: Pk[Long] = NotAssigned, workflowId: Long, sequenceCurrent: Long,
+  name: String, key: String, dateCreated: Date
+)
 
 object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects")
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
-  val getByWorkflow = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id}")
+  val getByWorkflowQuery = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id}")
+  val updateSequenceQuery = SQL("UPDATE projects SET sequence_current = LAST_INSERT_ID(sequence_current + 1) WHERE id={id}")
   val listQuery = SQL("SELECT * FROM projects LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects")
   val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, date_created) VALUES ({name}, {pkey}, {workflow_id}, UTC_TIMESTAMP())")
@@ -22,10 +26,14 @@ object ProjectModel {
   val project = {
     get[Pk[Long]]("id") ~
     get[Long]("workflow_id") ~
+    get[Long]("sequence_current") ~
     get[String]("name") ~
     get[String]("pkey") ~
     get[Date]("date_created") map {
-      case id~workflowId~name~pkey~dateCreated => Project(id, workflowId, name, pkey, dateCreated)
+      case id~workflowId~seqCurr~name~pkey~dateCreated => Project(
+        id = id, workflowId = workflowId, name = name, key = pkey,
+        sequenceCurrent = seqCurr, dateCreated = dateCreated
+      )
     }
   }
 
@@ -60,10 +68,17 @@ object ProjectModel {
     }
   }
 
+  def getNextSequence(id: Long) : Option[Long] = {
+
+    DB.withConnection { implicit conn =>
+      updateSequenceQuery.on('id -> id).executeInsert()
+    }
+  }
+
   def getWithWorkflow(id: Long) : Seq[Project] = {
     
     DB.withConnection { implicit conn => 
-      getByWorkflow.on('workflow_id -> id).as(project *)
+      getByWorkflowQuery.on('workflow_id -> id).as(project *)
     }
   }
 

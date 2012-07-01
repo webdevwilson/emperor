@@ -484,135 +484,132 @@ object SearchModel {
       "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
     )
 
-    indexer.index(ticketIndex, ticketType, ticket.id.get.toString, toJson(tdoc).toString)
+    indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(tdoc).toString)
   }
   
-  def indexHistory(history: TicketFullHistory) {
+  def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
     
-    val ticket = history.newTicket
-    val old = history.oldTicket
-
-    val projChanged = ticket.project.id match {
-      case old.project.id => false
+    val projChanged = newTick.project.id match {
+      case oldTick.project.id => false
       case _ => true
     }
-    val prioChanged = ticket.priority.id match {
-      case old.priority.id => false
+    val prioChanged = newTick.priority.id match {
+      case oldTick.priority.id => false
       case _ => true
     }
-    val resoChanged = ticket.resolution.id match {
-      case Some(res) if old.resolution.id.isEmpty => true // We have one now, true!
-      case Some(res) if !old.resolution.id.isEmpty => res != old.resolution.id.get // True if changed
-      case None if old.resolution.id.isEmpty => false // nothing and nothing, false
+    val resoChanged = newTick.resolution.id match {
+      case Some(res) if oldTick.resolution.id.isEmpty => true // We have one now, true!
+      case Some(res) if !oldTick.resolution.id.isEmpty => res != oldTick.resolution.id.get // True if changed
+      case None if oldTick.resolution.id.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val assChanged = ticket.assigneeId match {
-      case Some(ass) if old.assigneeId.isEmpty => true // We have one now, true!
-      case Some(ass) if !old.assigneeId.isEmpty => ass != old.assigneeId.get // True if changed
-      case None if old.assigneeId.isEmpty => false // nothing and nothing, false
+    val assChanged = newTick.assigneeId match {
+      case Some(ass) if oldTick.assigneeId.isEmpty => true // We have one now, true!
+      case Some(ass) if !oldTick.assigneeId.isEmpty => ass != oldTick.assigneeId.get // True if changed
+      case None if oldTick.assigneeId.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val attChanged = ticket.attentionId match {
-      case Some(att) if old.attentionId.isEmpty => true // We have one now, true!
-      case Some(att) if !old.attentionId.isEmpty => att != old.attentionId.get // True if changed
-      case None if old.attentionId.isEmpty => false // nothing and nothing, false
+    val attChanged = newTick.attentionId match {
+      case Some(att) if oldTick.attentionId.isEmpty => true // We have one now, true!
+      case Some(att) if !oldTick.attentionId.isEmpty => att != oldTick.attentionId.get // True if changed
+      case None if oldTick.attentionId.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val repChanged = ticket.reporter.id match {
-      case x if x == old.reporter.id => false
+    val repChanged = newTick.reporter.id match {
+      case x if x == oldTick.reporter.id => false
       case _ => true
     }
-    val sevChanged = ticket.severity.id match {
-      case x if x == old.severity.id => false
+    val sevChanged = newTick.severity.id match {
+      case x if x == oldTick.severity.id => false
       case _ => true
     }
-    val statChanged = ticket.status.id match {
-      case old.status.id => false
+    val statChanged = newTick.status.id match {
+      case oldTick.status.id => false
       case _ => true
     }
-    val typeChanged = ticket.ttype.id match {
-      case old.ttype.id => false
+    val typeChanged = newTick.ttype.id match {
+      case oldTick.ttype.id => false
       case _ => true
     }
-    val summChanged = ticket.summary match {
-      case old.summary => false
+    val summChanged = newTick.summary match {
+      case oldTick.summary => false
       case _ => true
     }
-    val descChanged = ticket.description match {
-      case Some(res) if old.description.isEmpty => true // We have one now, true!
-      case Some(res) if !old.description.isEmpty => res != old.description.get // True if changed
-      case None if old.description.isEmpty => false // nothing and nothing, false
+    val descChanged = newTick.description match {
+      case Some(res) if oldTick.description.isEmpty => true // We have one now, true!
+      case Some(res) if !oldTick.description.isEmpty => res != oldTick.description.get // True if changed
+      case None if oldTick.description.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
 
     val hdoc: Map[String,JsValue] = Map(
-      "ticket_id"         -> JsNumber(ticket.id.get),
-      "user_id"           -> JsNumber(history.userId),
+      "ticket_id"         -> JsNumber(newTick.id.get),
+      "user_id"           -> JsNumber(newTick.userId),
       // "user_realname"     -> JsString(userRealName), // XXX
-      "project_id"        -> JsNumber(ticket.project.id),
-      "old_project_id"    -> JsNumber(old.project.id),
-      "project_name"      -> JsString(ticket.project.name),
-      "old_project_name"  -> JsString(old.project.name),
+      "project_id"        -> JsNumber(newTick.project.id),
+      "old_project_id"    -> JsNumber(oldTick.project.id),
+      "project_name"      -> JsString(newTick.project.name),
+      "old_project_name"  -> JsString(oldTick.project.name),
       "project_changed"   -> JsBoolean(projChanged),
-      "priority_id"       -> JsNumber(ticket.priority.id),
-      "old_priority_id"   -> JsNumber(old.priority.id),
-      "priority_name"     -> JsString(ticket.priority.name),
-      "old_priority_name" -> JsString(old.priority.name),
+      "priority_id"       -> JsNumber(newTick.priority.id),
+      "old_priority_id"   -> JsNumber(oldTick.priority.id),
+      "priority_name"     -> JsString(newTick.priority.name),
+      "old_priority_name" -> JsString(oldTick.priority.name),
       "priorityChanged"   -> JsBoolean(prioChanged),
-      "resolution_id"     -> { ticket.resolution.id match {
+      "resolution_id"     -> { newTick.resolution.id match {
         case Some(id) => JsNumber(id)
         case None     => JsNull
       } },
-      // "old_resolution_id" -> JsNumber(old.resolutionId.getOrElse("")), XXX
-      "resolution_name"   -> { ticket.resolution.name match {
+      // "old_resolution_id" -> JsNumber(oldTick.resolutionId.getOrElse("")), XXX
+      "resolution_name"   -> { newTick.resolution.name match {
         case Some(name) => JsString(name)
         case None       => JsString("TICK_RESO_UNRESOLVED")
       } },
-      "old_resolution_name" -> JsString(old.resolution.name.getOrElse("")),
+      "old_resolution_name" -> JsString(oldTick.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
-      // "proposed_resolution_id" -> ticket.proposedResolutionId.toString, XXX
-      // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""), XXX
-      "assignee_id"       -> { ticket.assigneeId match {
+      // "proposed_resolution_id" -> newTick.proposedResolutionId.toString, XXX
+      // "proposed_resolution_name" -> newTick.proposedResolutionName.getOrElse(""), XXX
+      "assignee_id"       -> { newTick.assigneeId match {
         case Some(assId)=> JsNumber(assId)
         case None       => JsNull
       } },
-      // "assignee_name"     -> JsString(ticket.assigneeName),
+      // "assignee_name"     -> JsString(newTick.assigneeName),
       "assignee_changed"  -> JsBoolean(assChanged),
-      "attention_id"      -> { ticket.attentionId match {
+      "attention_id"      -> { newTick.attentionId match {
         case Some(attId) => JsNumber(attId)
         case None        => JsNull
       } },
-      // "attention_name"    -> JsString(ticket.assigneeName),
+      // "attention_name"    -> JsString(newTick.assigneeName),
       "attention_changed" -> JsBoolean(attChanged),
-      "reporter_id"       -> JsNumber(ticket.reporter.id),
-      "old_reporter_id"   -> JsNumber(old.reporter.id),
-      "reporter_name"     -> JsString(ticket.reporter.name),
-      "old_reporter_name" -> JsString(old.reporter.name),
+      "reporter_id"       -> JsNumber(newTick.reporter.id),
+      "old_reporter_id"   -> JsNumber(oldTick.reporter.id),
+      "reporter_name"     -> JsString(newTick.reporter.name),
+      "old_reporter_name" -> JsString(oldTick.reporter.name),
       "reporter_changed"  -> JsBoolean(repChanged),
-      "severity_id"       -> JsNumber(ticket.severity.id),
-      "old_severity_id"   -> JsNumber(old.severity.id),
-      "severity_name"     -> JsString(ticket.severity.name),
-      "old_severity_name" -> JsString(old.severity.name),
+      "severity_id"       -> JsNumber(newTick.severity.id),
+      "old_severity_id"   -> JsNumber(oldTick.severity.id),
+      "severity_name"     -> JsString(newTick.severity.name),
+      "old_severity_name" -> JsString(oldTick.severity.name),
       "severity_changed"  -> JsBoolean(sevChanged),
-      "status_id"         -> JsNumber(ticket.status.id),
-      "old_status_id"     -> JsNumber(old.status.id),
-      "status_name"       -> JsString(ticket.status.name),
-      "old_status_name"   -> JsString(old.status.name),
+      "status_id"         -> JsNumber(newTick.status.id),
+      "old_status_id"     -> JsNumber(oldTick.status.id),
+      "status_name"       -> JsString(newTick.status.name),
+      "old_status_name"   -> JsString(oldTick.status.name),
       "status_changed"    -> JsBoolean(statChanged),
-      "type_id"           -> JsNumber(ticket.ttype.id),
-      "old_type_id"       -> JsNumber(old.ttype.id),
-      "type_name"         -> JsString(ticket.ttype.name),
-      "old_type_name"     -> JsString(old.ttype.name),
+      "type_id"           -> JsNumber(newTick.ttype.id),
+      "old_type_id"       -> JsNumber(oldTick.ttype.id),
+      "type_name"         -> JsString(newTick.ttype.name),
+      "old_type_name"     -> JsString(oldTick.ttype.name),
       "type_changed"      -> JsBoolean(typeChanged),
-      "summary"           -> JsString(ticket.summary),
-      "old_summary"       -> JsString(old.summary),
+      "summary"           -> JsString(newTick.summary),
+      "old_summary"       -> JsString(oldTick.summary),
       "summary_changed"   -> JsBoolean(summChanged),
-      "description"       -> JsString(ticket.description.getOrElse("")),
-      "old_description"   -> JsString(old.description.getOrElse("")),
+      "description"       -> JsString(newTick.description.getOrElse("")),
+      "old_description"   -> JsString(oldTick.description.getOrElse("")),
       "description_changed" -> JsBoolean(descChanged),
       "date_occurred"     -> JsString(dateFormatter.format(new Date()))
     )
-    indexer.index(ticketHistoryIndex, ticketHistoryType, history.id.toString, toJson(hdoc).toString)
+    indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
   }
 
   def reIndex {
