@@ -205,7 +205,7 @@ CREATE TABLE ticket_links (
     PRIMARY KEY(id),
     FOREIGN KEY(link_type_id) REFERENCES ticket_link_types(id),
     FOREIGN KEY(parent_ticket_id) REFERENCES tickets(ticket_id),
-    FOREIGN KEY(child_ticket_id) REFERENCES tickets(id)
+    FOREIGN KEY(child_ticket_id) REFERENCES tickets(ticket_id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE ticket_comments (
@@ -215,7 +215,7 @@ CREATE TABLE ticket_comments (
   content TEXT,
   date_created DATETIME NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY(ticket_id) REFERENCES tickets(id),
+  FOREIGN KEY(ticket_id) REFERENCES tickets(ticket_id),
   FOREIGN KEY(user_id) REFERENCES users(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
@@ -227,5 +227,5 @@ CREATE TABLE ticket_stacks (
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(ticket_id) REFERENCES tickets(id)
+    FOREIGN KEY(ticket_id) REFERENCES tickets(ticket_id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;

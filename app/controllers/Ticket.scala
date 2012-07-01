@@ -208,9 +208,9 @@ object Ticket extends Controller with Secured {
         ticket match {
           case Some(t) => {
             SearchModel.indexTicket(TicketModel.getFullById(t.ticketId).get) // XXX actors, elsewhere?!!
-            Redirect(routes.Ticket.item("comments", t.id.get)).flashing("success" -> "ticket.add.success")
+            Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
           }
-          case None => Redirect(routes.Ticket.item("comments", ticket.get.id.get)).flashing("error" -> "ticket.add.failure")
+          case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
         }
       }
     )

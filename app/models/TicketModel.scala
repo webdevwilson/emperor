@@ -228,7 +228,7 @@ object TicketModel {
     }
   }
 
-  def addComment(ticketId: Long, userId: Long, content: String) : Option[Comment] = {
+  def addComment(ticketId: String, userId: Long, content: String) : Option[Comment] = {
     
     val ticket = this.getById(ticketId)
     
@@ -264,7 +264,7 @@ object TicketModel {
       this.update(userId = userId, id = ticketId, ticket = tick)
   }
 
-  def changeStatus(ticketId: Long, newStatusId: Long, userId: Long) = {
+  def changeStatus(ticketId: String, newStatusId: Long, userId: Long) = {
     
     DB.withConnection { implicit conn =>
 
@@ -293,8 +293,9 @@ object TicketModel {
           val proj = ProjectModel.getById(ticket.projectId).get
           val tid = ProjectModel.getNextSequence(ticket.projectId).get
 
+          val ticketId = proj.key + "-" + tid.toString
           val id = insertQuery.on(
-            'ticket_id    -> (proj.key + "-" + tid.toString),
+            'ticket_id    -> ticketId,
             'user_id      -> userId,
             'reporter_id  -> ticket.reporterId,
             'assignee_id  -> ticket.assigneeId,
@@ -307,7 +308,7 @@ object TicketModel {
             'position     -> ticket.position,
             'summary      -> ticket.summary
           ).executeInsert()
-          this.getById(id.get)
+          this.getById(ticketId)
         }
       }
       case None => None
@@ -320,10 +321,10 @@ object TicketModel {
       
   }
 
-  def getCommentById(id: String) : Option[Comment] = {
+  def getCommentById(id: Long) : Option[Comment] = {
       
     DB.withConnection { implicit conn =>
-      getCommentByIdQuery.on('ticket_id -> id).as(comment.singleOpt)
+      getCommentByIdQuery.on('id -> id).as(comment.singleOpt)
     }
   }
 
