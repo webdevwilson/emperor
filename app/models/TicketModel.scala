@@ -69,12 +69,13 @@ case class TicketForOptThing(
 )
 
 case class TicketHistory(
-  id: Pk[Long] = NotAssigned, ticketId: Long, projectId: Long,
-  user: TicketForThing, reporter: TicketForThing, priority: TicketForThing,
-  resolution: TicketForOptThing, proposedResolution: TicketForOptThing,
-  severity: TicketForThing,  status: TicketForThing, ttype: TicketForThing,
-  position: Option[Long], summary: String, description: Option[String],
+  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long,
   dateOccurred: Date
+)
+
+case class TicketFullHistory(
+  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long,
+  oldTicket: FullTicket, newTicket: FullTicket, dateOccurred: Date
 )
 
 object TicketModel {
@@ -95,7 +96,10 @@ object TicketModel {
   val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
   val getOpenCountForWeekProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= DATE_SUB(UTC_DATE(), INTERVAL 1 WEEK)")
 
-  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, priority_id, resolution_id, proposed_resolution_id, reporter_id, severity_id, status_id, type_id, position, summary, description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {priority_id}, {resolution_id}, {proposed_resolution_id}, {reporter_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
+  val insertHistoryQuery = SQL("INSERT INTO ticket_history (user_id, ticket_id, project_id, old_project_id, priority_id, old_priority_id, resolution_id, old_resolution_id, proposed_resolution_id, old_proposed_resolution_id, reporter_id, old_reporter_id, severity_id, old_severity_id, status_id, old_status_id, type_id, old_type_id, position, old_position, summary, old_summary, description, old_description, date_occurred) VALUES ({user_id}, {ticket_id}, {project_id}, {priority_id}, {resolution_id}, {proposed_resolution_id}, {reporter_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
+  val getHistoryByIdQuery = SQL("SELECT id, ticket_id, user_id, date_occurred FROM ticket_history WHERE id=?")
+  // val getHistoryOldTicketById = SQL("SELECT old_project_id, old_priority_id, old_resolution_id, old_proposed_resolution_id, old_assignee_id, old_attention_id, old_reporter_id, old_severity_id, old_status_id, old_type_id, old_position, old_summary, old_description FROM ticket_history WHERE id=?")
+  // val getHistoryNewTicketById = SQL("SELECT project_id, priority_id, resolution_id, proposed_resolution_id, assignee_id, attention_id, reporter_id, severity_id, status_id, type_id, position, summary, description FROM ticket_history WHERE id=?")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -215,43 +219,13 @@ object TicketModel {
     get[Pk[Long]]("ticket_history.id") ~
     get[Long]("ticket_history.ticket_id") ~
     get[Long]("ticket_history.user_id") ~
-    get[String]("users.realname") ~
-    get[Long]("ticket_history.reporter_id") ~
-    get[String]("users.realname") ~ // XXX rep.name
-    get[Long]("ticket_history.project_id") ~
-    get[Long]("ticket_history.priority_id") ~
-    get[String]("ticket_priorities.name") ~
-    get[Option[Long]]("ticket_history.resolution_id") ~
-    get[Option[String]]("ticket_resolutions.name") ~
-    get[Option[Long]]("ticket_history.proposed_resolution_id") ~
-    get[Option[String]]("ticket_resolutions.name") ~ // XXX tpr.name
-    get[Long]("ticket_history.severity_id") ~
-    get[String]("ticket_severities.name") ~
-    get[Long]("ticket_history.status_id") ~
-    get[String]("ticket_statuses.name") ~
-    get[Long]("ticket_history.type_id") ~
-    get[String]("ticket_types.name") ~
-    get[Option[Long]]("ticket_history.position") ~
-    get[String]("ticket_history.summary") ~
-    get[Option[String]]("ticket_history.description") ~
     get[Date]("ticket_history.date_occurred") map {
-      case id~ticketId~userId~realName~repId~repRealName~projectId~prioId~prioName~resId~resName~propResId~propResName~sevId~sevName~statId~statName~typeId~typeName~position~summary~description~dateOccurred => {
+      case id~ticketId~userId~dateOccurred => {
         
         TicketHistory(
           id = id,
           ticketId = ticketId,
-          projectId = projectId, 
-          user = TicketForThing(userId, realName),
-          reporter = TicketForThing(repId, repRealName),
-          priority = TicketForThing(prioId, prioName),
-          resolution = TicketForOptThing(resId, resName),
-          proposedResolution = TicketForOptThing(propResId, propResName),
-          severity = TicketForThing(sevId, sevName),
-          status = TicketForThing(statId, statName),
-          ttype = TicketForThing(typeId, typeName),
-          position = position,
-          summary = summary,
-          description = description,
+          userId = userId,
           dateOccurred = dateOccurred
         )
       }
@@ -376,6 +350,13 @@ object TicketModel {
     }
   }
 
+  def getHistoryById(id: Long): Option[TicketHistory] = {
+
+    DB.withConnection { implicit conn =>
+      getHistoryByIdQuery.on('id -> id).as(history.singleOpt)
+    }
+  }
+
   def getAll: List[Ticket] = {
       
     DB.withConnection { implicit conn =>
@@ -442,25 +423,38 @@ object TicketModel {
       this.getFullById(id).get
     }
 
-    val cid = DB.withTransaction { implicit conn =>
+    val change = DB.withTransaction { implicit conn =>
       
       // XXX needs to NOT create an entry if there are no differences!
       val cid = insertHistoryQuery.on(
         'user_id      -> userId,
         'ticket_id    -> id,
-        'project_id   -> oldTicket.project.id,
-        'priority_id  -> oldTicket.priority.id,
-        'resolution_id -> oldTicket.resolution.id,
-        'proposed_resolution_id -> oldTicket.proposedResolutionId,
-        'reporter_id  -> oldTicket.reporter.id,
-        'assignee_id  -> oldTicket.assigneeId,
-        'attention_id -> oldTicket.attentionId,
-        'severity_id  -> oldTicket.severity.id,
-        'status_id    -> oldTicket.status.id,
-        'type_id      -> oldTicket.ttype.id,
-        'description  -> oldTicket.description,
-        'position     -> oldTicket.position,
-        'summary      -> oldTicket.summary
+        'old_project_id   -> oldTicket.project.id,
+        'project_id       -> ticket.projectId,
+        'old_priority_id  -> oldTicket.priority.id,
+        'priority_id      -> ticket.priorityId,
+        'old_resolution_id -> oldTicket.resolution.id,
+        'resolution_id    -> ticket.resolutionId,
+        'old_proposed_resolution_id -> oldTicket.proposedResolutionId,
+        'proposed_resolution_id -> ticket.resolutionId,
+        'old_reporter_id  -> oldTicket.reporter.id,
+        'reporter_id      -> ticket.reporterId,
+        'old_assignee_id  -> oldTicket.assigneeId,
+        'assignee_id      -> ticket.assigneeId,
+        'old_attention_id -> oldTicket.attentionId,
+        'attention_id     -> ticket.attentionId,
+        'old_severity_id  -> oldTicket.severity.id,
+        'severity_id      -> ticket.severityId,
+        'old_status_id    -> oldTicket.status.id,
+        'status_id        -> statusId.getOrElse(oldTicket.status.id),
+        'old_type_id      -> oldTicket.ttype.id,
+        'type_id          -> ticket.typeId,
+        'old_description  -> oldTicket.description,
+        'description      -> ticket.description,
+        'old_position     -> oldTicket.position,
+        'position         -> ticket.position,
+        'old_summary      -> oldTicket.summary,
+        'summary          -> ticket.summary
       ).executeInsert()
 
       updateQuery.on(
@@ -479,16 +473,21 @@ object TicketModel {
         'summary                -> ticket.summary
       ).executeUpdate
 
-      cid
+      // XXX Could fail?
+      getHistoryById(id = cid.get).get
     }
     
     val newTicket = DB.withConnection { implicit conn =>
 
       this.getFullById(id).get      
     }
-    SearchModel.indexHistory(
-      changeId = cid.get, userId = userId, userRealName = user.realName,
-      ticket = newTicket, old = oldTicket
+
+    val fullHistory = TicketFullHistory(
+      id = change.id, userId = change.userId, ticketId = change.ticketId,
+      oldTicket = oldTicket, newTicket = newTicket,
+      dateOccurred = change.dateOccurred
     )
+
+    SearchModel.indexHistory(history = fullHistory)
   }
 }

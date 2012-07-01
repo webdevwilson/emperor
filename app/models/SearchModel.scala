@@ -488,8 +488,11 @@ object SearchModel {
   }
   
   // XXX This should take the change as it's argument and retrieve the other bits itself.
-  def indexHistory(changeId: Long, userId: Long, userRealName: String, ticket: FullTicket, old: FullTicket) {
+  def indexHistory(history: TicketFullHistory) {
     
+    val ticket = history.newTicket
+    val old = history.oldTicket
+
     val projChanged = ticket.project.id match {
       case old.project.id => false
       case _ => true
@@ -545,8 +548,8 @@ object SearchModel {
 
     val hdoc: Map[String,JsValue] = Map(
       "ticket_id"         -> JsNumber(ticket.id.get),
-      "user_id"           -> JsNumber(userId),
-      "user_realname"     -> JsString(userRealName),
+      "user_id"           -> JsNumber(history.userId),
+      // "user_realname"     -> JsString(userRealName), // XXX
       "project_id"        -> JsNumber(ticket.project.id),
       "old_project_id"    -> JsNumber(old.project.id),
       "project_name"      -> JsString(ticket.project.name),
@@ -610,7 +613,7 @@ object SearchModel {
       "description_changed" -> JsBoolean(descChanged),
       "date_occurred"     -> JsString(dateFormatter.format(new Date()))
     )
-    indexer.index(ticketHistoryIndex, ticketHistoryType, changeId.toString, toJson(hdoc).toString)
+    indexer.index(ticketHistoryIndex, ticketHistoryType, history.id.toString, toJson(hdoc).toString)
   }
 
   def reIndex {
