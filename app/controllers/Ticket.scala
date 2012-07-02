@@ -57,7 +57,7 @@ object Ticket extends Controller with Secured {
 
   val ticketForm = Form(
     mapping(
-      "ticket_id"     -> text,
+      "ticket_id"     -> ignored(NotAssigned:Pk[String]),
       "reporter_id"   -> longNumber,
       "assignee_id"   -> optional(longNumber),
       "attention_id"  -> optional(longNumber),
@@ -207,10 +207,10 @@ object Ticket extends Controller with Secured {
         val ticket = TicketModel.create(userId = request.session.get("userId").get.toLong, ticket = value)
         ticket match {
           case Some(t) => {
-            SearchModel.indexTicket(TicketModel.getFullById(t.ticketId).get) // XXX actors, elsewhere?!!
-            Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
+            SearchModel.indexTicket(TicketModel.getFullById(t.ticketId.get).get) // XXX actors, elsewhere?!!
+            Redirect(routes.Ticket.item("comments", t.ticketId.get)).flashing("success" -> "ticket.add.success")
           }
-          case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
+          case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId.get)).flashing("error" -> "ticket.add.failure")
         }
       }
     )

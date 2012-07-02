@@ -32,7 +32,7 @@ case class InitialTicket(
 )
 
 case class EditTicket(
-  ticketId: String, reporterId: Long, assigneeId: Option[Long],
+  ticketId: Pk[String] = NotAssigned, reporterId: Long, assigneeId: Option[Long],
   attentionId: Option[Long], projectId: Long,
   priorityId: Long, resolutionId: Option[Long],
   proposedResolutionId: Option[Long], severityId: Long,
@@ -82,14 +82,15 @@ object TicketModel {
 
   val allCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
-  val allFullQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE ticket_id={ticket_id} ORDER BY date_created DESC LIMIT 1")
   // XX Missing proposed resolution :( due to lack of aliases
+  val getAllCurrentQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id GROUP BY t.ticket_id ORDER BY t.date_created DESC")
   val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created DESC LIMIT 1")
+  val getAllFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created ASC")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({user_id}, {ticket_id}, {reporter_id}, {assignee_id}, {attention_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
+  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({user_id}, {ticket_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
@@ -135,7 +136,7 @@ object TicketModel {
   }
 
   val editTicket = {
-    get[String]("ticket_id") ~
+    get[Pk[String]]("ticket_id") ~
     get[Long]("reporter_id") ~
     get[Option[Long]]("assignee_id") ~
     get[Option[Long]]("attention_id") ~
@@ -342,10 +343,16 @@ object TicketModel {
     }
   }
 
-  def getAll: List[Ticket] = {
+  def getAllCurrent: List[Ticket] = {
       
     DB.withConnection { implicit conn =>
       allQuery.as(ticket *)
+    }
+  }
+
+  def getAllCurrentFull: List[FullTicket] = {
+    DB.withConnection { implicit conn =>
+      getAllCurrentQuery.as(fullTicket *)
     }
   }
 
@@ -356,10 +363,10 @@ object TicketModel {
     }
   }
 
-  def getAllFull: List[FullTicket] = {
+  def getAllFullById(id: String): List[FullTicket] = {
       
     DB.withConnection { implicit conn =>
-      allFullQuery.as(fullTicket *)
+      getAllFullByIdQuery.on('ticket_id -> id).as(fullTicket *)
     }
   }
 

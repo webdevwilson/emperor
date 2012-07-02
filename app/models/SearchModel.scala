@@ -400,7 +400,7 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
-      "date_occurred": {
+      "date_created": {
         "type": "date",
         "format": "basic_date_time_no_millis"
       }
@@ -608,7 +608,7 @@ object SearchModel {
       "description"       -> JsString(newTick.description.getOrElse("")),
       "old_description"   -> JsString(oldTick.description.getOrElse("")),
       "description_changed" -> JsBoolean(descChanged),
-      "date_occurred"     -> JsString(dateFormatter.format(new Date()))
+      "date_created"      -> JsString(dateFormatter.format(new Date()))
     )
     indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
   }
@@ -620,7 +620,7 @@ object SearchModel {
       types = Seq(ticketType, ticketHistoryType, ticketCommentType)
     )
     // Reindex all tickets
-    TicketModel.getAllFull.foreach { ticket =>
+    TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
     }
     // Reindex all ticket comments
@@ -668,7 +668,7 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page - 1)  * count)
       },
-      sorting = Seq("date_occurred" -> SortOrder.DESC)
+      sorting = Seq("date_created" -> SortOrder.DESC)
     )
   }
   
@@ -740,7 +740,6 @@ object SearchModel {
         termsFacet("severity").field("severity_name"),
         termsFacet("status").field("status_name")
       ),
-      fields = List("summary", "ticket_id"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)
