@@ -145,7 +145,7 @@ CREATE TABLE projects (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     pkey VARCHAR(16) NOT NULL UNIQUE,
-    sequence_current INT UNSIGNED NOT NULL DEFAULT 1,
+    sequence_current INT UNSIGNED NOT NULL DEFAULT 0,
     workflow_id INT UNSIGNED NOT NULL,
     date_created DATETIME NOT NULL,
     FOREIGN KEY (workflow_id) REFERENCES workflows(id),
@@ -199,8 +199,8 @@ CREATE TABLE tickets (
 CREATE TABLE ticket_links (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     link_type_id INT UNSIGNED NOT NULL,
-    parent_ticket_id INT UNSIGNED NOT NULL,
-    child_ticket_id INT UNSIGNED NOT NULL,
+    parent_ticket_id VARCHAR(64) NOT NULL,
+    child_ticket_id VARCHAR(64) NOT NULL,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(link_type_id) REFERENCES ticket_link_types(id),
@@ -210,7 +210,7 @@ CREATE TABLE ticket_links (
 
 CREATE TABLE ticket_comments (
   id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-  ticket_id INT UNSIGNED NOT NULL,
+  ticket_id VARCHAR(64) NOT NULL,
   user_id INT UNSIGNED NOT NULL,
   content TEXT,
   date_created DATETIME NOT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE ticket_comments (
 CREATE TABLE ticket_stacks (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     user_id INT UNSIGNED NOT NULL,
-    ticket_id INT UNSIGNED NOT NULL,
+    ticket_id VARCHAR(64) NOT NULL,
     position INT NOT NULL,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),

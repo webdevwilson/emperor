@@ -133,7 +133,7 @@ object SearchModel {
     "ticket": {
       "properties": {
         "ticket_id": {
-          "type": "long",
+          "type": "string",
           "index": "not_analyzed"
         },
         "user_id": {
@@ -164,7 +164,7 @@ object SearchModel {
   "ticket_history": {
     "properties": {
       "ticket_id": {
-        "type": "long",
+        "type": "string",
         "index": "not_analyzed"
       },
       "user_id": {

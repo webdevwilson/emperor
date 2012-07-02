@@ -14,11 +14,11 @@
  <tbody>
   @tickets.map { ticket =>
   <tr>
-   <td><a href="@controllers.routes.Ticket.item("comments", ticket.id.get)">@ticket.summary</a></td>
+   <td><a href="@controllers.routes.Ticket.item("comments", ticket.ticketId)">@ticket.summary</a></td>
    <td class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
-      <a class="btn btn-mini" href="@routes.Ticket.edit(ticket.id.get)"><i class="icon-edit"></i> @Messages("general.edit")</a>
+      <a class="btn btn-mini" href="@routes.Ticket.edit(ticket.ticketId)"><i class="icon-edit"></i> @Messages("general.edit")</a>
      </div>
     </div>
    </td>

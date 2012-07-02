@@ -19,8 +19,8 @@
    <div class="navbar-inner">
     <div class="container">
      <ul class="nav">
-      <li><a href="@routes.Ticket.item("comments", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
-      <li class="active"><a href="@routes.Ticket.item("history", id = ticket.id.get)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+      <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+      <li class="active"><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
      </ul>
     </div>
    </div>
