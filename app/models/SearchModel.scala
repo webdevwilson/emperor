@@ -21,6 +21,7 @@ object SearchModel {
   // Embedded ES
   // XXX turn off network for this?
   // XXX set data directory!
+  // XXX mapping blows up
   val indexer = Indexer.local.start
   
   val ticketIndex = "tickets"
@@ -739,7 +740,7 @@ object SearchModel {
         termsFacet("severity").field("severity_name"),
         termsFacet("status").field("status_name")
       ),
-      fields = List("summary"),
+      fields = List("summary", "ticket_id"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)

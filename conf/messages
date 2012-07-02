@@ -180,6 +180,7 @@ ticket.history.facet.changed_status=Status: {0}
 ticket.history.facet.fields=Changed Fields
 ticket.history.list=History
 ticket.history.none=No History
+ticket.id=Id
 ticket.list=Tickets
 ticket.priority=Priority
 ticket.project=Project
