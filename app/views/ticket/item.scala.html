@@ -6,8 +6,8 @@
 @import helper.bootstrap._
 @import util._
 
-@main(Messages("ticket.with.id", ticket.id)) {
-<h2 class="pull-left"><span class="label">@Messages(ticket.ttype.name)</span> @ticket.summary</h2>
+@main(Messages("ticket.with.id", ticket.ticketId)) {
+<h2 class="pull-left"><span class="label">@Messages(ticket.ttype.name)</span> @ticket.ticketId @ticket.summary</h2>
 <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
 <div class="btn-toolbar pull-right">
 @if(ticket.resolution.id.isEmpty) {
