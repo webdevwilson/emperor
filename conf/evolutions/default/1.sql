@@ -167,7 +167,7 @@ CREATE TABLE project_role_users (
 
 CREATE TABLE tickets (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    ticket_id VARCHAR(255) NOT NULL UNIQUE,
+    ticket_id VARCHAR(255) NOT NULL,
     user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
     priority_id INT UNSIGNED NOT NULL,
@@ -184,6 +184,7 @@ CREATE TABLE tickets (
     description TEXT,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
+    INDEX(ticket_id),
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
     FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),

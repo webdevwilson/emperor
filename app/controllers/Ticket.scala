@@ -281,9 +281,10 @@ object Ticket extends Controller with Secured {
             //   }
             // }
             // filters += "ticket_id" -> Seq(ticketId.toString)
+            val filters = Map("ticket_id" -> Seq(ticketId))
 
             val response = SearchModel.searchChange(
-              page, count, "", Map("ticket_id" -> Seq(ticketId))
+              page, count, "", filters
             )
             val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
 

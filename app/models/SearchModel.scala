@@ -172,7 +172,7 @@ object SearchModel {
         "type": "long",
         "index": "not_analyzed"
       },
-      "user_realname" {
+      "user_realname": {
         "type": "string",
         "index": "not_analyzed"
       },
@@ -409,9 +409,8 @@ object SearchModel {
   }
   """
 
-  def foo = {
+  def checkIndices = {
     
-    // indexer.deleteIndex(ticketIndex)
     if(!indexer.exists(ticketIndex)) {
       indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
@@ -427,19 +426,20 @@ object SearchModel {
       indexer.waitTillActive()
       indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
     }
-    // indexer.refresh()
+    indexer.refresh()
   }
 
   def indexComment(comment: Comment) {
 
     val cdoc: Map[String,JsValue] = Map(
-      "ticket_id"     -> JsNumber(comment.ticketId),
+      "ticket_id"     -> JsString(comment.ticketId),
       "user_id"       -> JsNumber(comment.userId),
       "user_realname" -> JsString(comment.realName),
       "content"       -> JsString(comment.content),
       "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
     )
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
+    indexer.refresh()
   }
   
   def indexTicket(ticket: FullTicket) {
@@ -486,6 +486,7 @@ object SearchModel {
     )
 
     indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(tdoc).toString)
+    indexer.refresh()
   }
   
   def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
@@ -544,7 +545,7 @@ object SearchModel {
     }
 
     val hdoc: Map[String,JsValue] = Map(
-      "ticket_id"         -> JsNumber(newTick.id.get),
+      "ticket_id"         -> JsString(newTick.ticketId),
       "user_id"           -> JsNumber(newTick.userId),
       // "user_realname"     -> JsString(userRealName), // XXX
       "project_id"        -> JsNumber(newTick.project.id),
@@ -611,24 +612,36 @@ object SearchModel {
       "date_created"      -> JsString(dateFormatter.format(new Date()))
     )
     indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
+    indexer.refresh()
   }
 
   def reIndex {
+
+    indexer.deleteIndex(ticketIndex)
+    indexer.deleteIndex(ticketHistoryIndex)
+    indexer.deleteIndex(ticketCommentIndex)
+    checkIndices
+
     // Nix all the existing documents
-    indexer.deleteByQuery(
-      indices = Seq(ticketIndex, ticketHistoryIndex, ticketCommentIndex),
-      types = Seq(ticketType, ticketHistoryType, ticketCommentType)
-    )
+    // indexer.deleteByQuery(
+    //   indices = Seq(ticketIndex, ticketHistoryIndex, ticketCommentIndex),
+    //   types = Seq(ticketType, ticketHistoryType, ticketCommentType)
+    // )
     // Reindex all tickets
     TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
+      val count = TicketModel.getAllFullCountById(ticket.ticketId)
+      if(count > 1) {
+        TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
+          oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
+          Some(newTick)
+        })
+      }
     }
     // Reindex all ticket comments
     TicketModel.getAllComments.foreach { comment =>
       indexComment(comment)
     }
-
-    // XXX Need history!
   }
 
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
@@ -645,7 +658,7 @@ object SearchModel {
     // If we have filters, build up a filterquery and swap out our actualQuery
     // with a filtered version!
     if(!filters.isEmpty) {
-      val fqs : Iterable[FilterBuilder] = filters map {
+      val fqs: Iterable[FilterBuilder] = filters map {
         case (key, values) => termFilter(key, values.head).asInstanceOf[FilterBuilder]
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
@@ -739,6 +752,7 @@ object SearchModel {
         termsFacet("priority").field("priority_name"),
         termsFacet("severity").field("severity_name"),
         termsFacet("status").field("status_name")
+        // XXX project should be here but it's a long
       ),
       size = Some(count),
       from = page match {
