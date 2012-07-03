@@ -34,34 +34,26 @@
    @defining(ticket.resolution.id) { resId =>
      @resId match {
        case Some(x) => {
-         <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.ticketId)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>        
+         <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.ticketId)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
        }
        case None => {
-         <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.ticketId)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>        
+         <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.ticketId)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
        }
      }
    }
  </div>
  </div>
 </div>
-<div class="row-fluid">
- <div class="span3">
-  <label>@Messages("ticket.project")</label>
-  <span>@ticket.project.name</span>
- </div>
- <div class="span3">
+<ul id="ticket-info" class="unstyled">
+ <li>
   <label>@Messages("ticket.priority")</label>
-  <span>@Messages(ticket.priority.name)</span>
- </div>
- <div class="span3">
+  <span class="badge">@Messages(ticket.priority.name)</span>
+ </li>
+ <li>
   <label>@Messages("ticket.severity")</label>
-  <span>@Messages(ticket.severity.name)</span>
- </div>
- <div class="span3">
-  <label>@Messages("ticket.status")</label>
-  <span>@Messages(ticket.status.name)</span>
- </div>
-</div>
+  <span class="badge">@Messages(ticket.severity.name)</span>
+ </li>
+</ul>
 <hr>
 <div class="well ticket-desc">
  @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }

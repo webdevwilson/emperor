@@ -19,7 +19,8 @@ object TicketType extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
-      "date_created" -> ignored(new Date())      
+      "color" -> nonEmptyText,
+      "date_created" -> ignored(new Date())
     )(models.TicketType.apply)(models.TicketType.unapply)
   )
 
@@ -33,7 +34,7 @@ object TicketType extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.ttype.create(typeForm)(request))
@@ -57,16 +58,16 @@ object TicketType extends Controller with Secured {
   }
 
   def item(typeId: Long) = IsAuthenticated { implicit request =>
-    
+
     val ttype = TicketTypeModel.getById(typeId)
 
     ttype match {
       case Some(value) => Ok(views.html.admin.ticket.ttype.item(value)(request))
       case None => NotFound
     }
-    
+
   }
-  
+
   def update(typeId: Long) = IsAuthenticated { implicit request =>
 
     typeForm.bindFromRequest.fold(

@@ -16,14 +16,16 @@
 @Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
+  <th>@Messages("ticket.color")</th>
   <th>@Messages("ticket_type.name")</th>
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
   @items.map { item =>
   <tr>
-   <td><a href="@controllers.admin.routes.TicketType.item(item.id.get)">@Messages(item.name)</a></td>
-   <td class="actions">
+   <td style="width: 7%"><span class="badge" style="background-color: #@item.color">&nbsp;</span></td>
+   <td style="width: 83%"><a href="@controllers.admin.routes.TicketType.item(item.id.get)">@Messages(item.name)</a></td>
+   <td style="width: 10%" class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
       <a class="btn btn-mini" href="@controllers.admin.routes.TicketType.edit(item.id.get)"><i class="icon-edit"></i> @Messages("general.edit")</a>
@@ -58,13 +60,13 @@
 //       url : '/admin/user/{id}/group/group.id'
 //     }
 //   );
-//   
+//
 //   TicketTypeModelList = Y.Base.create('ticketTypeList', Y.ModelList, [] {
 //     model: TicketTypeModel,
 //   });
-//   
+//
 //   var types = new Y.TicketTypeModelList();
-//   
+//
 //   var typeTable = new Y.DataTable({
 //       recordType: Y.PieModel,
 //       columns: [
@@ -72,7 +74,7 @@
 //       ],
 //       data: types
 //   }).render('#objtable');
-  
+
   // Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
   //   var model = new UserGroupModel({ id: group.id });
   //   if ( e.target.get('checked') ) {

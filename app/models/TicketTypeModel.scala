@@ -7,7 +7,7 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketType(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
+case class TicketType(id: Pk[Long] = NotAssigned, name: String, color: String, dateCreated: Date)
 
 object TicketTypeModel {
 
@@ -15,14 +15,20 @@ object TicketTypeModel {
   val getByIdQuery = SQL("SELECT * FROM ticket_types WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_types LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_types")
-  val insertQuery = SQL("INSERT INTO ticket_types (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("UPDATE ticket_types SET name={name} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO ticket_types (name, color, date_created) VALUES ({name}, {color}, UTC_TIMESTAMP())")
+  val updateQuery = SQL("UPDATE ticket_types SET name={name}, color={color} WHERE id={id}")
 
   val ticket_type = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
+    get[String]("color") ~
     get[Date]("date_created") map {
-      case id~name~dateCreated => TicketType(id, name, dateCreated)
+      case id~name~color~dateCreated => TicketType(
+        id = id,
+        name = name,
+        color = color,
+        dateCreated = dateCreated
+      )
     }
   }
 
@@ -30,26 +36,27 @@ object TicketTypeModel {
 
     DB.withConnection { implicit conn =>
       val id = insertQuery.on(
-        'name   -> tt.name
+        'name   -> tt.name,
+        'color  -> tt.color
       ).executeInsert()
 
       this.getById(id.get).get
     }
   }
-  
+
   def delete(id: Long) {
-      
+
   }
 
   def getById(id: Long) : Option[TicketType] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_type.singleOpt)
     }
   }
 
   def getAll: List[TicketType] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(ticket_type *)
     }
@@ -58,7 +65,7 @@ object TicketTypeModel {
   def list(page: Int = 1, count: Int = 10) : Page[TicketType] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val tss = listQuery.on(
           'count  -> count,
@@ -70,13 +77,14 @@ object TicketTypeModel {
         Page(tss, page, count, totalRows)
       }
   }
-  
+
   def update(id: Long, ts: TicketType) = {
 
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(
-        'id         -> id,
-        'name       -> ts.name
+        'id     -> id,
+        'name   -> ts.name,
+        'color  -> ts.color
       ).executeUpdate
     }
   }

@@ -81,14 +81,14 @@ INSERT INTO ticket_statuses (name, date_created) VALUES ("TICK_STATUS_CLOSED", U
 CREATE TABLE ticket_types (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    color VARCHAR(6) NOT NULL,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO ticket_types (name, date_created) VALUES ("TICK_TYPE_BUG", UTC_TIMESTAMP());
-INSERT INTO ticket_types (name, date_created) VALUES ("TICK_TYPE_IMPROVEMENT", UTC_TIMESTAMP());
-INSERT INTO ticket_types (name, date_created) VALUES ("TICK_TYPE_MILESTONE", UTC_TIMESTAMP());
+INSERT INTO ticket_types (name, color, date_created) VALUES ("TICK_TYPE_BUG", "f2dede", UTC_TIMESTAMP());
+INSERT INTO ticket_types (name, color, date_created) VALUES ("TICK_TYPE_IMPROVEMENT", "d9edf7", UTC_TIMESTAMP());
 
 CREATE TABLE ticket_link_types (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -103,28 +103,30 @@ INSERT INTO ticket_link_types (name, date_created) VALUES ("TICK_LINK_BLOCKS", U
 CREATE TABLE ticket_severities (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    color VARCHAR(6) NOT NULL,
     position INT NOT NULL,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO ticket_severities (name, position, date_created) VALUES ("TICK_SEV_DIFFICULT", 100, UTC_TIMESTAMP());
-INSERT INTO ticket_severities (name, position, date_created) VALUES ("TICK_SEV_NORMAL", 66, UTC_TIMESTAMP());
-INSERT INTO ticket_severities (name, position, date_created) VALUES ("TICK_SEV_TRIVIAL", 33, UTC_TIMESTAMP());
+INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_DIFFICULT", "f2dede", 100, UTC_TIMESTAMP());
+INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_NORMAL", "d9edf7", 66, UTC_TIMESTAMP());
+INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_TRIVIAL", "dff0d8", 33, UTC_TIMESTAMP());
 
 CREATE TABLE ticket_priorities (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    color VARCHAR(6) NOT NULL,
     position INT NOT NULL,
     date_created DATETIME NOT NULL,
     PRIMARY KEY(id),
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO ticket_priorities (name, position, date_created) VALUES ("TICK_PRIO_HIGH", 100, UTC_TIMESTAMP());
-INSERT INTO ticket_priorities (name, position, date_created) VALUES ("TICK_PRIO_NORMAL", 66, UTC_TIMESTAMP());
-INSERT INTO ticket_priorities (name, position, date_created) VALUES ("TICK_PRIO_LOW", 33, UTC_TIMESTAMP());
+INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_HIGH", "fcf8e3", 100, UTC_TIMESTAMP());
+INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_NORMAL", "d9edf7", 66, UTC_TIMESTAMP());
+INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_LOW", "dff0d8", 33, UTC_TIMESTAMP());
 
 CREATE TABLE workflow_statuses (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,

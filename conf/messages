@@ -155,6 +155,7 @@ ticket.advance.confirm=Advance
 ticket.advance.end=At End
 ticket.assignee=Assignee
 ticket.attention=Attention
+ticket.color=Color
 ticket.comment=Comment
 ticket.comment.added=Comment Added
 ticket.comment.attribution.postfix=on {0}
@@ -217,6 +218,7 @@ ticket_status.name=Name
 ticket_status.position=Position
 ticket_status.with.id=Ticket Status {0}
 
+ticket_type.color=Color
 ticket_type.name=Name
 
 user=User
