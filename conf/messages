@@ -4,7 +4,7 @@ admin.title=Administration
 
 admin.people=People
 
-admin.general=XXX General
+admin.general=General
 
 admin.group.add=Add Group
 admin.group.edit=Edit Group
@@ -18,7 +18,7 @@ admin.group.edit.success=Group Updated
 admin.projects=Projects
 admin.project.menu.list=Projects
 
-admin.reindex=XXX Reindex Search
+admin.reindex=Reindex Search
 admin.reindex.success=Search Reindex Successfull
 
 admin.role.add=Add Role
