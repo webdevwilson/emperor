@@ -7,59 +7,65 @@
 @import util._
 
 @main(Messages("ticket.with.id", ticket.ticketId)) {
-<h2 class="pull-left"><span class="label">@Messages(ticket.ttype.name)</span> @ticket.ticketId @ticket.summary</h2>
-<a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
-<div class="btn-toolbar pull-right">
-@if(ticket.resolution.id.isEmpty) {
-<div class="btn-group">
- @prevStatus match {
-   case Some(status) => {
- <a href="@routes.Ticket.newStatus(ticket.ticketId, prevStatus.get.id.get)" class="btn btn-warning remote-dialog" data-async="true" title="@Messages("ticket.revert", Messages(prevStatus.get.name))"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
-   }
-   case None => { }
- }
- <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
- @nextStatus match {
-   case Some(status) => {
- <a href="@routes.Ticket.newStatus(ticket.ticketId, nextStatus.get.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
-   }
-   case None => {
- <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
-   }
- }
-</div>
-}
-<div class="btn-group">
-  @defining(ticket.resolution.id) { resId =>
-    @resId match {
-      case Some(x) => {
-        <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.ticketId)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>        
-      }
-      case None => {
-        <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.ticketId)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>        
-      }
+<h2><span class="label">@Messages(ticket.ttype.name)</span> @ticket.ticketId @ticket.summary</h2>
+<div class="row-fluid">
+ <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
+ <div class="btn-toolbar pull-right">
+ @if(ticket.resolution.id.isEmpty) {
+ <div class="btn-group">
+  @prevStatus match {
+    case Some(status) => {
+  <a href="@routes.Ticket.newStatus(ticket.ticketId, prevStatus.get.id.get)" class="btn btn-warning remote-dialog" data-async="true" title="@Messages("ticket.revert", Messages(prevStatus.get.name))"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+    }
+    case None => { }
+  }
+  <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
+  @nextStatus match {
+    case Some(status) => {
+  <a href="@routes.Ticket.newStatus(ticket.ticketId, nextStatus.get.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+    }
+    case None => {
+  <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
     }
   }
-</div>
-<div style="clear: both" class="row well">
- <div class="span6">
-  <dl class="dl-horizontal">
-   <dt>@Messages("ticket.project")</dt>
-   <dd>@ticket.project.name</dd>
-   <dt>@Messages("ticket.priority")</dt>
-   <dd>@Messages(ticket.priority.name)</dd>
-  </dl>
  </div>
- <div class="span6">
-  <dl class="dl-horizontal">
-   <dt>@Messages("ticket.severity")</dt>
-   <dd>@Messages(ticket.severity.name)</dd>
-   <dt>@Messages("ticket.status")</dt>
-   <dd>@Messages(ticket.status.name)</dd>
-  </dl>
+ }
+ <div class="btn-group">
+   @defining(ticket.resolution.id) { resId =>
+     @resId match {
+       case Some(x) => {
+         <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.ticketId)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>        
+       }
+       case None => {
+         <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.ticketId)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>        
+       }
+     }
+   }
+ </div>
  </div>
 </div>
-@{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+<div class="row-fluid">
+ <div class="span3">
+  <label>@Messages("ticket.project")</label>
+  <span>@ticket.project.name</span>
+ </div>
+ <div class="span3">
+  <label>@Messages("ticket.priority")</label>
+  <span>@Messages(ticket.priority.name)</span>
+ </div>
+ <div class="span3">
+  <label>@Messages("ticket.severity")</label>
+  <span>@Messages(ticket.severity.name)</span>
+ </div>
+ <div class="span3">
+  <label>@Messages("ticket.status")</label>
+  <span>@Messages(ticket.status.name)</span>
+ </div>
+</div>
+<hr>
+<div class="well ticket-desc">
+ @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+</div>
 XXX Need loading thingie here
 XXX need query string here
 <div id="tabarea">
