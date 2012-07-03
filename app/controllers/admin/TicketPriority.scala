@@ -18,6 +18,7 @@ object TicketPriority extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
+      "color" -> nonEmptyText,
       "position" -> number,
       "date_created" -> ignored(new Date())
     )(models.TicketPriority.apply)(models.TicketPriority.unapply)
@@ -33,7 +34,7 @@ object TicketPriority extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.priority.create(priorityForm)(request))
@@ -57,7 +58,7 @@ object TicketPriority extends Controller with Secured {
   }
 
   def item(priorityId: Long) = IsAuthenticated { implicit request =>
-    
+
     val priority = TicketPriorityModel.getById(priorityId)
 
     priority match {
@@ -65,7 +66,7 @@ object TicketPriority extends Controller with Secured {
       case None => NotFound
     }
   }
-  
+
   def update(priorityId: Long) = IsAuthenticated { implicit request =>
 
     priorityForm.bindFromRequest.fold(

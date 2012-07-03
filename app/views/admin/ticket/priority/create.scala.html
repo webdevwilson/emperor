@@ -17,6 +17,7 @@
 @helper.form(action = controllers.admin.routes.TicketPriority.add) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_priority.name"))
+  @helper.inputText(objForm("color"), '_label -> Messages("ticket_priority.color"))
   @helper.inputText(objForm("position"), '_label -> Messages("ticket_priority.position"))
   <div class="form-actions">
    <a href="@routes.Admin.index" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>

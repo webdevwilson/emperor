@@ -7,7 +7,7 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketPriority(id: Pk[Long] = NotAssigned, name: String, position: Int, dateCreated: Date)
+case class TicketPriority(id: Pk[Long] = NotAssigned, name: String, color: String, position: Int, dateCreated: Date)
 
 object TicketPriorityModel {
 
@@ -15,15 +15,22 @@ object TicketPriorityModel {
   val getByIdQuery = SQL("SELECT * FROM ticket_priorities WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_priorities ORDER BY position ASC LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_priorities")
-  val insertQuery = SQL("INSERT INTO ticket_priorities (name, position, date_created) VALUES ({name}, {position}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, position={position} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ({name}, {color}, {position}, UTC_TIMESTAMP())")
+  val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, color={color}, position={position} WHERE id={id}")
 
   val ticket_priority = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
+    get[String]("color") ~
     get[Int]("position") ~
     get[Date]("date_created") map {
-      case id~name~position~dateCreated => TicketPriority(id, name, position, dateCreated)
+      case id~name~color~position~dateCreated => TicketPriority(
+        id = id,
+        name = name,
+        color = color,
+        position = position,
+        dateCreated = dateCreated
+      )
     }
   }
 
@@ -32,26 +39,27 @@ object TicketPriorityModel {
     DB.withConnection { implicit conn =>
       val id = insertQuery.on(
         'name     -> tp.name,
+        'color    -> tp.color,
         'position -> tp.position
       ).executeInsert()
 
       this.getById(id.get).get
     }
   }
-  
+
   def delete(id: Long) {
       // XXX
   }
 
   def getById(id: Long) : Option[TicketPriority] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_priority.singleOpt)
     }
   }
 
   def getAll: List[TicketPriority] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(ticket_priority *)
     }
@@ -60,7 +68,7 @@ object TicketPriorityModel {
   def list(page: Int = 1, count: Int = 10) : Page[TicketPriority] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val tps = listQuery.on(
           'count  -> count,
@@ -72,13 +80,14 @@ object TicketPriorityModel {
         Page(tps, page, count, totalRows)
       }
   }
-  
+
   def update(id: Long, tp: TicketPriority) = {
 
     DB.withTransaction { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
         'name       -> tp.name,
+        'color      -> tp.color,
         'position   -> tp.position
       ).executeUpdate
     }
