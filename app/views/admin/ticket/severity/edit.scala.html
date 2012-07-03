@@ -17,6 +17,7 @@
 @helper.form(action = controllers.admin.routes.TicketSeverity.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_severity.name"))
+  @helper.inputText(objForm("color"), '_label -> Messages("ticket_severity.color"))
   @helper.inputText(objForm("position"), '_label -> Messages("ticket_severity.position"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.TicketSeverity.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>

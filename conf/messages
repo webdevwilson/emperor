@@ -212,6 +212,7 @@ ticket_priority.name=Name
 ticket_priority.position=Position
 ticket_priority.with.id=Ticket Priority {0}
 
+ticket_severity.color=Color
 ticket_severity.name=Name
 ticket_severity.position=Position
 

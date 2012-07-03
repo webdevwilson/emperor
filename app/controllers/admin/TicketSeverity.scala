@@ -18,6 +18,7 @@ object TicketSeverity extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
+      "color" -> nonEmptyText,
       "position" -> number,
       "date_created" -> ignored(new Date())
     )(models.TicketSeverity.apply)(models.TicketSeverity.unapply)
@@ -33,7 +34,7 @@ object TicketSeverity extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.severity.create(severityForm)(request))
@@ -57,16 +58,16 @@ object TicketSeverity extends Controller with Secured {
   }
 
   def item(severityId: Long) = IsAuthenticated { implicit request =>
-    
+
     val severity = TicketSeverityModel.getById(severityId)
 
     severity match {
       case Some(value) => Ok(views.html.admin.ticket.severity.item(value)(request))
       case None => NotFound
     }
-    
+
   }
-  
+
   def update(severityId: Long) = IsAuthenticated { implicit request =>
 
     severityForm.bindFromRequest.fold(

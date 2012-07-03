@@ -16,6 +16,7 @@
 @Option(page.items).filterNot(_.isEmpty).map { items =>
 <table class="table table-bordered table-rounded table-striped">
  <thead>
+  <th>@Messages("ticket_severity.color")</th>
   <th>@Messages("ticket_severity.name")</th>
   <th>@Messages("ticket_severity.position")</th>
   <th>@Messages("general.actions")</th>
@@ -23,9 +24,10 @@
  <tbody>
   @items.map { item =>
   <tr>
+   <td style="width: 7%"><span class="badge" style="background-color: #@item.color">&nbsp;</span></td>
    <td><a href="@controllers.admin.routes.TicketSeverity.item(item.id.get)">@Messages(item.name)</a></td>
-   <td>@item.position</td>
-   <td class="actions">
+   <td style="width: 10%">@item.position</td>
+   <td style="width: 10%" class="actions">
     <div class="btn-toolbar">
      <div class="btn-group">
       <a class="btn btn-mini" href="@controllers.admin.routes.TicketSeverity.edit(item.id.get)"><i class="icon-edit"></i> @Messages("general.edit")</a>
