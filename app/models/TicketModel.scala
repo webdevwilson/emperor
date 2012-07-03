@@ -44,11 +44,11 @@ case class EditTicket(
 case class FullTicket(
   id: Pk[Long] = NotAssigned, ticketId: String, userId: Long, reporter: TicketForThing,
   assigneeId: Option[Long], attentionId: Option[Long],
-  project: TicketForThing,  priority: TicketForThing,
+  project: TicketForThing,  priority: TicketForColoredThing,
   resolution: TicketForOptThing,
   proposedResolutionId: Option[Long], // proposedResolutionName: Option[String],
-  severity: TicketForThing, workflowStatusId: Long, status: TicketForThing,
-  ttype: TicketForThing, position: Option[Long],
+  severity: TicketForColoredThing, workflowStatusId: Long, status: TicketForThing,
+  ttype: TicketForColoredThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: Date
 )
 
@@ -62,6 +62,10 @@ case class Ticket(
 
 case class TicketForThing(
   id: Long, name: String
+)
+
+case class TicketForColoredThing(
+  id: Long, name: String, color: String
 )
 
 case class TicketForOptThing(
@@ -180,21 +184,24 @@ object TicketModel {
     get[String]("projects.name") ~
     get[Long]("tickets.priority_id") ~
     get[String]("ticket_priorities.name") ~
+    get[String]("ticket_priorities.color") ~
     get[Option[Long]]("tickets.resolution_id") ~
     get[Option[String]]("ticket_resolutions.name") ~
     get[Option[Long]]("tickets.proposed_resolution_id") ~
     get[Long]("tickets.severity_id") ~
     get[String]("ticket_severities.name") ~
+    get[String]("ticket_severities.color") ~
     get[Long]("tickets.status_id") ~
     get[Long]("workflow_statuses.status_id") ~
     get[String]("ticket_statuses.name") ~
     get[Long]("tickets.type_id") ~
     get[String]("ticket_types.name") ~
+    get[String]("ticket_types.color") ~
     get[Option[Long]]("tickets.position") ~
     get[String]("tickets.summary") ~
     get[Option[String]]("tickets.description") ~
     get[Date]("tickets.date_created") map {
-      case id~tickId~userId~repId~repName~assId~attId~projId~projName~priId~priName~resId~resName~propResId~sevId~sevName~statusId~workflowStatusId~statusName~typeId~typeName~position~summary~description~dateCreated =>
+      case id~tickId~userId~repId~repName~assId~attId~projId~projName~priId~priName~priColor~resId~resName~propResId~sevId~sevName~sevColor~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
           ticketId = tickId,
@@ -203,13 +210,13 @@ object TicketModel {
           assigneeId = assId,
           attentionId = attId,
           project = TicketForThing(projId, projName),
-          priority = TicketForThing(priId, priName),
+          priority = TicketForColoredThing(priId, priName, priColor),
           resolution = TicketForOptThing(resId, resName),
           proposedResolutionId = propResId,
-          severity = TicketForThing(sevId, sevName),
+          severity = TicketForColoredThing(sevId, sevName, sevColor),
           workflowStatusId = workflowStatusId,
           status = TicketForThing(statusId, statusName),
-          ttype = TicketForThing(typeId, typeName),
+          ttype = TicketForColoredThing(typeId, typeName, typeColor),
           position = position,
           summary = summary,
           description = description,
@@ -231,9 +238,9 @@ object TicketModel {
   }
 
   def addComment(ticketId: String, userId: Long, content: String) : Option[Comment] = {
-    
+
     val ticket = this.getById(ticketId)
-    
+
     ticket match {
       case Some(ticket) => {
         DB.withConnection { implicit conn =>
@@ -248,30 +255,30 @@ object TicketModel {
       case None => return None
     }
   }
-  
+
   def resolve(ticketId: String, userId: Long, resolutionId: Long) = {
-    
+
     DB.withConnection { implicit conn =>
-      
+
       val tick = this.getById(ticketId).get
       val newTick = tick.copy(resolutionId = Some(resolutionId))
-      
+
       this.update(userId = userId, id = ticketId, ticket = newTick, resolutionId = Some(resolutionId))
     }
   }
-  
+
   def unresolve(ticketId: String, userId: Long) = {
       val tick = this.getById(ticketId).get
-      
+
       this.update(userId = userId, id = ticketId, ticket = tick)
   }
 
   def changeStatus(ticketId: String, newStatusId: Long, userId: Long) = {
-    
+
     DB.withConnection { implicit conn =>
 
       val tick = this.getById(ticketId).get
-      
+
       this.update(userId = userId, id = ticketId, ticket = tick, statusId = Some(newStatusId))
     }
   }
@@ -279,7 +286,7 @@ object TicketModel {
   def create(userId: Long, ticket: InitialTicket): Option[EditTicket] = {
 
     val project = ProjectModel.getById(ticket.projectId)
-    
+
     // Fetch the starting status we should use for the project's workflow.
     val startingStatus = project match {
       case Some(x) => WorkflowModel.getStartingStatus(x.workflowId)
@@ -318,34 +325,34 @@ object TicketModel {
 
     result
   }
-  
+
   def delete(id: Long) {
-      
+
   }
 
   def getCommentById(id: Long) : Option[Comment] = {
-      
+
     DB.withConnection { implicit conn =>
       getCommentByIdQuery.on('id -> id).as(comment.singleOpt)
     }
   }
 
   def getById(id: String) : Option[EditTicket] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('ticket_id -> id).as(editTicket.singleOpt)
     }
   }
 
   def getFullById(id: String) : Option[FullTicket] = {
-      
+
     DB.withConnection { implicit conn =>
       getFullByIdQuery.on('ticket_id -> id).as(fullTicket.singleOpt)
     }
   }
 
   def getAllCurrent: List[Ticket] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(ticket *)
     }
@@ -358,14 +365,14 @@ object TicketModel {
   }
 
   def getAllComments: List[Comment] = {
-      
+
     DB.withConnection { implicit conn =>
       allCommentsQuery.as(comment *)
     }
   }
 
   def getAllFullById(id: String): List[FullTicket] = {
-      
+
     DB.withConnection { implicit conn =>
       getAllFullByIdQuery.on('ticket_id -> id).as(fullTicket *)
     }
@@ -379,21 +386,21 @@ object TicketModel {
   }
 
   def getOpenCountForProject(projectId: Long): Long = {
-    
+
     DB.withConnection { implicit conn =>
       getOpenCountForProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 
   def getOpenCountTodayForProject(projectId: Long): Long = {
-    
+
     DB.withConnection { implicit conn =>
       getOpenCountForTodayProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 
   def getOpenCountWeekForProject(projectId: Long): Long = {
-    
+
     DB.withConnection { implicit conn =>
       getOpenCountForWeekProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
@@ -402,7 +409,7 @@ object TicketModel {
   def list(page: Int = 1, count: Int = 10) : Page[Ticket] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val tickets = listQuery.on(
           'count  -> count,
@@ -414,7 +421,7 @@ object TicketModel {
         Page(tickets, page, count, totalRows)
       }
   }
-  
+
   def update(userId: Long, id: String, ticket: EditTicket, resolutionId : Option[Long] = None, statusId : Option[Long] = None) = {
 
     val user = UserModel.getById(userId).get
@@ -464,7 +471,7 @@ object TicketModel {
     if(changed) {
       // Only record something if a change was made.
       val tid = DB.withTransaction { implicit conn =>
-        
+
         // XXX Project
         updateQuery.on(
           'ticket_id              -> id,
@@ -485,9 +492,9 @@ object TicketModel {
         ).executeInsert()
       }
 
-      
+
       val newTicket = DB.withConnection { implicit conn =>
-        getFullById(id).get      
+        getFullById(id).get
       }
 
       SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)

@@ -21,7 +21,7 @@
   @items.map { item =>
   <tr>
    <td><a href="@controllers.admin.routes.Workflow.item(item.id.get)">@Messages(item.name)</a></td>
-   <td class="actions">
+   <td class="actions" style="width: 15%">
     <div class="btn-toolbar">
      <div class="btn-group">
       <a class="btn btn-mini" href="@controllers.admin.routes.Workflow.edit(item.id.get)"><i class="icon-edit"></i> @Messages("general.edit")</a>

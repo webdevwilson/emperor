@@ -7,9 +7,19 @@
 @import util._
 
 @main(Messages("ticket.with.id", ticket.ticketId)) {
-<h2><span class="label">@Messages(ticket.ttype.name)</span> @ticket.ticketId @ticket.summary</h2>
-<div class="row-fluid">
- <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("Edit Ticket")</a>
+<h2>@Messages("ticket.with.summary", ticket.ticketId, ticket.summary)</h2>
+<div class="row-fluid" id="ticket-header">
+ <ul id="ticket-info" class="unstyled pull-left">
+  <li>
+   <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
+  </li>
+  <li>
+   <span class="label" style="background-color: #@ticket.priority.color"><label>@Messages("ticket.priority")</label> @Messages(ticket.priority.name)</span>
+  </li>
+  <li>
+   <span class="label" style="background-color: #@ticket.severity.color"><label>@Messages("ticket.severity")</label> @Messages(ticket.severity.name)</span>
+  </li>
+ </ul>
  <div class="btn-toolbar pull-right">
  @if(ticket.resolution.id.isEmpty) {
  <div class="btn-group">
@@ -44,17 +54,6 @@
  </div>
  </div>
 </div>
-<ul id="ticket-info" class="unstyled">
- <li>
-  <label>@Messages("ticket.priority")</label>
-  <span class="badge">@Messages(ticket.priority.name)</span>
- </li>
- <li>
-  <label>@Messages("ticket.severity")</label>
-  <span class="badge">@Messages(ticket.severity.name)</span>
- </li>
-</ul>
-<hr>
 <div class="well ticket-desc">
  @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 </div>

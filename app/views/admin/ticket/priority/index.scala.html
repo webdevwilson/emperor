@@ -24,7 +24,7 @@
  <tbody>
   @items.map { item =>
   <tr>
-   <td style="width: 7%"><span class="badge" style="background-color: #@item.color">&nbsp;</span></td>
+   <td style="width: 7%"><span class="label" style="background-color: #@item.color">&nbsp;</span></td>
    <td style="width: 76%"><a href="@controllers.admin.routes.TicketPriority.item(item.id.get)">@Messages(item.name)</a></td>
    <td style="width: 7%">@item.position</td>
    <td style="width: 10%" class="actions">

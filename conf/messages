@@ -204,6 +204,7 @@ ticket.unassigned=Nobody
 ticket.unresolve=Un-Resolve Ticket
 ticket.unresolve.summary=You are un-resolving ticket {0}.
 ticket.with.id=Ticket {0}
+ticket.with.summary={0}: {1}
 
 ticket_link_type.name=Name
 

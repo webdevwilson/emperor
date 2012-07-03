@@ -23,7 +23,7 @@
  <tbody>
   @items.map { item =>
   <tr>
-   <td style="width: 7%"><span class="badge" style="background-color: #@item.color">&nbsp;</span></td>
+   <td style="width: 7%"><span class="label" style="background-color: #@item.color">&nbsp;</span></td>
    <td style="width: 83%"><a href="@controllers.admin.routes.TicketType.item(item.id.get)">@Messages(item.name)</a></td>
    <td style="width: 10%" class="actions">
     <div class="btn-toolbar">
