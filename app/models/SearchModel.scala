@@ -707,6 +707,18 @@ object SearchModel {
     }
   }
 
+  def searchProjectStats(projectId: Long) : SearchResponse = {
+
+    var actualQuery = filteredQuery(queryString("*"), andFilter(termFilter("project_id", projectId)))
+
+    indexer.search(
+      query = actualQuery,
+      indices = Seq("tickets"),
+      facets = Seq(
+      )
+    )
+  }
+
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better

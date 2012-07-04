@@ -96,9 +96,6 @@ object TicketModel {
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
-  val getOpenCountForProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id}")
-  val getOpenCountForTodayProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= UTC_DATE()")
-  val getOpenCountForWeekProjectQuery = SQL("SELECT count(*) FROM tickets WHERE resolution_id IS NULL and proposed_resolution_id IS NULL AND project_id={project_id} AND date_created >= DATE_SUB(UTC_DATE(), INTERVAL 1 WEEK)")
 
   val ticket = {
     get[Pk[Long]]("id") ~
@@ -384,27 +381,6 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
       getAllFullByIdCountQuery.on('ticket_id -> id).as(scalar[Long].single)
-    }
-  }
-
-  def getOpenCountForProject(projectId: Long): Long = {
-
-    DB.withConnection { implicit conn =>
-      getOpenCountForProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
-    }
-  }
-
-  def getOpenCountTodayForProject(projectId: Long): Long = {
-
-    DB.withConnection { implicit conn =>
-      getOpenCountForTodayProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
-    }
-  }
-
-  def getOpenCountWeekForProject(projectId: Long): Long = {
-
-    DB.withConnection { implicit conn =>
-      getOpenCountForWeekProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 
