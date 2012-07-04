@@ -14,16 +14,15 @@ import play.api.libs.json.Json._
 import play.api.libs.json._
 
 object SearchModel {
-  
+
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   // Embedded ES
   // XXX turn off network for this?
   // XXX set data directory!
-  // XXX mapping blows up
   val indexer = Indexer.local.start
-  
+
   val ticketIndex = "tickets"
   val ticketType = "ticket"
   val ticketMapping = """
@@ -410,7 +409,7 @@ object SearchModel {
   """
 
   def checkIndices = {
-    
+
     if(!indexer.exists(ticketIndex)) {
       indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
@@ -441,7 +440,7 @@ object SearchModel {
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
     indexer.refresh()
   }
-  
+
   def indexTicket(ticket: FullTicket) {
 
     val resId = ticket.resolution.id match {
@@ -488,9 +487,9 @@ object SearchModel {
     indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(tdoc).toString)
     indexer.refresh()
   }
-  
+
   def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
-    
+
     val projChanged = newTick.project.id match {
       case oldTick.project.id => false
       case _ => true
@@ -645,16 +644,16 @@ object SearchModel {
   }
 
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
-    
+
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
     var q = query
     if(q.isEmpty) {
       q = "*"
     }
-    
+
     var actualQuery : BaseQueryBuilder = queryString(q)
-    
+
     // If we have filters, build up a filterquery and swap out our actualQuery
     // with a filtered version!
     if(!filters.isEmpty) {
@@ -663,7 +662,7 @@ object SearchModel {
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
-    
+
     indexer.search(
       query = actualQuery,
       indices = Seq("ticket_histories"),
@@ -684,18 +683,18 @@ object SearchModel {
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
   }
-  
+
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
-    
+
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
     var q = query
     if(q.isEmpty) {
       q = "*"
     }
-    
+
     var actualQuery : BaseQueryBuilder = queryString(q)
-    
+
     // If we have filters, build up a filterquery and swap out our actualQuery
     // with a filtered version!
     if(!filters.isEmpty) {
@@ -704,7 +703,7 @@ object SearchModel {
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
-    
+
     indexer.search(
       query = actualQuery,
       indices = Seq("ticket_comments"),
@@ -721,18 +720,18 @@ object SearchModel {
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
   }
-  
+
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
-    
+
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
     var q = query
     if(q.isEmpty) {
       q = "*"
     }
-    
+
     var actualQuery : BaseQueryBuilder = queryString(q)
-    
+
     // If we have filters, build up a filterquery and swap out our actualQuery
     // with a filtered version!
     if(!filters.isEmpty) {
@@ -741,7 +740,7 @@ object SearchModel {
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
-    
+
     indexer.search(
       query = actualQuery,
       indices = Seq("tickets"),
@@ -763,7 +762,7 @@ object SearchModel {
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
   }
-  
+
   def shutdown {
     indexer.stop
   }

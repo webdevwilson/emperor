@@ -1,5 +1,7 @@
 @(projects: List[Project])(implicit request: Request[AnyContent])
 
+@import util._
+
 @main("XXX Home") {
 <ul>
  @projects.map { project =>

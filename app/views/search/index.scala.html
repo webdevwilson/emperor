@@ -4,20 +4,23 @@
 @import util._
 
 @main(Messages("search.results")) {
-  XXX do something with empty
 <div class="row-fluid">
  <div class="span2">
   <ul class="nav nav-list well">
+  @if(facets.size > 0) {
 	@filters.map { key =>
-	  <li><a style="text-align: left" class="btn btn-danger btn-mini" href="@Library.filterLink(request, key._1, "")">@Messages("search.facet." + key._1) XXX <i class="icon-remove-circle icon-white"></i></a></li>
+	 <li><a style="text-align: left" class="btn btn-danger btn-mini" href="@Library.filterLink(request, key._1, "")">@Messages("search.facet." + key._1) XXX <i class="icon-remove-circle icon-white"></i></a></li>
 	}
-    @facets.map { facet =>
-      <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
-      @facet.entries.map { entry =>
-        <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
-      }
-    }
+  @facets.map { facet =>
+   <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
+   @facet.entries.map { entry =>
+   <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+   }
+  }
   </ul>
+  } else {
+   <h5>@Messages("search.facet.none")</h5>
+  }
  </div>
  <div class="span10">
   <table class="table table-bordered table-rounded table-striped">

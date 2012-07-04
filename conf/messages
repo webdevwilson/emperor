@@ -139,6 +139,7 @@ role.description=Description
 role.name=Name
 
 search.placeholder=Search
+search.facet.none=No facets.
 search.facet.priority=Priority
 search.facet.project=Project
 search.facet.resolution=Resolution
