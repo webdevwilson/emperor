@@ -7,7 +7,7 @@ import scala.collection.mutable.ListBuffer
  * Helper for pagination.
  */
 case class Page[+A](items: Seq[A], requestedPage: Int, count: Int, total: Long) {
-  lazy val lastPage = (total.toDouble / count).ceil.toInt 
+  lazy val lastPage = (total.toDouble / count).ceil.toInt
   lazy val page = {
     if(requestedPage > this.lastPage) {
       this.lastPage
@@ -26,7 +26,7 @@ case class Facets(name: String, param: String, items: Seq[Facet])
 case class SearchResult[A](pager: Page[A], facets: Seq[Facets])
 
 object Library {
-    
+
   def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
 
     var q = request.queryString
@@ -63,7 +63,7 @@ object Library {
         }
       )
     )
-    
+
     request.path + "?" + qs
   }
 }
