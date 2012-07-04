@@ -74,11 +74,11 @@ object Ticket extends Controller with Secured {
   )
 
   def resolve(ticketId: String) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
 
     val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    
+
     ticket match {
       case Some(value) => Ok(views.html.ticket.resolve(ticketId, value, resolutions, resolveForm)(request))
       case None => BadRequest(views.html.ticket.error(request))
@@ -86,7 +86,7 @@ object Ticket extends Controller with Secured {
   }
 
   def unresolve(ticketId: String) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
 
     ticket match {
@@ -96,9 +96,9 @@ object Ticket extends Controller with Secured {
   }
 
   def doResolve(ticketId: String) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
-    
+
     ticket match {
       case Some(value) => {
         resolveForm.bindFromRequest.fold(
@@ -117,9 +117,9 @@ object Ticket extends Controller with Secured {
   }
 
   def doUnResolve(ticketId: String) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
-    
+
     ticket match {
       case Some(value) => {
         commentForm.bindFromRequest.fold(
@@ -139,13 +139,12 @@ object Ticket extends Controller with Secured {
   }
 
   def newStatus(ticketId: String, statusId: Long) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
     val newStatus = WorkflowModel.getStatusById(statusId)
-    // XXX some sort of check too many gets!
-    
+
     // XXX form errors?
-    
+
     ticket match {
       case Some(value) => {
         newStatus match {
@@ -168,7 +167,6 @@ object Ticket extends Controller with Secured {
           errors => {
             val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
             val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-            // XXX page!
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange => {
@@ -176,7 +174,7 @@ object Ticket extends Controller with Secured {
               statusChange.comment match {
                 case Some(content) => {
                   val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, content)
-                  SearchModel.indexComment(comm.get) // XXX actors? handle None!
+                  SearchModel.indexComment(comm.get)
                 }
                 case None => //
               }
@@ -207,7 +205,7 @@ object Ticket extends Controller with Secured {
         val ticket = TicketModel.create(userId = request.session.get("userId").get.toLong, ticket = value)
         ticket match {
           case Some(t) => {
-            SearchModel.indexTicket(TicketModel.getFullById(t.ticketId.get).get) // XXX actors, elsewhere?!!
+            SearchModel.indexTicket(TicketModel.getFullById(t.ticketId.get).get)
             Redirect(routes.Ticket.item("comments", t.ticketId.get)).flashing("success" -> "ticket.add.success")
           }
           case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId.get)).flashing("error" -> "ticket.add.failure")
@@ -224,12 +222,12 @@ object Ticket extends Controller with Secured {
       },
       value => {
         val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.content)
-        SearchModel.indexComment(comm.get) // XXX actors? handle None!
+        SearchModel.indexComment(comm.get)
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     // Should be i18ned in the view
@@ -247,7 +245,6 @@ object Ticket extends Controller with Secured {
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
     val ticket = TicketModel.getById(ticketId)
-    // XXX Should really match this here and return if it's not found
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -262,7 +259,7 @@ object Ticket extends Controller with Secured {
   }
 
   def item(tab: String, ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
-    
+
     val ticket = TicketModel.getFullById(ticketId)
 
     ticket match {
@@ -270,7 +267,7 @@ object Ticket extends Controller with Secured {
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-        
+
         tab match {
           case "history"  => {
 
@@ -342,7 +339,7 @@ object Ticket extends Controller with Secured {
       case None => NotFound
     }
   }
-  
+
   def update(ticketId: String) = IsAuthenticated { implicit request =>
 
     ticketForm.bindFromRequest.fold(
@@ -359,7 +356,7 @@ object Ticket extends Controller with Secured {
       },
       value => {
         TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
-        SearchModel.indexTicket(TicketModel.getFullById(ticketId).get) // XXX actors, elsewhere?!!
+        SearchModel.indexTicket(TicketModel.getFullById(ticketId).get)
         Redirect(routes.Ticket.item("history", ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )
