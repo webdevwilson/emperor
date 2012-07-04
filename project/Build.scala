@@ -9,8 +9,8 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "org.scala-lang" % "scala-compiler"         % "2.9.1",
-    "org.specs2"    %% "specs2"                 % "1.8.2"           % "test",
-    "mysql"         % "mysql-connector-java"    % "5.1.19",
+    "org.specs2"    %% "specs2"                 % "1.11"           % "test",
+    "mysql"         % "mysql-connector-java"    % "5.1.21",
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
     "org.clapper"   %% "markwrap"               % "0.5.4"
   )

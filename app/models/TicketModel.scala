@@ -88,9 +88,9 @@ object TicketModel {
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE ticket_id={ticket_id} ORDER BY date_created DESC LIMIT 1")
   // XX Missing proposed resolution :( due to lack of aliases
-  val getAllCurrentQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id GROUP BY t.ticket_id ORDER BY t.date_created DESC")
-  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created DESC LIMIT 1")
-  val getAllFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created ASC")
+  val getAllCurrentQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users urep ON urep.id = t.reporter_id LEFT JOIN users uass ON uass.id = t.assignee_id LEFT JOIN users uatt ON uatt.id = t.attention_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id GROUP BY t.ticket_id ORDER BY t.date_created DESC")
+  val getFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users urep ON urep.id = t.reporter_id LEFT JOIN users uass ON uass.id = t.assignee_id LEFT JOIN users uatt ON uatt.id = t.attention_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created DESC LIMIT 1")
+  val getAllFullByIdQuery = SQL("SELECT * FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users urep ON urep.id = t.reporter_id LEFT JOIN users uass ON uass.id = t.assignee_id LEFT JOIN users uatt ON uatt.id = t.attention_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created ASC")
   val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM tickets t JOIN projects p ON p.id = t.project_id JOIN ticket_priorities tp ON tp.id = t.priority_id JOIN ticket_severities sevs ON sevs.id = t.severity_id JOIN workflow_statuses ws ON ws.id = t.status_id JOIN ticket_statuses ts ON ts.id = ws.status_id JOIN ticket_types tt ON tt.id = t.type_id JOIN users u ON u.id = t.reporter_id LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id WHERE t.ticket_id={ticket_id} ORDER BY t.date_created ASC")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
@@ -173,34 +173,34 @@ object TicketModel {
   }
 
   val fullTicket = {
-    get[Pk[Long]]("tickets.id") ~
-    get[String]("tickets.ticket_id") ~
-    get[Long]("tickets.user_id") ~
-    get[Long]("tickets.reporter_id") ~
-    get[String]("users.realname") ~
-    get[Option[Long]]("tickets.assignee_id") ~
-    get[Option[Long]]("tickets.attention_id") ~
-    get[Long]("tickets.project_id") ~
-    get[String]("projects.name") ~
-    get[Long]("tickets.priority_id") ~
-    get[String]("ticket_priorities.name") ~
-    get[String]("ticket_priorities.color") ~
-    get[Option[Long]]("tickets.resolution_id") ~
-    get[Option[String]]("ticket_resolutions.name") ~
-    get[Option[Long]]("tickets.proposed_resolution_id") ~
-    get[Long]("tickets.severity_id") ~
-    get[String]("ticket_severities.name") ~
-    get[String]("ticket_severities.color") ~
-    get[Long]("tickets.status_id") ~
-    get[Long]("workflow_statuses.status_id") ~
-    get[String]("ticket_statuses.name") ~
-    get[Long]("tickets.type_id") ~
-    get[String]("ticket_types.name") ~
-    get[String]("ticket_types.color") ~
-    get[Option[Long]]("tickets.position") ~
-    get[String]("tickets.summary") ~
-    get[Option[String]]("tickets.description") ~
-    get[Date]("tickets.date_created") map {
+    get[Pk[Long]]("t.id") ~
+    get[String]("t.ticket_id") ~
+    get[Long]("t.user_id") ~
+    get[Long]("t.reporter_id") ~
+    get[String]("urep.realname") ~
+    get[Option[Long]]("t.assignee_id") ~
+    get[Option[Long]]("t.attention_id") ~
+    get[Long]("t.project_id") ~
+    get[String]("p.name") ~
+    get[Long]("t.priority_id") ~
+    get[String]("tp.name") ~
+    get[String]("tp.color") ~
+    get[Option[Long]]("t.resolution_id") ~
+    get[Option[String]]("tr.name") ~
+    get[Option[Long]]("t.proposed_resolution_id") ~
+    get[Long]("t.severity_id") ~
+    get[String]("sevs.name") ~
+    get[String]("sevs.color") ~
+    get[Long]("t.status_id") ~
+    get[Long]("ws.status_id") ~
+    get[String]("ts.name") ~
+    get[Long]("t.type_id") ~
+    get[String]("tt.name") ~
+    get[String]("tt.color") ~
+    get[Option[Long]]("t.position") ~
+    get[String]("t.summary") ~
+    get[Option[String]]("t.description") ~
+    get[Date]("t.date_created") map {
       case id~tickId~userId~repId~repName~assId~attId~projId~projName~priId~priName~priColor~resId~resName~propResId~sevId~sevName~sevColor~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
