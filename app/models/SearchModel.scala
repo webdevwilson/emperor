@@ -451,6 +451,30 @@ object SearchModel {
       case Some(name) => JsString(name)
       case None       => JsString("TICK_RESO_UNRESOLVED")
     }
+    val propResId = ticket.proposedResolution.id match {
+      case Some(id)   => JsNumber(id)
+      case None       => JsNull
+    }
+    val propResName = ticket.proposedResolution.name match {
+      case Some(name) => JsString(name)
+      case None       => JsString("TICK_RESO_UNRESOLVED")
+    }
+    val assId = ticket.assignee.id match {
+      case Some(id) => JsNumber(id)
+      case None     => JsNull
+    }
+    val assName = ticket.assignee.name match {
+      case Some(name) => JsString(name)
+      case None       => JsNull
+    }
+    val attId = ticket.attention.id match {
+      case Some(id) => JsNumber(id)
+      case None     => JsNull
+    }
+    val attName = ticket.attention.name match {
+      case Some(name) => JsString(name)
+      case None       => JsNull
+    }
 
     val tdoc: Map[String,JsValue] = Map(
       "project_id"      -> JsNumber(ticket.project.id),
@@ -459,20 +483,14 @@ object SearchModel {
       "priority_name"   -> JsString(ticket.priority.name),
       "resolution_id"   -> resId,
       "resolution_name" -> resName,
-      // "proposed_resolution_id" -> ticket.proposedResolutionId.toString,
-      // "proposed_resolution_name" -> ticket.proposedResolutionName.getOrElse(""),
+      "proposed_resolution_id" -> propResId,
+      "proposed_resolution_name" -> propResName,
       "reporter_id"     -> JsNumber(ticket.reporter.id),
       "reporter_name"   -> JsString(ticket.reporter.name),
-      "assignee_id"     -> { ticket.assigneeId match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      // XXX assignee name
-      "attention_id"     -> { ticket.attentionId match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      // XXX attention name
+      "assignee_id"     -> assId,
+      "assignee_name"   -> assName,
+      "attention_id"    -> attId,
+      "attention_name"  -> attName,
       "severity_id"     -> JsNumber(ticket.severity.id),
       "severity_name"   -> JsString(ticket.severity.name),
       "status_id"       -> JsNumber(ticket.status.id),
@@ -504,16 +522,22 @@ object SearchModel {
       case None if oldTick.resolution.id.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val assChanged = newTick.assigneeId match {
-      case Some(ass) if oldTick.assigneeId.isEmpty => true // We have one now, true!
-      case Some(ass) if !oldTick.assigneeId.isEmpty => ass != oldTick.assigneeId.get // True if changed
-      case None if oldTick.assigneeId.isEmpty => false // nothing and nothing, false
+    val propResoChanged = newTick.proposedResolution.id match {
+      case Some(res) if oldTick.proposedResolution.id.isEmpty => true // We have one now, true!
+      case Some(res) if !oldTick.proposedResolution.id.isEmpty => res != oldTick.proposedResolution.id.get // True if changed
+      case None if oldTick.proposedResolution.id.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
-    val attChanged = newTick.attentionId match {
-      case Some(att) if oldTick.attentionId.isEmpty => true // We have one now, true!
-      case Some(att) if !oldTick.attentionId.isEmpty => att != oldTick.attentionId.get // True if changed
-      case None if oldTick.attentionId.isEmpty => false // nothing and nothing, false
+    val assChanged = newTick.assignee.id match {
+      case Some(ass) if oldTick.assignee.id.isEmpty => true // We have one now, true!
+      case Some(ass) if !oldTick.assignee.id.isEmpty => ass != oldTick.assignee.id.get // True if changed
+      case None if oldTick.assignee.id.isEmpty => false // nothing and nothing, false
+      case _ => true // true otherwise!
+    }
+    val attChanged = newTick.attention.id match {
+      case Some(att) if oldTick.attention.id.isEmpty => true // We have one now, true!
+      case Some(att) if !oldTick.attention.id.isEmpty => att != oldTick.attention.id.get // True if changed
+      case None if oldTick.attention.id.isEmpty => false // nothing and nothing, false
       case _ => true // true otherwise!
     }
     val repChanged = newTick.reporter.id match {
@@ -545,8 +569,8 @@ object SearchModel {
 
     val hdoc: Map[String,JsValue] = Map(
       "ticket_id"         -> JsString(newTick.ticketId),
-      "user_id"           -> JsNumber(newTick.userId),
-      // "user_realname"     -> JsString(userRealName), // XXX
+      "user_id"           -> JsNumber(newTick.user.id),
+      "user_realname"     -> JsString(newTick.user.name),
       "project_id"        -> JsNumber(newTick.project.id),
       "old_project_id"    -> JsNumber(oldTick.project.id),
       "project_name"      -> JsString(newTick.project.name),
@@ -561,26 +585,66 @@ object SearchModel {
         case Some(id) => JsNumber(id)
         case None     => JsNull
       } },
-      // "old_resolution_id" -> JsNumber(oldTick.resolutionId.getOrElse("")), XXX
+      "old_resolution_id" -> { oldTick.resolution.id match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
       "resolution_name"   -> { newTick.resolution.name match {
         case Some(name) => JsString(name)
         case None       => JsString("TICK_RESO_UNRESOLVED")
       } },
       "old_resolution_name" -> JsString(oldTick.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
-      // "proposed_resolution_id" -> newTick.proposedResolutionId.toString, XXX
-      // "proposed_resolution_name" -> newTick.proposedResolutionName.getOrElse(""), XXX
-      "assignee_id"       -> { newTick.assigneeId match {
+      "proposed_resolution_id" -> { newTick.proposedResolution.id match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
+      "old_proposed_resolution_id" -> { oldTick.proposedResolution.id match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      } },
+      "proposed_resolution_name" -> { newTick.proposedResolution.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
+      "old_proposed_resolution_name" -> { oldTick.proposedResolution.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
+      "resolution_changed"-> JsBoolean(propResoChanged),
+      "assignee_id"       -> { newTick.assignee.id match {
         case Some(assId)=> JsNumber(assId)
         case None       => JsNull
       } },
-      // "assignee_name"     -> JsString(newTick.assigneeName),
+      "old_assignee_id"       -> { oldTick.assignee.id match {
+        case Some(assId)=> JsNumber(assId)
+        case None       => JsNull
+      } },
+      "assignee_name"     -> { newTick.assignee.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
+      "old_assignee_name"     -> { oldTick.assignee.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
       "assignee_changed"  -> JsBoolean(assChanged),
-      "attention_id"      -> { newTick.attentionId match {
+      "attention_id"      -> { newTick.attention.id match {
         case Some(attId) => JsNumber(attId)
         case None        => JsNull
       } },
-      // "attention_name"    -> JsString(newTick.assigneeName),
+      "old_attention_id"      -> { oldTick.attention.id match {
+        case Some(attId) => JsNumber(attId)
+        case None        => JsNull
+      } },
+      "attention_name"    -> { newTick.attention.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
+      "old_attention_name"    -> { oldTick.attention.name match {
+        case Some(name) => JsString(name)
+        case None       => JsNull
+      } },
       "attention_changed" -> JsBoolean(attChanged),
       "reporter_id"       -> JsNumber(newTick.reporter.id),
       "old_reporter_id"   -> JsNumber(oldTick.reporter.id),
