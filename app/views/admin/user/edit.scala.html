@@ -32,6 +32,9 @@
  </div>
  <div class="span6">
   <h1>@Messages("admin.user.changepassword")</h1>
+  @passForm.globalError.map { error =>
+    <div class="alert alert-error">@Messages(error.message)</div>
+  }
   @helper.form(action = controllers.admin.routes.User.updatePassword(id)) {
    <fieldset>
     @helper.inputPassword(passForm("password"), '_label -> Messages("user.password"))

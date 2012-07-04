@@ -38,8 +38,9 @@ object User extends Controller with Secured {
   val passwordForm = Form(
     mapping(
       "password" -> nonEmptyText,
-      "password2"-> nonEmptyText // XXX should match
+      "password2"-> nonEmptyText
     )(models.NewPassword.apply)(models.NewPassword.unapply)
+    verifying("admin.user.password.match", np => { np.password.equals(np.password2) })
   )
 
   def add = IsAuthenticated { implicit request =>
@@ -52,7 +53,7 @@ object User extends Controller with Secured {
       }
     )
   }
-  
+
   def addToGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.getById(userId)
@@ -68,7 +69,7 @@ object User extends Controller with Secured {
       Map("status" -> "OK", "message" -> "admin.user.group.add.success")
     ))
   }
-  
+
   def removeFromGroup(userId: Long, groupId: Long) = IsAuthenticated { implicit request =>
 
     val user = UserModel.getById(userId)
@@ -84,7 +85,7 @@ object User extends Controller with Secured {
       Map("status" -> "OK")
     ))
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.user.create(newForm)(request))
@@ -111,7 +112,7 @@ object User extends Controller with Secured {
   }
 
   def item(userId: Long) = IsAuthenticated { implicit request =>
-    
+
     val user = UserModel.getById(userId)
     val allGroups = GroupModel.getAll
     val groupUsers = GroupModel.getGroupUsersForUser(userId)
@@ -120,9 +121,9 @@ object User extends Controller with Secured {
       case Some(value) => Ok(views.html.admin.user.item(value, allGroups, groupUsers)(request))
       case None => NotFound
     }
-    
+
   }
-  
+
   def update(userId: Long) = IsAuthenticated { implicit request =>
 
     editForm.bindFromRequest.fold(
