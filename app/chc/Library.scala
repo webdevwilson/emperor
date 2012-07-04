@@ -8,17 +8,18 @@ import scala.collection.mutable.ListBuffer
  */
 case class Page[+A](items: Seq[A], requestedPage: Int, count: Int, total: Long) {
   lazy val lastPage = (total.toDouble / count).ceil.toInt
-  lazy val page = {
-    if(requestedPage > this.lastPage) {
-      this.lastPage
-    } else {
-      requestedPage
-    }
+  lazy val page = requestedPage match {
+      case p if p < firstPage => firstPage
+      case p if p > lastPage => lastPage
+      case _ => requestedPage
   }
-  lazy val prev = Option(page - 1).filter(_ >= 1)
-  lazy val next = Option(page + 1).filter(_ => ((count * (page - 1)) + items.size) < total)
-  val firstPage = 0
-  lazy val offset = count * (page - 1)
+  lazy val prev = Option(page - 1).filter(_ >= firstPage)
+  lazy val next = Option(page + 1).filter(_ <= lastPage)
+  val firstPage = 1
+  lazy val offset = page match {
+    case p if p == 0 => 0
+    case _ => count * (page - 1)
+  }
 }
 
 case class Facet(name: String, value: String, count: Long)

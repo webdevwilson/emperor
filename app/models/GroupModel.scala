@@ -34,7 +34,7 @@ object GroupModel {
       case id~name~dateCreated => Group(id, name, dateCreated)
     }
   }
-  
+
   val groupUser = {
     get[Pk[Long]]("id") ~
     get[Long]("group_id") ~
@@ -44,7 +44,7 @@ object GroupModel {
   }
 
   def addUser(userId: Long, groupId: Long) {
-    
+
     DB.withConnection { implicit conn =>
       addUserQuery.on(
         'userId -> userId,
@@ -62,22 +62,22 @@ object GroupModel {
     }
     group.copy(id = new Id(id.get))
   }
-  
+
   def delete(id: Long) {
       // XXX
   }
 
   def getById(id: Long) : Option[Group] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(group.singleOpt)
     }
   }
 
   def getStartsWith(query: String) : Seq[Group] = {
-    
+
     val likeQuery = query + "%"
-    
+
     DB.withConnection { implicit conn =>
       val groups = startsWithQuery.on(
         'name -> likeQuery
@@ -88,37 +88,37 @@ object GroupModel {
   }
 
   def getAll: List[Group] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(group *)
     }
   }
 
   def getGroupUsersForUser(userId: Long): List[GroupUser] = {
-    
+
     DB.withConnection { implicit conn =>
       allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
     }
   }
 
   def getGroupUsersForGroup(groupId: Long): List[GroupUser] = {
-    
+
     DB.withConnection { implicit conn =>
       allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser *)
     }
   }
-  
+
   def getForUser(userId: Long): List[Group] = {
-    
+
     DB.withConnection { implicit conn =>
       allForUserQuery.on('userId -> userId).as(group *)
     }
   }
-  
+
   def list(page: Int = 1, count: Int = 10) : Page[Group] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val groups = listQuery.on(
           'count  -> count,
@@ -130,9 +130,9 @@ object GroupModel {
         Page(groups, page, count, totalRows)
       }
   }
-  
+
   def removeUser(userId : Long, groupId : Long) {
-    
+
     DB.withConnection { implicit conn =>
       removeUserQuery.on(
         'userId   -> userId,
@@ -140,7 +140,7 @@ object GroupModel {
       ).execute
     }
   }
-  
+
   def update(id: Long, group: Group) = {
 
     DB.withTransaction { implicit conn =>

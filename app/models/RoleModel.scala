@@ -27,7 +27,7 @@ object RoleModel {
       case id~name~description~dateCreated => Role(id, name, description, dateCreated)
     }
   }
-  
+
   def create(role: Role): Role = {
 
     val id = DB.withConnection { implicit conn =>
@@ -36,23 +36,23 @@ object RoleModel {
         'description-> role.description
       ).executeInsert()
     }
-    
+
     role.copy(id = new Id(id.get))
   }
-  
+
   def delete(id: Long) {
       // XXX
   }
 
   def getById(id: Long) : Option[Role] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(role.singleOpt)
     }
   }
 
   def getAll: List[Role] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(role *)
     }
@@ -61,7 +61,7 @@ object RoleModel {
   def list(page: Int = 1, count: Int = 10) : Page[Role] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val roles = listQuery.on(
           'count  -> count,
@@ -73,7 +73,7 @@ object RoleModel {
         Page(roles, page, count, totalRows)
       }
   }
-  
+
   def update(id: Long, role: Role) = {
 
     DB.withTransaction { implicit conn =>
