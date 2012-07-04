@@ -172,6 +172,7 @@ ticket.edit.success=Ticket Updated
 ticket.error.status=Error Changing Status
 ticket.history.attribution.postfix=on {0}
 ticket.history.attribution.prefix=by
+ticket.history.change.set=set to
 ticket.history.change.from=from
 ticket.history.change.to=to
 ticket.history.empty=None
