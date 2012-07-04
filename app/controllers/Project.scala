@@ -18,7 +18,7 @@ object Project extends Controller with Secured {
       "workflow_id" -> longNumber,
       "sequence_current" -> ignored(0.toLong),
       "name"-> nonEmptyText,
-      "key" -> nonEmptyText, // XXX needs better checking, length, etc
+      "key" -> text(minLength = 3, maxLength = 16),
       "date_created" -> ignored(new Date())
     )(models.Project.apply)(models.Project.unapply)
   )
@@ -36,7 +36,7 @@ object Project extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -63,14 +63,14 @@ object Project extends Controller with Secured {
   }
 
   def item(projectId: Long) = IsAuthenticated { implicit request =>
-    
+
     val project = ProjectModel.getById(projectId)
 
     project match {
       case Some(value) => Ok(views.html.project.item(value)(request))
       case None => NotFound
     }
-    
+
   }
 
   def list(page: Int, count: Int) = IsAuthenticated { implicit request =>
