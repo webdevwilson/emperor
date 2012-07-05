@@ -52,6 +52,7 @@
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important"><a href="@controllers.routes.Project.item(change.getSource.get("project_id").asInstanceOf[Long])">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</a></span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span></li>
   	      }
   	      @if(change.getSource.get("assignee_changed").asInstanceOf[Boolean]) {
+            XXX warning here
             @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
             <li>@Messages("ticket.assignee") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("assignee_name").asInstanceOf[String])</span></li>
             } else {
@@ -59,6 +60,7 @@
             }
   	      }
   	      @if(change.getSource.get("attention_changed").asInstanceOf[Boolean]) {
+            XXX warning here
             @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
             <li>@Messages("ticket.attention") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("attention_name").asInstanceOf[String])</span></li>
             } else {

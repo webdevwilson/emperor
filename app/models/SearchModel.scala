@@ -22,7 +22,6 @@ import scala.collection.JavaConversions._
 
 object SearchModel {
 
-  // println(Play.configuration.getConfig("emperor").get.getString("directory"))
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
 
@@ -34,7 +33,7 @@ object SearchModel {
   )
   val indexer = Indexer.at(nodeBuilder.local(true).data(true).settings(
     settingsBuilder.put(settings)
-  ).node)
+  ).node).start
 
   val ticketIndex = "tickets"
   val ticketType = "ticket"
