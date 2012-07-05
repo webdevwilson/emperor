@@ -31,9 +31,11 @@ object SearchModel {
   val settings = Map(
     "path.data" -> config.get.getString("directory").getOrElse("")
   )
-  val indexer = Indexer.at(nodeBuilder.local(true).data(true).settings(
-    settingsBuilder.put(settings)
-  ).node).start
+  val indexer = Indexer.at(
+    nodeBuilder.local(true).data(true).settings(
+      settingsBuilder.put(settings)
+    ).node
+  ).start
 
   val ticketIndex = "tickets"
   val ticketType = "ticket"
