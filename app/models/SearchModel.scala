@@ -27,7 +27,6 @@ object SearchModel {
 
   val config = Play.configuration.getConfig("emperor")
   // Embedded ES
-  // XXX turn off network for this?
   val settings = Map(
     "path.data" -> config.get.getString("directory").getOrElse("")
   )

@@ -53,6 +53,9 @@ object GroupModel {
     }
   }
 
+  /**
+   * Create a group.
+   */
   def create(group: Group): Group = {
 
     val id = DB.withConnection { implicit conn =>
@@ -67,6 +70,9 @@ object GroupModel {
       // XXX
   }
 
+  /**
+   * Retrieve a group by id.
+   */
   def getById(id: Long) : Option[Group] = {
 
     DB.withConnection { implicit conn =>
