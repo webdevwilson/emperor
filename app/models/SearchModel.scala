@@ -10,18 +10,31 @@ import org.elasticsearch.index.query.QueryBuilders._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.facet.FacetBuilders._
 import org.elasticsearch.search.sort._
+import play.api._
+import play.api.Play.current
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
+import org.elasticsearch.client._, transport._
+import org.elasticsearch.common.settings.ImmutableSettings._
+import org.elasticsearch.node._, NodeBuilder._
+import scala.collection.JavaConversions._
+
 object SearchModel {
 
+  // println(Play.configuration.getConfig("emperor").get.getString("directory"))
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
 
+  val config = Play.configuration.getConfig("emperor")
   // Embedded ES
   // XXX turn off network for this?
-  // XXX set data directory!
-  val indexer = Indexer.local.start
+  val settings = Map(
+    "path.data" -> config.get.getString("directory").getOrElse("")
+  )
+  val indexer = Indexer.at(nodeBuilder.local(true).data(true).settings(
+    settingsBuilder.put(settings)
+  ).node)
 
   val ticketIndex = "tickets"
   val ticketType = "ticket"
