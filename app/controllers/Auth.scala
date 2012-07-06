@@ -18,12 +18,13 @@ object Auth extends Controller {
       "username" -> nonEmptyText,
       "password" -> nonEmptyText
     )(LoginUser.apply)(LoginUser.unapply)
+    // XX could eliminate one of these by combining, reducing one of the queries
     .verifying("auth.failure", params => UserModel.getByUsername(params.username) != None)
     .verifying("auth.failure", params => {
       val maybeUser = UserModel.getByUsername(params.username)
       maybeUser match {
         case Some(user) => {
-          BCrypt.checkpw(params.password, user.password) == true          
+          BCrypt.checkpw(params.password, user.password) == true
         }
         case None => false
       }
@@ -34,9 +35,9 @@ object Auth extends Controller {
 
     Ok(views.html.auth.login(loginForm)(request))
   }
-  
+
   def logout = Action { implicit request =>
-    
+
     Redirect(routes.Auth.login).withNewSession.flashing("error" -> "auth.logout.success")
   }
 
@@ -65,7 +66,7 @@ object Auth extends Controller {
  * Provide security features
  */
 trait Secured {
-  
+
   /**
    * Retrieve the connected user email.
    */
@@ -75,10 +76,10 @@ trait Secured {
    * Redirect to login if the user in not authorized.
    */
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Auth.login).flashing("error" -> "auth.mustlogin")
-  
+
   // --
-  
-  /** 
+
+  /**
    * Action for authenticated users.
    */
   def IsAuthenticated(f: Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
