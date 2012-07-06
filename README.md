@@ -27,7 +27,7 @@ There is a need for a featureful, modern issue tracker and project management sy
 
 ## Current Features
 
-* Mulitple Users
+* Multiple Users
 * Multiple Projects
 * Search
 * Ticket Creation
