@@ -1,0 +1,7 @@
+# Feature Roadmap
+
+## 0.1.0
+ * Ticket Resolution & Unresolution with comments
+ * Decent Comment UI
+ * Full unit tests
+ * Ticket advance & revert dialog w/refreshing
