@@ -18,7 +18,7 @@ Development on Emperor begain in April of 2012 and has been conducted on nights 
 
 # How To Help
 
-Emperor is in very active development and may change dramatically before a 1.0 release. Feel free to follow this repo, create issues or contact me at \<cory@onemogin.com>
+Emperor is in very active development and may change dramatically before a 1.0 release. Feel free to follow this repo, create issues or contact me at \<cory@onemogin.com>.
 
 # Technologies
 
