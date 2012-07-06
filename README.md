@@ -4,13 +4,17 @@ Emperor is a project management application for software development.
 
 Emperor aims to replicate features of established bug-trackers such as JIRA, FogBugz and others while staying focused and opinionated.
 
-# See It
+## See It
 
 Please have a look at the [project page](http://gphat.github.com/emperor/).
 
-# Mission Statement
+## Mission Statement
 
 The mission of emperor is to provide project management software that is reasonable to administer, useful for developers and &mdash; perhaps most critical &mdash; visible and informative to non-developers.
+
+## Why It Exists
+
+There is a need for a featureful, modern issue tracker and project management systems that is an alternative to heavy, commercial systems.
 
 ## Current Features
 
