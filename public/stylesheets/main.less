@@ -143,6 +143,16 @@ table {
     }
   }
 }
+table.ticket-search {
+  .label {
+    display: inline-block;
+    min-width: 12em;
+    text-align: center;
+  }
+  a:hover .label {
+    border: 1px solid rgba(0,0,0,.25);
+  }
+}
 .btn-group-above-table {
     margin-bottom: .5em;
 }
@@ -194,6 +204,30 @@ table {
 
   p:last-child {
     margin-bottom: 0
+  }
+}
+.search-well {
+  padding: 12px;
+  li.filter {
+    a {
+      background-color: #DA4F49;
+      background-image: -moz-linear-gradient(top, #EE5F5B, #BD362F);
+      background-image: -ms-linear-gradient(top, #EE5F5B, #BD362F);
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#EE5F5B), to(#BD362F));
+      background-image: -webkit-linear-gradient(top, #EE5F5B, #BD362F);
+      background-image: -o-linear-gradient(top, #EE5F5B, #BD362F);
+      background-image: linear-gradient(top, #EE5F5B, #BD362F);
+      background-repeat: repeat-x;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EE5F5B', endColorstr='#BD362F', GradientType=0);
+      color: #fff;
+      display: block;
+      margin: 0;
+      padding: 3px 7px;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    }
+    i {
+      float: right;
+    }
   }
 }
 @import "yui.less";

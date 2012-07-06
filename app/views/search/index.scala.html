@@ -6,10 +6,10 @@
 @main(Messages("search.results")) {
 <div class="row-fluid">
  <div class="span2">
-  <ul class="nav nav-list well">
+  <ul class="nav nav-list well search-well">
   @if(facets.size > 0) {
 	@filters.map { key =>
-	 <li><a style="text-align: left" class="btn btn-danger btn-mini" href="@Library.filterLink(request, key._1, "")">@Messages("search.facet." + key._1) XXX <i class="icon-remove-circle icon-white"></i></a></li>
+	 <li class="filter"><a style="text-align: left" class="btn btn-mini" href="@Library.filterLink(request, key._1, "")">@Messages("search.facet.filter." + key._1, Messages(key._2(0)))<i class="icon-remove-circle icon-white"></i></a></li>
 	}
   @facets.map { facet =>
    <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
@@ -23,16 +23,16 @@
   }
  </div>
  <div class="span10">
-  <table class="table table-bordered table-rounded table-striped">
+  <table class="table table-bordered table-rounded table-striped ticket-search">
    <thead>
-    <th>@Messages("ticket.id")</th>
+    <th>@Messages("ticket.ticket")</th>
     <th>@Messages("ticket.summary")</th>
     <th>@Messages("general.actions")</th>
    </thead>
    <tbody>
     @results.items.map { hit =>
     <tr>
-     <td style="width: 10%">@hit.id</td>
+     <td style="width: 10%"><a href="@controllers.routes.Ticket.item("comments", hit.getId)"><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages("ticket.type.with.id", Messages(hit.getSource.get("type_name").asInstanceOf[String]), hit.id)</span></a</td>
      <td style="width: 80%"><a href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.getSource.get("summary")</a></td>
      <td style="width: 10%" class="actions">
       <div class="btn-toolbar">
