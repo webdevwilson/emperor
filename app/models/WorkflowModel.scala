@@ -15,7 +15,7 @@ case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: 
 object WorkflowModel {
 
   val allQuery = SQL("SELECT * FROM workflows")
-  val allStatuses = SQL("SELECT * FROM workflow_statuses ws JOIN ticket_statuses ts ON (ts.id = ws.status_id) WHERE workflow_id={id}")
+  val allStatuses = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.workflow_id={id}")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
@@ -90,6 +90,9 @@ object WorkflowModel {
     }
   }
 
+  /**
+   * Get statuses in this workflow.
+   */
   def getStatuses(id: Long) : Seq[WorkflowStatus] = {
 
     DB.withConnection { implicit conn =>
@@ -97,6 +100,9 @@ object WorkflowModel {
     }
   }
 
+  /**
+   * Get the "previous" status before the provided one.
+   */
   def getPreviousStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
 
     val ws = this.getStatusById(workflowStatusId)
@@ -115,6 +121,9 @@ object WorkflowModel {
     }
   }
 
+  /**
+   * Get the "next" status after the provided one.
+   */
   def getNextStatus(workflowStatusId: Long) : Option[WorkflowStatus] = {
 
     val ws = this.getStatusById(workflowStatusId)
@@ -133,6 +142,10 @@ object WorkflowModel {
     }
   }
 
+  /**
+   * Get the status that a ticket should have when it is created in
+   * his workflow.
+   */
   def getStartingStatus(workflowId: Long) : Option[WorkflowStatus] = {
 
     DB.withConnection { implicit conn =>
