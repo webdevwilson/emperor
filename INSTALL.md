@@ -1,5 +1,10 @@
 # Installation
 
+## Note
+
+These instructions are suitable for developers, not for a permanent installation.
+There is an installer in the works for such things.
+
 ## Install a JDK
 
 JDK 6 is required.  7 should work.

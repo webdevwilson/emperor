@@ -12,6 +12,15 @@ Please have a look at the [project page](http://gphat.github.com/emperor/).
 
 The mission of emperor is to provide project management software that is reasonable to administer, useful for developers and &mdash; perhaps most critical &mdash; visible and informative to non-developers.
 
+## Goals
+
+ * Easy installation and upgrade
+ * Focus on UI and UX
+ * Relatively simple administration
+ * JVM as the only dependency
+ * Focus on convenience and readability for non-developer users
+ * More?
+
 ## Why It Exists
 
 There is a need for a featureful, modern issue tracker and project management systems that is an alternative to heavy, commercial systems.
