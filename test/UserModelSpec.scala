@@ -17,7 +17,7 @@ class UserModelSpec extends Specification {
       running(FakeApplication()) {
 
         val iu = models.InitialUser(
-          username = "testuser",
+          username = "testuser1",
           password = "1234",
           realName = "Test User",
           email    = "test@example.com",

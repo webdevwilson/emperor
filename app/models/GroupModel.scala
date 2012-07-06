@@ -14,12 +14,12 @@ case class GroupUser(id: Pk[Long] = NotAssigned, user_id: Long, group_id: Long)
 
 object GroupModel {
 
-  val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id) VALUES ({userId}, {groupId})")
+  val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id, date_created) VALUES ({userId}, {groupId}, UTC_TIMESTAMP())")
   val removeUserQuery = SQL("DELETE FROM group_users WHERE user_id={userId} AND group_id={groupId}")
   val allQuery = SQL("SELECT * FROM groups")
   val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users WHERE group_id={groupId}")
   val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users WHERE user_id={userId}")
-  val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.id WHERE gu.user_id={userId}")
+  val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.group_id WHERE gu.user_id={userId}")
   val startsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
@@ -91,6 +91,10 @@ object GroupModel {
     }
   }
 
+  /**
+   * Find all groups starting with a specific string. Used for
+   * autocomplete.
+   */
   def getStartsWith(query: String) : Seq[Group] = {
 
     val likeQuery = query + "%"
@@ -111,6 +115,9 @@ object GroupModel {
     }
   }
 
+  /**
+   * Get the GroupUsers that this user is in.
+   */
   def getGroupUsersForUser(userId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
@@ -118,6 +125,9 @@ object GroupModel {
     }
   }
 
+  /**
+   * Get the users that are in this group.
+   */
   def getGroupUsersForGroup(groupId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
@@ -125,6 +135,9 @@ object GroupModel {
     }
   }
 
+  /**
+   * Get the groups that this user is in.
+   */
   def getForUser(userId: Long): List[Group] = {
 
     DB.withConnection { implicit conn =>
