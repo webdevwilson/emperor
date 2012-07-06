@@ -28,7 +28,6 @@ class WorkflowModelSpec extends Specification {
         val work = WorkflowModel.getById(newWork.id.get)
         work must beSome
         work.get must beAnInstanceOf[models.Workflow]
-        println(work.get.id.get)
 
         // // Change it
         val cWork = work.get.copy(name = "Test Workflow 1!")
