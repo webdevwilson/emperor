@@ -58,6 +58,10 @@ object SearchModel {
           "type": "string",
           "index": "not_analyzed"
         },
+        "priority_color": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "resolution_id": {
           "type": "long",
           "index": "not_analyzed"
@@ -102,6 +106,10 @@ object SearchModel {
           "type": "long",
           "index": "not_analyzed"
         },
+        "severity_color": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "severity_name": {
           "type": "string",
           "index": "not_analyzed"
@@ -116,6 +124,10 @@ object SearchModel {
         },
         "type_id": {
           "type": "long",
+          "index": "not_analyzed"
+        },
+        "type_color": {
+          "type": "string",
           "index": "not_analyzed"
         },
         "type_name": {
@@ -494,6 +506,7 @@ object SearchModel {
       "project_name"    -> JsString(ticket.project.name),
       "priority_id"     -> JsNumber(ticket.priority.id),
       "priority_name"   -> JsString(ticket.priority.name),
+      "priority_color"  -> JsString(ticket.priority.color),
       "resolution_id"   -> resId,
       "resolution_name" -> resName,
       "proposed_resolution_id" -> propResId,
@@ -505,10 +518,12 @@ object SearchModel {
       "attention_id"    -> attId,
       "attention_name"  -> attName,
       "severity_id"     -> JsNumber(ticket.severity.id),
+      "severity_color"  -> JsString(ticket.severity.name),
       "severity_name"   -> JsString(ticket.severity.name),
       "status_id"       -> JsNumber(ticket.status.id),
       "status_name"     -> JsString(ticket.status.name),
       "type_id"         -> JsNumber(ticket.ttype.id),
+      "type_color"      -> JsString(ticket.ttype.color),
       "type_name"       -> JsString(ticket.ttype.name),
       "summary"         -> JsString(ticket.summary),
       "description"     -> JsString(ticket.description.getOrElse("")),

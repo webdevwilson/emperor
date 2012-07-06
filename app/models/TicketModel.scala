@@ -83,7 +83,7 @@ case class TicketFullHistory(
 
 object TicketModel {
 
-  val allCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON users.id = ticket_comments.user_id")
+  val allCommentsQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
