@@ -6,11 +6,11 @@ JDK 6 is required.  7 should work.
 
 ## Install Play framework
 
-(Here are instructions.)[http://www.playframework.org/documentation/2.0.2/Installing]
+[Here are instructions.](http://www.playframework.org/documentation/2.0.2/Installing)
 
 ## Install MySQL
 
-(However is best for your system.)[http://dev.mysql.com/downloads/]
+[However is best for your system.](http://dev.mysql.com/downloads/)
 
 ## Create A Database
 
@@ -30,7 +30,7 @@ Create a database called `emperor`.
 
 ## Setup Emperor
 
-  visit http://127.0.0.1:9000
+  visit [http://127.0.0.1:9000](http://127.0.0.1:9000)
   Click "apply" when prompted to populate your database
 
 ## Log In
