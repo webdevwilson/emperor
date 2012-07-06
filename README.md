@@ -27,31 +27,7 @@ There is a need for a featureful, modern issue tracker and project management sy
 
 ## Current Features
 
-**Note:** See [feature list](https://github.com/gphat/emperor/blob/master/features.md).
-
-* Multiple Users
-* Multiple Projects
-* Search
-* Ticket Creation
-* Ticket History
-* Customizable, per-Project Workflow
-* Markdown formatting
-
-## Current Pain Points
-
-* UI is a Work In Progress
-* Not enough tests
-
-## Planned Features
-
-* Groups & Roles
-* Search (with saved searches)
-* Plugins
-* Email notification
-* First-class milestones
-* No-nonsense UI with great user experience
-* Ticket "stacks"
-* Attention flags
+See [feature list](https://github.com/gphat/emperor/blob/master/features.md).
 
 # Running Emperor
 
