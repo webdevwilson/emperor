@@ -7,10 +7,10 @@
 <div class="row-fluid">
  <div class="span2">
   <ul class="nav nav-list well search-well">
-  @if(facets.size > 0) {
 	@filters.map { key =>
 	 <li class="filter"><a style="text-align: left" class="btn btn-mini" href="@Library.filterLink(request, key._1, "")">@Messages("search.facet.filter." + key._1, Messages(key._2(0)))<i class="icon-remove-circle icon-white"></i></a></li>
 	}
+  @if(facets.size > 0) {
   @facets.map { facet =>
    <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
    @facet.entries.map { entry =>
