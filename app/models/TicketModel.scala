@@ -83,7 +83,7 @@ case class TicketFullHistory(
 
 object TicketModel {
 
-  val allCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id")
+  val allCommentsQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON users.id = ticket_comments.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
@@ -94,7 +94,7 @@ object TicketModel {
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments tc JOIN users u ON u.id = tc.user_id WHERE tc.id={id}")
+  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id}")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
 
   val ticket = {
