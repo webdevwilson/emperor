@@ -8,9 +8,17 @@ Emperor aims to replicate features of established bug-trackers such as JIRA, Fog
 
 The mission of emperor is to provide project management software that is reasonable to administer, useful for developers and &mdash; perhaps most critical &mdash; visible and informative to non-developers.
 
+# Running Emperor
+
+See the [INSTALL instructions](https://github.com/gphat/emperor/blob/master/INSTALL.md).
+
 # Development Status
 
-Development on Emperor begain in April of 2012 and has been conducted on nights and weekends.
+Development on Emperor begain in April of 2012 and has been conducted on nights and weekends. It is currently considered to be Alpha quality.
+
+# How To Help
+
+Emperor is in very active development and may change dramatically before a 1.0 release. Feel free to follow this repo, create issues or contact me at \<cory@onemogin.com>
 
 # Technologies
 
@@ -24,9 +32,15 @@ instance.
 * Mulitple Users
 * Multiple Projects
 * Search
+* Ticket Creation
 * Ticket History
 * Customizable, per-Project Workflow
 * Markdown formatting
+
+## Current Pain Points
+
+* UI is a Work In Progress
+* Not enough tests
 
 ## Planned Features
 
