@@ -110,15 +110,16 @@ object UserModel {
       }
   }
 
-  def update(id: Long, user: EditUser) = {
+  def update(id: Long, user: EditUser): Option[User] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'username   -> user.username,
         'realname   -> user.realName,
         'email      -> user.email
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 
@@ -126,7 +127,7 @@ object UserModel {
 
     val hashedPass = BCrypt.hashpw(np.password, BCrypt.gensalt(12))
 
-    DB.withTransaction { implicit conn =>
+    DB.withConnection { implicit conn =>
       val foo = updatePassQuery.on(
         'id         -> id,
         'password   -> hashedPass

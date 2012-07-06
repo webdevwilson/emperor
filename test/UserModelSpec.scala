@@ -31,6 +31,17 @@ class UserModelSpec extends Specification {
         user must beSome
         user.get must beAnInstanceOf[models.User]
 
+        // // Change it
+        val cUser = models.EditUser(
+          username = "testuser1",
+          realName = "Testy User",
+          email = "test@example.com"
+        )
+        val updatedUser = UserModel.update(newUser.id.get, cUser)
+        updatedUser must beSome
+        updatedUser.get must beAnInstanceOf[models.User]
+        updatedUser.get.realName mustEqual "Testy User"
+
         // Nix it
         UserModel.delete(newUser.id.get)
         val goneUser =  UserModel.getById(newUser.id.get)

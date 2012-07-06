@@ -22,7 +22,7 @@ object WorkflowModel {
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
   val addQuery = SQL("INSERT INTO workflows (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
-  val lastInsertQuery = SQL("SELECT LAST_INSERT_ID()")
+  val deleteQuery = SQL("DELETE FROM workflows WHERE id={id}")
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON ticket_statuses.id = workflow_statuses.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
   val getPrevStatus = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE position < {position} AND workflow_id={workflow_id} ORDER BY position DESC LIMIT 1")
   val getNextStatus = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE position > {position} AND workflow_id={workflow_id} ORDER BY position ASC LIMIT 1")
@@ -47,24 +47,35 @@ object WorkflowModel {
     }
   }
 
+  /**
+   * Create a workflow.
+   */
   def create(workflow: Workflow): Workflow = {
 
     DB.withConnection { implicit conn =>
-      addQuery.on(
+      val id = addQuery.on(
         'name         -> workflow.name,
         'description  -> workflow.description
-      ).executeUpdate
+      ).executeInsert()
 
-      val id = lastInsertQuery.as(scalar[Long].single)
-
-      workflow.copy(id = new Id(id))
+      getById(id.get).get
     }
   }
 
+  /**
+   * Delete a workflow.
+   */
   def delete(id: Long) {
-      // XXX
+    DB.withConnection {implicit conn =>
+      deleteQuery.on(
+        'id -> id
+      ).execute
+    }
   }
 
+  /**
+   * Get a workflow by id.
+   */
   def getById(id: Long) : Option[Workflow] = {
 
     DB.withConnection { implicit conn =>
@@ -152,14 +163,18 @@ object WorkflowModel {
       }
   }
 
+  /**
+   * Update a workflow
+   */
   def update(id: Long, workflow: Workflow) = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> workflow.name,
         'description-> workflow.description
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 

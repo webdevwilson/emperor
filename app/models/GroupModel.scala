@@ -161,6 +161,9 @@ object GroupModel {
       }
   }
 
+  /**
+   * Remove a user from a group.
+   */
   def removeUser(userId : Long, groupId : Long) {
 
     DB.withConnection { implicit conn =>
