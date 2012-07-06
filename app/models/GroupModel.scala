@@ -26,6 +26,7 @@ object GroupModel {
   val listCountQuery = SQL("SELECT count(*) FROM groups")
   val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM groups WHERE id={id}")
 
   val group = {
     get[Pk[Long]]("id") ~
@@ -43,6 +44,9 @@ object GroupModel {
     }
   }
 
+  /**
+   * Add user to group.
+   */
   def addUser(userId: Long, groupId: Long) {
 
     DB.withConnection { implicit conn =>
@@ -66,8 +70,15 @@ object GroupModel {
     group.copy(id = new Id(id.get))
   }
 
+  /**
+   * Delete a group.
+   */
   def delete(id: Long) {
-      // XXX
+      DB.withConnection { implicit conn =>
+        deleteQuery.on(
+          'id -> id
+        ).execute
+      }
   }
 
   /**
@@ -147,13 +158,17 @@ object GroupModel {
     }
   }
 
-  def update(id: Long, group: Group) = {
+  /**
+   * Update a group.  Returns the changed group.
+   */
+  def update(id: Long, group: Group): Option[Group] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> group.name
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }

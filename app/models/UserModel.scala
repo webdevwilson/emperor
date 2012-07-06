@@ -29,6 +29,7 @@ object UserModel {
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM users WHERE id={id}")
 
   val user = {
     get[Pk[Long]]("id") ~
@@ -41,6 +42,9 @@ object UserModel {
     }
   }
 
+  /**
+   * Add a user.  Uses `InitialUser`.
+   */
   def create(user: InitialUser): User = {
 
     DB.withConnection { implicit conn =>
@@ -54,27 +58,37 @@ object UserModel {
       this.getById(id.get).get
     }
   }
-  
+
+  /**
+   * Delete a user.
+   */
   def delete(id: Long) {
-      
+    DB.withConnection { implicit conn =>
+      deleteQuery.on(
+        'id -> id
+      ).execute
+    }
   }
 
+  /**
+   * Retrieve a user by id.
+   */
   def getById(id: Long) : Option[User] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
     }
   }
 
   def getAll: List[User] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(user *)
     }
   }
 
   def getByUsername(username: String) : Option[User] = {
-      
+
     DB.withConnection { implicit conn =>
       getByUsernameQuery.on('username -> username).as(UserModel.user.singleOpt)
     }
@@ -83,7 +97,7 @@ object UserModel {
   def list(page: Int = 1, count: Int = 10) : Page[User] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val users = listQuery.on(
           'count  -> count,
@@ -95,7 +109,7 @@ object UserModel {
         Page(users, page, count, totalRows)
       }
   }
-  
+
   def update(id: Long, user: EditUser) = {
 
     DB.withTransaction { implicit conn =>
