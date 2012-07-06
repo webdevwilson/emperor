@@ -27,6 +27,8 @@ There is a need for a featureful, modern issue tracker and project management sy
 
 ## Current Features
 
+**Note:** See [feature list](https://github.com/gphat/emperor/blob/master/features.md).
+
 * Multiple Users
 * Multiple Projects
 * Search
