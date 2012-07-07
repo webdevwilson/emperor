@@ -544,12 +544,7 @@ object SearchModel {
       case oldTick.priority.id => false
       case _ => true
     }
-    val resoChanged = newTick.resolution.id match {
-      case Some(res) if oldTick.resolution.id.isEmpty => true // We have one now, true!
-      case Some(res) if !oldTick.resolution.id.isEmpty => res != oldTick.resolution.id.get // True if changed
-      case None if oldTick.resolution.id.isEmpty => false // nothing and nothing, false
-      case _ => true // true otherwise!
-    }
+    val resoChanged = newTick.resolution.id != oldTick.resolution.id
     val propResoChanged = newTick.proposedResolution.id match {
       case Some(res) if oldTick.proposedResolution.id.isEmpty => true // We have one now, true!
       case Some(res) if !oldTick.proposedResolution.id.isEmpty => res != oldTick.proposedResolution.id.get // True if changed
@@ -639,7 +634,7 @@ object SearchModel {
         case Some(name) => JsString(name)
         case None       => JsNull
       } },
-      "resolution_changed"-> JsBoolean(propResoChanged),
+      "proposed_resolution_changed"-> JsBoolean(propResoChanged),
       "assignee_id"       -> { newTick.assignee.id match {
         case Some(assId)=> JsNumber(assId)
         case None       => JsNull
@@ -700,7 +695,7 @@ object SearchModel {
       "description"       -> JsString(newTick.description.getOrElse("")),
       "old_description"   -> JsString(oldTick.description.getOrElse("")),
       "description_changed" -> JsBoolean(descChanged),
-      "date_created"      -> JsString(dateFormatter.format(new Date()))
+      "date_created"      -> JsString(dateFormatter.format(newTick.dateCreated))
     )
     indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
     indexer.refresh()
