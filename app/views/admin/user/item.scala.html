@@ -15,9 +15,10 @@ XXX edit link
 <ul id="userGroups" class="unstyled bordered">
 @allGroups.map { group =>
   <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.group_id == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>
-} 
+}
 </ul>
 }
+XXX Fix JS
 <script type="text/javascript">
 YUI({gallery: 'gallery-2012.03.23-18-00'}).use('node', 'model', 'model-list', 'gallery-model-sync-rest', function (Y) {
   UserGroupModel = Y.Base.create('UserGroup', Y.Model, [ Y.ModelSync.REST ],
@@ -25,7 +26,7 @@ YUI({gallery: 'gallery-2012.03.23-18-00'}).use('node', 'model', 'model-list', 'g
       root : '/admin/user/' +  @user.id + '/group'
     }
   );
-  
+
   Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
     var model = new UserGroupModel({ id: e.target.get('value') });
     if ( e.target.get('checked') ) {

@@ -32,8 +32,8 @@
    <tbody>
     @results.items.map { hit =>
     <tr>
-     <td style="width: 10%"><a href="@controllers.routes.Ticket.item("comments", hit.getId)"><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages("ticket.type.with.id", Messages(hit.getSource.get("type_name").asInstanceOf[String]), hit.id)</span></a</td>
-     <td style="width: 80%"><a href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.getSource.get("summary")</a></td>
+     <td style="width: 10%"><a href="@controllers.routes.Ticket.item(hit.getId)"><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages("ticket.type.with.id", Messages(hit.getSource.get("type_name").asInstanceOf[String]), hit.id)</span></a</td>
+     <td style="width: 80%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
      <td style="width: 10%" class="actions">
       <div class="btn-toolbar">
        <div class="btn-group">

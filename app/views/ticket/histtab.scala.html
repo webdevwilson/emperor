@@ -1,36 +1,20 @@
 @(
   ticket: models.FullTicket,
   markdown: org.clapper.markwrap.MarkWrapParser,
-  prevStatus: Option[models.WorkflowStatus],
-  nextStatus: Option[models.WorkflowStatus],
-	history: chc.Page[org.elasticsearch.search.SearchHit],
-	changeFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
-	response: org.elasticsearch.action.search.SearchResponse
+  history: chc.Page[org.elasticsearch.search.SearchHit],
+  facets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet]
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import chc._
 @import util._
 
-@item(ticket, markdown, prevStatus, nextStatus) {
   XXX Need empty stuff @Messages("ticket.history.none")
-<div class="tabcontent">
-  <div class="navbar">
-   <div class="navbar-inner">
-    <div class="container">
-     <ul class="nav">
-      <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
-      <li class="active"><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
-     </ul>
-    </div>
-   </div>
-  </div>
-   <div class="tab-pane active" id="history">
     <div class="row">
      <div class="span2">
       <ul class="nav nav-list">
        <li class="nav-header">@Messages("ticket.history.facet.fields")</li>
-       @changeFacets.map { facet =>
+       @facets.map { facet =>
         @facet.entries.map { entry =>
         <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages("ticket.history.facet." + facet.getName, entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
         }
@@ -98,6 +82,3 @@
       @pager(history)
      </div>
     </div>
-   </div>
-  </div>
-}
