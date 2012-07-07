@@ -797,7 +797,6 @@ object SearchModel {
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
-    println(actualQuery)
 
     indexer.search(
       query = actualQuery,

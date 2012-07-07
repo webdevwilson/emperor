@@ -272,7 +272,6 @@ object TicketModel {
     DB.withConnection { implicit conn =>
 
       val tick = this.getById(ticketId).get
-      println("##### " + comment)
       this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
     }
   }

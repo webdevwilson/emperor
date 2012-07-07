@@ -102,7 +102,6 @@ object Ticket extends Controller with Secured {
       case Some(value) => {
         commentForm.bindFromRequest.fold(
           errors => {
-            println(errors)
             BadRequest(views.html.ticket.error(request))
           }, {
             case resolution: models.InitialComment => {
