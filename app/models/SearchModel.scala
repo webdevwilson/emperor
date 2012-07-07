@@ -536,59 +536,18 @@ object SearchModel {
 
   def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
 
-    val projChanged = newTick.project.id match {
-      case oldTick.project.id => false
-      case _ => true
-    }
-    val prioChanged = newTick.priority.id match {
-      case oldTick.priority.id => false
-      case _ => true
-    }
+    val projChanged = newTick.project.id != oldTick.project.id
+    val prioChanged = newTick.priority.id != oldTick.priority.id
     val resoChanged = newTick.resolution.id != oldTick.resolution.id
-    val propResoChanged = newTick.proposedResolution.id match {
-      case Some(res) if oldTick.proposedResolution.id.isEmpty => true // We have one now, true!
-      case Some(res) if !oldTick.proposedResolution.id.isEmpty => res != oldTick.proposedResolution.id.get // True if changed
-      case None if oldTick.proposedResolution.id.isEmpty => false // nothing and nothing, false
-      case _ => true // true otherwise!
-    }
-    val assChanged = newTick.assignee.id match {
-      case Some(ass) if oldTick.assignee.id.isEmpty => true // We have one now, true!
-      case Some(ass) if !oldTick.assignee.id.isEmpty => ass != oldTick.assignee.id.get // True if changed
-      case None if oldTick.assignee.id.isEmpty => false // nothing and nothing, false
-      case _ => true // true otherwise!
-    }
-    val attChanged = newTick.attention.id match {
-      case Some(att) if oldTick.attention.id.isEmpty => true // We have one now, true!
-      case Some(att) if !oldTick.attention.id.isEmpty => att != oldTick.attention.id.get // True if changed
-      case None if oldTick.attention.id.isEmpty => false // nothing and nothing, false
-      case _ => true // true otherwise!
-    }
-    val repChanged = newTick.reporter.id match {
-      case x if x == oldTick.reporter.id => false
-      case _ => true
-    }
-    val sevChanged = newTick.severity.id match {
-      case x if x == oldTick.severity.id => false
-      case _ => true
-    }
-    val statChanged = newTick.status.id match {
-      case oldTick.status.id => false
-      case _ => true
-    }
-    val typeChanged = newTick.ttype.id match {
-      case oldTick.ttype.id => false
-      case _ => true
-    }
-    val summChanged = newTick.summary match {
-      case oldTick.summary => false
-      case _ => true
-    }
-    val descChanged = newTick.description match {
-      case Some(res) if oldTick.description.isEmpty => true // We have one now, true!
-      case Some(res) if !oldTick.description.isEmpty => res != oldTick.description.get // True if changed
-      case None if oldTick.description.isEmpty => false // nothing and nothing, false
-      case _ => true // true otherwise!
-    }
+    val propResoChanged = newTick.proposedResolution.id != oldTick.proposedResolution.id
+    val assChanged = newTick.assignee.id != oldTick.assignee.id
+    val attChanged = newTick.attention.id != oldTick.attention.id
+    val repChanged = newTick.reporter.id != oldTick.reporter.id
+    val sevChanged = newTick.severity.id != oldTick.severity.id
+    val statChanged = newTick.status.id != oldTick.status.id
+    val typeChanged = newTick.ttype.id != oldTick.ttype.id
+    val summChanged = newTick.summary != oldTick.summary
+    val descChanged = newTick.description != oldTick.description
 
     val hdoc: Map[String,JsValue] = Map(
       "ticket_id"         -> JsString(newTick.ticketId),
