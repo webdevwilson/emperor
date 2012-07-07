@@ -1,7 +1,15 @@
-@(ticket: models.FullTicket, mdParser: org.clapper.markwrap.MarkWrapParser,
+@(ticket: models.FullTicket,
+  markdown: org.clapper.markwrap.MarkWrapParser,
   prevStatus: Option[models.WorkflowStatus],
-  nextStatus: Option[models.WorkflowStatus]
-)(content: Html)(implicit request: Request[AnyContent])
+  nextStatus: Option[models.WorkflowStatus],
+  resolutions: List[(String,String)],
+  resolveForm: Form[models.Resolution],
+  commentForm: Form[models.InitialComment],
+  comments: chc.Page[org.elasticsearch.search.SearchHit],
+  commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
+  history: chc.Page[org.elasticsearch.search.SearchHit],
+  historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet]
+)(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -25,14 +33,14 @@
  <div class="btn-group">
   @prevStatus match {
     case Some(status) => {
-  <a href="@routes.Ticket.newStatus(ticket.ticketId, prevStatus.get.id.get)" class="btn btn-warning remote-dialog" data-async="true" title="@Messages("ticket.revert", Messages(prevStatus.get.name))"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+  <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
     }
     case None => { }
   }
   <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
   @nextStatus match {
     case Some(status) => {
-  <a href="@routes.Ticket.newStatus(ticket.ticketId, nextStatus.get.id.get)" class="btn btn-primary remote-dialog" data-async="true" title="@Messages("ticket.advance", Messages(nextStatus.get.name))">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+  <a class="btn btn-primary" data-toggle="modal" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
     }
     case None => {
   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
@@ -44,10 +52,10 @@
    @defining(ticket.resolution.id) { resId =>
      @resId match {
        case Some(x) => {
-         <a class="btn btn-danger remote-dialog" href="@routes.Ticket.unresolve(ticket.ticketId)" title="@Messages("ticket.unresolve")"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+         <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
        }
        case None => {
-         <a class="btn btn-success remote-dialog" href="@routes.Ticket.resolve(ticket.ticketId)" title="@Messages("ticket.resolve")"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
+         <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
        }
      }
    }
@@ -55,19 +63,109 @@
  </div>
 </div>
 <div class="well ticket-desc">
- @{ ticket.description match { case Some(text) => Html(mdParser.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+ @{ ticket.description match { case Some(text) => Html(markdown.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 </div>
-XXX Need loading thingie here
-XXX need query string here
-<div id="tabarea">
- @content
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
+  <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="comments">
+   @helper.form(action = routes.Ticket.item(id = ticket.ticketId), 'class -> "navbar-search") {
+    <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
+   }
+   @commtab(
+    ticket      = ticket,
+    markdown    = markdown,
+    commentForm = commentForm,
+    comments    = comments,
+    facets      = commFacets
+   )
+  </div>
+  <div class="tab-pane" id="history">
+   @histtab(
+    ticket      = ticket,
+    markdown    = markdown,
+    history     = history,
+    facets      = historyFacets
+   )
+  </div>
 </div>
 }
-<script>
-YUI().use('pjax', function (Y) {
-    new Y.Pjax({
-      container: '#tabarea',
-      contentSelector: '.tabcontent'
-    });
-});
-</script>
+@if(nextStatus.isDefined) {
+<div class="modal hide" id="status-advance">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.advance", Messages(nextStatus.get.name))</h3>
+ </div>
+ <div class="modal-body">
+  <fieldset>
+   <input type="hidden" name="status_id" value="@nextStatus.get.id.get">
+   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+}
+@if(prevStatus.isDefined) {
+<div class="modal hide" id="status-revert">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.revert", Messages(prevStatus.get.name))</h3>
+ </div>
+ <div class="modal-body">
+  <fieldset>
+   <input type="hidden" name="status_id" value="@prevStatus.get.id.get">
+   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+}
+<div class="modal hide" id="resolver">
+ @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.resolve")</h3>
+ </div>
+ <div class="modal-body">
+  <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
+  <fieldset>
+   @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
+   @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+<div class="modal hide" id="unresolver">
+ @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.unresolve")</h3>
+ </div>
+ <div class="modal-body">
+   <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
+   <fieldset>
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+   </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>

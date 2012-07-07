@@ -95,19 +95,14 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 GET     /stack                          controllers.Stack.index
 
 GET     /ticket/create                  controllers.Ticket.create
-GET     /ticket/:id                     controllers.Ticket.item(tab = "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
-GET     /ticket/comments/:id            controllers.Ticket.item(tab = "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
-GET     /ticket/history/:id             controllers.Ticket.item(tab = "history",  id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/:id                     controllers.Ticket.item(id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: String)
 POST    /ticket                         controllers.Ticket.add
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: String)
-GET     /ticket/newstatus/:id/:sid      controllers.Ticket.newStatus(id: String, sid: Long)
-GET     /ticket/resolve/:id             controllers.Ticket.resolve(id: String)
 POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: String)
 POST    /ticket/status/:id              controllers.Ticket.status(id: String)
-GET     /ticket/unresolve/:id           controllers.Ticket.unresolve(id: String)
 POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
