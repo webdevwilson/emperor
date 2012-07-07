@@ -160,7 +160,7 @@
  <div class="modal-body">
    <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
    <fieldset>
-     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
    </fieldset>
  </div>
  <div class="modal-footer">

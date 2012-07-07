@@ -9,7 +9,7 @@ import play.api.Play.current
 import scala.collection.mutable.ListBuffer
 
 case class InitialComment(
-  content: String
+  comment: String
 )
 
 case class Comment(
@@ -267,30 +267,29 @@ object TicketModel {
     }
   }
 
-  def resolve(ticketId: String, userId: Long, resolutionId: Long) = {
+  def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None) = {
 
     DB.withConnection { implicit conn =>
 
       val tick = this.getById(ticketId).get
-      val newTick = tick.copy(resolutionId = Some(resolutionId))
-
-      this.update(userId = userId, id = ticketId, ticket = newTick, resolutionId = Some(resolutionId))
+      println("##### " + comment)
+      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
     }
   }
 
-  def unresolve(ticketId: String, userId: Long) = {
+  def unresolve(ticketId: String, userId: Long, comment: Option[String] = None) = {
       val tick = this.getById(ticketId).get
 
-      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true)
+      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
   }
 
-  def changeStatus(ticketId: String, newStatusId: Long, userId: Long) = {
+  def changeStatus(ticketId: String, newStatusId: Long, userId: Long, comment: Option[String] = None) = {
 
     DB.withConnection { implicit conn =>
 
       val tick = this.getById(ticketId).get
 
-      this.update(userId = userId, id = ticketId, ticket = tick, statusId = Some(newStatusId))
+      this.update(userId = userId, id = ticketId, ticket = tick, statusId = Some(newStatusId), comment = comment)
     }
   }
 
@@ -450,7 +449,8 @@ object TicketModel {
   def update(
     userId: Long, id: String, ticket: EditTicket,
     resolutionId: Option[Long] = None, statusId: Option[Long] = None,
-    clearResolution: Boolean = false
+    clearResolution: Boolean = false,
+    comment: Option[String] = None
   ) = {
 
     val user = UserModel.getById(userId).get
@@ -510,7 +510,7 @@ object TicketModel {
 
     if(changed) {
       // Only record something if a change was made.
-      val tid = DB.withConnection { implicit conn =>
+      val tid = DB.withTransaction { implicit conn =>
 
         // XXX Project
         updateQuery.on(
@@ -531,10 +531,18 @@ object TicketModel {
           'summary                -> ticket.summary
         ).executeInsert()
 
-        val newTicket = DB.withConnection { implicit conn =>
-          getFullById(id).get
-        }
+        // Add a comment, if we had one.
+        comment.map { content => {
+          val comm = addComment(ticketId = id, userId = userId, content = content)
+          SearchModel.indexComment(comm.get)
+        } }
+      }
 
+      val newTicket = DB.withConnection { implicit conn =>
+        getFullById(id).get
+      }
+
+      if(changed) {
         SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)
       }
     }
