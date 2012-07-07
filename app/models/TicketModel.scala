@@ -269,7 +269,7 @@ object TicketModel {
   def unresolve(ticketId: String, userId: Long) = {
       val tick = this.getById(ticketId).get
 
-      this.update(userId = userId, id = ticketId, ticket = tick)
+      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true)
   }
 
   def changeStatus(ticketId: String, newStatusId: Long, userId: Long) = {
@@ -400,12 +400,27 @@ object TicketModel {
       }
   }
 
-  def update(userId: Long, id: String, ticket: EditTicket, resolutionId : Option[Long] = None, statusId : Option[Long] = None) = {
+  def update(
+    userId: Long, id: String, ticket: EditTicket,
+    resolutionId: Option[Long] = None, statusId: Option[Long] = None,
+    clearResolution: Boolean = false
+  ) = {
 
     val user = UserModel.getById(userId).get
 
     val oldTicket = DB.withConnection { implicit conn =>
       this.getFullById(id).get
+    }
+
+    // This is a bit hinky, so some explanation is required.
+    // We could get passed a new resolutionId.  If so then we are changing
+    // the resolution.  But if we DON'T get one (None) then we could either
+    // be leaving the resolution alone OR setting it to None.  To disambiguate
+    // we use the clearResolution boolean.  If that is true then we will
+    // set newResId to None (regladless of what resolutionId we might've gotten).
+    val newResId = clearResolution match {
+      case true   => None
+      case false  => resolutionId.getOrElse(oldTicket.resolution.id)
     }
 
     var changed = false
@@ -415,7 +430,7 @@ object TicketModel {
     if(!changed && (oldTicket.priority.id != ticket.priorityId)) {
       changed = true
     }
-    if(!changed && (oldTicket.resolution.id != resolutionId.getOrElse(oldTicket.resolution.id))) {
+    if(!changed && (oldTicket.resolution.id != newResId)) {
       changed = true
     }
     if(!changed && (oldTicket.proposedResolution.id != ticket.proposedResolutionId)) {
@@ -448,7 +463,7 @@ object TicketModel {
 
     if(changed) {
       // Only record something if a change was made.
-      val tid = DB.withTransaction { implicit conn =>
+      val tid = DB.withConnection { implicit conn =>
 
         // XXX Project
         updateQuery.on(
@@ -462,20 +477,19 @@ object TicketModel {
           'severity_id            -> ticket.severityId,
           'status_id              -> statusId.getOrElse(oldTicket.status.id),
           'type_id                -> ticket.typeId,
-          'resolution_id          -> resolutionId.getOrElse(oldTicket.resolution.id),
+          'resolution_id          -> newResId,
           'proposed_resolution_id -> ticket.proposedResolutionId,
           'position               -> ticket.position,
           'description            -> ticket.description,
           'summary                -> ticket.summary
         ).executeInsert()
+
+        val newTicket = DB.withConnection { implicit conn =>
+          getFullById(id).get
+        }
+
+        SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)
       }
-
-
-      val newTicket = DB.withConnection { implicit conn =>
-        getFullById(id).get
-      }
-
-      SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)
     }
   }
 }
