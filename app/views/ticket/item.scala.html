@@ -93,79 +93,79 @@
 </div>
 }
 @if(nextStatus.isDefined) {
-<div class="modal hide" id="status-advance">XXX errors, redirect
+<div class="modal hide" id="status-advance">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3>@Messages("ticket.advance", Messages(nextStatus.get.name))</h3>
  </div>
  <div class="modal-body">
-  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
   <fieldset>
    <input type="hidden" name="status_id" value="@nextStatus.get.id.get">
    @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
   </fieldset>
-  }
  </div>
- <div class="modal-footer">XXX
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-  <a href="#" class="btn btn-primary">Save changes</a>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
  </div>
+ }
 </div>
 }
 @if(prevStatus.isDefined) {
-<div class="modal hide" id="status-revert">XXX errors, redirect
+<div class="modal hide" id="status-revert">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3>@Messages("ticket.revert", Messages(prevStatus.get.name))</h3>
  </div>
  <div class="modal-body">
-  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
   <fieldset>
    <input type="hidden" name="status_id" value="@prevStatus.get.id.get">
    @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
   </fieldset>
-  }
  </div>
- <div class="modal-footer">XXX
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-  <a href="#" class="btn btn-primary">Save changes</a>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
  </div>
+ }
 </div>
 }
-<div class="modal hide" id="resolver">XXX errors, redirect
+<div class="modal hide" id="resolver">
+ @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3>@Messages("ticket.resolve")</h3>
  </div>
  <div class="modal-body">
-  @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
   <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
   <fieldset>
    @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
    @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
   </fieldset>
-  }
  </div>
- <div class="modal-footer">XXX
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-  <a href="#" class="btn btn-primary">Save changes</a>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
  </div>
+ }
 </div>
-<div class="modal hide" id="unresolver">XXX errors, redirect
+<div class="modal hide" id="unresolver">
+ @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3>@Messages("ticket.unresolve")</h3>
  </div>
  <div class="modal-body">
-  @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
    <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
    <fieldset>
      @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
    </fieldset>
-  }
  </div>
- <div class="modal-footer">XXX
-  <a href="#" class="btn" data-dismiss="modal">Close</a>
-  <a href="#" class="btn btn-primary">Save changes</a>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
  </div>
+ }
 </div>
