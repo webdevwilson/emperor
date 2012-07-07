@@ -35,7 +35,7 @@ See the [INSTALL instructions](https://github.com/gphat/emperor/blob/master/INST
 
 # Development Status
 
-Development on Emperor begain in April of 2012 and has been conducted on nights and weekends. It is currently considered to be Alpha quality.
+Development on Emperor began in April of 2012 and has been conducted on nights and weekends. It is currently considered to be Alpha quality.
 
 # How To Help
 
