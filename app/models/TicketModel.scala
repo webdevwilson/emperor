@@ -94,7 +94,7 @@ object TicketModel {
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id}")
+  val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
@@ -204,7 +204,7 @@ object TicketModel {
     get[String]("severity_color") ~
     get[Long]("status_id") ~
     get[Long]("workflow_status_id") ~
-    get[String]("severity_name") ~
+    get[String]("status_name") ~
     get[Long]("type_id") ~
     get[String]("type_name") ~
     get[String]("type_color") ~
@@ -243,7 +243,7 @@ object TicketModel {
     get[String]("realname") ~
     get[String]("ticket_id") ~
     get[String]("content") ~
-    get[Date]("date_created") map {
+    get[Date]("ticket_comments.date_created") map {
       case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
     }
   }

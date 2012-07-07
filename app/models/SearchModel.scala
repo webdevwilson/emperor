@@ -23,7 +23,6 @@ import scala.collection.JavaConversions._
 object SearchModel {
 
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-  dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   val config = Play.configuration.getConfig("emperor")
   // Embedded ES
