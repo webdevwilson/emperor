@@ -179,7 +179,7 @@ object WorkflowModel {
   /**
    * Update a workflow
    */
-  def update(id: Long, workflow: Workflow) = {
+  def update(id: Long, workflow: Workflow): Option[Workflow] = {
 
     DB.withConnection { implicit conn =>
       updateQuery.on(

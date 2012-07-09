@@ -17,6 +17,7 @@ object TicketLinkTypeModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_link_types")
   val insertQuery = SQL("INSERT INTO ticket_link_types (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_link_types SET name={name} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM ticket_link_types WHERE id={id}")
 
   val ticket_link_type = {
     get[Pk[Long]]("id") ~
@@ -26,30 +27,43 @@ object TicketLinkTypeModel {
     }
   }
 
+  /**
+   * Create a link type.
+   */
   def create(ts: TicketLinkType): TicketLinkType = {
 
-    DB.withConnection { implicit conn =>
+    val id = DB.withConnection { implicit conn =>
       insertQuery.on(
         'name   -> ts.name
-      ).executeUpdate
+      ).executeInsert()
     }
-    
-    ts
-  }
-  
-  def delete(id: Long) {
-      
+
+    getById(id.get).get
   }
 
+  /**
+   * Delete a link type.
+   */
+  def delete(id: Long) {
+    DB.withConnection { implicit conn =>
+      deleteQuery.on(
+        'id -> id
+      ).execute
+    }
+  }
+
+  /**
+   * Get a link type by id.
+   */
   def getById(id: Long) : Option[TicketLinkType] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_link_type.singleOpt)
     }
   }
 
   def getAll: List[TicketLinkType] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(ticket_link_type *)
     }
@@ -58,7 +72,7 @@ object TicketLinkTypeModel {
   def list(page: Int = 1, count: Int = 10) : Page[TicketLinkType] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val tss = listQuery.on(
           'count  -> count,
@@ -70,14 +84,18 @@ object TicketLinkTypeModel {
         Page(tss, page, count, totalRows)
       }
   }
-  
-  def update(id: Long, ts: TicketLinkType) = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+  /**
+   * Update a link type.
+   */
+  def update(id: Long, ts: TicketLinkType): Option[TicketLinkType] = {
+
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> ts.name
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }
