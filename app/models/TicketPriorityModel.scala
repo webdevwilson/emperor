@@ -17,6 +17,7 @@ object TicketPriorityModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_priorities")
   val insertQuery = SQL("INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ({name}, {color}, {position}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_priorities SET name={name}, color={color}, position={position} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM ticket_priorities WHERE id={id}")
 
   val ticket_priority = {
     get[Pk[Long]]("id") ~
@@ -34,6 +35,9 @@ object TicketPriorityModel {
     }
   }
 
+  /**
+   * Create a priority.
+   */
   def create(tp: TicketPriority): TicketPriority = {
 
     DB.withConnection { implicit conn =>
@@ -47,10 +51,20 @@ object TicketPriorityModel {
     }
   }
 
+  /**
+   * Delete a priority.
+   */
   def delete(id: Long) {
-      // XXX
+    DB.withConnection { implicit conn =>
+      deleteQuery.on(
+        'id -> id
+      ).execute
+    }
   }
 
+  /**
+   * Get a priority by id.
+   */
   def getById(id: Long) : Option[TicketPriority] = {
 
     DB.withConnection { implicit conn =>
@@ -81,15 +95,19 @@ object TicketPriorityModel {
       }
   }
 
-  def update(id: Long, tp: TicketPriority) = {
+  /**
+   * Update a priority.
+   */
+  def update(id: Long, tp: TicketPriority): Option[TicketPriority] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> tp.name,
         'color      -> tp.color,
         'position   -> tp.position
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }

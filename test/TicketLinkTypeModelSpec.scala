@@ -16,11 +16,11 @@ class TicketLinkTypeModelSpec extends Specification {
     "create, retrieve and delete" in {
       running(FakeApplication()) {
 
-        val s = models.TicketLinkType(
+        val lt = models.TicketLinkType(
           name = "Ticket Link Type 1",
           dateCreated = new Date
         )
-        val newLinkType = TicketLinkTypeModel.create(s)
+        val newLinkType = TicketLinkTypeModel.create(lt)
         newLinkType must beAnInstanceOf[models.TicketLinkType]
 
         // Get it by id
