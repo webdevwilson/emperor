@@ -17,6 +17,7 @@ object TicketSeverityModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_severities")
   val insertQuery = SQL("INSERT INTO ticket_severities (name, color, position, date_created) VALUES ({name}, {color}, {position}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_severities SET name={name}, color={color}, position={position} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM ticket_severities WHERE id={id}")
 
   val ticket_severity = {
     get[Pk[Long]]("id") ~
@@ -34,6 +35,9 @@ object TicketSeverityModel {
     }
   }
 
+  /**
+  * Create a severity.
+  */
   def create(ts: TicketSeverity): TicketSeverity = {
 
     DB.withConnection { implicit conn =>
@@ -48,10 +52,20 @@ object TicketSeverityModel {
 
   }
 
+  /**
+   * Delete a severity.
+   */
   def delete(id: Long) {
-
+    DB.withConnection { implicit conn =>
+      deleteQuery.on(
+        'id -> id
+      ).execute
+    }
   }
 
+  /**
+   * Get a severity by id
+   */
   def getById(id: Long) : Option[TicketSeverity] = {
 
     DB.withConnection { implicit conn =>
@@ -82,15 +96,19 @@ object TicketSeverityModel {
       }
   }
 
-  def update(id: Long, ts: TicketSeverity) = {
+  /**
+   * Update a severity.
+   */
+  def update(id: Long, ts: TicketSeverity): Option[TicketSeverity] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> ts.name,
         'color      -> ts.color,
         'position   -> ts.position
-      ).executeUpdate
+      ).execute
     }
+    getById(id)
   }
 }
