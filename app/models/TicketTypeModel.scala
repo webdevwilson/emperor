@@ -17,6 +17,7 @@ object TicketTypeModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_types")
   val insertQuery = SQL("INSERT INTO ticket_types (name, color, date_created) VALUES ({name}, {color}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_types SET name={name}, color={color} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM ticket_types WHERE id={id}")
 
   val ticket_type = {
     get[Pk[Long]]("id") ~
@@ -32,6 +33,9 @@ object TicketTypeModel {
     }
   }
 
+  /**
+   * Create a type.
+   */
   def create(tt: TicketType): TicketType = {
 
     DB.withConnection { implicit conn =>
@@ -44,10 +48,18 @@ object TicketTypeModel {
     }
   }
 
+  /**
+   * Delete a type.
+   */
   def delete(id: Long) {
-
+    DB.withConnection { implicit conn =>
+      deleteQuery.on('id -> id).execute
+    }
   }
 
+  /**
+   * Get a type by it's id.
+   */
   def getById(id: Long) : Option[TicketType] = {
 
     DB.withConnection { implicit conn =>
@@ -78,14 +90,18 @@ object TicketTypeModel {
       }
   }
 
-  def update(id: Long, ts: TicketType) = {
+  /**
+   * Update a type.
+   */
+  def update(id: Long, ts: TicketType): Option[TicketType] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id     -> id,
         'name   -> ts.name,
         'color  -> ts.color
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }
