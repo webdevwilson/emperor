@@ -11,7 +11,7 @@ class ProjectModelSpec extends Specification {
 
   import models.{ProjectModel,WorkflowModel}
 
-  "Ticket Tyoe model" should {
+  "Project model" should {
 
     "create, retrieve and delete" in {
       running(FakeApplication()) {
@@ -42,6 +42,30 @@ class ProjectModelSpec extends Specification {
         ProjectModel.delete(newProject.id.get)
         val gone =  ProjectModel.getById(newProject.id.get)
         gone must beNone
+      }
+    }
+
+    "handle sequences" in {
+      running(FakeApplication()) {
+
+        val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+        val p = models.Project(
+          name = "Test Project 1",
+          key = "TEST1",
+          workflowId = work.get.id.get,
+          dateCreated = new Date
+        )
+        val newProject = ProjectModel.create(p)
+        newProject.sequenceCurrent mustEqual(0)
+
+        // Verify it increments
+        val neyext = ProjectModel.getNextSequence(newProject.id.get)
+        neyext must beSome
+        neyext.get mustEqual(1)
+
+        ProjectModel.delete(newProject.id.get)
+        1 mustEqual(1)
       }
     }
   }

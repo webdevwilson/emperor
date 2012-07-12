@@ -17,6 +17,7 @@ object TicketResolutionModel {
   val listCountQuery = SQL("SELECT count(*) FROM ticket_resolutions")
   val insertQuery = SQL("INSERT INTO ticket_resolutions (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_resolutions SET name={name} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM ticket_resolutions WHERE id={id}")
 
   val ticket_resolution = {
     get[Pk[Long]]("id") ~
@@ -26,6 +27,9 @@ object TicketResolutionModel {
     }
   }
 
+  /**
+   * Create a resolution.
+   */
   def create(tr: TicketResolution): TicketResolution = {
 
     DB.withConnection { implicit conn =>
@@ -36,20 +40,28 @@ object TicketResolutionModel {
       this.getById(id.get).get
     }
   }
-  
+
+  /**
+   * Delete a resolution.
+   */
   def delete(id: Long) {
-      
+    DB.withConnection { implicit conn =>
+      deleteQuery.on('id -> id).execute
+    }
   }
 
+  /**
+   * Get a resolution by id.
+   */
   def getById(id: Long) : Option[TicketResolution] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_resolution.singleOpt)
     }
   }
 
   def getAll: List[TicketResolution] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(ticket_resolution *)
     }
@@ -58,7 +70,7 @@ object TicketResolutionModel {
   def list(page: Int = 1, count: Int = 10) : Page[TicketResolution] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val trs = listQuery.on(
           'count  -> count,
@@ -70,14 +82,18 @@ object TicketResolutionModel {
         Page(trs, page, offset, totalRows)
       }
   }
-  
-  def update(id: Long, tr: TicketResolution) = {
 
-    DB.withTransaction { implicit conn =>
+  /**
+   * Update a resolution.
+   */
+  def update(id: Long, tr: TicketResolution): Option[TicketResolution] = {
+
+    DB.withConnection { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
         'name       -> tr.name
       ).executeUpdate
+      getById(id)
     }
   }
 }

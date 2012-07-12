@@ -80,6 +80,10 @@ object ProjectModel {
     }
   }
 
+  /**
+   * Increment this project's sequence and return the new
+   * value.  The operation is atomic.
+   */
   def getNextSequence(id: Long) : Option[Long] = {
 
     DB.withConnection { implicit conn =>
