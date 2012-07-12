@@ -8,7 +8,7 @@ import play.api.db.DB
 import play.api.Play.current
 
 case class Project(
-  id: Pk[Long] = NotAssigned, workflowId: Long, sequenceCurrent: Long,
+  id: Pk[Long] = NotAssigned, workflowId: Long, sequenceCurrent: Long = 0,
   name: String, key: String, dateCreated: Date
 )
 
@@ -22,6 +22,7 @@ object ProjectModel {
   val listCountQuery = SQL("SELECT count(*) FROM projects")
   val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, date_created) VALUES ({name}, {pkey}, {workflow_id}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM projects WHERE id={id}")
 
   val project = {
     get[Pk[Long]]("id") ~
@@ -37,6 +38,9 @@ object ProjectModel {
     }
   }
 
+  /**
+   * Create a project.
+   */
   def create(project: Project): Project = {
 
     DB.withConnection { implicit conn =>
@@ -49,20 +53,28 @@ object ProjectModel {
       this.getById(id.get).get
     }
   }
-  
+
+  /**
+   * Delete project.
+   */
   def delete(id: Long) {
-      
+    DB.withConnection { implicit conn =>
+      deleteQuery.on('id -> id).execute
+    }
   }
 
+  /**
+   * Get a project by id.
+   */
   def getById(id: Long) : Option[Project] = {
-      
+
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(project.singleOpt)
     }
   }
 
   def getAll: List[Project] = {
-      
+
     DB.withConnection { implicit conn =>
       allQuery.as(project *)
     }
@@ -76,8 +88,8 @@ object ProjectModel {
   }
 
   def getWithWorkflow(id: Long) : Seq[Project] = {
-    
-    DB.withConnection { implicit conn => 
+
+    DB.withConnection { implicit conn =>
       getByWorkflowQuery.on('workflow_id -> id).as(project *)
     }
   }
@@ -85,7 +97,7 @@ object ProjectModel {
   def list(page: Int = 1, count: Int = 10) : Page[Project] = {
 
       val offset = count * (page - 1)
-      
+
       DB.withConnection { implicit conn =>
         val projects = listQuery.on(
           'count  -> count,
@@ -97,15 +109,19 @@ object ProjectModel {
         Page(projects, page, count, totalRows)
       }
   }
-  
-  def update(id: Long, project: Project) = {
 
-    DB.withTransaction { implicit conn =>
+  /**
+   * Update a project.
+   */
+  def update(id: Long, project: Project): Option[Project] = {
+
+    DB.withConnection { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
         'name       -> project.name,
         'workflow_id-> project.workflowId
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }
