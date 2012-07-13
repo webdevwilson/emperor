@@ -7,3 +7,4 @@
   * Ticket Links
   * Ticket Stacks
  * Ticket advance & revert dialog w/refreshing
+ * Case class docs
