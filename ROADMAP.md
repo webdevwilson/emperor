@@ -4,7 +4,6 @@
  * Ticket Resolution & Unresolution with comments
  * Decent Comment UI
  * Full unit tests
-  * Role
   * Ticket
   * Ticket Comment
   * Ticket Links

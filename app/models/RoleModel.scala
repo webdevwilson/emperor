@@ -8,7 +8,7 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: Date)
+case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String] = None, dateCreated: Date)
 
 object RoleModel {
 
@@ -18,6 +18,7 @@ object RoleModel {
   val listCountQuery = SQL("SELECT count(*) FROM roles")
   val addQuery = SQL("INSERT INTO roles (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE roles SET name={name}, description={description} WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM roles WHERE id={id}")
 
   val role = {
     get[Pk[Long]]("id") ~
@@ -28,6 +29,9 @@ object RoleModel {
     }
   }
 
+  /**
+   * Create a role.
+   */
   def create(role: Role): Role = {
 
     val id = DB.withConnection { implicit conn =>
@@ -40,10 +44,18 @@ object RoleModel {
     role.copy(id = new Id(id.get))
   }
 
+  /**
+   * Delete a role.
+   */
   def delete(id: Long) {
-      // XXX
+      DB.withConnection { implicit conn =>
+        deleteQuery.on('id -> id).execute
+      }
   }
 
+  /**
+   * Get a role by id.
+   */
   def getById(id: Long) : Option[Role] = {
 
     DB.withConnection { implicit conn =>
@@ -74,14 +86,18 @@ object RoleModel {
       }
   }
 
-  def update(id: Long, role: Role) = {
+  /**
+   * Update a role.
+   */
+  def update(id: Long, role: Role): Option[Role] = {
 
-    DB.withTransaction { implicit conn =>
-      val foo = updateQuery.on(
+    DB.withConnection { implicit conn =>
+      updateQuery.on(
         'id         -> id,
         'name       -> role.name,
         'description-> role.description
-      ).executeUpdate
+      ).execute
+      getById(id)
     }
   }
 }
