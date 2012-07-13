@@ -26,9 +26,9 @@ case class Resolution(
 )
 
 case class InitialTicket(
-  reporterId: Long, assigneeId: Option[Long], projectId: Long,
-  priorityId: Long, severityId: Long, typeId: Long, position: Option[Long],
-  summary: String, description: Option[String]
+  reporterId: Long, assigneeId: Option[Long] = None, projectId: Long,
+  priorityId: Long, severityId: Long, typeId: Long, position: Option[Long] = None,
+  summary: String, description: Option[String] = None
 )
 
 case class EditTicket(
@@ -96,6 +96,7 @@ object TicketModel {
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
+  val deleteQuery = SQL("DELETE FROM tickets WHERE id={id}")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
   val getCountByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id}")
@@ -292,7 +293,10 @@ object TicketModel {
     }
   }
 
-  def create(userId: Long, ticket: InitialTicket): Option[EditTicket] = {
+  /**
+   * Create a ticket.
+   */
+  def create(userId: Long, ticket: InitialTicket): Option[FullTicket] = {
 
     val project = ProjectModel.getById(ticket.projectId)
 
@@ -326,7 +330,7 @@ object TicketModel {
             'position     -> ticket.position,
             'summary      -> ticket.summary
           ).executeInsert()
-          this.getById(ticketId)
+          this.getFullById(ticketId)
         }
       }
       case None => None
@@ -336,7 +340,9 @@ object TicketModel {
   }
 
   def delete(id: Long) {
-
+    DB.withConnection { implicit conn =>
+      deleteQuery.on('id -> id).execute
+    }
   }
 
   def getCommentById(id: Long) : Option[Comment] = {

@@ -40,5 +40,7 @@ class RoleModelSpec extends Specification {
         gone must beNone
       }
     }
+
+    // XXX Need project_role_user stuff also
   }
 }
