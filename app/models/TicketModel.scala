@@ -96,6 +96,7 @@ object TicketModel {
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
+  val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM tickets WHERE id={id}")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
@@ -249,6 +250,9 @@ object TicketModel {
     }
   }
 
+  /**
+   * Add a comment.
+   */
   def addComment(ticketId: String, userId: Long, content: String) : Option[Comment] = {
 
     val ticket = this.getById(ticketId)
@@ -265,6 +269,15 @@ object TicketModel {
         }
       }
       case None => return None
+    }
+  }
+
+  /**
+   * Delete comment.
+   */
+  def deleteComment(id: Long) = {
+    DB.withConnection { implicit conn =>
+      deleteCommentQuery.on('id -> id).execute
     }
   }
 
@@ -339,12 +352,18 @@ object TicketModel {
     result
   }
 
+  /**
+   * Delete a ticket.
+   */
   def delete(id: Long) {
     DB.withConnection { implicit conn =>
       deleteQuery.on('id -> id).execute
     }
   }
 
+  /**
+   * Get a comment by id.
+   */
   def getCommentById(id: Long) : Option[Comment] = {
 
     DB.withConnection { implicit conn =>
@@ -352,6 +371,9 @@ object TicketModel {
     }
   }
 
+  /**
+   * Get ticket by ticketId.
+   */
   def getById(id: String) : Option[EditTicket] = {
 
     DB.withConnection { implicit conn =>
@@ -359,6 +381,9 @@ object TicketModel {
     }
   }
 
+  /**
+   * Get ticket by ticketId.  This version returns the `FullTicket`.
+   */
   def getFullById(id: String) : Option[FullTicket] = {
 
     DB.withConnection { implicit conn =>
