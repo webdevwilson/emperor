@@ -10,6 +10,20 @@ $(document).ready(function() {
       var iname = item.attr("data-name")
       $("#workflow-notinuse").append("<li data-name=\"" + iname + "\"><input type=\"hidden\" value=\"" + ival + "\">" + iname + " <button class=\"fire adder pull-right btn btn-mini\"><i class=\"icon-arrow-right\"></i></button></li>")
     }
+    if(t.hasClass("upper")) {
+      var here = t.parents("li")
+      var above = here.prev()
+      if(above != null) {
+        above.before(here);
+      }
+    }
+    if(t.hasClass("downer")) {
+      var here = t.parents("li")
+      var below = here.next()
+      if(below != null) {
+        below.after(here);
+      }
+    }
     event.preventDefault();
   })
 
