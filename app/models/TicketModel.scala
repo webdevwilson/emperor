@@ -310,6 +310,9 @@ object TicketModel {
     }
   }
 
+  /**
+   * Mark a ticket as resolved with an optional comment.
+   */
   def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None) = {
 
     DB.withConnection { implicit conn =>
@@ -319,12 +322,18 @@ object TicketModel {
     }
   }
 
+  /**
+   * Remove the resolution of a ticket with an optional comment.
+   */
   def unresolve(ticketId: String, userId: Long, comment: Option[String] = None) = {
       val tick = this.getById(ticketId).get
 
       this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
   }
 
+  /**
+   * Change the status of a ticket.  Is really a wrapper around `update`.
+   */
   def changeStatus(ticketId: String, newStatusId: Long, userId: Long, comment: Option[String] = None) = {
 
     DB.withConnection { implicit conn =>
