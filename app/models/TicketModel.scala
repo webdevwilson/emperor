@@ -122,7 +122,7 @@ object TicketModel {
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
-  val deleteQuery = SQL("DELETE FROM tickets WHERE id={id}")
+  val deleteQuery = SQL("DELETE FROM tickets WHERE ticket_id={ticket_id}")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
   val getCountByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id}")
@@ -384,9 +384,9 @@ object TicketModel {
   /**
    * Delete a ticket.
    */
-  def delete(id: Long) {
+  def delete(ticketId: String) {
     DB.withConnection { implicit conn =>
-      deleteQuery.on('id -> id).execute
+      deleteQuery.on('ticket_id -> ticketId).execute
     }
   }
 

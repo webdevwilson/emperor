@@ -9,7 +9,7 @@ import play.api.test.Helpers._
 
 class TicketModelSpec extends Specification {
 
-  import models.{ProjectModel,TicketModel,TicketPriorityModel,TicketSeverityModel,TicketTypeModel,UserModel,WorkflowModel}
+  import models.{ProjectModel,TicketModel,TicketPriorityModel,TicketResolutionModel,TicketSeverityModel,TicketTypeModel,UserModel,WorkflowModel}
 
   "Ticket model" should {
 
@@ -38,17 +38,18 @@ class TicketModelSpec extends Specification {
           priorityId = tp.id.get,
           severityId = ts.id.get,
           typeId = tt.id.get,
-          summary = "Test Project 1"
+          summary = "Test Ticket 1"
         )
         val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
         newTicket must beSome
         newTicket.get must beAnInstanceOf[models.FullTicket]
+        newTicket.get.ticketId must beEqualTo("TEST1-1")
 
         val eTicket = TicketModel.getById(newTicket.get.ticketId)
         eTicket must beSome
         eTicket.get must beAnInstanceOf[models.EditTicket]
 
-        TicketModel.delete(newTicket.get.id.get)
+        TicketModel.delete(newTicket.get.ticketId)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }
@@ -60,8 +61,8 @@ class TicketModelSpec extends Specification {
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
 
         val p = models.Project(
-          name = "Test Project 1",
-          key = "TEST1",
+          name = "Test Project 2",
+          key = "TEST2",
           workflowId = work.get.id.get,
           dateCreated = new Date
         )
@@ -79,7 +80,7 @@ class TicketModelSpec extends Specification {
           priorityId = tp.id.get,
           severityId = ts.id.get,
           typeId = tt.id.get,
-          summary = "Test Project 1"
+          summary = "Test Ticket 2"
         )
         val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
 
@@ -92,10 +93,56 @@ class TicketModelSpec extends Specification {
         gcomm.get must beAnInstanceOf[models.Comment]
 
         TicketModel.deleteComment(comm.get.id.get)
-        TicketModel.delete(newTicket.get.id.get)
+        TicketModel.delete(newTicket.get.ticketId)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }
     }
+
+    // XXX gotta figure out the indexing thing here
+    // "handle resolution & unresolution" in {
+    //   running(FakeApplication()) {
+
+    //     val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+    //     val p = models.Project(
+    //       name = "Test Project 3",
+    //       key = "TEST3",
+    //       workflowId = work.get.id.get,
+    //       dateCreated = new Date
+    //     )
+    //     val newProject = ProjectModel.create(p)
+
+    //     val user = UserModel.getById(1).get
+    //     val userId = user.id.get
+
+    //     val tp = TicketPriorityModel.getById(1).get
+    //     val tr = TicketResolutionModel.getById(1).get
+    //     val ts = TicketSeverityModel.getById(1).get
+    //     val tt = TicketTypeModel.getById(1).get
+
+    //     val t = models.InitialTicket(
+    //       reporterId = user.id.get,
+    //       projectId = newProject.id.get,
+    //       priorityId = tp.id.get,
+    //       severityId = ts.id.get,
+    //       typeId = tt.id.get,
+    //       summary = "Test Ticket 3"
+    //     )
+    //     val newTicket = TicketModel.create(userId = user.id.get, ticket = t).get
+    //     val ticketId = newTicket.ticketId
+    //     newTicket.resolution.id must beNone
+
+    //     TicketModel.resolve(ticketId = ticketId, userId = userId, resolutionId = tr.id.get, comment = None)
+    //     val resolvedTicket = TicketModel.getFullById(ticketId).get
+    //     resolvedTicket.resolution.id must beSome
+    //     resolvedTicket.resolution.name must beSome
+    //     resolvedTicket.resolution.id must beEqualTo(tr.id)
+
+    //     TicketModel.delete(newTicket.ticketId)
+    //     ProjectModel.delete(newProject.id.get)
+    //     1 mustEqual(1)
+    //   }
+    // }
   }
 }
