@@ -35,6 +35,7 @@ object SearchModel {
     ).node
   ).start
 
+  // Ticket ES index
   val ticketIndex = "tickets"
   val ticketType = "ticket"
   val ticketMapping = """
@@ -150,6 +151,7 @@ object SearchModel {
   }
   """
 
+  // Ticket Comment ES index
   val ticketCommentIndex = "ticket_comments"
   val ticketCommentType = "ticket_comment"
   val ticketCommentMapping = """
@@ -181,6 +183,7 @@ object SearchModel {
   }
   """
 
+  // Ticket History ES index
   val ticketHistoryIndex = "ticket_histories"
   val ticketHistoryType = "ticket_history"
   val ticketHistoryMapping = """
@@ -432,6 +435,9 @@ object SearchModel {
   }
   """
 
+  /**
+   * Check that all the necessary indices exist.  If they don't, create them.
+   */
   def checkIndices = {
 
     if(!indexer.exists(ticketIndex)) {
@@ -452,6 +458,9 @@ object SearchModel {
     indexer.refresh()
   }
 
+  /**
+   * Index a comment.
+   */
   def indexComment(comment: Comment) {
 
     val cdoc: Map[String,JsValue] = Map(
@@ -465,6 +474,9 @@ object SearchModel {
     indexer.refresh()
   }
 
+  /**
+   * Index a ticket.
+   */
   def indexTicket(ticket: FullTicket) {
 
     val resId = ticket.resolution.id match {
@@ -533,6 +545,9 @@ object SearchModel {
     indexer.refresh()
   }
 
+  /**
+   * Index a history item by comparing a new and old ticket.
+   */
   def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
 
     val projChanged = newTick.project.id != oldTick.project.id
@@ -659,6 +674,11 @@ object SearchModel {
     indexer.refresh()
   }
 
+  /**
+   * Delete all the existing indexes and recreate them. Then iterate over
+   * all the tickets and index each one and it's history.  Finally
+   * reindex all the ticket comments.
+   */
   def reIndex {
 
     indexer.deleteIndex(ticketIndex)
@@ -666,12 +686,7 @@ object SearchModel {
     indexer.deleteIndex(ticketCommentIndex)
     checkIndices
 
-    // Nix all the existing documents
-    // indexer.deleteByQuery(
-    //   indices = Seq(ticketIndex, ticketHistoryIndex, ticketCommentIndex),
-    //   types = Seq(ticketType, ticketHistoryType, ticketCommentType)
-    // )
-    // Reindex all tickets
+    // Reindex all tickets and their history
     TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
       val count = TicketModel.getAllFullCountById(ticket.ticketId)
@@ -688,6 +703,7 @@ object SearchModel {
     }
   }
 
+  // XXX
   def searchProjectStats(projectId: Long) : SearchResponse = {
 
     var actualQuery = filteredQuery(queryString("*"), andFilter(termFilter("project_id", projectId)))
@@ -700,6 +716,9 @@ object SearchModel {
     )
   }
 
+  /**
+   * Search for ticket changes, or history.
+   */
   def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
@@ -741,6 +760,9 @@ object SearchModel {
     )
   }
 
+  /**
+   * Search for ticket comments.
+   */
   def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
@@ -778,6 +800,9 @@ object SearchModel {
     )
   }
 
+  /**
+   * Search for a ticket.
+   */
   def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
@@ -820,6 +845,9 @@ object SearchModel {
     )
   }
 
+  /**
+   * Shutdown ElasticSearch.
+   */
   def shutdown {
     indexer.stop
   }

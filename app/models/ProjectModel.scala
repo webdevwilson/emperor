@@ -7,6 +7,9 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
+/**
+ * Class for a project.
+ */
 case class Project(
   id: Pk[Long] = NotAssigned, workflowId: Long, sequenceCurrent: Long = 0,
   name: String, key: String, dateCreated: Date
@@ -24,6 +27,7 @@ object ProjectModel {
   val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM projects WHERE id={id}")
 
+  // Parser for retrieving a project.
   val project = {
     get[Pk[Long]]("id") ~
     get[Long]("workflow_id") ~

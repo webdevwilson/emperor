@@ -7,6 +7,9 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
+/**
+ * Class for types of links.
+ */
 case class TicketLinkType(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 
 object TicketLinkTypeModel {
@@ -19,6 +22,7 @@ object TicketLinkTypeModel {
   val updateQuery = SQL("UPDATE ticket_link_types SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_link_types WHERE id={id}")
 
+  // parser for retrieving a link type
   val ticket_link_type = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~

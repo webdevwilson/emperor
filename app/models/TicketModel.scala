@@ -8,29 +8,48 @@ import play.api.db.DB
 import play.api.Play.current
 import scala.collection.mutable.ListBuffer
 
+/**
+ * Class for creating a comment.  Requires only a string.
+ */
 case class InitialComment(
   comment: String
 )
 
+/**
+ * Class for a comment.
+ */
 case class Comment(
   id: Pk[Long] = NotAssigned, userId: Long, username: String,
   realName: String, ticketId: String, content: String, dateCreated: Date
 )
 
+/**
+ * Class for a status change.  Used with status change form.
+ */
 case class StatusChange(
   statusId: Long, comment: Option[String]
 )
 
+/**
+ * Class for resolution.  Used with resolution form.
+ */
 case class Resolution(
   resolutionId: Long, comment: Option[String]
 )
 
+/**
+ * Class for creating a ticket.  Eliminates fields that aren't useful
+ * at creation time.
+ */
 case class InitialTicket(
   reporterId: Long, assigneeId: Option[Long] = None, projectId: Long,
   priorityId: Long, severityId: Long, typeId: Long, position: Option[Long] = None,
   summary: String, description: Option[String] = None
 )
 
+/**
+ * Class for editing a ticket.  Eliminates fields that aren't useful when editing.
+ */
 case class EditTicket(
   ticketId: Pk[String] = NotAssigned, reporterId: Long, assigneeId: Option[Long],
   attentionId: Option[Long], projectId: Long,
@@ -40,17 +59,24 @@ case class EditTicket(
   description: Option[String]
 )
 
+/**
+ * Class for getting all possible information out of a ticket. Uses other case classes
+ * to avoid the 22 limit.
+ */
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, ticketId: String, user: TicketForThing, reporter: TicketForThing,
-  assignee: TicketForOptThing, attention: TicketForOptThing,
-  project: TicketForThing,  priority: TicketForColoredThing,
-  resolution: TicketForOptThing,
-  proposedResolution: TicketForOptThing,
-  severity: TicketForColoredThing, workflowStatusId: Long, status: TicketForThing,
-  ttype: TicketForColoredThing, position: Option[Long],
+  id: Pk[Long] = NotAssigned, ticketId: String, user: NamedThing, reporter: NamedThing,
+  assignee: OptionalNamedThing, attention: OptionalNamedThing,
+  project: NamedThing,  priority: ColoredThing,
+  resolution: OptionalNamedThing,
+  proposedResolution: OptionalNamedThing,
+  severity: ColoredThing, workflowStatusId: Long, status: NamedThing,
+  ttype: ColoredThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: Date
 )
 
+/**
+ * Class for getting a ticket.
+ */
 case class Ticket(
   id: Pk[Long] = NotAssigned, ticketId: String, reporterId: Long, assigneeId: Long,
   attentionId: Long, projectId: Long, priorityId: Long,
@@ -59,26 +85,25 @@ case class Ticket(
   summary: String, description: Option[String], dateCreated: Date
 )
 
-case class TicketForThing(
+/**
+ * A thing with a name and id.
+ */
+case class NamedThing(
   id: Long, name: String
 )
 
-case class TicketForColoredThing(
+/**
+ * A thing with an id, name and a color.
+ */
+case class ColoredThing(
   id: Long, name: String, color: String
 )
 
-case class TicketForOptThing(
+/**
+ * An optional thing with an id and name.
+ */
+case class OptionalNamedThing(
   id: Option[Long], name: Option[String]
-)
-
-case class TicketHistory(
-  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long,
-  dateOccurred: Date
-)
-
-case class TicketFullHistory(
-  id: Pk[Long] = NotAssigned, userId: Long, ticketId: Long,
-  oldTicket: FullTicket, newTicket: FullTicket, dateOccurred: Date
 )
 
 object TicketModel {
@@ -111,6 +136,7 @@ object TicketModel {
   val getCountTodayByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND DATE(date_created) = DATE(NOW())")
   val getCountThisWeekByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND DATE(date_created) + 7 > DATE(NOW()) ")
 
+  // parser for retrieving a ticket
   val ticket = {
     get[Pk[Long]]("id") ~
     get[String]("ticket_id") ~
@@ -149,6 +175,7 @@ object TicketModel {
     }
   }
 
+  // parser for retrieving an EditTicket
   val editTicket = {
     get[Pk[String]]("ticket_id") ~
     get[Long]("reporter_id") ~
@@ -181,6 +208,7 @@ object TicketModel {
     }
   }
 
+  // Parser for retrieving a FullTicket
   val fullTicket = {
     get[Pk[Long]]("id") ~
     get[String]("ticket_id") ~
@@ -218,18 +246,18 @@ object TicketModel {
         FullTicket(
           id = id,
           ticketId = tickId,
-          user = TicketForThing(userId, userName),
-          reporter = TicketForThing(repId, repName),
-          assignee = TicketForOptThing(assId, assName),
-          attention = TicketForOptThing(attId, attName),
-          project = TicketForThing(projId, projName),
-          priority = TicketForColoredThing(priId, priName, priColor),
-          resolution = TicketForOptThing(resId, resName),
-          proposedResolution = TicketForOptThing(propResId, propResName),
-          severity = TicketForColoredThing(sevId, sevName, sevColor),
+          user = NamedThing(userId, userName),
+          reporter = NamedThing(repId, repName),
+          assignee = OptionalNamedThing(assId, assName),
+          attention = OptionalNamedThing(attId, attName),
+          project = NamedThing(projId, projName),
+          priority = ColoredThing(priId, priName, priColor),
+          resolution = OptionalNamedThing(resId, resName),
+          proposedResolution = OptionalNamedThing(propResId, propResName),
+          severity = ColoredThing(sevId, sevName, sevColor),
           workflowStatusId = workflowStatusId,
-          status = TicketForThing(statusId, statusName),
-          ttype = TicketForColoredThing(typeId, typeName, typeColor),
+          status = NamedThing(statusId, statusName),
+          ttype = ColoredThing(typeId, typeName, typeColor),
           position = position,
           summary = summary,
           description = description,
@@ -238,6 +266,7 @@ object TicketModel {
     }
   }
 
+  // Parser for retrieving a comment
   val comment = {
     get[Pk[Long]]("ticket_comments.id") ~
     get[Long]("user_id") ~

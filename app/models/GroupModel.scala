@@ -8,8 +8,14 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
+/**
+ * Class for groups.
+ */
 case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 
+/**
+ * Class for users in a group.
+ */
 case class GroupUser(id: Pk[Long] = NotAssigned, user_id: Long, group_id: Long)
 
 object GroupModel {
@@ -28,6 +34,7 @@ object GroupModel {
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM groups WHERE id={id}")
 
+  // parser for retrieving a group
   val group = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
@@ -36,6 +43,7 @@ object GroupModel {
     }
   }
 
+  // parser for retrieving a group user
   val groupUser = {
     get[Pk[Long]]("id") ~
     get[Long]("group_id") ~

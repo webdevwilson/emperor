@@ -8,6 +8,9 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
+/**
+ * Class for a role.
+ */
 case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String] = None, dateCreated: Date)
 
 object RoleModel {
@@ -20,6 +23,7 @@ object RoleModel {
   val updateQuery = SQL("UPDATE roles SET name={name}, description={description} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM roles WHERE id={id}")
 
+  // parser for retrieving a role
   val role = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
