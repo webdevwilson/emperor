@@ -11,20 +11,28 @@
 </ul>
 <p>@Messages("admin.workflow.modify.help")</p>
 @helper.form(action = controllers.admin.routes.Workflow.save(id)) {
-<div class="row" id="statuses">
+<div class="row" id="modify-workflow">
  <div class="span3">
   <h2>@Messages("admin.workflow.modify.available")</h2>
-  <ul class="bordered unstyled well" id="list1">
+  <ul class="bordered unstyled well" id="workflow-notinuse">
   @unused.map { item =>
-   <li class="draggable"><input type="hidden" name="@item.id" value="@item.id">@Messages(item.name)</li>
+   <li><input type="hidden" name="@item.id" value="@item.id">@Messages(item.name) <button class="pull-right fire adder btn btn-mini"><i class="icon-arrow-right"></i></button></li>
   }
   </ul>
  </div>
  <div class="span9">
   <h2>@Messages("admin.workflow.modify.final")</h2>
-  <ul class="bordered unstyled well" id="list2">
+  <ul class="bordered unstyled well" id="workflow-inuse">
   @statuses.map { item =>
-   <li class="draggable"><input type="hidden" name="@item.statusId" value="@item.statusId"><i class="icon-resize-vertical"></i> @Messages(item.name)</li>
+   <li data-name="@Messages(item.name)">
+    <input type="hidden" name="statusId" value="@item.statusId">
+    <div class="btn-group" style="display: inline; padding: 0; margin: 0">
+     <button class="btn btn-mini fire"><i class="icon-arrow-up"></i></button>
+     <button class="btn btn-mini fire"><i class="icon-arrow-down"></i></button>
+    </div>
+    @Messages(item.name)
+    <button class="btn btn-mini btn-danger pull-right fire remover"><i class="icon-remove icon-white"></i></button>
+   </li>
   }
   </ul>
  </div>
@@ -34,27 +42,4 @@
  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
 </div>
 }
-<script type="text/javascript">
-YUI().use('dd-constrain', 'sortable', function(Y) {
-  var list1 = new Y.Sortable({
-    container: '#list1',
-    nodes: 'li',
-    opacity: '.2'
-  });
-
-  var list2 = new Y.Sortable({
-    container: '#list2',
-    nodes: 'li',
-    opacity: '.2'
-  });
-
-  list1.delegate.dd.plug(Y.Plugin.DDConstrained, {
-    constrain2node: '#statuses'
-  });
-  list2.delegate.dd.plug(Y.Plugin.DDConstrained, {
-    constrain2node: '#statuses'
-  });
-  list1.join(list2);
-});
-</script>
 }
