@@ -8,6 +8,10 @@
  * Ticket Features
   * Linking
   * Stacks
+ * Workflow editing
+  * Drafts
+  * Resolving problems
+  * Changing existing tickets
 
 ## 0.1.0
  * Ticket Resolution & Unresolution with comments
