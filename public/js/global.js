@@ -6,9 +6,11 @@ $(document).ready(function() {
       item.slideUp("fast", function() {
         item.remove()
       })
-      var ival = item.children("input:hidden").val()
-      var iname = item.attr("data-name")
-      $("#workflow-notinuse").append("<li data-name=\"" + iname + "\"><input type=\"hidden\" value=\"" + ival + "\">" + iname + " <button class=\"fire adder pull-right btn btn-mini\"><i class=\"icon-arrow-right\"></i></button></li>")
+      var ival = item.children("input:hidden").val();
+      var iname = item.attr("data-name");
+      var source   = $("#unused-item").html();
+      var template = Handlebars.compile(source);
+      $("#workflow-notinuse").append(template({ status_name: iname, status_id: ival }));
     }
     if(t.hasClass("upper")) {
       var here = t.parents("li")
@@ -34,9 +36,11 @@ $(document).ready(function() {
       item.slideUp("fast", function() {
         item.remove()
       })
-      var ival = item.children("input:hidden").val()
-      var iname = item.attr("data-name")
-      $("#workflow-inuse").append("<li data-name=\"" + iname + "\"><input type=\"hidden\" name=\"statusId\" value=\"" + ival + "\"><div class=\"btn-group\" style=\"display: inline; padding: 0; margin: 0\"><button class=\"btn btn-mini fire upper\"><i class=\"icon-arrow-up\"></i></button><button class=\"btn btn-mini fire downer\"><i class=\"icon-arrow-down\"></i></button></div> " + iname + "<button class=\"btn btn-mini btn-danger pull-right fire remover\"><i class=\"icon-remove icon-white\"></i></button></li>")
+      var ival = item.children("input:hidden").val();
+      var iname = item.attr("data-name");
+      var source   = $("#used-item").html();
+      var template = Handlebars.compile(source);
+      $("#workflow-inuse").append(template({ status_name: iname, status_id: ival }));
     }
     event.preventDefault();
   })

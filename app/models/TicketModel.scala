@@ -514,6 +514,14 @@ object TicketModel {
       }
   }
 
+  /**
+   * Change the contents of a ticket. The resolution, status and clear resolution
+   * provide the caller with the ability to manipulate these fields directly, as they
+   * are special fields that do not normally get modified.  The `clearResolution` field
+   * allows the clearing of a resolution.  The optional comment will add a comment in
+   * addition to other changes.
+   * Note that if there is no change, nothing will happen here.
+   */
   def update(
     userId: Long, id: String, ticket: EditTicket,
     resolutionId: Option[Long] = None, statusId: Option[Long] = None,
