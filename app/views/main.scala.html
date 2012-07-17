@@ -36,10 +36,11 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid">
+    <div id="alert-area" class="container-fluid">
       @{ request.flash.get("success") match {
         case Some(message) => {
           <div class="alert alert-success">
+           <a class="close" data-dismiss="alert" href="#">&times;</a>
            { Messages(message) }
           </div>
         }
@@ -49,6 +50,7 @@
       @{ request.flash.get("error") match {
         case Some(message) => {
           <div class="alert alert-error">
+           <a class="close" data-dismiss="alert" href="#">&times;</a>
            { Messages(message) }
           </div>
         }
@@ -58,14 +60,21 @@
       @{ request.flash.get("info") match {
         case Some(message) => {
           <div class="alert alert-info">
+           <a class="close" data-dismiss="alert" href="#">&times;</a>
            { Messages(message) }
           </div>
         }
         case None => { }
       }
       }
-     @content
     </div>
+    @content
+   <script id="alerter" type="text/x-handlebars-template">
+    <div class="alert {{alert_class}}">
+     <a class="close" data-dismiss="alert" href="#">&times;</a>
+     {{message}}
+    </div>
+   </script>
   </body>
   <script src="@routes.Assets.at("js/jquery-1.7.2.min.js")"></script>
   <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
