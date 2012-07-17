@@ -5,7 +5,7 @@ import PlayProject._
 object ApplicationBuild extends Build {
 
   val appName         = "emperor"
-  val appVersion      = "1.0-SNAPSHOT"
+  val appVersion      = "0.1-SNAPSHOT"
 
   val appDependencies = Seq(
     "org.scala-lang" % "scala-compiler"         % "2.9.1",
