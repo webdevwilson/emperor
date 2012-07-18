@@ -38,6 +38,16 @@ case class Resolution(
 )
 
 /**
+ * Case class for a link between tickets.
+ */
+case class Link(
+  id: Pk[Long] = NotAssigned, typeId: Long, typeName: String,
+  parentId: String, parentSummary: String,
+  childId: String, childSummary: String,
+  dateCreated: Date
+)
+
+/**
  * Class for creating a ticket.  Eliminates fields that aren't useful
  * at creation time.
  */
@@ -123,6 +133,11 @@ object TicketModel {
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM tickets WHERE ticket_id={ticket_id}")
+
+  val insertLinkQuery = SQL("INSERT INTO ticket_links (link_type_id, parent_ticket_id, child_ticket_id, date_created) VALUES ({link_type_id}, {parent_ticket_id}, {child_ticket_id}, UTC_TIMESTAMP())")
+  val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} ORDER BY date_created")
+  val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE ticket_links.id={id}")
+  val deleteLinkQuery = SQL("DELETE FROM ticket_links WHERE id={id}")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
   val getCountByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id}")
@@ -276,6 +291,25 @@ object TicketModel {
     get[String]("content") ~
     get[Date]("ticket_comments.date_created") map {
       case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
+    }
+  }
+
+  // Parser for retrieving a link
+  val link = {
+    get[Pk[Long]]("ticket_links.id") ~
+    get[Long]("ticket_links.link_type_id") ~
+    get[String]("ticket_link_types.name") ~
+    get[String]("ticket_links.parent_ticket_id") ~
+    get[String]("parent_ticket.summary") ~
+    get[String]("ticket_links.child_ticket_id") ~
+    get[String]("child_ticket.summary") ~
+    get[Date]("ticket_links.date_created") map {
+      case id~linkId~linkName~parentId~parentSummary~childId~childSummary~dateCreated => Link(
+        id = id, typeId = linkId, typeName = linkName,
+        parentId = parentId, parentSummary = parentSummary,
+        childId = childId, childSummary = childSummary,
+        dateCreated = dateCreated
+      )
     }
   }
 
@@ -495,6 +529,50 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
       getCountThisWeekByProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
+    }
+  }
+
+  /**
+   * Get links for a ticket.
+   */
+  def getLinks(id: String): List[Link] = {
+
+    DB.withConnection { implicit conn =>
+      getLinksQuery.on('ticket_id -> id).as(link *)
+    }
+  }
+
+  /**
+   * Get a Link by id.
+   */
+  def getLinkById(id: Long): Option[Link] = {
+
+    DB.withConnection { implicit conn =>
+      getLinkByIdQuery.on('id -> id).as(link.singleOpt)
+    }
+  }
+
+  /**
+   * Link a child ticket to a parent with a type.
+   */
+  def link(linkTypeId: Long, parentId: String, childId: String): Option[Link] = {
+
+    DB.withConnection { implicit conn =>
+      val lid = insertLinkQuery.on(
+        'link_type_id     -> linkTypeId,
+        'parent_ticket_id -> parentId,
+        'child_ticket_id  -> childId
+      ).executeInsert()
+      getLinkById(lid.get)
+    }
+  }
+
+  /**
+   * Remove a link between tickets.
+   */
+  def removeLink(id: Long) {
+    DB.withConnection { implicit conn =>
+      deleteLinkQuery.on('id -> id).execute()
     }
   }
 
