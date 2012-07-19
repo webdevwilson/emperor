@@ -5,7 +5,7 @@
 </a>
 <ul id="link-menu" class="dropdown-menu">
   @ltypes.map { ltype =>
-  <li><a href="#" class="linker"><i class="icon-resize-small"></i> @Messages("ticket.linker.link", Messages(ltype.name), ticketId)</a></li>
+  <li><a href="#" class="linker"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name), ticketId)</a></li>
   }
   <li class="divider"></li>
   <li><a href="@routes.Ticket.item(ticketId)"><i class="icon-eye-open"></i> @Messages("ticket.linker.view", ticketId)</a></li>
