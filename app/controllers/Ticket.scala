@@ -249,7 +249,6 @@ object Ticket extends Controller with Secured {
           }
         } //filter { f => f.entries.size > 1 }
 
-
         Ok(views.html.ticket.item(
           ticket = value,
           markdown = mdParser,
@@ -266,6 +265,37 @@ object Ticket extends Controller with Secured {
       }
       case None => NotFound
     }
+  }
+
+  def link(typeId: Long, parentId: String, childId: String) = IsAuthenticated { implicit request =>
+
+    val link = TicketModel.link(linkTypeId = typeId, parentId = parentId, childId = childId)
+
+    link match {
+      case Some(query) => Ok(generate(link))
+      case None => NotFound
+    }
+  }
+
+  def linker = IsAuthenticated { implicit request =>
+
+    val ltypes = TicketLinkTypeModel.getAll
+
+    val ticketId = request.session.get("link_ticket")
+    ticketId match {
+      case Some(id) => Ok(views.html.util.linker(id, ltypes))
+      case None => Ok("&nbsp;")
+    }
+  }
+
+  def startLink(ticketId: String) = IsAuthenticated { implicit request =>
+
+    Ok("""{"OK":"OK"}""").withSession(session + ("link_ticket" -> ticketId))
+  }
+
+  def stopLink = IsAuthenticated { implicit request =>
+
+    Ok("""{"OK":"OK"}""").withSession(session - "link_ticket")
   }
 
   def update(ticketId: String) = IsAuthenticated { implicit request =>

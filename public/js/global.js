@@ -87,4 +87,20 @@ $(document).ready(function() {
     }
     event.preventDefault();
   });
+
+  $("#startlink").click(function(event) {
+    var button = $(event.currentTarget);
+    var tick = button.attr("data-ticket");
+    // Post a link to get it into the session
+    $.post('/ticket/startlink/' + tick, function(data) {
+      // Fetch the linker markup
+      $.get('/ticket/linker', function(resp) {
+        // Install it into the linker element.
+        var body = $(resp)
+        body.appendTo($("#linker"));
+        button.addClass("disabled");
+      });
+    });
+    event.preventDefault();
+  });
 });

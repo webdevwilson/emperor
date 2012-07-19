@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div id="alert-area" class="container-fluid">
+    <div id="alert-area">
       @{ request.flash.get("success") match {
         case Some(message) => {
           <div class="alert alert-success">
@@ -67,8 +67,9 @@
         case None => { }
       }
       }
+    <div class="container-fluid">
+     @content
     </div>
-    @content
    <script id="alerter" type="text/x-handlebars-template">
     <div class="alert {{alert_class}}">
      <a class="close" data-dismiss="alert" href="#">&times;</a>
