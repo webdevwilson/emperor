@@ -16,7 +16,7 @@
 
 @main(Messages("ticket.with.id", ticket.ticketId)) {
 <h2>@Messages("ticket.with.summary", ticket.ticketId, ticket.summary)</h2>
-<div class="row-fluid" id="ticket-header">
+<div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
  <ul id="ticket-info" class="unstyled pull-left">
   <li>
    <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
@@ -30,7 +30,16 @@
  </ul>
  <div class="btn-toolbar pull-right">
  <div class="btn-group">
-  <button id="startlink" class="btn" data-ticket="@ticket.ticketId">XXX Link</button>
+  @defining(request.session.get("link_ticket")) { lt =>
+    @lt match {
+      case Some(ltid) => {
+        <button id="startlink" class="btn @if(ltid == ticket.ticketId) { disabled }" data-ticket="@ticket.ticketId">@Messages("ticket.linker.action")</button>
+      }
+      case None => {
+        <button id="startlink" class="btn" data-ticket="@ticket.ticketId">@Messages("ticket.linker.action")</button>
+      }
+    }
+  }
  </div>
  @if(ticket.resolution.id.isEmpty) {
  <div class="btn-group">

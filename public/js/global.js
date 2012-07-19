@@ -3,6 +3,11 @@ $(document).ready(function() {
   // Enable alerts
   $().alert();
 
+  var thead = $("#ticket-header");
+  if(thead.size() > 0) {
+    showLinker(thead.attr("data-ticket"));
+  }
+
   $("#link-menu").on("click", "a.linker", function(event) {
     // Ajax up some linkage
     showAlert("alert-info", "Hello, world");
@@ -38,6 +43,24 @@ $(document).ready(function() {
     } else {
       appender();
     }
+  }
+
+  function showLinker(ticketId) {
+
+    // Fetch the linker markup
+    $.get('/ticket/linker', function(resp) {
+      // Install it into the linker element.
+      var lnkr = $("#linker");
+      var toggle = lnkr.children(".link-item");
+      if(toggle.size() > 0) {
+        toggle.fadeOut("fast", function() {
+          toggle.remove();
+          $(resp).appendTo(lnkr);
+        });
+      } else {
+        $(resp).appendTo(lnkr);
+      }
+    });
   }
 
   // Handle workflow changes
@@ -90,17 +113,12 @@ $(document).ready(function() {
 
   $("#startlink").click(function(event) {
     var button = $(event.currentTarget);
-    var tick = button.attr("data-ticket");
-    // Post a link to get it into the session
-    $.post('/ticket/startlink/' + tick, function(data) {
-      // Fetch the linker markup
-      $.get('/ticket/linker', function(resp) {
-        // Install it into the linker element.
-        var body = $(resp)
-        body.appendTo($("#linker"));
-        button.addClass("disabled");
-      });
+    var tickId = button.attr("data-ticket");
+
+    $.post('/ticket/startlink/' + tickId, function(data) {
+      showLinker(tickId);
+      button.addClass("disabled");
+      event.preventDefault();
     });
-    event.preventDefault();
   });
 });
