@@ -6,7 +6,6 @@
 
 ## Future!
  * Ticket Features
-  * Linking
   * Stacks
  * Workflow editing
   * Drafts
@@ -14,8 +13,10 @@
   * Changing existing tickets
 
 ## 0.1.0
+ * Ticket Linking
  * Ticket Resolution & Unresolution with comments
  * Decent Comment UI
  * Full unit tests
  * Ticket advance & revert dialog w/refreshing
  * Case class docs
+ * Ticket edit button

@@ -269,11 +269,15 @@ object Ticket extends Controller with Secured {
 
   def link(typeId: Long, parentId: String, childId: String) = IsAuthenticated { implicit request =>
 
-    val link = TicketModel.link(linkTypeId = typeId, parentId = parentId, childId = childId)
+    val link = if(parentId == childId) {
+      None
+    } else {
+      TicketModel.link(linkTypeId = typeId, parentId = parentId, childId = childId)
+    }
 
     link match {
-      case Some(query) => Ok(generate(link))
-      case None => NotFound
+      case Some(query) => Ok(Messages("ticket.linker.success"))
+      case None => Accepted(Messages("ticket.linker.maybe"))
     }
   }
 
@@ -284,18 +288,18 @@ object Ticket extends Controller with Secured {
     val ticketId = request.session.get("link_ticket")
     ticketId match {
       case Some(id) => Ok(views.html.util.linker(id, ltypes))
-      case None => Ok("&nbsp;")
+      case None => Ok("")
     }
   }
 
   def startLink(ticketId: String) = IsAuthenticated { implicit request =>
 
-    Ok("""{"OK":"OK"}""").withSession(session + ("link_ticket" -> ticketId))
+    Ok(Messages("ticket.linker.start", ticketId)).withSession(session + ("link_ticket" -> ticketId))
   }
 
   def stopLink = IsAuthenticated { implicit request =>
 
-    Ok("""{"OK":"OK"}""").withSession(session - "link_ticket")
+    Ok(Messages("ticket.linker.stop")).withSession(session - "link_ticket")
   }
 
   def update(ticketId: String) = IsAuthenticated { implicit request =>

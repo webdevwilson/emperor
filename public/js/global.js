@@ -8,16 +8,6 @@ $(document).ready(function() {
     showLinker(thead.attr("data-ticket"));
   }
 
-  $("#link-menu").on("click", "a.linker", function(event) {
-    // Ajax up some linkage
-    showAlert("alert-info", "Hello, world");
-  });
-
-  $("#link-menu").on("click", "a.remover", function(event) {
-    // Ajax up some removing here
-    showAlert("", "Hello, world");
-  });
-
   function showAlert(aclass, message) {
 
     // Get the alert area
@@ -45,20 +35,50 @@ $(document).ready(function() {
     }
   }
 
+  function removeLinker(callback) {
+    var toggle = $("#linker").children(".link-item");
+    if(toggle.size() > 0) {
+      toggle.fadeOut("fast", function() {
+        toggle.remove();
+        callback();
+      });
+    }
+  }
+
   function showLinker(ticketId) {
 
     // Fetch the linker markup
     $.get('/ticket/linker', function(resp) {
       // Install it into the linker element.
+      var cont = $(resp);
       var lnkr = $("#linker");
       var toggle = lnkr.children(".link-item");
       if(toggle.size() > 0) {
         toggle.fadeOut("fast", function() {
           toggle.remove();
-          $(resp).appendTo(lnkr);
+          cont.appendTo(lnkr);
         });
       } else {
-        $(resp).appendTo(lnkr);
+        cont.appendTo(lnkr);
+        lnkr.on("click", "a.linker", function(event) {
+          var clicked = $(event.currentTarget);
+          var child = thead.attr("data-ticket");
+          var parent = clicked.attr("data-parent");
+          var ltid = clicked.attr("data-linktype");
+          $.post("/ticket/link/" + ltid + "/" + parent + "/" + child, function(data) {
+            showAlert("alert-info", data);
+          }).error(function() {
+            showAlert("alert-error", "Error: Link failed!")
+          });
+        });
+        lnkr.on("click", "a.remover", function(event) {
+          $.post("/ticket/stoplink", function(data) {
+            removeLinker(function() {
+              showAlert("alert-success", data);
+              $("#startlink").removeClass("disabled");
+            });
+          });
+        });
       }
     });
   }

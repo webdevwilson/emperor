@@ -195,7 +195,11 @@ ticket.id=Id
 ticket.linker.action=Link
 ticket.linker.label=Linker: {0}
 ticket.linker.link=Link this as {0} {1}
+ticket.linker.maybe=Link not created. Already linked? Linking to itself?
 ticket.linker.remove=Remove {0} from Linker
+ticket.linker.start=Added {0} to Linker
+ticket.linker.stop=Removed ticket from Linker
+ticket.linker.success=Link created.
 ticket.linker.view=View {0}
 ticket.list=Tickets
 ticket.priority=Priority
@@ -253,6 +257,10 @@ ROLE_QA=QA
 ROLE_DEVELOPER=Developer
 
 TICK_LINK_BLOCKS=Blocks
+TICK_LINK_BLOCKED_BY=Blocked by
+TICK_LINK_CONTAINS=Contains
+TICK_LINK_CONTAINED=Contained in
+TICK_LINK_RELATED=is Related to
 
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix

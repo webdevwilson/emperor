@@ -36,6 +36,7 @@
         </div>
       </div>
     </div>
+    <div class="container-fluid">
     <div id="alert-area">
       @{ request.flash.get("success") match {
         case Some(message) => {
@@ -67,7 +68,7 @@
         case None => { }
       }
       }
-    <div class="container-fluid">
+    </div>
      @content
     </div>
    <script id="alerter" type="text/x-handlebars-template">

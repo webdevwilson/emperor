@@ -134,7 +134,7 @@ object TicketModel {
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM tickets WHERE ticket_id={ticket_id}")
 
-  val insertLinkQuery = SQL("INSERT INTO ticket_links (link_type_id, parent_ticket_id, child_ticket_id, date_created) VALUES ({link_type_id}, {parent_ticket_id}, {child_ticket_id}, UTC_TIMESTAMP())")
+  val insertLinkQuery = SQL("INSERT IGNORE INTO ticket_links (link_type_id, parent_ticket_id, child_ticket_id, date_created) VALUES ({link_type_id}, {parent_ticket_id}, {child_ticket_id}, UTC_TIMESTAMP())")
   val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} ORDER BY date_created")
   val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE ticket_links.id={id}")
   val deleteLinkQuery = SQL("DELETE FROM ticket_links WHERE id={id}")
@@ -558,12 +558,15 @@ object TicketModel {
   def link(linkTypeId: Long, parentId: String, childId: String): Option[Link] = {
 
     DB.withConnection { implicit conn =>
-      val lid = insertLinkQuery.on(
+      val li = insertLinkQuery.on(
         'link_type_id     -> linkTypeId,
         'parent_ticket_id -> parentId,
         'child_ticket_id  -> childId
       ).executeInsert()
-      getLinkById(lid.get)
+      li match {
+        case Some(lid) => getLinkById(lid)
+        case None => None
+      }
     }
   }
 

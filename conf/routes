@@ -96,6 +96,7 @@ GET     /stack                          controllers.Stack.index
 
 GET     /ticket/create                  controllers.Ticket.create
 GET     /ticket/linker                  controllers.Ticket.linker
+POST    /ticket/stoplink                controllers.Ticket.stopLink
 GET     /ticket/:id                     controllers.Ticket.item(id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)
@@ -105,7 +106,6 @@ POST    /ticket/comment/:id             controllers.Ticket.comment(id: String)
 POST    /ticket/link/:typeId/:parent/:child controllers.Ticket.link(typeId: Long, parent: String, child: String)
 POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: String)
 POST    /ticket/startlink/:id           controllers.Ticket.startLink(id: String)
-POST    /ticket/stoplink                controllers.Ticket.stopLink
 POST    /ticket/status/:id              controllers.Ticket.status(id: String)
 POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: String)
 
