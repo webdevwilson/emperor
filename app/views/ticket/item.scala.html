@@ -5,6 +5,7 @@
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
   commentForm: Form[models.InitialComment],
+  links: List[models.Link],
   comments: chc.Page[org.elasticsearch.search.SearchHit],
   commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
   history: chc.Page[org.elasticsearch.search.SearchHit],
@@ -77,6 +78,11 @@
 <div class="well ticket-desc">
  @{ ticket.description match { case Some(text) => Html(markdown.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 </div>
+<ul>
+@links.map { link =>
+ <li>@link</li>
+}
+</ul>
 <ul class="nav nav-tabs">
   <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
   <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
