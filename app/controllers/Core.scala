@@ -1,10 +1,11 @@
 package controllers
 
+import chc._
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Security._
 import play.db._
-import models.ProjectModel
+import models.{ProjectModel,SearchModel}
 import org.slf4j.{Logger,LoggerFactory}
 
 object Core extends Controller with Secured {
@@ -15,6 +16,20 @@ object Core extends Controller with Secured {
 
     val projects = models.ProjectModel.getAll
 
-    Ok(views.html.index(projects))
+    val filters = request.queryString filterKeys { key =>
+      key match {
+        case "project"    => true
+        case "priority"   => true
+        case "resolution" => true
+        case "severity"   => true
+        case "type"       => true
+        case _            => false // Nothing else is useful as a filter
+      }
+    }
+
+    val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
+    val pager = Page(response.hits.hits, 1, 10, response.hits.totalHits) // XX fixed page, count, query
+
+    Ok(views.html.index(pager, projects))
   }
 }

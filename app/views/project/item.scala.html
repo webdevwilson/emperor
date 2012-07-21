@@ -1,4 +1,4 @@
-@(project: models.Project)(implicit request: Request[AnyContent])
+@(project: models.Project, timeline: chc.Page[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
 @main(Messages("project.with.id", project.name)) {
 <div class="page-header">
  <h1>@Messages("project.with.id", project.name)</h1>
@@ -9,6 +9,15 @@
  </div>
  <div class="span6">
   <h2>@Messages("general.timeline")</h2>
+  <ul class="unstyled events">
+   @timeline.items.map { event =>
+    <li>
+      @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item(event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
+      <blockquote>@event.field("content").getValue</blockquote>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.field("user_realname").getValue.toString</b> @Messages("ticket.comment.attribution.postfix", event.field("date_created").getValue.toString)</div>
+    </li>
+   }
+  </ul>
  </div>
 </div>
 }

@@ -5,6 +5,7 @@
  * Compile handlebars
 
 ## Future!
+ * Timeline controller & view
  * Ticket Features
   * Stacks
  * Workflow editing
@@ -13,6 +14,7 @@
   * Changing existing tickets
 
 ## 0.1.0
+ * Events
  * Ticket Linking
  * Ticket Resolution & Unresolution with comments
  * Decent Comment UI

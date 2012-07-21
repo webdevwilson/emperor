@@ -1,6 +1,7 @@
 package controllers
 
 import anorm._
+import chc._
 import java.util.Date
 import play.api._
 import play.api.data._
@@ -8,7 +9,7 @@ import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
-import models.{ProjectModel,WorkflowModel}
+import models.{ProjectModel,SearchModel,WorkflowModel}
 
 object Project extends Controller with Secured {
 
@@ -66,11 +67,15 @@ object Project extends Controller with Secured {
 
     val project = ProjectModel.getById(projectId)
 
+    val filters = Map("project_id" -> Seq(projectId.toString))
+
+    val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
+    val pager = Page(response.hits.hits, 1, 10, response.hits.totalHits) // XX fixed page, count, query
+
     project match {
-      case Some(value) => Ok(views.html.project.item(value)(request))
+      case Some(value) => Ok(views.html.project.item(value, pager)(request))
       case None => NotFound
     }
-
   }
 
   def list(page: Int, count: Int) = IsAuthenticated { implicit request =>

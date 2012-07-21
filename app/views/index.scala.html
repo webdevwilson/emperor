@@ -1,4 +1,4 @@
-@(projects: List[Project])(implicit request: Request[AnyContent])
+@(timeline: chc.Page[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: Request[AnyContent])
 
 @import chc._
 @import util._
@@ -8,6 +8,15 @@
  <div class="span8">
   <div class="page-header">
    <h1>@Messages("general.timeline")</h1>
+   <ul class="unstyled events">
+   @timeline.items.map { event =>
+    <li>
+      @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item(event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
+      <blockquote>@event.field("content").getValue</blockquote>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.field("user_realname").getValue.toString</b> @Messages("ticket.comment.attribution.postfix", event.field("date_created").getValue.toString)</div>
+    </li>
+   }
+   </ul>
   </div>
  </div>
  <div class="span4">

@@ -151,6 +151,54 @@ object SearchModel {
   }
   """
 
+  // Event ES index
+  val eventIndex = "events"
+  val eventType = "event"
+  val eventMapping = """
+  {
+    "event": {
+      "properties": {
+        "project_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "project_name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "user_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "user_realname": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "ekey": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "etype": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "content": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "date_created": {
+          "type": "date",
+          "format": "basic_date_time_no_millis"
+        }
+      }
+    }
+  }
+  """
+
   // Ticket Comment ES index
   val ticketCommentIndex = "ticket_comments"
   val ticketCommentType = "ticket_comment"
@@ -440,6 +488,11 @@ object SearchModel {
    */
   def checkIndices = {
 
+    if(!indexer.exists(eventIndex)) {
+      indexer.createIndex(eventIndex, settings = Map("number_of_shards" -> "1"))
+      indexer.waitTillActive()
+      indexer.putMapping(eventIndex, eventType, eventMapping)
+    }
     if(!indexer.exists(ticketIndex)) {
       indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
@@ -455,6 +508,26 @@ object SearchModel {
       indexer.waitTillActive()
       indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
     }
+    indexer.refresh()
+  }
+
+  /**
+   * Index an event.
+   */
+  def indexEvent(event: Event) {
+
+    val edoc: Map[String,JsValue] = Map(
+      "project_id"    -> JsNumber(event.projectId),
+      "project_name"  -> JsString(event.projectName),
+      "user_id"       -> JsNumber(event.userId),
+      "user_realname" -> JsString(event.userRealName),
+      "ekey"          -> JsString(event.eKey),
+      "etype"         -> JsString(event.eType),
+      "content"       -> JsString(event.content),
+      "url"           -> JsString(event.url),
+      "date_created"  -> JsString(dateFormatter.format(event.dateCreated))
+    )
+    indexer.index(eventIndex, eventType, null, toJson(edoc).toString)
     indexer.refresh()
   }
 
@@ -681,6 +754,7 @@ object SearchModel {
    */
   def reIndex {
 
+    indexer.deleteIndex(eventIndex)
     indexer.deleteIndex(ticketIndex)
     indexer.deleteIndex(ticketHistoryIndex)
     indexer.deleteIndex(ticketCommentIndex)
@@ -689,10 +763,33 @@ object SearchModel {
     // Reindex all tickets and their history
     TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
+      indexEvent(Event(
+        projectId     = ticket.project.id,
+        projectName   = ticket.project.name,
+        userId        = ticket.user.id,
+        userRealName  = ticket.user.name,
+        eKey          = ticket.ticketId,
+        eType         = "ticket_create",
+        content       = ticket.summary,
+        url           = "",
+        dateCreated   = ticket.dateCreated
+      ))
       val count = TicketModel.getAllFullCountById(ticket.ticketId)
       if(count > 1) {
         TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
+          // First run will NOT index history because oldTick is None (as None starts the fold)
           oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
+          indexEvent(Event(
+            projectId     = newTick.project.id,
+            projectName   = newTick.project.name,
+            userId        = newTick.user.id,
+            userRealName  = newTick.user.name,
+            eKey          = newTick.ticketId,
+            eType         = "ticket_change",
+            content       = newTick.summary,
+            url           = "",
+            dateCreated   = newTick.dateCreated
+          ))
           Some(newTick)
         })
       }
@@ -700,6 +797,20 @@ object SearchModel {
     // Reindex all ticket comments
     TicketModel.getAllComments.foreach { comment =>
       indexComment(comment)
+
+      val ft = TicketModel.getFullById(comment.ticketId).get
+
+      indexEvent(Event(
+        projectId     = ft.project.id,
+        projectName   = ft.project.name,
+        userId        = ft.user.id,
+        userRealName  = ft.user.name,
+        eKey          = comment.ticketId,
+        eType         = "comment",
+        content       = comment.content,
+        url           = "",
+        dateCreated   = ft.dateCreated
+      ))
     }
   }
 
@@ -785,11 +896,48 @@ object SearchModel {
 
     indexer.search(
       query = actualQuery,
-      indices = Seq("ticket_comments"),
+      indices = Seq(ticketCommentIndex),
       facets = Seq(
         termsFacet("user_id").field("user_id")
       ),
       fields = List("content", "user_id", "user_realname", "date_created"),
+      size = Some(count),
+      from = page match {
+        case 0 => Some(0)
+        case 1 => Some(0)
+        case _ => Some((page * count) - 1)
+      },
+      sorting = Seq("date_created" -> SortOrder.DESC)
+    )
+  }
+
+  /**
+   * Search for events.
+   */
+  def searchEvent(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+
+    // This shouldn't have to live here. It annoys me. Surely there's a better
+    // way.
+    var q = query
+    if(q.isEmpty) {
+      q = "*"
+    }
+
+    var actualQuery : BaseQueryBuilder = queryString(q)
+
+    // If we have filters, build up a filterquery and swap out our actualQuery
+    // with a filtered version!
+    if(!filters.isEmpty) {
+      val fqs : Iterable[FilterBuilder] = filters map {
+        case (key, values) => termFilter(key, values.head).asInstanceOf[FilterBuilder]
+      }
+      actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
+    }
+
+    indexer.search(
+      query = actualQuery,
+      indices = Seq(eventIndex),
+      fields = List("project_id", "project_name", "user_id", "user_realname", "ekey", "etype", "content", "url", "date_created"),
       size = Some(count),
       from = page match {
         case 0 => Some(0)
@@ -825,7 +973,7 @@ object SearchModel {
 
     indexer.search(
       query = actualQuery,
-      indices = Seq("tickets"),
+      indices = Seq(ticketIndex),
       facets = Seq(
         termsFacet("resolution").field("resolution_name"),
         termsFacet("type").field("type_name"),
