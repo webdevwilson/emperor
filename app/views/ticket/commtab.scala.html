@@ -16,7 +16,7 @@
   @facets.map { facet =>
     <li class="nav-header">@Messages("ticket.comment.facet." + facet.getName)</li>
     @facet.entries.map { entry =>
-    <li><a href="@Library.filterLink(request, facet.getName, entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+    <li><a href="@Library.filterLink(request = request, name = facet.getName, value = entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
     }
   }
  </ul>

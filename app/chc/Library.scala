@@ -43,7 +43,13 @@ object Library {
     request.path + "?" + qs
   }
 
-  def filterLink(request: Request[AnyContent], name: String, value: String) : String = {
+  /**
+   * Return a String (URL) with a query parameter (`name`) and `value`.
+   * It uses the request to populate existing query params and also
+   * to provide the base query path.
+   * To override the base path you can pass in a `path`.
+   */
+  def filterLink(request: Request[AnyContent], path: Option[String] = None, name: String, value: String) : String = {
 
     var q = request.queryString
     q += name -> List(value)
@@ -65,6 +71,9 @@ object Library {
       )
     )
 
-    request.path + "?" + qs
+    path match {
+      case Some(p) => p + "?" + qs
+      case None => request.path + "?" + qs
+    }
   }
 }
