@@ -779,6 +779,8 @@ object SearchModel {
         TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
           // First run will NOT index history because oldTick is None (as None starts the fold)
           oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
+          // XXX Do something special for resolution changes, they are ticked_resolved
+          // and status changes.
           indexEvent(Event(
             projectId     = newTick.project.id,
             projectName   = newTick.project.name,
