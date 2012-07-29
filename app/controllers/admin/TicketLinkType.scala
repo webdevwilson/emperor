@@ -19,6 +19,7 @@ object TicketLinkType extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
+      "invertable" -> boolean,
       "date_created" -> ignored(new Date())
     )(models.TicketLinkType.apply)(models.TicketLinkType.unapply)
   )
@@ -33,7 +34,7 @@ object TicketLinkType extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.ticket.linktype.create(ltypeForm)(request))
@@ -57,16 +58,16 @@ object TicketLinkType extends Controller with Secured {
   }
 
   def item(ltypeId: Long) = IsAuthenticated { implicit request =>
-    
+
     val tltype = TicketLinkTypeModel.getById(ltypeId)
 
     tltype match {
       case Some(value) => Ok(views.html.admin.ticket.linktype.item(value)(request))
       case None => NotFound
     }
-    
+
   }
-  
+
   def update(ltypeId: Long) = IsAuthenticated { implicit request =>
 
     ltypeForm.bindFromRequest.fold(

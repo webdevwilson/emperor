@@ -10,7 +10,7 @@ import play.api.Play.current
 /**
  * Class for types of links.
  */
-case class TicketLinkType(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
+case class TicketLinkType(id: Pk[Long] = NotAssigned, name: String, invertable: Boolean, dateCreated: Date)
 
 object TicketLinkTypeModel {
 
@@ -18,7 +18,7 @@ object TicketLinkTypeModel {
   val getByIdQuery = SQL("SELECT * FROM ticket_link_types WHERE id={id}")
   val listQuery = SQL("SELECT * FROM ticket_link_types LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_link_types")
-  val insertQuery = SQL("INSERT INTO ticket_link_types (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ({name}, {invertable}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE ticket_link_types SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_link_types WHERE id={id}")
 
@@ -26,8 +26,9 @@ object TicketLinkTypeModel {
   val ticket_link_type = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
+    get[Boolean]("invertable") ~
     get[Date]("date_created") map {
-      case id~name~dateCreated => TicketLinkType(id, name, dateCreated)
+      case id~name~invertable~dateCreated => TicketLinkType(id, name, invertable, dateCreated)
     }
   }
 
@@ -38,7 +39,8 @@ object TicketLinkTypeModel {
 
     val id = DB.withConnection { implicit conn =>
       insertQuery.on(
-        'name   -> ts.name
+        'name       -> ts.name,
+        'invertable -> ts.invertable
       ).executeInsert()
     }
 

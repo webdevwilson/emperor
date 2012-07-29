@@ -83,9 +83,9 @@
 <ul>
 @links.map { link =>
   @if(link.parentId == ticket.ticketId) {
- <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.childId)">@link.childId</a> PAR</li>
+ <li>@Messages(link.typeName + "_INVERT") <a href="@routes.Ticket.item(link.childId)">@link.childId</a></li>
   } else {
- <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.parentId)">@link.parentId</a> CHI</li>
+ <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.parentId)">@link.parentId</a></li>
   }
 }
 </ul>

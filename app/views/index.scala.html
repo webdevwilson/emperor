@@ -28,7 +28,7 @@
    <h1>@Messages("general.projects")</h1>
   </div>
   @if(projects.isEmpty) {
-  <p>@Messages("general.projects.empty"). <a href="@controllers.routes.Project.create">@Messages("general.projects.add")</a></p>
+  <p>@Messages("general.projects.empty") <a href="@controllers.routes.Project.create">@Messages("general.projects.add")</a></p>
   } else {
   <ul>
   @projects.map { project =>

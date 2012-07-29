@@ -3,6 +3,11 @@ $(document).ready(function() {
   // Enable alerts
   $().alert();
 
+  // Add hasAttr function, cuz it should exist
+  $.fn.hasAttr = function(name) {
+     return this.attr(name) !== undefined;
+  };
+
   var thead = $("#ticket-header");
   if(thead.size() > 0) {
     showLinker(thead.attr("data-ticket"));
@@ -65,6 +70,13 @@ $(document).ready(function() {
           var child = thead.attr("data-ticket");
           var parent = clicked.attr("data-parent");
           var ltid = clicked.attr("data-linktype");
+
+          if(clicked.hasAttr("data-inverse")) {
+            var oldChild = child;
+            var child = parent;
+            var parent = oldChild;
+          }
+
           $.post("/ticket/link/" + ltid + "/" + parent + "/" + child, function(data) {
             showAlert("alert-info", data);
           }).error(function() {

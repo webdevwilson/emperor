@@ -95,13 +95,14 @@ CREATE TABLE ticket_link_types (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
     name VARCHAR(255) NOT NULL,
     date_created DATETIME NOT NULL,
+    invertable BOOLEAN DEFAULT 1,
     PRIMARY KEY(id),
     UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO ticket_link_types (name, date_created) VALUES ("TICK_LINK_BLOCKS", UTC_TIMESTAMP());
-INSERT INTO ticket_link_types (name, date_created) VALUES ("TICK_LINK_CONTAINS", UTC_TIMESTAMP());
-INSERT INTO ticket_link_types (name, date_created) VALUES ("TICK_LINK_RELATED", UTC_TIMESTAMP());
+INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_BLOCKS", 1, UTC_TIMESTAMP());
+INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_CONTAINS", 1, UTC_TIMESTAMP());
+INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_RELATED", 0, UTC_TIMESTAMP());
 
 CREATE TABLE ticket_severities (
     id INT UNSIGNED AUTO_INCREMENT NOT NULL,
