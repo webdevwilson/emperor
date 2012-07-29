@@ -2,6 +2,9 @@
 
 @import chc._
 
+@if(page.items.isEmpty) {
+@Messages("pager.empty")
+} else {
 <span class="summ">@Messages("pager.summary", page.offset + 1, page.offset + page.items.size, page.total)</span>
 <div class="pagination pull-right">
   <ul>
@@ -22,3 +25,4 @@
     }
   </ul>
 </div>
+}

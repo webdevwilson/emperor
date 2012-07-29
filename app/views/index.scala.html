@@ -8,6 +8,10 @@
  <div class="span8">
   <div class="page-header">
    <h1>@Messages("general.timeline")</h1>
+  </div>
+   @if(timeline.items.isEmpty) {
+   <p>@Messages("general.timeline.empty")</p>
+   } else {
    <ul class="unstyled events">
    @timeline.items.map { event =>
     <li>
@@ -17,17 +21,21 @@
     </li>
    }
    </ul>
-  </div>
+   }
  </div>
  <div class="span4">
   <div class="page-header">
    <h1>@Messages("general.projects")</h1>
   </div>
+  @if(projects.isEmpty) {
+  <p>@Messages("general.projects.empty"). <a href="@controllers.routes.Project.create">@Messages("general.projects.add")</a></p>
+  } else {
   <ul>
   @projects.map { project =>
    <li><a href="@controllers.routes.Project.item(project.id.get)">@project.name</a></li>
   }
   </ul>
+  }
  </div>
 </div>
 }

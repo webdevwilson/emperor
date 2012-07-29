@@ -122,12 +122,16 @@ general.edit=Edit
 general.home=Home
 general.password=Password
 general.projects=Projects
+general.projects.empty=No projects.
+general.projects.add=Add one!
 general.ticket=Tickets
 general.timeline=Timeline
+general.timeline.empty=Timeline is empty. Get to work!
 general.username=Username
 
 group.name=Name
 
+pager.empty=No items.
 pager.next=Next
 pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
@@ -210,6 +214,7 @@ ticket.linker.start=Added {0} to Linker
 ticket.linker.stop=Removed ticket from Linker
 ticket.linker.success=Link created.
 ticket.linker.view=View {0}
+ticket.links=Links
 ticket.list=Tickets
 ticket.priority=Priority
 ticket.project=Project
@@ -266,10 +271,11 @@ ROLE_QA=QA
 ROLE_DEVELOPER=Developer
 
 TICK_LINK_BLOCKS=Blocks
-TICK_LINK_BLOCKED_BY=Blocked by
+TICK_LINK_BLOCKS_INVERT=Blocked by
 TICK_LINK_CONTAINS=Contains
-TICK_LINK_CONTAINED=Contained in
-TICK_LINK_RELATED=is Related to
+TICK_LINK_CONTAINS_INVERT=Contained in
+TICK_LINK_RELATED=Related to
+TICK_LINK_RELATED_INVERT=Related to
 
 TICK_RESO_FIXED=Fixed
 TICK_RESO_WONTFIX=Won't Fix

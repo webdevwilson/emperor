@@ -78,11 +78,18 @@
 <div class="well ticket-desc">
  @{ ticket.description match { case Some(text) => Html(markdown.parseToHTML(text)); case None => Messages("ticket.description.none") } }
 </div>
+<h3>@Messages("ticket.links")</h3>
+@if(!links.isEmpty) {
 <ul>
 @links.map { link =>
- <li>@link</li>
+  @if(link.parentId == ticket.ticketId) {
+ <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.childId)">@link.childId</a> PAR</li>
+  } else {
+ <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.parentId)">@link.parentId</a> CHI</li>
+  }
 }
 </ul>
+}
 <ul class="nav nav-tabs">
   <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
   <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
