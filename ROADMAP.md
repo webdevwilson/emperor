@@ -13,6 +13,9 @@
   * Resolving problems
   * Changing existing tickets
 
+## ISSUES
+ * disabled linker color
+
 ## 0.1.0
  * Events
  * Ticket Linking

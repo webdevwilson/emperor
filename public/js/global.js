@@ -65,6 +65,10 @@ $(document).ready(function() {
         });
       } else {
         cont.appendTo(lnkr);
+        var linkid = cont.attr("data-linkid")
+        if(linkid == ticketId) {
+          cont.children().first().addClass("disabled");
+        }
         lnkr.on("click", "a.linker", function(event) {
           var clicked = $(event.currentTarget);
           var child = thead.attr("data-ticket");

@@ -1,5 +1,5 @@
 @(ticketId: String, ltypes: List[models.TicketLinkType])(implicit request: Request[AnyContent])
-<div class="link-item">
+<div class="link-item" data-linkid="@ticketId">
  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
    @Messages("ticket.linker.label", ticketId)
    <span class="caret"></span>
