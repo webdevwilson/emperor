@@ -6,12 +6,17 @@
 
 ## Future!
  * Timeline controller & view
+  * Timeline filters
  * Ticket Features
   * Stacks
  * Workflow editing
   * Drafts
   * Resolving problems
   * Changing existing tickets
+ * Search
+  * Assignee filter
+  * Reporter filter
+  * Notice filter
 
 ## ISSUES
  * disabled linker color

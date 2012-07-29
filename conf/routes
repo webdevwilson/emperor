@@ -24,6 +24,8 @@ POST    /admin/role/:id                 controllers.admin.Role.update(id: Long)
 GET     /admin/role/edit/:id            controllers.admin.Role.edit(id: Long)
 POST    /admin/role                     controllers.admin.Role.add
 
+GET     /admin/test/generate            controllers.admin.Test.generate
+
 GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 1, count: Int ?= 10)
 GET     /admin/ticket/linktype/create   controllers.admin.TicketLinkType.create
 GET     /admin/ticket/linktype/:id      controllers.admin.TicketLinkType.item(id: Long)
