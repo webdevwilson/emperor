@@ -347,7 +347,7 @@ object TicketModel {
   /**
    * Mark a ticket as resolved with an optional comment.
    */
-  def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None) = {
+  def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None): FullTicket = {
 
     DB.withConnection { implicit conn =>
 
@@ -359,7 +359,7 @@ object TicketModel {
   /**
    * Remove the resolution of a ticket with an optional comment.
    */
-  def unresolve(ticketId: String, userId: Long, comment: Option[String] = None) = {
+  def unresolve(ticketId: String, userId: Long, comment: Option[String] = None): FullTicket = {
       val tick = this.getById(ticketId).get
 
       this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
@@ -608,7 +608,7 @@ object TicketModel {
     resolutionId: Option[Long] = None, statusId: Option[Long] = None,
     clearResolution: Boolean = false,
     comment: Option[String] = None
-  ) = {
+  ): FullTicket = {
 
     val user = UserModel.getById(userId).get
 
@@ -702,6 +702,9 @@ object TicketModel {
       if(changed) {
         SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)
       }
+      newTicket
+    } else {
+      oldTicket
     }
   }
 }

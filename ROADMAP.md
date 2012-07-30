@@ -28,6 +28,7 @@
 ## ISSUES
  * disabled linker color
  * Ticket edit button
+ * show resolution on resolved tickets
 
 ## 0.1.0
  * Events
