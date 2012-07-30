@@ -9,8 +9,11 @@
  * General
   * Agile support (Kanban and Scrum) (Planned)
   * Better test data
- * Timeline controller & view
-  * Timeline filters
+  * rank (for agile backlog ordering)
+  * sprint ticket type
+  * custom flag for user-definable rows
+  * ticket-users
+  * handle "old" names of tickets (if moved)
  * Ticket Features
   * Stacks
  * Workflow editing
@@ -20,8 +23,12 @@
  * Search
   * Notice filter
 
+
+
 ## ISSUES
  * disabled linker color
+ * Timeline filters
+ * Ticket edit button
 
 ## 0.1.0
  * Events
@@ -31,4 +38,4 @@
  * Full unit tests
  * Ticket advance & revert dialog w/refreshing
  * Case class docs
- * Ticket edit button
+ * Timeline

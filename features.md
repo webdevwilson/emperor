@@ -12,6 +12,9 @@
 * Extensive search, faceting and filtering
 * Easily rebuildable indices
 
+## Timeline
+* Faceting and filtering
+
 ## Workflow
 * Agile support (Kanban and Scrum) (Planned)
 
