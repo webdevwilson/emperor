@@ -14,16 +14,16 @@
   * custom flag for user-definable rows
   * ticket-users
   * handle "old" names of tickets (if moved)
+  * table sorting
  * Ticket Features
   * Stacks
+  * Better link UI
  * Workflow editing
   * Drafts
   * Resolving problems
   * Changing existing tickets
  * Search
   * Notice filter
-
-
 
 ## ISSUES
  * disabled linker color

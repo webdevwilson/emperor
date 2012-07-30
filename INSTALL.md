@@ -7,7 +7,7 @@ There is an installer in the works for such things.
 
 ## Install a JDK
 
-JDK 6 is required.  7 should work.
+JDK 6 is required.  7 is used for development, but not required.
 
 ## Install Play framework
 

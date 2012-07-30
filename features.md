@@ -30,7 +30,6 @@
 
 ## Features in Progress
 * No-nonsense UI with great user experience
-* More unit-tests
 
 ## Planned Features
 * Integration with GitHub
