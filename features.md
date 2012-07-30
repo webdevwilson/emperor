@@ -14,6 +14,7 @@
 
 ## Timeline
 * Faceting and filtering
+* Standalone and per-project
 
 ## Workflow
 * Agile support (Kanban and Scrum) (Planned)

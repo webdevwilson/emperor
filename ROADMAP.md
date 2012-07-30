@@ -27,7 +27,6 @@
 
 ## ISSUES
  * disabled linker color
- * Timeline filters
  * Ticket edit button
 
 ## 0.1.0

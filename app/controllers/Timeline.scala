@@ -15,9 +15,9 @@ object Timeline extends Controller with Secured {
 
     val filters = request.queryString filterKeys { key =>
       key match {
-        case "project"    => true
-        case "user"       => true
-        case _            => false // Nothing else is useful as a filter
+        case "project"=> true
+        case "user"   => true
+        case _        => false // Nothing else is useful as a filter
       }
     }
 

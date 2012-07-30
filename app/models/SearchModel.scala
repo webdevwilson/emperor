@@ -39,6 +39,13 @@ object SearchModel {
   // Ticket ES index
   val ticketIndex = "tickets"
   val ticketType = "ticket"
+  val ticketFilterMap = Map(
+    "project"    -> "project_name",
+    "priority"   -> "priority_name",
+    "resolution" -> "resolution_name",
+    "severity"   -> "severity_name",
+    "type"       -> "type_name"
+  )
   val ticketMapping = """
   {
     "ticket": {
@@ -155,6 +162,10 @@ object SearchModel {
   // Event ES index
   val eventIndex = "events"
   val eventType = "event"
+  val eventFilterMap = Map(
+    "user" -> "user_realname",
+    "project" -> "project_name"
+  )
   val eventMapping = """
   {
     "event": {
@@ -932,7 +943,7 @@ object SearchModel {
     // with a filtered version!
     if(!filters.isEmpty) {
       val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(key, values.head).asInstanceOf[FilterBuilder]
+        case (key, values) => termFilter(eventFilterMap.get(key).get, values.head).asInstanceOf[FilterBuilder]
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
@@ -976,7 +987,7 @@ object SearchModel {
     // with a filtered version!
     if(!filters.isEmpty) {
       val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(key + "_name", values.head).asInstanceOf[FilterBuilder]
+        case (key, values) => termFilter(ticketFilterMap.get(key).get, values.head).asInstanceOf[FilterBuilder]
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
