@@ -28,8 +28,7 @@ object Core extends Controller with Secured {
     }
 
     val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
-    val pager = Page(response.hits.hits, 1, 10, response.hits.totalHits) // XX fixed page, count, query
 
-    Ok(views.html.index(pager, projects))
+    Ok(views.html.index(response, projects))
   }
 }

@@ -70,10 +70,9 @@ object Project extends Controller with Secured {
     val filters = Map("project_id" -> Seq(projectId.toString))
 
     val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
-    val pager = Page(response.hits.hits, 1, 10, response.hits.totalHits) // XX fixed page, count, query
 
     project match {
-      case Some(value) => Ok(views.html.project.item(value, pager)(request))
+      case Some(value) => Ok(views.html.project.item(value, response)(request))
       case None => NotFound
     }
   }

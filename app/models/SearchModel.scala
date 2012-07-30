@@ -818,7 +818,7 @@ object SearchModel {
   }
 
   // XXX
-  def searchProjectStats(projectId: Long) : SearchResponse = {
+  def searchProjectStats(projectId: Long): SearchResponse = {
 
     var actualQuery = filteredQuery(queryString("*"), andFilter(termFilter("project_id", projectId)))
 
@@ -833,7 +833,7 @@ object SearchModel {
   /**
    * Search for ticket changes, or history.
    */
-  def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+  def searchChange(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -877,7 +877,7 @@ object SearchModel {
   /**
    * Search for ticket comments.
    */
-  def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+  def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -917,7 +917,7 @@ object SearchModel {
   /**
    * Search for events.
    */
-  def searchEvent(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+  def searchEvent(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -937,9 +937,13 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
 
-    indexer.search(
+    val res = indexer.search(
       query = actualQuery,
       indices = Seq(eventIndex),
+      facets = Seq(
+        termsFacet("project").field("project_name"),
+        termsFacet("user").field("user_realname")
+      ),
       fields = List("project_id", "project_name", "user_id", "user_realname", "ekey", "etype", "content", "url", "date_created"),
       size = Some(count),
       from = page match {
@@ -949,12 +953,15 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
+
+    val pager = Page(res.hits.hits, page, count, res.hits.totalHits)
+    Library.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
    * Search for a ticket.
    */
-  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.

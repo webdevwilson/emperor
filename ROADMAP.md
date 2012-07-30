@@ -3,8 +3,12 @@
 ## Someday
  * Compile LESS
  * Compile handlebars
+ * Replace jQuery mess
 
 ## Future!
+ * General
+  * Agile support (Kanban and Scrum) (Planned)
+  * Better test data
  * Timeline controller & view
   * Timeline filters
  * Ticket Features
@@ -14,8 +18,6 @@
   * Resolving problems
   * Changing existing tickets
  * Search
-  * Assignee filter
-  * Reporter filter
   * Notice filter
 
 ## ISSUES

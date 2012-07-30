@@ -1,0 +1,44 @@
+@(result: chc.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: Request[AnyContent])
+
+@import chc._
+@import util._
+
+@main(Messages("general.timeline")) {
+<div class="row-fluid">
+ <div class="span2">
+  <ul class="nav nav-list well search-well">
+  @filters.map { key =>
+   <li class="filter"><a style="text-align: left" class="btn btn-mini" href="@Library.filterLink(request = request, name = key._1, value = "")">@Messages("search.facet.filter." + key._1, Messages(key._2(0)))<i class="icon-remove-circle icon-white"></i></a></li>
+  }
+  @if(result.facets.size > 0) {
+  @result.facets.map { facet =>
+   <li class="nav-header">@Messages("search.facet." + facet.name)</li>
+   @facet.items.map { entry =>
+   <li><a href="@Library.filterLink(request = request, name = facet.name, value = entry.value)">@Messages(entry.value) <span class="badge">@entry.count</span></a></li>
+   }
+  }
+  </ul>
+  } else {
+   <h5>@Messages("search.facet.none")</h5>
+  }
+ </div>
+ <div class="span10">
+  <div class="page-header">
+   <h1>@Messages("general.timeline")</h1>
+  </div>
+   @if(result.pager.items.isEmpty) {
+   <p>@Messages("general.timeline.empty")</p>
+   } else {
+   <ul class="unstyled events">
+   @result.pager.items.map { event =>
+    <li>
+      <i class="@Messages("event.action.icon." + event.field("etype").getValue)"></i> @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item(event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
+      <blockquote>@event.field("content").getValue</blockquote>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.field("user_realname").getValue.toString</b> @Messages("ticket.comment.attribution.postfix", event.field("date_created").getValue.toString)</div>
+    </li>
+   }
+   </ul>
+   }
+  </div>
+</div>
+}

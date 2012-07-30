@@ -1,4 +1,4 @@
-@(timeline: chc.Page[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: Request[AnyContent])
+@(timeline: chc.SearchResult[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: Request[AnyContent])
 
 @import chc._
 @import util._
@@ -9,11 +9,11 @@
   <div class="page-header">
    <h1>@Messages("general.timeline")</h1>
   </div>
-   @if(timeline.items.isEmpty) {
+   @if(timeline.pager.items.isEmpty) {
    <p>@Messages("general.timeline.empty")</p>
    } else {
    <ul class="unstyled events">
-   @timeline.items.map { event =>
+   @timeline.pager.items.map { event =>
     <li>
       <i class="@Messages("event.action.icon." + event.field("etype").getValue)"></i> @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item(event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
       <blockquote>@event.field("content").getValue</blockquote>
