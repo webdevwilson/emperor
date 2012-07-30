@@ -21,21 +21,8 @@ object Search extends Controller with Secured {
       }
     }
 
-    val response = SearchModel.searchTicket(page, count, query, filters)
+    val result = SearchModel.searchTicket(page, count, query, filters)
 
-    val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
-
-    // The response contains a list of facets, but they are generic'ed down
-    // to Facet rather than their real fucking class.  Therefore we re-cast
-    // them all in this list and filter any that do not have more than one
-    // value. The > 1 is because a facet with only one term is useless to
-    // display.
-    val termfacets = response.facets.facets.map { facet =>
-      facet match {
-        case t: InternalStringTermsFacet => t
-      }
-    } filter { f => f.entries.size > 1 }
-
-    Ok(views.html.search.index(pager, filters, termfacets)(request))
+    Ok(views.html.search.index(filters, result)(request))
   }
 }

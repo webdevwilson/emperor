@@ -1,5 +1,9 @@
 package chc
 
+import collection.JavaConversions._
+import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.search.facet.terms.strings._
+import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
 import play.api.mvc._
 import scala.collection.mutable.ListBuffer
 
@@ -22,8 +26,8 @@ case class Page[+A](items: Seq[A], requestedPage: Int, count: Int, total: Long) 
   }
 }
 
-case class Facet(name: String, value: String, count: Long)
-case class Facets(name: String, param: String, items: Seq[Facet])
+case class Facet(value: String, count: Long)
+case class Facets(name: String, items: Seq[Facet])
 case class SearchResult[A](pager: Page[A], facets: Seq[Facets])
 
 object Library {
@@ -75,5 +79,35 @@ object Library {
       case Some(p) => p + "?" + qs
       case None => request.path + "?" + qs
     }
+  }
+
+  def parseSearchResponse(pager: Page[org.elasticsearch.search.SearchHit], response: SearchResponse): SearchResult[org.elasticsearch.search.SearchHit] = {
+
+    val facets = response.facets.facets map { facet =>
+      Facets(
+        name  = facet.getName,
+        items = facet match {
+          case t: InternalStringTermsFacet => {
+            t.entries map { fitem =>
+              Facet(
+                value = fitem.getTerm,
+                count = fitem.getCount
+              )
+            }
+          }
+          case t: InternalLongTermsFacet => {
+            t.entries map { fitem =>
+              Facet(
+                value = fitem.getTerm,
+                count = fitem.getCount
+              )
+            }
+          }
+        }
+      )
+    } filter { f => f.items.size > 1 } // Eliminate facets with only one item
+
+    // val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
+    SearchResult(pager = pager, facets = facets)
   }
 }

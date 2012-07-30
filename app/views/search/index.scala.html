@@ -1,4 +1,4 @@
-@(results: chc.Page[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]], facets: scala.collection.mutable.Buffer[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet])(implicit request: Request[AnyContent])
+@(filters: Map[String,Seq[String]], result: chc.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
 
 @import chc._
 @import util._
@@ -10,11 +10,11 @@
 	@filters.map { key =>
 	 <li class="filter"><a style="text-align: left" class="btn btn-mini" href="@Library.filterLink(request = request, name = key._1, value = "")">@Messages("search.facet.filter." + key._1, Messages(key._2(0)))<i class="icon-remove-circle icon-white"></i></a></li>
 	}
-  @if(facets.size > 0) {
-  @facets.map { facet =>
-   <li class="nav-header">@Messages("search.facet." + facet.getName)</li>
-   @facet.entries.map { entry =>
-   <li><a href="@Library.filterLink(request = request, name = facet.getName, value = entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+  @if(result.facets.size > 0) {
+  @result.facets.map { facet =>
+   <li class="nav-header">@Messages("search.facet." + facet.name)</li>
+   @facet.items.map { entry =>
+   <li><a href="@Library.filterLink(request = request, name = facet.name, value = entry.value)">@Messages(entry.value) <span class="badge">@entry.count</span></a></li>
    }
   }
   </ul>
@@ -30,7 +30,7 @@
     <th>@Messages("general.actions")</th>
    </thead>
    <tbody>
-    @results.items.map { hit =>
+    @result.pager.items.map { hit =>
     <tr>
      <td style="width: 10%"><a href="@controllers.routes.Ticket.item(hit.getId)"><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages("ticket.type.with.id", Messages(hit.getSource.get("type_name").asInstanceOf[String]), hit.id)</span></a</td>
      <td style="width: 80%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
@@ -47,7 +47,7 @@
    <tfoot>
     <tr>
      <td colspan="3">
-       @pager(results)
+       @pager(result.pager)
       </td>
      </tr>
    </tfoot

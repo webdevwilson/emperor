@@ -1,5 +1,6 @@
 package models
 
+import chc._
 import com.traackr.scalastic.elasticsearch.Indexer
 import java.text.SimpleDateFormat
 import java.util.{Date,TimeZone}
@@ -953,7 +954,7 @@ object SearchModel {
   /**
    * Search for a ticket.
    */
-  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResponse = {
+  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]) : SearchResult[org.elasticsearch.search.SearchHit] = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -973,7 +974,7 @@ object SearchModel {
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }
 
-    indexer.search(
+    val res = indexer.search(
       query = actualQuery,
       indices = Seq(ticketIndex),
       facets = Seq(
@@ -982,8 +983,9 @@ object SearchModel {
         termsFacet("project").field("project_name"),
         termsFacet("priority").field("priority_name"),
         termsFacet("severity").field("severity_name"),
-        termsFacet("status").field("status_name")
-        // XXX project should be here but it's a long
+        termsFacet("status").field("status_name"),
+        termsFacet("assignee").field("assignee_name"),
+        termsFacet("reporter").field("reporter_name")
       ),
       size = Some(count),
       from = page match {
@@ -993,6 +995,9 @@ object SearchModel {
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )
+
+    val pager = Page(res.hits.hits, page, count, res.hits.totalHits)
+    Library.parseSearchResponse(pager = pager, response = res)
   }
 
   /**

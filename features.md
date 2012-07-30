@@ -10,6 +10,7 @@
 ## Search
 * High-performance search via [ElasticSearch](http://www.elasticsearch.org/)
 * Extensive search, faceting and filtering
+* Easily rebuildable indices
 
 ## Workflow
 * Agile support (Kanban and Scrum) (Planned)
@@ -17,6 +18,7 @@
 ## Tickets
 * Full ticket history with faceting and filtering
 * Commenting
+* Linking
 
 ## Security
 * Passwords are stored using bcrypt.
@@ -32,6 +34,5 @@
 * Plugins
 * Email notification
 * First-class milestones
-* Ticket linking
 * Ticket "stacks"
 * Attention Flagging
