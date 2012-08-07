@@ -1,6 +1,7 @@
 package models
 
 import chc._
+import chc.Json._
 import com.traackr.scalastic.elasticsearch.Indexer
 import java.text.SimpleDateFormat
 import java.util.{Date,TimeZone}
@@ -564,69 +565,7 @@ object SearchModel {
    */
   def indexTicket(ticket: FullTicket) {
 
-    val resId = ticket.resolution.id match {
-      case Some(id)   => JsNumber(id)
-      case None       => JsNull
-    }
-    val resName = ticket.resolution.name match {
-      case Some(name) => JsString(name)
-      case None       => JsString("TICK_RESO_UNRESOLVED")
-    }
-    val propResId = ticket.proposedResolution.id match {
-      case Some(id)   => JsNumber(id)
-      case None       => JsNull
-    }
-    val propResName = ticket.proposedResolution.name match {
-      case Some(name) => JsString(name)
-      case None       => JsString("TICK_RESO_UNRESOLVED")
-    }
-    val assId = ticket.assignee.id match {
-      case Some(id) => JsNumber(id)
-      case None     => JsNull
-    }
-    val assName = ticket.assignee.name match {
-      case Some(name) => JsString(name)
-      case None       => JsNull
-    }
-    val attId = ticket.attention.id match {
-      case Some(id) => JsNumber(id)
-      case None     => JsNull
-    }
-    val attName = ticket.attention.name match {
-      case Some(name) => JsString(name)
-      case None       => JsNull
-    }
-
-    val tdoc: Map[String,JsValue] = Map(
-      "project_id"      -> JsNumber(ticket.project.id),
-      "project_name"    -> JsString(ticket.project.name),
-      "priority_id"     -> JsNumber(ticket.priority.id),
-      "priority_name"   -> JsString(ticket.priority.name),
-      "priority_color"  -> JsString(ticket.priority.color),
-      "resolution_id"   -> resId,
-      "resolution_name" -> resName,
-      "proposed_resolution_id" -> propResId,
-      "proposed_resolution_name" -> propResName,
-      "reporter_id"     -> JsNumber(ticket.reporter.id),
-      "reporter_name"   -> JsString(ticket.reporter.name),
-      "assignee_id"     -> assId,
-      "assignee_name"   -> assName,
-      "attention_id"    -> attId,
-      "attention_name"  -> attName,
-      "severity_id"     -> JsNumber(ticket.severity.id),
-      "severity_color"  -> JsString(ticket.severity.name),
-      "severity_name"   -> JsString(ticket.severity.name),
-      "status_id"       -> JsNumber(ticket.status.id),
-      "status_name"     -> JsString(ticket.status.name),
-      "type_id"         -> JsNumber(ticket.ttype.id),
-      "type_color"      -> JsString(ticket.ttype.color),
-      "type_name"       -> JsString(ticket.ttype.name),
-      "summary"         -> JsString(ticket.summary),
-      "description"     -> JsString(ticket.description.getOrElse("")),
-      "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
-    )
-
-    indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(tdoc).toString)
+    indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(ticket).toString)
     indexer.refresh()
   }
 
