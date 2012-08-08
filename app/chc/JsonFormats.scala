@@ -7,12 +7,15 @@ import models._
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
-object Json {
+object JsonFormats {
 
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
 
   // XXX UNIT TESTS FOR THE LOVE OF GOD
 
+  /**
+   * JSON conversion for Comment
+   */
   implicit object CommentFormat extends Format[Comment] {
     def reads(json: JsValue): Comment = Comment(
       id = Id((json \ "id").as[Long]),

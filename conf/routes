@@ -80,6 +80,8 @@ GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Lo
 POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
+GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String)
+
 GET     /auth/login                     controllers.Auth.login
 GET     /auth/logout                    controllers.Auth.logout
 POST    /auth/login                     controllers.Auth.doLogin

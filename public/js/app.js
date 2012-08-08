@@ -8,7 +8,7 @@ YUI({
   console.log("Hello World!");
 
   Y.TicketModel = Y.Base.create('ticketModel', Y.Model, [Y.ModelSync.REST], {
-    root: '/ticket'
+    root: '/api/ticket'
   }, {
     ATTRS: {
       summary: {}

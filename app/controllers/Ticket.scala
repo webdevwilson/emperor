@@ -2,7 +2,7 @@ package controllers
 
 import anorm._
 import chc._
-import chc.Json._
+import chc.JsonFormats._
 import collection.JavaConversions._
 import play.api._
 import play.api.data._
@@ -215,14 +215,10 @@ object Ticket extends Controller with Secured {
 
   def item(ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
 
-    println(request.accept)
-
     val ticket = TicketModel.getFullById(ticketId)
 
     ticket match {
       case Some(value) => {
-
-        println(Json.toJson(value))
 
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
