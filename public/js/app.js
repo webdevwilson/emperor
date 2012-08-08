@@ -1,21 +1,18 @@
-YUI({
-  gallery: 'gallery-2012.05.16-20-37'
-}).use('app', 'model', 'gallery-model-sync-rest', function(Y) {
+YUI().use('model', 'model-sync-rest', function(Y) {
 
-  var app = new Y.App({
-  });
-  app.render().dispatch();
-  console.log("Hello World!");
-
-  Y.TicketModel = Y.Base.create('ticketModel', Y.Model, [Y.ModelSync.REST], {
-    root: '/api/ticket'
-  }, {
-    ATTRS: {
-      summary: {}
-    }
+  Y.Ticket = Y.Base.create('ticket', Y.Model, [Y.ModelSync.REST], {
+      // The root or collection path segment for the server's Users resource.
+      root: '/api/ticket'
   });
 
-  var ticket = new Y.TicketModel({ id: 'CAMP-7' });
-  ticket.load();
-  console.log(ticket);
+  var ticket;
+
+  ticket = new Y.Ticket({ id: 'CAMP-7' }).load(function(err) {
+    console.log(err);
+    console.log(ticket.get("id"));
+    console.log(ticket.get("summary"));
+    ticket.set("summary", "fuck you");
+    console.log(ticket.getAttrs());
+    console.log(ticket.get("summary"));
+  });
 });
