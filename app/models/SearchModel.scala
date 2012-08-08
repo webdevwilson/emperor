@@ -529,18 +529,7 @@ object SearchModel {
    */
   def indexEvent(event: Event) {
 
-    val edoc: Map[String,JsValue] = Map(
-      "project_id"    -> JsNumber(event.projectId),
-      "project_name"  -> JsString(event.projectName),
-      "user_id"       -> JsNumber(event.userId),
-      "user_realname" -> JsString(event.userRealName),
-      "ekey"          -> JsString(event.eKey),
-      "etype"         -> JsString(event.eType),
-      "content"       -> JsString(event.content),
-      "url"           -> JsString(event.url),
-      "date_created"  -> JsString(dateFormatter.format(event.dateCreated))
-    )
-    indexer.index(eventIndex, eventType, null, toJson(edoc).toString)
+    indexer.index(eventIndex, eventType, null, toJson(event).toString)
     indexer.refresh()
   }
 
@@ -549,14 +538,7 @@ object SearchModel {
    */
   def indexComment(comment: Comment) {
 
-    val cdoc: Map[String,JsValue] = Map(
-      "ticket_id"     -> JsString(comment.ticketId),
-      "user_id"       -> JsNumber(comment.userId),
-      "user_realname" -> JsString(comment.realName),
-      "content"       -> JsString(comment.content),
-      "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
-    )
-    indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(cdoc).toString)
+    indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(comment).toString)
     indexer.refresh()
   }
 

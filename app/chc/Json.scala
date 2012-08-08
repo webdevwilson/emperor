@@ -13,6 +13,61 @@ object Json {
 
   // XXX UNIT TESTS FOR THE LOVE OF GOD
 
+  implicit object CommentFormat extends Format[Comment] {
+    def reads(json: JsValue): Comment = Comment(
+      id = Id((json \ "id").as[Long]),
+      userId = (json \ "user_id").as[Long],
+      username = (json \ "user_name").as[String],
+      realName = (json \ "user_realname").as[String],
+      ticketId = (json \ "ticket_id").as[String],
+      content = (json \ "content").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(comment: Comment): JsValue = {
+      val cdoc: Map[String,JsValue] = Map(
+        "ticket_id"     -> JsString(comment.ticketId),
+        "user_id"       -> JsNumber(comment.userId),
+        "user_realname" -> JsString(comment.realName),
+        "content"       -> JsString(comment.content),
+        "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
+      )
+      toJson(cdoc)
+    }
+  }
+
+  /**
+   * JSON conversion for Event
+   */
+  implicit object EventFormat extends Format[Event] {
+    def reads(json: JsValue): Event = Event(
+      projectId = (json \ "project_id").as[Long],
+      projectName = (json \ "project_name").as[String],
+      userId = (json \ "user_id").as[Long],
+      userRealName = (json \ "user_realname").as[String],
+      eKey = (json \ "ekey").as[String],
+      eType = (json \ "etype").as[String],
+      content = (json \ "content").as[String],
+      url = (json \ "url").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(event: Event): JsValue = {
+      val edoc: Map[String,JsValue] = Map(
+        "project_id"    -> JsNumber(event.projectId),
+        "project_name"  -> JsString(event.projectName),
+        "user_id"       -> JsNumber(event.userId),
+        "user_realname" -> JsString(event.userRealName),
+        "ekey"          -> JsString(event.eKey),
+        "etype"         -> JsString(event.eType),
+        "content"       -> JsString(event.content),
+        "url"           -> JsString(event.url),
+        "date_created"  -> JsString(dateFormatter.format(event.dateCreated))
+      )
+      toJson(edoc)
+    }
+  }
+
   /**
    * JSON conversion for FullTicket
    */
