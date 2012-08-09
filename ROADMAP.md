@@ -32,13 +32,13 @@
  * disabled linker color
  * Ticket edit button
  * show resolution on resolved tickets
+ * Decent Comment UI
 
-## 0.1.0
+## 0.0.4
  * Events
  * Ticket Linking
  * Ticket Resolution & Unresolution with comments
- * Decent Comment UI
- * Full unit tests
+  * Full unit tests
  * Ticket advance & revert dialog w/refreshing
  * Case class docs
  * Timeline
