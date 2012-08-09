@@ -15,6 +15,9 @@
   * ticket-users
   * handle "old" names of tickets (if moved)
   * table sorting
+  * notice
+  * API
+    * Ruby gem
  * Ticket Features
   * Stacks
   * Better link UI
