@@ -39,6 +39,63 @@ object JsonFormats {
     }
   }
 
+  implicit object EditTicketFormat extends Format[EditTicket] {
+    def reads(json: JsValue): EditTicket = EditTicket(
+      ticketId      = Id((json \ "ticket_id").as[String]),
+      reporterId    = (json \ "reporter_id").as[Long],
+      assigneeId    = (json \ "assignee_id").as[Option[Long]],
+      priorityId    = (json \ "priority_id").as[Long],
+      projectId     = (json \ "project_id").as[Long],
+      resolutionId  = (json \ "resolution_id").as[Option[Long]],
+      severityId    = (json \ "severity_id").as[Long],
+      typeId        = (json \ "type_id").as[Long],
+      summary       = (json \ "summary").as[String],
+      description   = (json \ "description").as[Option[String]],
+      attentionId    = (json \ "attention_id").as[Option[Long]],
+      position      = (json \ "position").as[Option[Long]],
+      proposedResolutionId = (json \ "proposed_resolution_id").as[Option[Long]]
+    )
+
+    def writes(ticket: EditTicket): JsValue = {
+
+      val assId  = ticket.assigneeId match {
+        case Some(assId)=> JsNumber(assId)
+        case None       => JsNull
+      }
+      val resId = ticket.resolutionId match {
+        case Some(id)   => JsNumber(id)
+        case None       => JsNull
+      }
+      val propResId = ticket.proposedResolutionId match {
+        case Some(id)   => JsNumber(id)
+        case None       => JsNull
+      }
+      val pos = ticket.position match {
+        case Some(id)   => JsNumber(id)
+        case None       => JsNull
+      }
+      val desc = ticket.description match {
+        case Some(d)    => JsString(d)
+        case None       => JsNull
+      }
+
+      val tdoc: Map[String,JsValue] = Map(
+        "ticket_id"   -> JsString(ticket.ticketId.get),
+        "reporter_id" -> JsNumber(ticket.reporterId),
+        "assignee_id" -> assId,
+        "priority_id" -> JsNumber(ticket.priorityId),
+        "resolution_id" -> resId,
+        "proposed_resolution_id" -> propResId,
+        "severity_id" -> JsNumber(ticket.severityId),
+        "type_id"     -> JsNumber(ticket.typeId),
+        "position"    -> pos,
+        "summary"     -> JsString(ticket.summary),
+        "description" -> desc
+      )
+      toJson(tdoc)
+    }
+  }
+
   /**
    * JSON conversion for Event
    */

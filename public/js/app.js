@@ -5,14 +5,14 @@ YUI().use('model', 'model-sync-rest', function(Y) {
       root: '/api/ticket'
   });
 
-  var ticket;
+  // var ticket;
 
-  ticket = new Y.Ticket({ id: 'CAMP-7' }).load(function(err) {
-    console.log(err);
-    console.log(ticket.get("id"));
-    console.log(ticket.get("summary"));
-    ticket.set("summary", "fuck you");
-    console.log(ticket.getAttrs());
-    console.log(ticket.get("summary"));
-  });
+  // ticket = new Y.Ticket({ id: 'CAMP-7' }).load(function(err) {
+  //   console.log(err);
+  //   console.log(ticket.get("id"));
+  //   console.log(ticket.get("summary"));
+  //   ticket.set("summary", "fuck you");
+  //   console.log(ticket.getAttrs());
+  //   console.log(ticket.get("summary"));
+  // });
 });
