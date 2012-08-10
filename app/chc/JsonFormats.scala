@@ -4,6 +4,7 @@ import anorm.Id
 import java.text.SimpleDateFormat
 import java.util.Date
 import models._
+import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
@@ -180,9 +181,9 @@ object JsonFormats {
         name  = (json \ "status_name").as[String]
       ),
       ttype  = ColoredThing(
-        id    = (json \ "ttype_id").as[Long],
-        name  = (json \ "ttype_name").as[String],
-        color = (json \ "ttype_color").as[String]
+        id    = (json \ "type_id").as[Long],
+        name  = (json \ "type_name").as[String],
+        color = (json \ "type_color").as[String]
       ),
       position = Some((json \ "position").as[Long]),
       summary = (json \ "summary").as[String],
@@ -225,10 +226,12 @@ object JsonFormats {
         case None       => JsNull
       }
       val tdoc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(ticket.id.get),
+        "ticket_id"       -> JsString(ticket.ticketId),
         "project_id"      -> JsNumber(ticket.project.id),
         "project_name"    -> JsString(ticket.project.name),
         "priority_id"     -> JsNumber(ticket.priority.id),
-        "priority_name"   -> JsString(ticket.priority.name),
+        "priority_name"   -> JsString(Messages(ticket.priority.name)),
         "priority_color"  -> JsString(ticket.priority.color),
         "resolution_id"   -> resId,
         "resolution_name" -> resName,
@@ -241,13 +244,13 @@ object JsonFormats {
         "attention_id"    -> attId,
         "attention_name"  -> attName,
         "severity_id"     -> JsNumber(ticket.severity.id),
-        "severity_color"  -> JsString(ticket.severity.name),
-        "severity_name"   -> JsString(ticket.severity.name),
+        "severity_color"  -> JsString(ticket.severity.color),
+        "severity_name"   -> JsString(Messages(ticket.severity.name)),
         "status_id"       -> JsNumber(ticket.status.id),
-        "status_name"     -> JsString(ticket.status.name),
+        "status_name"     -> JsString(Messages(ticket.status.name)),
         "type_id"         -> JsNumber(ticket.ttype.id),
         "type_color"      -> JsString(ticket.ttype.color),
-        "type_name"       -> JsString(ticket.ttype.name),
+        "type_name"       -> JsString(Messages(ticket.ttype.name)),
         "summary"         -> JsString(ticket.summary),
         "description"     -> JsString(ticket.description.getOrElse("")),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))

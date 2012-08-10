@@ -267,7 +267,8 @@ object Ticket extends Controller with Secured {
           comments = comments,
           commFacets = commFacets,
           history = history,
-          historyFacets = historyFacets
+          historyFacets = historyFacets,
+          ticketJson = toJson(ticket).toString
         )(request))
       }
       case None => NotFound

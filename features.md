@@ -26,7 +26,6 @@
 
 ## Security
 * Passwords are stored using bcrypt.
-* Written with static typing from database to template.
 
 ## Features in Progress
 * No-nonsense UI with great user experience
