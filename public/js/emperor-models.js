@@ -5,6 +5,10 @@ YUI.add('emperor-models', function(Y) {
       root: '/api/ticket'
   });
 
+  Y.TicketWorkflow = Y.Base.create('ticketWorkflow', Y.Model, [Y.ModelSync.REST], {
+    root: '/api/ticket/workflow'
+  });
+
   // var ticket;
 
   // ticket = new Y.Ticket({ id: 'CAMP-7' }).load(function(err) {

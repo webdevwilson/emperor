@@ -10,17 +10,19 @@
   commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
   history: chc.Page[org.elasticsearch.search.SearchHit],
   historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
-  ticketJson: String
+  ticketJson: String,
+  workflowJson: String
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
 
 @main(Messages("ticket.with.id", ticket.ticketId)) {
+<div id="ticket-head">
+</div>
 <div id="ticket-body">
 </div>
-<div class="well ticket-desc">
- @{ ticket.description match { case Some(text) => Html(markdown.parseToHTML(text)); case None => Messages("ticket.description.none") } }
+<div id="workflow-body">
 </div>
 <h3>@Messages("ticket.links")</h3>
 @if(!links.isEmpty) {
@@ -62,7 +64,7 @@
 </div>
 <script type="text/javascript">
   YUI().use('emperor-models', 'base', 'view', 'node', function (Y) {
-    Y.TicketItemView = Y.Base.create('ticketItemView', Y.View, [], {
+    Y.TicketHeaderView = Y.Base.create('ticketItemView', Y.View, [], {
       events: {
         '.eat': { click: 'eatSlice '}
       },
@@ -77,7 +79,6 @@
         var container = this.get('container');
 
         var source   = this.template;
-        console.log(source);
         var template = Handlebars.compile(source);
         var html = template(this.get('model').toJSON());
 
@@ -97,15 +98,77 @@
       ATTRS: {
         container: {
           valueFn: function () {
+            return Y.one('#ticket-head');
+          }
+        }
+      }
+    });
+
+    Y.TicketBodyView = Y.Base.create('ticketItemView', Y.View, [], {
+      template: Y.one("#ticket-body-template").getHTML(),
+      initializer: function () {
+        var model = this.get('model');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        var html = template(this.get('model').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
             return Y.one('#ticket-body');
           }
         }
       }
     });
 
+    Y.WorkflowBodyView = Y.Base.create('ticketBodyView', Y.View, [], {
+      template: Y.one("#workflow-body-template").getHTML(),
+      initializer: function () {
+        var model = this.get('model');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        var html = template(this.get('model').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
+            return Y.one('#workflow-body');
+          }
+        }
+      }
+    });
+
     var ticket = new Y.Ticket(@Html(ticketJson));
-    var ticketView = new Y.TicketItemView({ model: ticket });
-    ticketView.render();
+    var workflow = new Y.TicketWorkflow(@Html(workflowJson));
+    var ticketHeadView = new Y.TicketHeaderView({ model: ticket });
+    var ticketBodyView = new Y.TicketBodyView({ model: ticket });
+    var workflowBodyView = new Y.WorkflowBodyView({ model: workflow });
+    ticketHeadView.render();
+    ticketBodyView.render();
+    workflowBodyView.render();
   });
 </script>
 <script id="ticket-header-template" type="text/x-handlebars-template">
@@ -113,13 +176,13 @@
  <h2>{{ticket_id}}, {{summary}}</h2>
  <ul id="ticket-info" class="unstyled pull-left">
   <li>
-   <span class="label" style="background-color: #{{type_color}}"><label>@Messages("ticket.type")</label> {{type_name}}</span>
+   <span class="label" style="background-color: #{{type_color}}"><label>@Messages("ticket.type")</label> {{type_name_i18n}}</span>
   </li>
   <li>
-   <span class="label" style="background-color: #{{priority_color}}"><label>@Messages("ticket.priority")</label> {{priority_name}}</span>
+   <span class="label" style="background-color: #{{priority_color}}"><label>@Messages("ticket.priority")</label> {{priority_name_i18n}}</span>
   </li>
   <li>
-   <span class="label" style="background-color: #{{severity_color}}"><label>@Messages("ticket.severity")</label> {{severity_name}}</span>
+   <span class="label" style="background-color: #{{severity_color}}"><label>@Messages("ticket.severity")</label> {{severity_name_i18n}}</span>
   </li>
  </ul>
  <div class="btn-toolbar pull-right">
@@ -135,25 +198,6 @@
      }
    }
   </div>
-  @if(ticket.resolution.id.isEmpty) {
-  <div class="btn-group">
-   @prevStatus match {
-     case Some(status) => {
-   <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
-     }
-     case None => { }
-   }
-   <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
-   @nextStatus match {
-     case Some(status) => {
-   <a class="btn btn-primary" data-toggle="modal" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
-     }
-     case None => {
-   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
-     }
-   }
-  </div>
-  }
   <div class="btn-group">
    {{#if resolution_id}}
    <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
@@ -164,4 +208,31 @@
  </div>
 </div>
 </script>
+<script id="ticket-body-template" type="text/x-handlebars-template">
+ <div class="well ticket-desc">
+  {{#if description}}
+  {{{description}}}
+  {{else}}
+  @Messages("ticket.description.none")
+  {{/if}}
+ </div>
+</script>
+<script id="workflow-body-template" type="text/x-handlebars-template">
+  XXX ticket resolution id
+  {{#if 1}}
+  <div class="btn-group">
+   {{#if previous}}
+   <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i>  @Messages("ticket.revert") <i></i>{{previous.name}}</a>
+   {{/if}}
+   <a href="#" class="btn disabled">XXX status name</a>
+   {{#if next}}
+   <a class="btn btn-primary" data-toggle="modal" href="#status-advance"> @Messages("ticket.advance") <i></i>{{next.name_i18n}} <i class="icon-arrow-right icon-white"></i></a>
+   {{else}}
+   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
+   {{/if}}
+  </div>
+  {{/if}}
+</script>
 }
+
+

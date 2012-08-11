@@ -33,6 +33,8 @@
  * Ticket edit button
  * show resolution on resolved tickets
  * Decent Comment UI
+ * Y.Handlebars
+ * API docs
 
 ## 0.0.4
  * Events

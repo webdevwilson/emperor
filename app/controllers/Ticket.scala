@@ -223,6 +223,11 @@ object Ticket extends Controller with Secured {
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
 
+        val statuses: Map[String,Option[WorkflowStatus]] = Map(
+          "previous" -> prevStatus,
+          "next" -> nextStatus
+        )
+
         val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
         val commFilters = Map("ticket_id" -> Seq(ticketId))
@@ -268,7 +273,8 @@ object Ticket extends Controller with Secured {
           commFacets = commFacets,
           history = history,
           historyFacets = historyFacets,
-          ticketJson = toJson(ticket).toString
+          ticketJson = toJson(ticket).toString,
+          workflowJson = toJson(statuses).toString
         )(request))
       }
       case None => NotFound

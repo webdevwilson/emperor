@@ -4,6 +4,7 @@ import anorm.Id
 import java.text.SimpleDateFormat
 import java.util.Date
 import models._
+import org.clapper.markwrap._
 import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
@@ -11,6 +12,7 @@ import play.api.libs.json._
 object JsonFormats {
 
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+  val markdown = MarkWrap.parserFor(MarkupType.Markdown)
 
   // XXX UNIT TESTS FOR THE LOVE OF GOD
 
@@ -198,16 +200,16 @@ object JsonFormats {
         case None       => JsNull
       }
       val resName = ticket.resolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsString("TICK_RESO_UNRESOLVED")
+        case Some(name) => name
+        case None       => "TICK_RESO_UNRESOLVED"
       }
       val propResId = ticket.proposedResolution.id match {
         case Some(id)   => JsNumber(id)
         case None       => JsNull
       }
       val propResName = ticket.proposedResolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsString("TICK_RESO_UNRESOLVED")
+        case Some(name) => name
+        case None       => "TICK_RESO_UNRESOLVED"
       }
       val assId = ticket.assignee.id match {
         case Some(id) => JsNumber(id)
@@ -231,12 +233,14 @@ object JsonFormats {
         "project_id"      -> JsNumber(ticket.project.id),
         "project_name"    -> JsString(ticket.project.name),
         "priority_id"     -> JsNumber(ticket.priority.id),
-        "priority_name"   -> JsString(Messages(ticket.priority.name)),
+        "priority_name"   -> JsString(ticket.priority.name),
+        "priority_name_i18n" -> JsString(Messages(ticket.priority.name)),
         "priority_color"  -> JsString(ticket.priority.color),
         "resolution_id"   -> resId,
-        "resolution_name" -> resName,
+        "resolution_name" -> JsString(Messages(resName)),
         "proposed_resolution_id" -> propResId,
-        "proposed_resolution_name" -> propResName,
+        "proposed_resolution_name" -> JsString(propResName),
+        "proposed_resolution_name_i18n" -> JsString(Messages(propResName)),
         "reporter_id"     -> JsNumber(ticket.reporter.id),
         "reporter_name"   -> JsString(ticket.reporter.name),
         "assignee_id"     -> assId,
@@ -245,17 +249,47 @@ object JsonFormats {
         "attention_name"  -> attName,
         "severity_id"     -> JsNumber(ticket.severity.id),
         "severity_color"  -> JsString(ticket.severity.color),
-        "severity_name"   -> JsString(Messages(ticket.severity.name)),
+        "severity_name"   -> JsString(ticket.severity.name),
+        "severity_name_i18n" -> JsString(Messages(ticket.severity.name)),
         "status_id"       -> JsNumber(ticket.status.id),
-        "status_name"     -> JsString(Messages(ticket.status.name)),
+        "status_name"     -> JsString(ticket.status.name),
+        "status_name_i18n"-> JsString(Messages(ticket.status.name)),
         "type_id"         -> JsNumber(ticket.ttype.id),
         "type_color"      -> JsString(ticket.ttype.color),
-        "type_name"       -> JsString(Messages(ticket.ttype.name)),
+        "type_name"       -> JsString(ticket.ttype.name),
+        "type_name_i18n"  -> JsString(Messages(ticket.ttype.name)),
         "summary"         -> JsString(ticket.summary),
-        "description"     -> JsString(ticket.description.getOrElse("")),
+        "description"     -> JsString(markdown.parseToHTML(ticket.description.getOrElse(""))),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
       )
       toJson(tdoc)
+    }
+  }
+
+  /**
+   * JSON conversion for FullTicket
+   */
+  implicit object WorkflowStatusFormat extends Format[WorkflowStatus] {
+
+    def reads(json: JsValue): WorkflowStatus = WorkflowStatus(
+      id          = Id((json \ "id").as[Long]),
+      workflowId  = (json \ "workflow_id").as[Long],
+      statusId    = (json \ "status_id").as[Long],
+      name        = (json \ "name").as[String],
+      position    = (json \ "position").as[Int]
+    )
+
+    def writes(ws: WorkflowStatus): JsValue = {
+
+      val wsdoc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(ws.id.get),
+        "workflow_id"     -> JsNumber(ws.workflowId),
+        "status_id"       -> JsNumber(ws.statusId),
+        "name"            -> JsString(ws.name),
+        "name_i18n"       -> JsString(Messages(ws.name)),
+        "position"        -> JsNumber(ws.position)
+      )
+      toJson(wsdoc)
     }
   }
 }
