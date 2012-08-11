@@ -9,7 +9,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.mvc._
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.libs.json.Json._
 import models._
 import models.TicketModel._
@@ -228,6 +228,11 @@ object Ticket extends Controller with Secured {
           "next" -> nextStatus
         )
 
+        val apiTick: Map[String,JsValue] = Map(
+          "ticket" -> Json.toJson(value),
+          "workflow" -> Json.toJson(statuses)
+        )
+
         val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
         val commFilters = Map("ticket_id" -> Seq(ticketId))
@@ -271,7 +276,7 @@ object Ticket extends Controller with Secured {
           commFacets = commFacets,
           history = history,
           historyFacets = historyFacets,
-          ticketJson = toJson(ticket).toString,
+          ticketJson = toJson(apiTick).toString,
           workflowJson = toJson(statuses).toString
         )(request))
       }
