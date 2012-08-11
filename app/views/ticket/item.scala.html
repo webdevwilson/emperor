@@ -1,7 +1,5 @@
 @(ticket: models.FullTicket,
   markdown: org.clapper.markwrap.MarkWrapParser,
-  prevStatus: Option[models.WorkflowStatus],
-  nextStatus: Option[models.WorkflowStatus],
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
   commentForm: Form[models.InitialComment],
@@ -23,6 +21,8 @@
 <div id="ticket-body">
 </div>
 <div id="workflow-body">
+</div>
+<div id="change-body">
 </div>
 <h3>@Messages("ticket.links")</h3>
 @if(!links.isEmpty) {
@@ -64,9 +64,90 @@
 </div>
 <script type="text/javascript">
   YUI().use('emperor-models', 'base', 'view', 'node', function (Y) {
+
+    var ticket = new Y.Ticket(@Html(ticketJson));
+    var workflow = new Y.TicketWorkflow(@Html(workflowJson));
+
+    // Resolve
+    Y.ResolverView = Y.Base.create('resolverView', Y.View, [], {
+      events: {
+        '.cancel': { click: 'close'}
+      },
+      template: Y.one("#resolver-template").getHTML(),
+      initializer: function () {
+        var model = this.get('model');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        var html = template(this.get('model').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+      close: function() {
+        var container = this.get('container');
+        container.setHTML('');
+      }
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
+            return Y.one('#change-body');
+          }
+        }
+      }
+    });
+
+    var resolverView = new Y.ResolverView({ model : ticket });
+
+    // Advance
+    Y.AdvanceView = Y.Base.create('advanceView', Y.View, [], {
+      events: {
+        '.cancel': { click: 'close'}
+      },
+      template: Y.one("#advance-template").getHTML(),
+      initializer: function () {
+        var model = this.get('model');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        var html = template(this.get('model').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+      close: function() {
+        var container = this.get('container');
+        container.setHTML('');
+      }
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
+            return Y.one('#change-body');
+          }
+        }
+      }
+    });
+
+    var advanceView = new Y.AdvanceView({ model : workflow });
+
+    // Ticket Header
     Y.TicketHeaderView = Y.Base.create('ticketItemView', Y.View, [], {
       events: {
-        '.eat': { click: 'eatSlice '}
+        '#btn-resolver': { click: 'resolve'}
       },
       template: Y.one("#ticket-header-template").getHTML(),
       initializer: function () {
@@ -86,13 +167,8 @@
 
         return this;
       },
-      // The eatSlice function will handle click events on this view's "Eat a Slice"
-      // button.
-      eatSlice: function (e) {
-        // Call the pie model's eatSlice() function. This will consume a slice of
-        // pie (if there are any left) and update the model, thus causing the view
-        // to re-render to reflect the new model data.
-        this.get('model').eatSlice();
+      resolve: function (e) {
+        resolverView.render();
       }
     }, {
       ATTRS: {
@@ -104,6 +180,7 @@
       }
     });
 
+    // Ticket Body
     Y.TicketBodyView = Y.Base.create('ticketItemView', Y.View, [], {
       template: Y.one("#ticket-body-template").getHTML(),
       initializer: function () {
@@ -133,7 +210,11 @@
       }
     });
 
+    // Workflow
     Y.WorkflowBodyView = Y.Base.create('ticketBodyView', Y.View, [], {
+      events: {
+        '#btn-advance': { click: 'advance'}
+      },
       template: Y.one("#workflow-body-template").getHTML(),
       initializer: function () {
         var model = this.get('model');
@@ -151,6 +232,10 @@
 
         return this;
       },
+      advance: function (e) {
+        console.log('asdasd');
+        advanceView.render();
+      }
     }, {
       ATTRS: {
         container: {
@@ -161,8 +246,6 @@
       }
     });
 
-    var ticket = new Y.Ticket(@Html(ticketJson));
-    var workflow = new Y.TicketWorkflow(@Html(workflowJson));
     var ticketHeadView = new Y.TicketHeaderView({ model: ticket });
     var ticketBodyView = new Y.TicketBodyView({ model: ticket });
     var workflowBodyView = new Y.WorkflowBodyView({ model: workflow });
@@ -200,9 +283,9 @@
   </div>
   <div class="btn-group">
    {{#if resolution_id}}
-   <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+   <a class="btn btn-danger" id="btn-unresolver" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
    {{else}}
-   <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
+   <a class="btn btn-success" id="btn-resolver" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
    {{/if}}
   </div>
  </div>
@@ -226,12 +309,53 @@
    {{/if}}
    <a href="#" class="btn disabled">XXX status name</a>
    {{#if next}}
-   <a class="btn btn-primary" data-toggle="modal" href="#status-advance"> @Messages("ticket.advance") <i></i>{{next.name_i18n}} <i class="icon-arrow-right icon-white"></i></a>
+   <a class="btn btn-primary" id="btn-advance" href="#status-advance"> @Messages("ticket.advance") <i></i>{{next.name_i18n}} <i class="icon-arrow-right icon-white"></i></a>
    {{else}}
    <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
    {{/if}}
   </div>
   {{/if}}
+</script>
+<script id="resolver-template" type="text/x-handlebars-template">
+<div id="resolver">
+ @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close cancel">×</button>
+  <h3>@Messages("ticket.resolve")</h3>
+ </div>
+ <div class="modal-body">
+  <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
+  <fieldset>
+   @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
+   @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn cancel">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+</script>
+<script id="advance-template" type="text/x-handlebars-template">
+<div id="status-advance">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close cancel">×</button>
+  <h3>@Messages("ticket.advance") <i></i>{{next.name_i18n}}</h3>
+ </div>
+ <div class="modal-body">
+  <fieldset>
+   <input type="hidden" name="status_id" value="{{next.status_id}}">
+   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn cancel">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
 </script>
 }
 

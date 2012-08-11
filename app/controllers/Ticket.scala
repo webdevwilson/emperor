@@ -263,8 +263,6 @@ object Ticket extends Controller with Secured {
         Ok(views.html.ticket.item(
           ticket = value,
           markdown = mdParser,
-          prevStatus = prevStatus,
-          nextStatus = nextStatus,
           resolutions = resolutions,
           resolveForm = resolveForm,
           commentForm = commentForm,
