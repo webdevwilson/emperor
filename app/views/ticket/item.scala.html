@@ -284,7 +284,7 @@
  </div>
 </script>
 <script id="resolver-template" type="text/x-handlebars-template">
-<div id="resolver">
+<div id="resolver" class="modal">
  @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close cancel">×</button>
@@ -305,7 +305,7 @@
 </div>
 </script>
 <script id="advance-template" type="text/x-handlebars-template">
-<div id="status-advance">
+<div id="status-advance" class="modal">
  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close cancel">×</button>
@@ -325,7 +325,7 @@
 </div>
 </script>
 <script id="revert-template" type="text/x-handlebars-template">
-<div id="status-revert">
+<div id="status-revert" class="modal">
  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close cancel" data-dismiss="modal">×</button>
