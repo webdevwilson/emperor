@@ -101,6 +101,44 @@
 
     var resolverView = new Y.ResolverView({ model : ticket });
 
+    // Unresolve
+    Y.UnresolverView = Y.Base.create('unresolverView', Y.View, [], {
+      events: {
+        '.cancel': { click: 'close'}
+      },
+      template: Y.one("#unresolver-template").getHTML(),
+      initializer: function () {
+        var model = this.get('model');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        var html = template(this.get('model').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+      close: function() {
+        var container = this.get('container');
+        container.setHTML('');
+      }
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
+            return Y.one('#change-body');
+          }
+        }
+      }
+    });
+
+    var unresolverView = new Y.UnresolverView({ model : ticket });
+
     // Advance
     Y.AdvanceView = Y.Base.create('advanceView', Y.View, [], {
       events: {
@@ -180,9 +218,10 @@
     // Ticket Header
     Y.TicketHeaderView = Y.Base.create('ticketItemView', Y.View, [], {
       events: {
-        '#btn-resolver': { click: 'resolve'},
-        '#btn-advance': { click: 'advance'},
-        '#btn-revert': { click: 'revert'}
+        '#btn-resolver': { click: 'resolve' },
+        '#btn-unresolver': { click: 'unresolve' },
+        '#btn-advance': { click: 'advance' },
+        '#btn-revert': { click: 'revert' }
       },
       template: Y.one("#ticket-header-template").getHTML(),
       initializer: function () {
@@ -204,6 +243,9 @@
       },
       resolve: function (e) {
         resolverView.render();
+      },
+      unresolve: function(e) {
+        unresolverView.render();
       },
       advance: function (e) {
         advanceView.render();
@@ -304,6 +346,26 @@
  }
 </div>
 </script>
+<script id="unresolver-template" type="text/x-handlebars-template">
+<div id="unresolver" class="modal">
+ @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.unresolve")</h3>
+ </div>
+ <div class="modal-body">
+   <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
+   <fieldset>
+     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+   </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+</script>
 <script id="advance-template" type="text/x-handlebars-template">
 <div id="status-advance" class="modal">
  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
@@ -343,7 +405,6 @@
  </div>
  }
 </div>
-
 </script>
 }
 
