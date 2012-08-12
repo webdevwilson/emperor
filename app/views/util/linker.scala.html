@@ -1,14 +1,14 @@
 @(ticketId: String, ltypes: List[models.TicketLinkType])(implicit request: Request[AnyContent])
-<div class="link-item" data-linkid="@ticketId">
+<div class="link-item">
  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
    @Messages("ticket.linker.label", ticketId)
    <span class="caret"></span>
  </a>
  <ul id="link-menu" class="dropdown-menu">
    @ltypes.map { ltype =>
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticketId"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name), ticketId)</a></li>
+   <li><a href="#" class="linker" data-linktype="@ltype.id.get"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name), ticketId)</a></li>
    @if(ltype.invertable) {
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticketId" data-inverse="true"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name + "_INVERT"), ticketId)</a></li>
+   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-inverse="true"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name + "_INVERT"), ticketId)</a></li>
    }
    }
    <li class="divider"></li>

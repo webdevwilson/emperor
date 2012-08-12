@@ -265,6 +265,8 @@ object Ticket extends Controller with Secured {
           }
         } //filter { f => f.entries.size > 1 }
 
+        val ltypes = TicketLinkTypeModel.getAll
+
         Ok(views.html.ticket.item(
           ticket = value,
           markdown = mdParser,
@@ -277,10 +279,25 @@ object Ticket extends Controller with Secured {
           history = history,
           historyFacets = historyFacets,
           ticketJson = toJson(apiTick).toString,
-          workflowJson = toJson(statuses).toString
+          workflowJson = toJson(statuses).toString,
+          linkTypes = ltypes
         )(request))
       }
       case None => NotFound
+    }
+  }
+
+  def link(typeId: Long, parentId: String, childId: String) = IsAuthenticated { implicit request =>
+
+    val link = if(parentId == childId) {
+      None
+    } else {
+      TicketModel.link(linkTypeId = typeId, parentId = parentId, childId = childId)
+    }
+
+    link match {
+      case Some(query) => Ok(Messages("ticket.linker.success"))
+      case None => Accepted(Messages("ticket.linker.maybe"))
     }
   }
 
