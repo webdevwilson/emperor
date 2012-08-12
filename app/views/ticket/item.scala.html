@@ -282,18 +282,6 @@
   </li>
  </ul>
  <div class="btn-toolbar pull-right">
-  <div class="btn-group">
-   @defining(request.session.get("link_ticket")) { lt =>
-     @lt match {
-       case Some(ltid) => {
-         <button id="startlink" class="btn @if(ltid == ticket.ticketId) { disabled }" data-ticket="@ticket.ticketId">@Messages("ticket.linker.action")</button>
-       }
-       case None => {
-         <button id="startlink" class="btn" data-ticket="@ticket.ticketId">@Messages("ticket.linker.action")</button>
-       }
-     }
-   }
-  </div>
   {{#if ticket.resolution_id}}
   {{else}}
   <div class="btn-group">
