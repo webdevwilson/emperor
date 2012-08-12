@@ -60,7 +60,7 @@
   </div>
 </div>
 <script type="text/javascript">
-  YUI().use('emperor-models', 'base', 'view', 'node', function (Y) {
+  YUI().use('emperor-models', 'base', 'view', 'node', 'io-base', function (Y) {
 
     var ticket = new Y.Ticket(@Html(ticketJson));
 
@@ -300,10 +300,41 @@
         model.set("ticket_id", null).save();
       },
       link: function(e) {
+        var model = this.get('model');
         var t = e.currentTarget;
+        var type = t.getAttribute('data-linktype');
         var invert = t.getAttribute('data-inverse');
-        console.log(t.getAttribute('data-linktype'));
-        console.log(invert);
+
+        var ticketId = '@ticket.ticketId';
+        var childId = model.get("ticket_id");
+        if(invert == true) {
+          ticketId = model.get("ticket_id");
+          childId = '@ticket.ticketId';
+        }
+
+        var uri = '/api/ticket/link/' + ticketId
+
+        var link = {
+          link_type_id: parseInt(type),
+          child_ticket_id: childId
+        };
+
+        var cfg = {
+            method: 'PUT',
+            data: JSON.stringify(link),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        };
+
+        function onSuccess(transactionid, response, arguments) {
+          console.log("yay!");
+        }
+
+        // Subscribe to "io.success".
+        Y.on('io:success', onSuccess, Y, true);
+
+        var request = Y.io(uri, cfg);
       }
     }, {
       ATTRS: {

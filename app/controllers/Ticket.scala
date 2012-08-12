@@ -287,20 +287,6 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def link(typeId: Long, parentId: String, childId: String) = IsAuthenticated { implicit request =>
-
-    val link = if(parentId == childId) {
-      None
-    } else {
-      TicketModel.link(linkTypeId = typeId, parentId = parentId, childId = childId)
-    }
-
-    link match {
-      case Some(query) => Ok(Messages("ticket.linker.success"))
-      case None => Accepted(Messages("ticket.linker.maybe"))
-    }
-  }
-
   def update(ticketId: String) = IsAuthenticated { implicit request =>
 
     ticketForm.bindFromRequest.fold(

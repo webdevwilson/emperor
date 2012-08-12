@@ -3,6 +3,7 @@ package controllers.api
 import chc.JsonFormats._
 import controllers._
 import models._
+import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -33,5 +34,36 @@ object Ticket extends Controller with Secured {
       }
       case None => NotFound
     }
+  }
+
+  def link(ticketId: String) = IsAuthenticated { implicit request =>
+
+    request.body.asJson.map { json =>
+      val childId = (json \ "child_ticket_id").asOpt[String]
+      val typeId = (json \ "link_type_id").asOpt[Long]
+
+      val maybeLink: Either[String,Option[Link]] = if(childId.isDefined && typeId.isDefined) {
+        if(childId.get == ticketId) {
+          Left("Can't link ticket to itself.")
+        } else {
+          Right(TicketModel.link(
+            linkTypeId = typeId.get, parentId = ticketId, childId = childId.get
+          ))
+        }
+      } else {
+        Left("Must have both child_ticket_id and link_type_id")
+      }
+
+      maybeLink match {
+        case Left(message) => BadRequest(message)
+        case Right(link) => link match {
+          case Some(l) => Ok(Messages("ticket.linker.success"))
+          case None => InternalServerError("Error occurred creating link.")
+        }
+      }
+    }.getOrElse {
+      BadRequest("Expecting Json data")
+    }
+
   }
 }

@@ -136,7 +136,7 @@ object TicketModel {
 
   val insertLinkQuery = SQL("INSERT IGNORE INTO ticket_links (link_type_id, parent_ticket_id, child_ticket_id, date_created) VALUES ({link_type_id}, {parent_ticket_id}, {child_ticket_id}, UTC_TIMESTAMP())")
   val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} GROUP BY ticket_links.id ORDER BY ticket_links.date_created")
-  val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE ticket_links.id={id}")
+  val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id JOIN tickets AS parent_ticket ON parent_ticket.ticket_id = ticket_links.parent_ticket_id JOIN tickets AS child_ticket ON child_ticket.ticket_id = ticket_links.child_ticket_id WHERE ticket_links.id={id} LIMIT 1")
   val deleteLinkQuery = SQL("DELETE FROM ticket_links WHERE id={id}")
 
   val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
