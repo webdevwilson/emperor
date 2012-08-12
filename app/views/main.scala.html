@@ -77,6 +77,82 @@
     </div>
      @content
     </div>
+   <script type="text/javascript">
+   YUI().use('emperor-models', 'base', 'view', 'node', function (Y) {
+
+    // Find a ticket id if we have one
+    var tickId = null;
+    var thead  = Y.one("#ticket-head");
+    if(thead != null) {
+      tickId = thead.getAttribute("data-ticket");
+
+      Y.LinkerView = Y.Base.create('linkerView', Y.View, [], {
+        events: {
+          '#btn-start': { click: 'start' },
+          '.remover': { click: 'stop' }
+        },
+        template: Y.one("#linker-template").getHTML(),
+        initializer: function () {
+          var model = this.get('model');
+
+          model.after('change', this.render, this);
+          model.after('destroy', this.render, this);
+        },
+        render: function () {
+          var container = this.get('container');
+          var source   = this.template;
+          var template = Handlebars.compile(source);
+          var html = template(this.get('model').toJSON());
+
+          container.setHTML(html);
+
+          return this;
+        },
+        start: function(e) {
+          var model = this.get('model');
+          model.set("ticket_id", tickId).save();
+        },
+        stop: function(e) {
+          var model = this.get('model');
+          // Causes a PUT with an empty ticket id. Hackish
+          model.set("ticket_id", null).save();
+        }
+      }, {
+        ATTRS: {
+          container: {
+            valueFn: function () {
+              return Y.one('#linker');
+            }
+          }
+        }
+      });
+
+      var linkTicket = new Y.LinkTicket({ id : tickId });
+      linkTicket.load();
+
+      var linkerView = new Y.LinkerView({ model: linkTicket });
+      linkerView.render();
+    }
+   });
+   </script>
+   <script id="linker-template" type="text/x-handlebars-template">
+    <div class="link-item">
+    {{#if ticket_id}}
+     <a class="btn btn-primary dropdown-toggle {{#if disabled}}disabled{{/if}}" data-toggle="dropdown" href="#">
+       @Messages("ticket.linker.label") <i></i>{{ticket_id}}
+       <span class="caret"></span>
+     </a>
+     <ul id="link-menu" class="dropdown-menu">
+       XXX linker template
+       <li class="divider"></li>
+       <li><a href="/ticket/{{ticket_id}}"><i class="icon-eye-open"></i> @Messages("ticket.linker.view") <i></i>{{ticket_id}}</a></li>
+       <li><a href="#" class="remover"><i class="icon-eject"></i> @Messages("ticket.linker.remove") <i></i>{{ticket_id}}</a></li>
+     </ul>
+    {{else}}
+    <a class="btn" id="btn-start">@Messages("ticket.linker.action")</a>
+    {{/if}}
+    </div>
+   </script>
    <script id="alerter" type="text/x-handlebars-template">
     <div class="alert {{alert_class}}">
      <a class="close" data-dismiss="alert" href="#">&times;</a>

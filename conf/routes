@@ -81,6 +81,14 @@ POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String)
+GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String)
+PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String)
+
+#GET     /ticket/linker                  controllers.Ticket.linker
+#POST    /api/linkticket/:typeId/:parent/:child controllers.Ticket.link(typeId: Long, parent: String, child: String)
+#POST    /api/linkticket/:id             controllers.Ticket.startLink(id: String)
+#POST    /api/stoplink                   controllers.Ticket.stopLink
+
 
 GET     /auth/login                     controllers.Auth.login
 GET     /auth/logout                    controllers.Auth.logout
@@ -99,17 +107,13 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 GET     /stack                          controllers.Stack.index
 
 GET     /ticket/create                  controllers.Ticket.create
-GET     /ticket/linker                  controllers.Ticket.linker
-POST    /ticket/stoplink                controllers.Ticket.stopLink
 GET     /ticket/:id                     controllers.Ticket.item(id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: String)
 POST    /ticket                         controllers.Ticket.add
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: String)
-POST    /ticket/link/:typeId/:parent/:child controllers.Ticket.link(typeId: Long, parent: String, child: String)
 POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: String)
-POST    /ticket/startlink/:id           controllers.Ticket.startLink(id: String)
 POST    /ticket/status/:id              controllers.Ticket.status(id: String)
 POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: String)
 

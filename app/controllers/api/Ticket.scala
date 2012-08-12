@@ -11,6 +11,7 @@ object Ticket extends Controller with Secured {
 
   def item(ticketId: String) = IsAuthenticated { implicit request =>
 
+    val lid = request.session.get("link_ticket")
     val ticket = TicketModel.getFullById(ticketId)
 
     ticket match {

@@ -5,8 +5,8 @@ YUI.add('emperor-models', function(Y) {
       root: '/api/ticket'
   });
 
-  Y.TicketWorkflow = Y.Base.create('ticketWorkflow', Y.Model, [Y.ModelSync.REST], {
-    root: '/api/ticket/workflow'
+  Y.LinkTicket = Y.Base.create('linkTicket', Y.Model, [Y.ModelSync.REST], {
+      root: '/api/linkticket'
   });
 
   // var ticket;
