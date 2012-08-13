@@ -237,8 +237,6 @@ object Ticket extends Controller with Secured {
 
         val commFilters = Map("ticket_id" -> Seq(ticketId))
 
-        val links = TicketModel.getLinks(ticketId)
-
         // XXX Different page & count
         val commRes = SearchModel.searchComment(
           page, count, query, commFilters
@@ -273,7 +271,6 @@ object Ticket extends Controller with Secured {
           resolutions = resolutions,
           resolveForm = resolveForm,
           commentForm = commentForm,
-          links = links,
           comments = comments,
           commFacets = commFacets,
           history = history,

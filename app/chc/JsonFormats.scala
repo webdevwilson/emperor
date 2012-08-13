@@ -267,7 +267,7 @@ object JsonFormats {
   }
 
   /**
-   * JSON conversion for FullTicket
+   * JSON conversion for WorkflowStatus
    */
   implicit object WorkflowStatusFormat extends Format[WorkflowStatus] {
 
@@ -290,6 +290,39 @@ object JsonFormats {
         "position"        -> JsNumber(ws.position)
       )
       toJson(wsdoc)
+    }
+  }
+
+  /**
+   * JSON conversion for Link
+   */
+  implicit object LinkFormat extends Format[Link] {
+
+    def reads(json: JsValue): Link = Link(
+      id          = Id((json \ "id").as[Long]),
+      typeId      = (json \ "type_id").as[Long],
+      typeName    = (json \ "name").as[String],
+      parentId    = (json \ "parent_id").as[String],
+      parentSummary = (json \ "parent_summary").as[String],
+      childId     = (json \ "parent_id").as[String],
+      childSummary = (json \ "parent_summary").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(l: Link): JsValue = {
+
+      val ldoc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(l.id.get),
+        "type_id"         -> JsNumber(l.typeId),
+        "name"            -> JsString(l.typeName),
+        "name_i18n"       -> JsString(Messages(l.typeName)),
+        "parent_id"       -> JsString(l.parentId),
+        "child_id"        -> JsString(l.childId),
+        "child_summary"   -> JsString(l.childSummary),
+        "parent_summary"  -> JsString(l.parentSummary),
+        "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
+      )
+      toJson(ldoc)
     }
   }
 }

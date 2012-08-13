@@ -16,6 +16,7 @@
   * handle "old" names of tickets (if moved)
   * table sorting
   * notice
+  * Y.Handlebars
   * API
     * Ruby gem
  * Ticket Features
@@ -32,5 +33,4 @@
  * Ticket edit button
  * show resolution on resolved tickets
  * Decent Comment UI
- * Y.Handlebars
  * API docs

@@ -3,7 +3,6 @@
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
   commentForm: Form[models.InitialComment],
-  links: List[models.Link],
   comments: chc.Page[org.elasticsearch.search.SearchHit],
   commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
   history: chc.Page[org.elasticsearch.search.SearchHit],
@@ -22,17 +21,8 @@
 <div id="change-body">
 </div>
 <h3>@Messages("ticket.links")</h3>
-@if(!links.isEmpty) {
-<ul>
-@links.map { link =>
-  @if(link.parentId == ticket.ticketId) {
- <li>@Messages(link.typeName + "_INVERT") <a href="@routes.Ticket.item(link.childId)">@link.childId</a></li>
-  } else {
- <li>@Messages(link.typeName) <a href="@routes.Ticket.item(link.parentId)">@link.parentId</a></li>
-  }
-}
-</ul>
-}
+<div id="ticket-links">
+</div>
 <ul class="nav nav-tabs">
   <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
   <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
@@ -351,6 +341,43 @@
 
     var linkerView = new Y.LinkerView({ model: linkTicket });
     linkerView.render();
+
+    // Ticket Header
+    Y.TicketLinkView = Y.Base.create('ticketLinkView', Y.View, [], {
+      template: Y.one("#link-template").getHTML(),
+      initializer: function () {
+        var model = this.get('modelList');
+
+        model.after('change', this.render, this);
+        model.after('destroy', this.destroy, this);
+      },
+      render: function () {
+        var container = this.get('container');
+
+        var source   = this.template;
+        var template = Handlebars.compile(source);
+        console.log(this.get('modelList').toJSON());
+        var html = template(this.get('modelList').toJSON());
+
+        container.setHTML(html);
+
+        return this;
+      },
+    }, {
+      ATTRS: {
+        container: {
+          valueFn: function () {
+            return Y.one('#ticket-links');
+          }
+        }
+      }
+    });
+
+    console.log("asdasd")
+    var ticketLinks = new Y.TicketLinks({ url: '/api/ticket/link/@ticket.ticketId' });
+    ticketLinks.load();
+    var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
+    linkView.render();
   });
 </script>
 <script id="ticket-header-template" type="text/x-handlebars-template">
@@ -503,7 +530,13 @@
 {{/if}}
 </div>
 </script>
-
+<script id="link-template" type="text/x-handlebars-template">
+<ul>
+ {{#each foo}}
+ <li>{{name_i18n}} <a href="/ticket/{{parent_ticket_id}}">{{parent_ticket_id}}</a></li>
+ {{/each}}
+</ul>
+</script>
 }
 
 

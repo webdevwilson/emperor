@@ -9,14 +9,11 @@ YUI.add('emperor-models', function(Y) {
       root: '/api/linkticket'
   });
 
-  // var ticket;
+  Y.TicketLink = Y.Base.create('ticketLink', Y.Model, [Y.ModelSync.REST], {
+      root: '/api/ticket/link'
+  });
 
-  // ticket = new Y.Ticket({ id: 'CAMP-7' }).load(function(err) {
-  //   console.log(err);
-  //   console.log(ticket.get("id"));
-  //   console.log(ticket.get("summary"));
-  //   ticket.set("summary", "fuck you");
-  //   console.log(ticket.getAttrs());
-  //   console.log(ticket.get("summary"));
-  // });
+  Y.TicketLinks = Y.Base.create('ticketLinks', Y.ModelList, [Y.ModelSync.REST], {
+      model: Y.TicketLink
+  });
 });
