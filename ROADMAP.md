@@ -21,7 +21,6 @@
     * Ruby gem
  * Ticket Features
   * Stacks
-  * Better link UI
  * Workflow editing
   * Drafts
   * Resolving problems
@@ -34,3 +33,4 @@
  * show resolution on resolved tickets
  * Decent Comment UI
  * API docs
+ * Header dimmed link ticket doodad

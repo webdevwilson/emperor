@@ -1,6 +1,7 @@
 ## 0.0.5
  * Start of API
  * Revamped JS for linking and ticked workflow
+ * Better link UI
 
 ## 0.0.4
  * Events
