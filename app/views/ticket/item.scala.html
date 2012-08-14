@@ -54,6 +54,9 @@
 
     var ticket = new Y.Ticket(@Html(ticketJson));
 
+    var ticketLinks = new Y.TicketLinks({ url: '/api/ticket/link/@ticket.ticketId' });
+    ticketLinks.load();
+
     // Resolve
     Y.ResolverView = Y.Base.create('resolverView', Y.View, [], {
       events: {
@@ -318,7 +321,8 @@
         };
 
         function onSuccess(transactionid, response, arguments) {
-          console.log("yay!");
+          console.log(response.responseText);
+          ticketLinks.add(JSON.parse(response.responseText))
         }
 
         // Subscribe to "io.success".
@@ -347,17 +351,16 @@
       template: Y.one("#link-template").getHTML(),
       initializer: function () {
         var model = this.get('modelList');
-
-        model.after('change', this.render, this);
+        model.after('reset', this.render, this);
         model.after('destroy', this.destroy, this);
+        model.after('add', this.render, this);
       },
       render: function () {
         var container = this.get('container');
 
         var source   = this.template;
         var template = Handlebars.compile(source);
-        console.log(this.get('modelList').toJSON());
-        var html = template(this.get('modelList').toJSON());
+        var html = template({ links: this.get('modelList').toJSON() });
 
         container.setHTML(html);
 
@@ -373,9 +376,6 @@
       }
     });
 
-    console.log("asdasd")
-    var ticketLinks = new Y.TicketLinks({ url: '/api/ticket/link/@ticket.ticketId' });
-    ticketLinks.load();
     var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
     linkView.render();
   });
@@ -532,8 +532,8 @@
 </script>
 <script id="link-template" type="text/x-handlebars-template">
 <ul>
- {{#each foo}}
- <li>{{name_i18n}} <a href="/ticket/{{parent_ticket_id}}">{{parent_ticket_id}}</a></li>
+ {{#each links}}
+ <li><a href="/ticket/{{parent_id}}">{{parent_id}}</a> {{name_i18n}} <a href="/ticket/{{child_id}}">{{child_id}}</a></li>
  {{/each}}
 </ul>
 </script>

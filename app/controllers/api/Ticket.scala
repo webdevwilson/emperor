@@ -61,7 +61,7 @@ object Ticket extends Controller with Secured {
       maybeLink match {
         case Left(message) => BadRequest(message)
         case Right(link) => link match {
-          case Some(l) => Ok(Messages("ticket.linker.success"))
+          case Some(l) => Ok(Json.toJson(l))
           case None => InternalServerError("Error occurred creating link.")
         }
       }
