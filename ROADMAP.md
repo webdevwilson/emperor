@@ -7,7 +7,7 @@
 
 ## Future!
  * General
-  * Agile support (Kanban and Scrum) (Planned)
+  * Agile support (Kanban and Scrum)
   * Better test data
   * rank (for agile backlog ordering)
   * sprint ticket type
@@ -25,6 +25,9 @@
   * Drafts
   * Resolving problems
   * Changing existing tickets
+ * Timeline
+  * Linking events
+  * "your" actions today, yesterday, etc
  * Search
   * Notice filter
 
