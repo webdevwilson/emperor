@@ -1,3 +1,6 @@
+## 0.0.5.1
+ * Fix JS error in linking button
+
 ## 0.0.5
  * Start of API
   * Getting a project
