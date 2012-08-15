@@ -27,6 +27,7 @@
    <thead>
     <th>@Messages("ticket.ticket")</th>
     <th>@Messages("ticket.type")</th>
+    <th>@Messages("ticket.resolution")</th>
     <th>@Messages("ticket.summary")</th>
     <th>@Messages("ticket.priority")</th>
     <th>@Messages("ticket.severity")</th>
@@ -35,9 +36,10 @@
    <tbody>
     @result.pager.items.map { hit =>
     <tr>
-     <td style="width: 10%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.id</a</td>
+     <td style="width: 10%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.id</a</td>
      <td><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages(hit.getSource.get("type_name").toString)</span></td>
-     <td style="width: 80%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
+     <td><span class="label">@Messages(hit.getSource.get("resolution_name").toString)</span></td>
+     <td style="width: 80%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
      <td><span class="label" style="background-color: #@hit.getSource.get("priority_color")">@Messages(hit.getSource.get("priority_name").toString)</span></td>
      <td><span class="label" style="background-color: #@hit.getSource.get("severity_color")">@Messages(hit.getSource.get("severity_name").toString)</span></td>
      <td style="width: 10%" class="actions">
@@ -52,7 +54,7 @@
    </tbody>
    <tfoot>
     <tr>
-     <td colspan="3">
+     <td colspan="7">
        @pager(result.pager)
       </td>
      </tr>
