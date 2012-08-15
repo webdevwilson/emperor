@@ -325,4 +325,31 @@ object JsonFormats {
       toJson(ldoc)
     }
   }
+
+  /**
+   * JSON conversion for Project
+   */
+  implicit object ProjectFormat extends Format[Project] {
+
+    def reads(json: JsValue): Project = Project(
+      id          = Id((json \ "id").as[Long]),
+      workflowId  = (json \ "workflow_id").as[Long],
+      name        = (json \ "name").as[String],
+      key         = (json \ "key").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(obj: Project): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(obj.id.get),
+        "workflow_id"     -> JsNumber(obj.workflowId),
+        "name"            -> JsString(obj.name),
+        "key"             -> JsString(obj.key),
+        "sequence_current"-> JsNumber(obj.sequenceCurrent),
+        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
 }

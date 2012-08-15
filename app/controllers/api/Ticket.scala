@@ -10,10 +10,6 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
-  def index = IsAuthenticated { implicit request =>
-    Ok("yay")
-  }
-
   def item(ticketId: String) = IsAuthenticated { implicit request =>
 
     val lid = request.session.get("link_ticket")
@@ -73,8 +69,6 @@ object Ticket extends Controller with Secured {
   def links(ticketId: String) = IsAuthenticated { implicit request =>
 
     val links = TicketModel.getLinks(ticketId)
-
-    // <li>@Messages(link.typeName + "_INVERT") <a href="@routes.Ticket.item(link.childId)">@link.childId</a></li>
 
     Ok(Json.toJson(links))
   }

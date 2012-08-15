@@ -80,7 +80,7 @@ GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Lo
 POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
-GET     /api/ticket/link                controllers.api.Ticket.index
+GET     /api/project/:id                controllers.api.Project.item(id: Long)
 GET     /api/ticket/link/:ticketId      controllers.api.Ticket.links(ticketId: String)
 PUT     /api/ticket/link/:ticketId      controllers.api.Ticket.link(ticketId: String)
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String)

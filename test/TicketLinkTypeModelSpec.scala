@@ -18,6 +18,7 @@ class TicketLinkTypeModelSpec extends Specification {
 
         val lt = models.TicketLinkType(
           name = "Ticket Link Type 1",
+          invertable = true,
           dateCreated = new Date
         )
         val newLinkType = TicketLinkTypeModel.create(lt)
