@@ -26,14 +26,20 @@
   <table class="table table-bordered table-rounded table-striped ticket-search">
    <thead>
     <th>@Messages("ticket.ticket")</th>
+    <th>@Messages("ticket.type")</th>
     <th>@Messages("ticket.summary")</th>
+    <th>@Messages("ticket.priority")</th>
+    <th>@Messages("ticket.severity")</th>
     <th>@Messages("general.actions")</th>
    </thead>
    <tbody>
     @result.pager.items.map { hit =>
     <tr>
-     <td style="width: 10%"><a href="@controllers.routes.Ticket.item(hit.getId)"><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages("ticket.type.with.id", Messages(hit.getSource.get("type_name").asInstanceOf[String]), hit.id)</span></a</td>
+     <td style="width: 10%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.id</a</td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages(hit.getSource.get("type_name").toString)</span></td>
      <td style="width: 80%"><a href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("priority_color")">@Messages(hit.getSource.get("priority_name").toString)</span></td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("severity_color")">@Messages(hit.getSource.get("severity_name").toString)</span></td>
      <td style="width: 10%" class="actions">
       <div class="btn-toolbar">
        <div class="btn-group">
