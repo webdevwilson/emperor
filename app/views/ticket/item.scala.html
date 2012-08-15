@@ -321,12 +321,15 @@
         };
 
         function onSuccess(transactionid, response, arguments) {
-          console.log(response.responseText);
           ticketLinks.add(JSON.parse(response.responseText))
         }
 
-        // Subscribe to "io.success".
+        function onFailure(transactionId, response, arguments) {
+          Y.ShowAlert('alert-error', response.responseText);
+        }
+
         Y.on('io:success', onSuccess, Y, true);
+        Y.on('io:failure', onFailure, Y, true);
 
         var request = Y.io(uri, cfg);
       }
