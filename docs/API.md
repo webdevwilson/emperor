@@ -25,3 +25,45 @@ All timestamps are in ISO 8601 format.
     {
       "foo": 1
     }
+
+## Link Ticket
+
+### Get a link ticket
+
+    GET /api/linkticket/:id
+
+#### Response
+
+### Set the link ticket
+
+    PUT /api/linkticket/:id
+
+#### Input
+
+#### Response
+
+## Ticket
+
+## Get a ticket
+
+    GET /api/ticket/:id
+
+#### Response
+
+## Ticket Link
+
+### Get a ticket link
+
+    GET /api/ticket/link/:ticketId
+
+#### Input
+
+#### Response
+
+### Link two tickets
+
+    PUT /api/ticket/link/:ticketId
+
+#### Input
+
+#### Response

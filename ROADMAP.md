@@ -4,6 +4,7 @@
  * Compile LESS
  * Compile handlebars
  * Replace jQuery mess
+ * https://github.com/schaloner/deadbolt-2
 
 ## Future!
  * General
@@ -13,14 +14,15 @@
   * sprint ticket type
   * custom flag for user-definable rows
   * ticket-users
-  * handle "old" names of tickets (if moved)
   * table sorting
-  * notice
   * Y.Handlebars
   * API
     * Ruby gem
+  * Authz
  * Ticket Features
   * Stacks
+  * handle "old" names of tickets (if moved)
+  * notice
  * Workflow editing
   * Drafts
   * Resolving problems
@@ -35,5 +37,4 @@
  * Ticket edit button
  * show resolution on resolved tickets
  * Decent Comment UI
- * API docs
  * Header dimmed link ticket doodad

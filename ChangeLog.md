@@ -1,6 +1,11 @@
 ## 0.0.5
  * Start of API
- * Revamped JS for linking and ticked workflow
+  * Getting a project
+  * Getting a ticket
+  * Linking two tickets
+  * Setting the link ticket
+  * Removing the link ticket
+ * Revamped JS for linking and ticket workflow
  * Better link UI
 
 ## 0.0.4
