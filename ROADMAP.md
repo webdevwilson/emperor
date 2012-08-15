@@ -37,4 +37,3 @@
  * Ticket edit button
  * show resolution on resolved tickets
  * Decent Comment UI
- * Header dimmed link ticket doodad

@@ -76,6 +76,45 @@
     </div>
      @content
     </div>
+   <script type="text/javascript">
+    YUI().use('emperor-models', 'base', 'view', 'node', 'io-base', function (Y) {
+      if(!Y.one("#ticket-head")) {
+        var linkTicket = new Y.LinkTicket({ id: 1 });
+        linkTicket.load();
+        console.log("ASDASD!");
+        Y.PartialLinkerView = Y.Base.create('partialLinkerView', Y.View, [], {
+          template: Y.one("#partial-linker-template").getHTML(),
+          initializer: function () {
+            var model = this.get('model');
+
+            model.after('change', this.render, this);
+            model.after('destroy', this.destroy, this);
+          },
+          render: function () {
+            var container = this.get('container');
+            var source   = this.template;
+            var template = Handlebars.compile(source);
+            var html = template(this.get('model').toJSON());
+
+            container.setHTML(html);
+
+            return this;
+          },
+        }, {
+          ATTRS: {
+            container: {
+              valueFn: function () {
+                return Y.one('#linker');
+              }
+            }
+          }
+        });
+
+        var partLinkView = new Y.PartialLinkerView({ model: linkTicket });
+        partLinkView.render();
+      }
+    });
+    </script>
    <script id="partial-linker-template" type="text/x-handlebars-template">
     <div class="link-item">
     {{#if ticket_id}}
