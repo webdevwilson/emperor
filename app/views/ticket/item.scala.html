@@ -388,6 +388,9 @@
  <h2>{{ticket.ticket_id}}, {{ticket.summary}}</h2>
  <ul id="ticket-info" class="unstyled pull-left">
   <li>
+   <span class="label"><label>@Messages("ticket.resolution")</label> {{ticket.resolution_name_i18n}}</span>
+  </li>
+  <li>
    <span class="label" style="background-color: #{{ticket.type_color}}"><label>@Messages("ticket.type")</label> {{ticket.type_name_i18n}}</span>
   </li>
   <li>
