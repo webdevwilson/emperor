@@ -300,7 +300,7 @@
 
         var ticketId = '@ticket.ticketId';
         var childId = model.get("ticket_id");
-        if(invert == true) {
+        if(invert == 'true') {
           ticketId = model.get("ticket_id");
           childId = '@ticket.ticketId';
         }
@@ -519,9 +519,9 @@
  </a>
  <ul id="link-menu" class="dropdown-menu">
    @linkTypes.map { ltype =>
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name), ticket.ticketId)</a></li>
+   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId"><i class="icon-magnet"></i> @Messages("ticket.linker.link", ticket.ticketId, Messages(ltype.name)) <i></i>{{ticket_id}}</a></li>
    @if(ltype.invertable) {
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId" data-inverse="true"><i class="icon-magnet"></i> @Messages("ticket.linker.link", Messages(ltype.name + "_INVERT"), ticket.ticketId)</a></li>
+   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId" data-inverse="true"><i class="icon-magnet"></i> @Messages("ticket.linker.link", ticket.ticketId, Messages(ltype.name + "_INVERT")) <i></i>{{ticket_id}}</a></li>
    }
    }
    <li class="divider"></li>
