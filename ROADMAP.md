@@ -32,8 +32,3 @@
   * "your" actions today, yesterday, etc
  * Search
   * Notice filter
-
-## ISSUES
- * Ticket edit button
- * show resolution on resolved tickets
- * Decent Comment UI
