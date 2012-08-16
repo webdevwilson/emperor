@@ -348,12 +348,11 @@ object TicketModel {
    * Mark a ticket as resolved with an optional comment.
    */
   def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None): FullTicket = {
+    val tick = this.getById(ticketId).get
 
-    DB.withConnection { implicit conn =>
-
-      val tick = this.getById(ticketId).get
-      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
-    }
+    val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
+    SearchModel.indexTicket(ticket = ft)
+    ft
   }
 
   /**
@@ -362,7 +361,9 @@ object TicketModel {
   def unresolve(ticketId: String, userId: Long, comment: Option[String] = None): FullTicket = {
       val tick = this.getById(ticketId).get
 
-      this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
+      val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
+      SearchModel.indexTicket(ticket = ft)
+      ft
   }
 
   /**
@@ -415,7 +416,24 @@ object TicketModel {
             'position     -> ticket.position,
             'summary      -> ticket.summary
           ).executeInsert()
-          this.getFullById(ticketId)
+          val nt = this.getFullById(ticketId)
+
+          nt.map { t =>
+            SearchModel.indexTicket(ticket = t)
+
+            SearchModel.indexEvent(Event(
+              projectId     = t.project.id,
+              projectName   = t.project.name,
+              userId        = t.user.id,
+              userRealName  = t.user.name,
+              eKey          = t.ticketId,
+              eType         = "ticket_create",
+              content       = t.summary,
+              url           = "",
+              dateCreated   = t.dateCreated
+            ))
+          }
+          nt
         }
       }
       case None => None

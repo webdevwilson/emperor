@@ -87,7 +87,6 @@ object Ticket extends Controller with Secured {
           }, {
             case resolution: models.Resolution => {
               val nt = TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId,  comment = resolution.comment)
-              SearchModel.indexTicket(ticket = nt)
               Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.resolution")
             }
           }
@@ -109,7 +108,6 @@ object Ticket extends Controller with Secured {
           }, {
             case resolution: models.InitialComment => {
               val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(resolution.comment))
-              SearchModel.indexTicket(ticket = nt)
               Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
@@ -178,6 +176,7 @@ object Ticket extends Controller with Secured {
       value => {
         val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.comment)
         SearchModel.indexComment(comm.get)
+
         Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.comment.added")
       }
     )

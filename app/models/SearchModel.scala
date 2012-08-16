@@ -539,6 +539,21 @@ object SearchModel {
   def indexComment(comment: Comment) {
 
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(comment).toString)
+
+    val ft = TicketModel.getFullById(comment.ticketId).get
+
+    SearchModel.indexEvent(Event(
+      projectId     = ft.project.id,
+      projectName   = ft.project.name,
+      userId        = ft.user.id,
+      userRealName  = ft.user.name,
+      eKey          = comment.ticketId,
+      eType         = "comment",
+      content       = comment.content,
+      url           = "",
+      dateCreated   = ft.dateCreated
+    ))
+
     indexer.refresh()
   }
 
@@ -548,6 +563,7 @@ object SearchModel {
   def indexTicket(ticket: FullTicket) {
 
     indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(ticket).toString)
+
     indexer.refresh()
   }
 
@@ -677,6 +693,21 @@ object SearchModel {
       "date_created"      -> JsString(dateFormatter.format(newTick.dateCreated))
     )
     indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
+
+    // XXX Do something special for resolution changes, they are ticked_resolved
+    // and status changes.
+    indexEvent(Event(
+      projectId     = newTick.project.id,
+      projectName   = newTick.project.name,
+      userId        = newTick.user.id,
+      userRealName  = newTick.user.name,
+      eKey          = newTick.ticketId,
+      eType         = "ticket_change",
+      content       = newTick.summary,
+      url           = "",
+      dateCreated   = newTick.dateCreated
+    ))
+
     indexer.refresh()
   }
 
@@ -696,56 +727,21 @@ object SearchModel {
     // Reindex all tickets and their history
     TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
-      indexEvent(Event(
-        projectId     = ticket.project.id,
-        projectName   = ticket.project.name,
-        userId        = ticket.user.id,
-        userRealName  = ticket.user.name,
-        eKey          = ticket.ticketId,
-        eType         = "ticket_create",
-        content       = ticket.summary,
-        url           = "",
-        dateCreated   = ticket.dateCreated
-      ))
       val count = TicketModel.getAllFullCountById(ticket.ticketId)
       if(count > 1) {
         TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
           // First run will NOT index history because oldTick is None (as None starts the fold)
           oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
-          // XXX Do something special for resolution changes, they are ticked_resolved
-          // and status changes.
-          indexEvent(Event(
-            projectId     = newTick.project.id,
-            projectName   = newTick.project.name,
-            userId        = newTick.user.id,
-            userRealName  = newTick.user.name,
-            eKey          = newTick.ticketId,
-            eType         = "ticket_change",
-            content       = newTick.summary,
-            url           = "",
-            dateCreated   = newTick.dateCreated
-          ))
+
           Some(newTick)
         })
       }
     }
     // Reindex all ticket comments
+    // XXX This should be nested within the above loop to avoid having to
+    // re-fetch every fullticket.
     TicketModel.getAllComments.foreach { comment =>
       indexComment(comment)
-
-      val ft = TicketModel.getFullById(comment.ticketId).get
-
-      indexEvent(Event(
-        projectId     = ft.project.id,
-        projectName   = ft.project.name,
-        userId        = ft.user.id,
-        userRealName  = ft.user.name,
-        eKey          = comment.ticketId,
-        eType         = "comment",
-        content       = comment.content,
-        url           = "",
-        dateCreated   = ft.dateCreated
-      ))
     }
   }
 
