@@ -70,6 +70,8 @@ object Ticket extends Controller with Secured {
 
     val links = TicketModel.getLinks(ticketId)
 
+    // XXX Need to put the actual tickets in here, at least the Edit ticket
+
     Ok(Json.toJson(links))
   }
 }

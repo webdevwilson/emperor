@@ -537,11 +537,17 @@
 </div>
 </script>
 <script id="link-template" type="text/x-handlebars-template">
-<ul>
+<table class="table table-striped table-condensed">
  {{#each links}}
- <li><a href="/ticket/{{parent_id}}">{{parent_id}}</a> {{name_i18n}} <a href="/ticket/{{child_id}}">{{child_id}}</a></li>
+ <tr>
+  <td><a href="/ticket/{{parent_id}}">{{parent_id}}</a></td>
+  <td>{{name_i18n}}</td>
+  <td><a href="/ticket/{{child_id}}">{{child_id}}</a></td>
+  <td width="70%">XXX summary</td>
+  <td>
+ </tr>
  {{/each}}
-</ul>
+</table>
 </script>
 }
 

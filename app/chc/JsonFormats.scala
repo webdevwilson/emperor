@@ -304,9 +304,7 @@ object JsonFormats {
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "name").as[String],
       parentId    = (json \ "parent_id").as[String],
-      parentSummary = (json \ "parent_summary").as[String],
       childId     = (json \ "parent_id").as[String],
-      childSummary = (json \ "parent_summary").as[String],
       dateCreated = new Date() // XXX
     )
 
@@ -319,8 +317,6 @@ object JsonFormats {
         "name_i18n"       -> JsString(Messages(l.typeName)),
         "parent_id"       -> JsString(l.parentId),
         "child_id"        -> JsString(l.childId),
-        "child_summary"   -> JsString(l.childSummary),
-        "parent_summary"  -> JsString(l.parentSummary),
         "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
       )
       toJson(ldoc)
