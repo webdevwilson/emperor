@@ -234,15 +234,14 @@ table.ticket-search {
     margin-bottom: 5px;
 
     a {
-      background-color: #DA4F49;
-      background-image: -moz-linear-gradient(top, #EE5F5B, #BD362F);
-      background-image: -ms-linear-gradient(top, #EE5F5B, #BD362F);
-      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#EE5F5B), to(#BD362F));
-      background-image: -webkit-linear-gradient(top, #EE5F5B, #BD362F);
-      background-image: -o-linear-gradient(top, #EE5F5B, #BD362F);
-      background-image: linear-gradient(top, #EE5F5B, #BD362F);
-      background-repeat: repeat-x;
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EE5F5B', endColorstr='#BD362F', GradientType=0);
+      background: rgb(129,139,158); /* Old browsers */
+      background: -moz-linear-gradient(top, rgba(129,139,158,1) 0%, rgba(99,104,121,1) 100%); /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(129,139,158,1)), color-stop(100%,rgba(99,104,121,1))); /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(top, rgba(129,139,158,1) 0%,rgba(99,104,121,1) 100%); /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(top, rgba(129,139,158,1) 0%,rgba(99,104,121,1) 100%); /* Opera 11.10+ */
+      background: -ms-linear-gradient(top, rgba(129,139,158,1) 0%,rgba(99,104,121,1) 100%); /* IE10+ */
+      background: linear-gradient(top, rgba(129,139,158,1) 0%,rgba(99,104,121,1) 100%); /* W3C */
+
       color: #fff;
       display: block;
       margin: 0;
