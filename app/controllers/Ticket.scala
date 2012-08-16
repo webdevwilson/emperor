@@ -192,7 +192,19 @@ object Ticket extends Controller with Secured {
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val assignees = ("" -> Messages("ticket.unassigned")) +: users
 
-    Ok(views.html.ticket.create(initialTicketForm, users, assignees, projs, ttypes, prios, sevs)(request))
+    val defaultedForm = initialTicketForm.fill(InitialTicket(
+      reporterId = request.session.get("userId").get.toLong,
+      assigneeId = None,
+      projectId = 1,  // XXX should be in the session, EMP-5
+      priorityId = 2, // XXX should be a project attr
+      severityId = 2, // XXX should be a project attr
+      typeId = 1,     // XXX should be a project attr
+      position = None,
+      summary = "",
+      description = None
+    ))
+
+    Ok(views.html.ticket.create(defaultedForm, users, assignees, projs, ttypes, prios, sevs)(request))
   }
 
   def edit(ticketId: String) = IsAuthenticated { implicit request =>
