@@ -47,6 +47,17 @@ case class Link(
 )
 
 /**
+ * Case class for a link between tickets with more information culled from
+ * the tickets themselves.
+ */
+case class FullLink(
+  id: Pk[Long] = NotAssigned, typeId: Long, typeName: String,
+  parentId: String, parentSummary: String, parentResolutionId: Option[Long],
+  childId: String, childSummary: String, childResolutionId: Option[Long],
+  dateCreated: Date
+)
+
+/**
  * Class for creating a ticket.  Eliminates fields that aren't useful
  * at creation time.
  */
@@ -549,10 +560,32 @@ object TicketModel {
   /**
    * Get links for a ticket.
    */
-  def getLinks(id: String): List[Link] = {
+  def getLinks(id: String): List[FullLink] = {
 
     DB.withConnection { implicit conn =>
-      getLinksQuery.on('ticket_id -> id).as(link *)
+      val links = getLinksQuery.on('ticket_id -> id).as(link *)
+
+      links.map { link =>
+
+        // XXX This sucks.  I would love to fix this, but I can't turn
+        // the link query into a JOIN to the full_tickets view because it
+        // hangs MySQL. Ugh. - gphat
+        val parent = getFullById(link.parentId).get
+        val child = getFullById(link.childId).get
+
+        FullLink(
+          id            = link.id,
+          typeId        = link.typeId,
+          typeName      = link.typeName,
+          parentId      = link.parentId,
+          parentSummary = parent.summary,
+          parentResolutionId = parent.resolution.id,
+          childId = link.childId,
+          childSummary = child.summary,
+          childResolutionId = child.resolution.id,
+          dateCreated = link.dateCreated
+        )
+      }
     }
   }
 

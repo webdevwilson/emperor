@@ -381,6 +381,10 @@
 
     var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
     linkView.render();
+
+    Y.asshole = function (ticketLinks) {
+      console.log("asdasd");
+    }
   });
 </script>
 <script id="ticket-header-template" type="text/x-handlebars-template">
@@ -540,10 +544,10 @@
 <table class="table table-striped table-condensed">
  {{#each links}}
  <tr>
-  <td><a href="/ticket/{{parent_id}}">{{parent_id}}</a></td>
+  <td><a href="/ticket/{{parent_id}}" {{#if parent_resolution_id}}class="strike"{{/if}}>{{parent_id}}</a></td>
   <td>{{name_i18n}}</td>
-  <td><a href="/ticket/{{child_id}}">{{child_id}}</a></td>
-  <td width="70%">XXX summary</td>
+  <td><a href="/ticket/{{child_id}}" {{#if child_resolution_id}}class="strike"{{/if}}>{{child_id}}</a></td>
+  <td width="70%">{{child_summary}}</td>
   <td>
  </tr>
  {{/each}}
