@@ -389,7 +389,7 @@
 </script>
 <script id="ticket-header-template" type="text/x-handlebars-template">
 <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
- <h2>{{ticket.ticket_id}}, {{ticket.summary}}</h2>
+ <h2><a href="/ticket/edit/{{ticket.ticket_id}}" class="btn btn-mini"><i class="icon-edit"></i></a> {{ticket.ticket_id}}, {{ticket.summary}}</h2>
  <ul id="ticket-info" class="unstyled pull-left">
   <li>
    <span class="label"><label>@Messages("ticket.resolution")</label> {{ticket.resolution_name_i18n}}</span>
