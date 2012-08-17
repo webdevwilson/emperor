@@ -67,3 +67,13 @@ All timestamps are in ISO 8601 format.
 #### Input
 
 #### Response
+
+### Remove a link between tickets
+
+    DELETE /api/ticket/link/:linkid
+
+#### Input
+
+#### Response
+
+    { "ok" : "ok" }

@@ -36,6 +36,11 @@ object Ticket extends Controller with Secured {
     }
   }
 
+  def deleteLink(id: Long) = IsAuthenticated { implicit request =>
+    TicketModel.removeLink(id)
+    Ok(Json.toJson(Map("ok" -> "ok")))
+  }
+
   def link(ticketId: String) = IsAuthenticated { implicit request =>
 
     request.body.asJson.map { json =>

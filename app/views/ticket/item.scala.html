@@ -351,12 +351,16 @@
 
     // Ticket Header
     Y.TicketLinkView = Y.Base.create('ticketLinkView', Y.View, [], {
+      events: {
+        'a.remover': { click: 'delete' }
+      },
       template: Y.one("#link-template").getHTML(),
       initializer: function () {
         var model = this.get('modelList');
         model.after('reset', this.render, this);
         model.after('destroy', this.destroy, this);
         model.after('add', this.render, this);
+        model.after('remove', this.render, this);
       },
       render: function () {
         var container = this.get('container');
@@ -369,6 +373,14 @@
 
         return this;
       },
+      delete: function(e) {
+        var model = this.get('modelList');
+        var t = e.currentTarget;
+        var lid = t.getAttribute('data-linkid');
+
+        var link = model.getById(parseInt(lid))
+        link.destroy({ remove: true });
+      }
     }, {
       ATTRS: {
         container: {
@@ -381,10 +393,6 @@
 
     var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
     linkView.render();
-
-    Y.asshole = function (ticketLinks) {
-      console.log("asdasd");
-    }
   });
 </script>
 <script id="ticket-header-template" type="text/x-handlebars-template">
@@ -548,7 +556,7 @@
   <td>{{name_i18n}}</td>
   <td><a href="/ticket/{{child_id}}" {{#if child_resolution_id}}class="strike"{{/if}}>{{child_id}}</a></td>
   <td width="70%">{{child_summary}}</td>
-  <td>
+  <td><a class="remover" href="#" data-linkid="{{id}}"><i class="icon-trash"></i></a></td>
  </tr>
  {{/each}}
 </table>
