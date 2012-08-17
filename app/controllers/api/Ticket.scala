@@ -42,7 +42,7 @@ object Ticket extends Controller with Secured {
       val childId = (json \ "child_ticket_id").asOpt[String]
       val typeId = (json \ "link_type_id").asOpt[Long]
 
-      val maybeLink: Either[String,Option[Link]] = if(childId.isDefined && typeId.isDefined) {
+      val maybeLink: Either[String,Option[FullLink]] = if(childId.isDefined && typeId.isDefined) {
         if(childId.get == ticketId) {
           Left("Can't link ticket to itself.")
         } else {

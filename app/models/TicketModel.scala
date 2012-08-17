@@ -580,11 +580,41 @@ object TicketModel {
           parentId      = link.parentId,
           parentSummary = parent.summary,
           parentResolutionId = parent.resolution.id,
-          childId = link.childId,
-          childSummary = child.summary,
+          childId       = link.childId,
+          childSummary  = child.summary,
           childResolutionId = child.resolution.id,
-          dateCreated = link.dateCreated
+          dateCreated   = link.dateCreated
         )
+      }
+    }
+  }
+
+  /**
+   * Get a FullLink by id.
+   */
+  def getFullLinkById(id: Long): Option[FullLink] = {
+
+    DB.withConnection { implicit conn =>
+      val maybeL = getLinkByIdQuery.on('id -> id).as(link.singleOpt)
+      maybeL match {
+        case Some(l) => {
+          val parent = getFullById(l.parentId).get
+          val child = getFullById(l.childId).get
+
+          Some(FullLink(
+            id            = l.id,
+            typeId        = l.typeId,
+            typeName      = l.typeName,
+            parentId      = l.parentId,
+            parentSummary = parent.summary,
+            parentResolutionId = parent.resolution.id,
+            childId       = l.childId,
+            childSummary  = child.summary,
+            childResolutionId = child.resolution.id,
+            dateCreated   = l.dateCreated
+          ))
+        }
+        case None => None
       }
     }
   }
@@ -602,7 +632,7 @@ object TicketModel {
   /**
    * Link a child ticket to a parent with a type.
    */
-  def link(linkTypeId: Long, parentId: String, childId: String): Option[Link] = {
+  def link(linkTypeId: Long, parentId: String, childId: String): Option[FullLink] = {
 
     DB.withConnection { implicit conn =>
       val li = insertLinkQuery.on(
@@ -611,7 +641,7 @@ object TicketModel {
         'child_ticket_id  -> childId
       ).executeInsert()
       li match {
-        case Some(lid) => getLinkById(lid)
+        case Some(lid) => getFullLinkById(lid)
         case None => None
       }
     }
