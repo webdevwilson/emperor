@@ -20,6 +20,11 @@ object Project extends Controller with Secured {
       "sequence_current" -> ignored(0.toLong),
       "name"-> nonEmptyText,
       "key" -> text(minLength = 3, maxLength = 16),
+      "owner_id" -> optional(longNumber),
+      "default_priority_id" -> optional(longNumber),
+      "default_severity_id" -> optional(longNumber),
+      "default_type_id" -> optional(longNumber),
+      "default_assignee" -> optional(number),
       "date_created" -> ignored(new Date())
     )(models.Project.apply)(models.Project.unapply)
   )

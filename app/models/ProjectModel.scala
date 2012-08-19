@@ -11,8 +11,17 @@ import play.api.Play.current
  * Class for a project.
  */
 case class Project(
-  id: Pk[Long] = NotAssigned, workflowId: Long, sequenceCurrent: Long = 0,
-  name: String, key: String, dateCreated: Date
+  id: Pk[Long] = NotAssigned,
+  workflowId: Long,
+  sequenceCurrent: Long = 0,
+  name: String,
+  key: String,
+  ownerId: Option[Long],
+  defaultPriorityId: Option[Long],
+  defaultSeverityId: Option[Long],
+  defaultTypeId: Option[Long],
+  defaultAssignee: Option[Int],
+  dateCreated: Date
 )
 
 object ProjectModel {
@@ -34,10 +43,18 @@ object ProjectModel {
     get[Long]("sequence_current") ~
     get[String]("name") ~
     get[String]("pkey") ~
+    get[Option[Long]]("owner_id") ~
+    get[Option[Long]]("default_priority_id") ~
+    get[Option[Long]]("default_severity_id") ~
+    get[Option[Long]]("default_ticket_type_id") ~
+    get[Option[Int]]("default_assignee") ~
     get[Date]("date_created") map {
-      case id~workflowId~seqCurr~name~pkey~dateCreated => Project(
+      case id~workflowId~seqCurr~name~pkey~ownerId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
         id = id, workflowId = workflowId, name = name, key = pkey,
-        sequenceCurrent = seqCurr, dateCreated = dateCreated
+        sequenceCurrent = seqCurr, ownerId = ownerId,
+        defaultPriorityId = defPrioId, defaultSeverityId = defSevId,
+        defaultTypeId = defTypeId, defaultAssignee = defAss,
+        dateCreated = dateCreated
       )
     }
   }

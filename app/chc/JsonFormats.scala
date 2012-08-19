@@ -377,10 +377,40 @@ object JsonFormats {
       workflowId  = (json \ "workflow_id").as[Long],
       name        = (json \ "name").as[String],
       key         = (json \ "key").as[String],
+      ownerId     = (json \ "owner_id").as[Option[Long]],
+      defaultPriorityId = (json \ "default_priority_id").as[Option[Long]],
+      defaultSeverityId = (json \ "default_severity_id").as[Option[Long]],
+      defaultTypeId = (json \ "default_type_id").as[Option[Long]],
+      defaultAssignee = (json \ "default_assignee").as[Option[Int]],
       dateCreated = new Date() // XXX
     )
 
     def writes(obj: Project): JsValue = {
+
+      val owner = obj.ownerId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      }
+
+      val prio = obj.defaultPriorityId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      }
+
+      val sev = obj.defaultSeverityId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      }
+
+      val ttype = obj.defaultTypeId match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      }
+
+      val defAssign = obj.defaultAssignee match {
+        case Some(id) => JsNumber(id)
+        case None     => JsNull
+      }
 
       val doc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(obj.id.get),
@@ -388,6 +418,11 @@ object JsonFormats {
         "name"            -> JsString(obj.name),
         "key"             -> JsString(obj.key),
         "sequence_current"-> JsNumber(obj.sequenceCurrent),
+        "owner_id"        -> owner,
+        "default_priority_id" -> prio,
+        "default_severity_id" -> sev,
+        "default_type_id" -> ttype,
+        "default_assignee" -> defAssign,
         "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
       )
       toJson(doc)
