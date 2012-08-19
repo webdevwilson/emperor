@@ -7,7 +7,13 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketPriority(id: Pk[Long] = NotAssigned, name: String, color: String, position: Int, dateCreated: Date)
+case class TicketPriority(
+  id: Pk[Long] = NotAssigned,
+  name: String,
+  color: String,
+  position: Int,
+  dateCreated: Date
+)
 
 object TicketPriorityModel {
 

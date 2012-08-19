@@ -904,7 +904,7 @@ object SearchModel {
     // with a filtered version!
     if(!filters.isEmpty) {
       val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(ticketFilterMap.get(key).get, values.head).asInstanceOf[FilterBuilder]
+        case (key, values) => termFilter(ticketFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
       }
       actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
     }

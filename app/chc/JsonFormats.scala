@@ -17,6 +17,30 @@ object JsonFormats {
   // XXX UNIT TESTS FOR THE LOVE OF GOD
 
   /**
+   * JSON conversion for TicketPriority
+   */
+  implicit object TicketPriorityFormat extends Format[TicketPriority] {
+    def reads(json: JsValue): TicketPriority = TicketPriority(
+      id = Id((json \ "id").as[Long]),
+      name = (json \ "name").as[String],
+      color = (json \ "color").as[String],
+      position = (json \ "position").as[Int],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(obj: TicketPriority): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "color"         -> JsString(obj.color),
+        "position"      -> JsNumber(obj.position),
+        "date_created"  -> JsString(dateFormatter.format(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
    * JSON conversion for Comment
    */
   implicit object CommentFormat extends Format[Comment] {
@@ -128,6 +152,53 @@ object JsonFormats {
         "date_created"  -> JsString(dateFormatter.format(event.dateCreated))
       )
       toJson(edoc)
+    }
+  }
+
+  /**
+   * JSON conversion for FullLink
+   */
+  implicit object FullLinkFormat extends Format[FullLink] {
+
+    def reads(json: JsValue): FullLink = FullLink(
+      id          = Id((json \ "id").as[Long]),
+      typeId      = (json \ "type_id").as[Long],
+      typeName    = (json \ "name").as[String],
+      parentId    = (json \ "parent_id").as[String],
+      parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
+      parentSummary = (json \ "parent_summary").as[String],
+      childId     = (json \ "parent_id").as[String],
+      childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
+      childSummary = (json \ "child_summary").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(l: FullLink): JsValue = {
+
+      val childRes = l.childResolutionId match {
+        case Some(reso) => JsNumber(reso)
+        case None => JsNull
+      }
+
+      val parentRes = l.parentResolutionId match {
+        case Some(reso) => JsNumber(reso)
+        case None => JsNull
+      }
+
+      val ldoc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(l.id.get),
+        "type_id"         -> JsNumber(l.typeId),
+        "name"            -> JsString(l.typeName),
+        "name_i18n"       -> JsString(Messages(l.typeName)),
+        "parent_id"       -> JsString(l.parentId),
+        "parent_resolution_id" -> parentRes,
+        "parent_summary"  -> JsString(l.parentSummary),
+        "child_id"        -> JsString(l.childId),
+        "child_resolution_id" -> childRes,
+        "child_summary"  -> JsString(l.childSummary),
+        "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
+      )
+      toJson(ldoc)
     }
   }
 
@@ -268,33 +339,6 @@ object JsonFormats {
   }
 
   /**
-   * JSON conversion for WorkflowStatus
-   */
-  implicit object WorkflowStatusFormat extends Format[WorkflowStatus] {
-
-    def reads(json: JsValue): WorkflowStatus = WorkflowStatus(
-      id          = Id((json \ "id").as[Long]),
-      workflowId  = (json \ "workflow_id").as[Long],
-      statusId    = (json \ "status_id").as[Long],
-      name        = (json \ "name").as[String],
-      position    = (json \ "position").as[Int]
-    )
-
-    def writes(ws: WorkflowStatus): JsValue = {
-
-      val wsdoc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(ws.id.get),
-        "workflow_id"     -> JsNumber(ws.workflowId),
-        "status_id"       -> JsNumber(ws.statusId),
-        "name"            -> JsString(ws.name),
-        "name_i18n"       -> JsString(Messages(ws.name)),
-        "position"        -> JsNumber(ws.position)
-      )
-      toJson(wsdoc)
-    }
-  }
-
-  /**
    * JSON conversion for Link
    */
   implicit object LinkFormat extends Format[Link] {
@@ -317,53 +361,6 @@ object JsonFormats {
         "name_i18n"       -> JsString(Messages(l.typeName)),
         "parent_id"       -> JsString(l.parentId),
         "child_id"        -> JsString(l.childId),
-        "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
-      )
-      toJson(ldoc)
-    }
-  }
-
-  /**
-   * JSON conversion for FullLink
-   */
-  implicit object FullLinkFormat extends Format[FullLink] {
-
-    def reads(json: JsValue): FullLink = FullLink(
-      id          = Id((json \ "id").as[Long]),
-      typeId      = (json \ "type_id").as[Long],
-      typeName    = (json \ "name").as[String],
-      parentId    = (json \ "parent_id").as[String],
-      parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
-      parentSummary = (json \ "parent_summary").as[String],
-      childId     = (json \ "parent_id").as[String],
-      childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
-      childSummary = (json \ "child_summary").as[String],
-      dateCreated = new Date() // XXX
-    )
-
-    def writes(l: FullLink): JsValue = {
-
-      val childRes = l.childResolutionId match {
-        case Some(reso) => JsNumber(reso)
-        case None => JsNull
-      }
-
-      val parentRes = l.parentResolutionId match {
-        case Some(reso) => JsNumber(reso)
-        case None => JsNull
-      }
-
-      val ldoc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(l.id.get),
-        "type_id"         -> JsNumber(l.typeId),
-        "name"            -> JsString(l.typeName),
-        "name_i18n"       -> JsString(Messages(l.typeName)),
-        "parent_id"       -> JsString(l.parentId),
-        "parent_resolution_id" -> parentRes,
-        "parent_summary"  -> JsString(l.parentSummary),
-        "child_id"        -> JsString(l.childId),
-        "child_resolution_id" -> childRes,
-        "child_summary"  -> JsString(l.childSummary),
         "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
       )
       toJson(ldoc)
@@ -394,6 +391,33 @@ object JsonFormats {
         "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
       )
       toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for WorkflowStatus
+   */
+  implicit object WorkflowStatusFormat extends Format[WorkflowStatus] {
+
+    def reads(json: JsValue): WorkflowStatus = WorkflowStatus(
+      id          = Id((json \ "id").as[Long]),
+      workflowId  = (json \ "workflow_id").as[Long],
+      statusId    = (json \ "status_id").as[Long],
+      name        = (json \ "name").as[String],
+      position    = (json \ "position").as[Int]
+    )
+
+    def writes(ws: WorkflowStatus): JsValue = {
+
+      val wsdoc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(ws.id.get),
+        "workflow_id"     -> JsNumber(ws.workflowId),
+        "status_id"       -> JsNumber(ws.statusId),
+        "name"            -> JsString(ws.name),
+        "name_i18n"       -> JsString(Messages(ws.name)),
+        "position"        -> JsNumber(ws.position)
+      )
+      toJson(wsdoc)
     }
   }
 }

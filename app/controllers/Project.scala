@@ -67,12 +67,19 @@ object Project extends Controller with Secured {
 
     val project = ProjectModel.getById(projectId)
 
-    val filters = Map("project_id" -> Seq(projectId.toString))
+    val efilters = Map("project_id" -> Seq(projectId.toString))
 
-    val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
+    val events = SearchModel.searchEvent(1, 10, "", efilters) // XXX fixed page, count, query
+
+    val tfilters = Map(
+      "project_id"  -> Seq(projectId.toString),
+      "resolution"  -> Seq("TICK_RESO_UNRESOLVED")
+    )
+
+    val tickets = SearchModel.searchTicket(1, 10, "", tfilters) // XXX Fixed page, count, query
 
     project match {
-      case Some(value) => Ok(views.html.project.item(value, response)(request))
+      case Some(value) => Ok(views.html.project.item(value, tickets, events)(request))
       case None => NotFound
     }
   }

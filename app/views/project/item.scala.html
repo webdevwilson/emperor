@@ -1,13 +1,51 @@
-@(project: models.Project, timeline: chc.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
+@(project: models.Project, tickets: chc.SearchResult[org.elasticsearch.search.SearchHit], timeline: chc.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
+
+@import util._
+
 @main(Messages("project.with.id", project.name)) {
 <div class="page-header">
  <h1>@Messages("project.with.id", project.name)</h1>
 </div>
 <div class="row-fluid">
- <div class="span6">
+ <div class="span8">
   <h2>@Messages("project.tickets.open")</h2>
+  <table class="table table-bordered table-rounded table-striped ticket-search">
+   <thead>
+    <th>@Messages("ticket.ticket")</th>
+    <th>@Messages("ticket.type")</th>
+    <th>@Messages("ticket.summary")</th>
+    <th>@Messages("ticket.priority")</th>
+    <th>@Messages("ticket.severity")</th>
+    <th>@Messages("general.actions")</th>
+   </thead>
+   <tbody>
+    @tickets.pager.items.map { hit =>
+    <tr>
+     <td style="width: 10%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.id</a</td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages(hit.getSource.get("type_name").toString)</span></td>
+     <td style="width: 80%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("priority_color")">@Messages(hit.getSource.get("priority_name").toString)</span></td>
+     <td><span class="label" style="background-color: #@hit.getSource.get("severity_color")">@Messages(hit.getSource.get("severity_name").toString)</span></td>
+     <td style="width: 10%" class="actions">
+      <div class="btn-toolbar">
+       <div class="btn-group">
+        <a class="btn btn-mini" href="@routes.Ticket.edit(hit.getId)"><i class="icon-edit"></i> @Messages("general.edit")</a>
+       </div>
+      </div>
+     </td>
+    </tr>
+    }
+   </tbody>
+   <tfoot>
+    <tr>
+     <td colspan="6">
+       @pager(tickets.pager)
+      </td>
+     </tr>
+   </tfoot>
+  </table>
  </div>
- <div class="span6">
+ <div class="span4">
   <h2>@Messages("general.timeline")</h2>
   <ul class="unstyled events">
    @timeline.pager.items.map { event =>
