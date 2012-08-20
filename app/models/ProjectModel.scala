@@ -10,6 +10,20 @@ import play.api.Play.current
 /**
  * Class for a project.
  */
+case class EditProject(
+  id: Pk[Long] = NotAssigned,
+  workflowId: Long,
+  name: String,
+  ownerId: Option[Long],
+  defaultPriorityId: Option[Long],
+  defaultSeverityId: Option[Long],
+  defaultTypeId: Option[Long],
+  defaultAssignee: Option[Int]
+)
+
+/**
+ * Class for a project.
+ */
 case class Project(
   id: Pk[Long] = NotAssigned,
   workflowId: Long,
@@ -24,6 +38,11 @@ case class Project(
   dateCreated: Date
 )
 
+object DefaultAssignee extends Enumeration {
+  type DefaultAssignee = Value
+  val Def_Assign_Nobody, Def_Assign_Owner = Value
+}
+
 object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects")
@@ -32,8 +51,8 @@ object ProjectModel {
   val updateSequenceQuery = SQL("UPDATE projects SET sequence_current = LAST_INSERT_ID(sequence_current + 1) WHERE id={id}")
   val listQuery = SQL("SELECT * FROM projects LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects")
-  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, date_created) VALUES ({name}, {pkey}, {workflow_id}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id} WHERE id={id}")
+  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, owner_id, default_priority_id, default_severity_id, default_ticket_type_id, default_assignee, date_created) VALUES ({name}, {pkey}, {workflow_id}, {owner_id}, {default_priority_id}, {default_severity_id}, {default_ticket_type_id}, {default_assignee}, UTC_TIMESTAMP())")
+  val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id}, owner_id={owner_id}, default_priority_id={default_priority_id}, default_severity_id={default_severity_id}, default_ticket_type_id={default_ticket_type_id}, default_assignee={default_assignee} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM projects WHERE id={id}")
 
   // Parser for retrieving a project.
@@ -68,7 +87,12 @@ object ProjectModel {
       val id = insertQuery.on(
         'name         -> project.name,
         'pkey         -> project.key,
-        'workflow_id  -> project.workflowId
+        'workflow_id  -> project.workflowId,
+        'owner_id     -> project.ownerId,
+        'default_priority_id -> project.defaultPriorityId,
+        'default_severity_id -> project.defaultSeverityId,
+        'default_ticket_type_id -> project.defaultTypeId,
+        'default_assignee -> project.defaultAssignee
       ).executeInsert()
 
       this.getById(id.get).get
@@ -138,13 +162,18 @@ object ProjectModel {
   /**
    * Update a project.
    */
-  def update(id: Long, project: Project): Option[Project] = {
+  def update(id: Long, project: EditProject): Option[Project] = {
 
     DB.withConnection { implicit conn =>
       val foo = updateQuery.on(
         'id         -> id,
         'name       -> project.name,
-        'workflow_id-> project.workflowId
+        'workflow_id-> project.workflowId,
+        'owner_id   -> project.ownerId,
+        'default_priority_id -> project.defaultPriorityId,
+        'default_severity_id -> project.defaultSeverityId,
+        'default_ticket_type_id -> project.defaultTypeId,
+        'default_assignee -> project.defaultAssignee
       ).execute
       getById(id)
     }

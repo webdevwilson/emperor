@@ -102,6 +102,9 @@ auth.logout.success=You have been logged out.
 auth.mustlogin=You must log in to perform that action.
 auth.success=Successfully logged in.
 
+Def_Assign_Nobody=Nobody
+Def_Assign_Owner=Owner of Project
+
 event.action={0} {1}
 event.action.icon.comment=icon-bullhorn
 event.action.icon.ticket_change=icon-pencil
@@ -138,11 +141,16 @@ pager.summary=Displaying {0} to {1} of {2}
 
 project.add=Add Project
 project.add.success=Project Added
+project.default.assignee=Default Assignee
+project.default.priority=Default Ticket Priority
+project.default.severity=Default Ticket Severity
+project.default.ttype=Default Ticket Type
 project.edit=Edit Project
 project.edit.success=Project Updated
+project.key=Key
 project.list=Projects
 project.name=Name
-project.key=Key
+project.owner=Owner
 project.with.id=Project {0}
 project.workflow=Workflow
 project.tickets.open=Open Tickets

@@ -9,11 +9,11 @@ import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
-import models.{ProjectModel,SearchModel,WorkflowModel}
+import models._
 
 object Project extends Controller with Secured {
 
-  val projectForm = Form(
+  val addProjectForm = Form(
     mapping(
       "id"  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id" -> longNumber,
@@ -29,12 +29,32 @@ object Project extends Controller with Secured {
     )(models.Project.apply)(models.Project.unapply)
   )
 
+  val editProjectForm = Form(
+    mapping(
+      "id"  -> ignored(NotAssigned:Pk[Long]),
+      "workflow_id" -> longNumber,
+      "name"-> nonEmptyText,
+      "owner_id" -> optional(longNumber),
+      "default_priority_id" -> optional(longNumber),
+      "default_severity_id" -> optional(longNumber),
+      "default_type_id" -> optional(longNumber),
+      "default_assignee" -> optional(number)
+    )(models.EditProject.apply)(models.EditProject.unapply)
+  )
+
   def add = IsAuthenticated { implicit request =>
 
-    projectForm.bindFromRequest.fold(
+    addProjectForm.bindFromRequest.fold(
       errors => {
         val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        BadRequest(views.html.project.create(errors, workflows))
+
+        val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+        val asses = DefaultAssignee.values.map { x => (x.id.toString -> Messages(x.toString)) }
+        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+        BadRequest(views.html.project.create(errors, workflows, users, asses.toList, ttypes, prios, sevs))
       },
       value => {
         val project = ProjectModel.create(value)
@@ -47,7 +67,13 @@ object Project extends Controller with Secured {
 
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-    Ok(views.html.project.create(projectForm, workflows)(request))
+    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+    val asses = DefaultAssignee.values.map { x => (x.id.toString -> Messages(x.toString)) }
+    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+    Ok(views.html.project.create(addProjectForm, workflows, users, asses.toList, ttypes, prios, sevs)(request))
   }
 
   def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
@@ -62,8 +88,26 @@ object Project extends Controller with Secured {
     val project = ProjectModel.getById(projectId)
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
+    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+    val asses = DefaultAssignee.values.map { x => (x.id.toString -> Messages(x.toString)) }
+    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
     project match {
-      case Some(value) => Ok(views.html.project.edit(projectId, projectForm.fill(value), workflows)(request))
+      case Some(value) => {
+        val editProject = EditProject(
+          id = value.id,
+          workflowId = value.workflowId,
+          name = value.name,
+          ownerId = value.ownerId,
+          defaultPriorityId = value.defaultPriorityId,
+          defaultSeverityId = value.defaultSeverityId,
+          defaultTypeId = value.defaultTypeId,
+          defaultAssignee = value.defaultAssignee
+        )
+        Ok(views.html.project.edit(projectId, editProjectForm.fill(editProject), workflows, users, asses.toList, ttypes, prios, sevs)(request))
+      }
       case None => NotFound
     }
   }
@@ -98,10 +142,16 @@ object Project extends Controller with Secured {
 
   def update(projectId: Long) = IsAuthenticated { implicit request =>
 
-    projectForm.bindFromRequest.fold(
+    editProjectForm.bindFromRequest.fold(
       errors => {
         val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        BadRequest(views.html.project.edit(projectId, errors, workflows))
+        val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+        val asses = DefaultAssignee.values.map { x => (x.id.toString -> Messages(x.toString)) }
+        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+
+        BadRequest(views.html.project.edit(projectId, errors, workflows, users, asses.toList, ttypes, prios, sevs))
       },
       value => {
         ProjectModel.update(projectId, value)
