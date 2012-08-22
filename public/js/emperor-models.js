@@ -30,6 +30,10 @@ YUI.add('emperor-models', function(Y) {
     }
   }
 
+  Y.Project = Y.Base.create('project', Y.Model, [Y.ModelSync.REST], {
+    root: '/api/project'
+  })
+
   Y.Ticket = Y.Base.create('ticket', Y.Model, [Y.ModelSync.REST], {
     root: '/api/ticket'
   });
