@@ -1,4 +1,4 @@
-@(implicit request: Request[AnyContent])
+@(currentProject: Option[Long] = None)(implicit request: Request[AnyContent])
 
 <div class="nav-collapse">
  <ul class="nav">
@@ -8,7 +8,7 @@
   <li @if(request.path.startsWith("/project")) { class="active" }><a href="@controllers.routes.Project.index()">@Messages("general.projects")</a></li>
   <li @if(request.path.startsWith("/admin")) { class="active" }><a href="@routes.Admin.index">@Messages("general.admin")</a></li>
  </ul>
- <a class="btn btn-primary" href="@controllers.routes.Ticket.create">@Messages("ticket.add")</a>
+ <a class="btn btn-primary" href="@controllers.routes.Ticket.create(project = currentProject)">@Messages("ticket.add")</a>
  @helper.form(action = routes.Search.index(page = 1, count = 10), 'class -> "navbar-search") {
   <input type="text" name="query" class="search-query" placeholder="@Messages("search.placeholder")">
  }

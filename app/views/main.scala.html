@@ -1,4 +1,4 @@
-@(title : String)(content: Html)(implicit request: Request[AnyContent])
+@(title: String, currentProject: Option[Long] = None)(content: Html)(implicit request: Request[AnyContent])
 
 @import util._
 
@@ -37,7 +37,7 @@
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="brand" href="@routes.Core.index">Emperor</a>
-          @topmenu(request)
+          @topmenu(currentProject = currentProject)(request)
         </div>
       </div>
     </div>
@@ -81,7 +81,6 @@
       if(!Y.one("#ticket-head")) {
         var linkTicket = new Y.LinkTicket({ id: 1 });
         linkTicket.load();
-        console.log("ASDASD!");
         Y.PartialLinkerView = Y.Base.create('partialLinkerView', Y.View, [], {
           template: Y.one("#partial-linker-template").getHTML(),
           initializer: function () {

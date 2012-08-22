@@ -104,7 +104,7 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 
 GET     /stack                          controllers.Stack.index
 
-GET     /ticket/create                  controllers.Ticket.create
+GET     /ticket/create                  controllers.Ticket.create(project: Option[Long] ?= None)
 GET     /ticket/:id                     controllers.Ticket.item(id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)

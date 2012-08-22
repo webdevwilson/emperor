@@ -1,6 +1,9 @@
 ## 0.0.7
  * Show unresolved tickets on project page
  * Add JSON serialization for Ticket Priority
+ * Add YUI model for Project
+ * Remove old, unused templates
+ * Add project-level defaults for various ticket fields
 
 ## 0.0.6
  * There is now an edit button on the ticket view page. (EMP-2)

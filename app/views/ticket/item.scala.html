@@ -15,7 +15,7 @@
 @import helper.bootstrap._
 @import util._
 
-@main(Messages("ticket.with.id", ticket.ticketId)) {
+@main(title = Messages("ticket.with.id", ticket.ticketId), currentProject = Some(ticket.project.id)) {
 <div id="ticket-head" data-ticket="@ticket.ticketId">
 </div>
 <div id="change-body">

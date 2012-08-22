@@ -182,7 +182,12 @@ object Ticket extends Controller with Secured {
     )
   }
 
-  def create = IsAuthenticated { implicit request =>
+  /**
+   * Display a form for creating a ticket.
+   * If we received a projectId then we will default the form to the appropriate
+   * settings for the provided project.
+   */
+  def create(projectId: Option[Long]) = IsAuthenticated { implicit request =>
 
     // Should be i18ned in the view
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
@@ -192,17 +197,41 @@ object Ticket extends Controller with Secured {
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val assignees = ("" -> Messages("ticket.unassigned")) +: users
 
-    val defaultedForm = initialTicketForm.fill(InitialTicket(
+    // The worst case scenario, just the user id
+    val startTicket = InitialTicket(
       reporterId = request.session.get("userId").get.toLong,
-      assigneeId = None,
-      projectId = 1,  // XXX should be in the session, EMP-5
-      priorityId = 2, // XXX should be a project attr
-      severityId = 2, // XXX should be a project attr
-      typeId = 1,     // XXX should be a project attr
+      assigneeId = None, // XXX need to fix this
+      projectId = 0,
+      priorityId = 0,
+      severityId = 0,
+      typeId = 0,
       position = None,
       summary = "",
       description = None
-    ))
+    )
+
+    val finalTicket = projectId match {
+      case Some(pid) => {
+        val maybeProject = ProjectModel.getById(pid)
+
+        maybeProject match {
+          case Some(project) => {
+            // If we got a project then copy the "default" ticket and modify
+            // the appropriate settings for the project's defaults.
+            startTicket.copy(
+              assigneeId = None, // XXX need to fix this
+              projectId = pid,
+              priorityId = project.defaultPriorityId.getOrElse(0),
+              severityId = project.defaultSeverityId.getOrElse(0),
+              typeId = project.defaultTypeId.getOrElse(0)
+            )
+          }
+          case None => startTicket
+        }
+      }
+    }
+
+    val defaultedForm = initialTicketForm.fill(finalTicket)
 
     Ok(views.html.ticket.create(defaultedForm, users, assignees, projs, ttypes, prios, sevs)(request))
   }
