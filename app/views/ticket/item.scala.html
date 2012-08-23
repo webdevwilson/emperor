@@ -8,7 +8,8 @@
   history: chc.Page[org.elasticsearch.search.SearchHit],
   historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
   ticketJson: String,
-  workflowJson: String,
+  previousStatus: Option[WorkflowStatus],
+  nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
 )(implicit request: Request[AnyContent])
 
@@ -17,6 +18,59 @@
 
 @main(title = Messages("ticket.with.id", ticket.ticketId), currentProject = Some(ticket.project.id)) {
 <div id="ticket-head" data-ticket="@ticket.ticketId">
+<div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
+ <h2><a href="@routes.Ticket.edit(ticket.ticketId)" class="btn btn-mini"><i class="icon-edit"></i></a> @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
+ <ul id="ticket-info" class="unstyled pull-left">
+  <li>
+   <span class="label"><label>@Messages("ticket.resolution")</label> @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
+  </li>
+  <li>
+   <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
+  </li>
+  <li>
+   <span class="label" style="background-color: #@ticket.priority.color"><label>@Messages("ticket.priority")</label> @Messages(ticket.priority.name)</span>
+  </li>
+  <li>
+   <span class="label" style="background-color: #@ticket.severity.color"><label>@Messages("ticket.severity")</label> @Messages(ticket.severity.name)</span>
+  </li>
+ </ul>
+ <div class="btn-toolbar pull-right">
+  @if(ticket.resolution.id.isEmpty) {
+  <div class="btn-group">
+   @previousStatus match {
+    case Some(status) => {
+   <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+    }
+    case None => { }
+    }
+   <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
+   @nextStatus match {
+    case Some(status) => {
+   <a class="btn btn-primary" data-toggle="modal" id="btn-advance" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+    }
+    case None => {
+   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
+    }
+   }
+  </div>
+  }
+  <div class="btn-group">
+   @if(ticket.resolution.id.isDefined) {
+   <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+   } else {
+   <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
+   }
+  </div>
+ </div>
+</div>
+ <div class="well ticket-desc">
+  @if(ticket.description) {
+    @ticket.description
+  } else {
+    @Messages("ticket.description.none")
+  }
+ </div>
+
 </div>
 <div id="change-body">
 </div>
@@ -49,6 +103,83 @@
    )
   </div>
 </div>
+@if(nextStatus.isDefined) {
+<div class="modal hide" id="status-advance">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.advance", Messages(nextStatus.get.name))</h3>
+ </div>
+ <div class="modal-body">
+  <fieldset>
+   <input type="hidden" name="status_id" value="@nextStatus.get.id.get">
+   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+}
+@if(previousStatus.isDefined) {
+<div class="modal hide" id="status-revert">
+ @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.revert", Messages(previousStatus.get.name))</h3>
+ </div>
+ <div class="modal-body">
+  <fieldset>
+   <input type="hidden" name="status_id" value="@previousStatus.get.id.get">
+   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+}
+<div class="modal hide" id="resolver">
+ @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.resolve")</h3>
+ </div>
+ <div class="modal-body">
+  <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
+  <fieldset>
+   @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
+   @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
+  </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+<div class="modal hide" id="unresolver">
+ @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("ticket.unresolve")</h3>
+ </div>
+ <div class="modal-body">
+   <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
+   <fieldset>
+     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+   </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
 <script type="text/javascript">
   YUI().use('emperor-models', 'base', 'view', 'node', 'io-base', function (Y) {
 
@@ -56,209 +187,6 @@
 
     var ticketLinks = new Y.TicketLinks({ url: '/api/ticket/link/@ticket.ticketId' });
     ticketLinks.load();
-
-    // Resolve
-    Y.ResolverView = Y.Base.create('resolverView', Y.View, [], {
-      events: {
-        '.cancel': { click: 'close'}
-      },
-      template: Y.one("#resolver-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.destroy, this);
-      },
-      render: function () {
-        var container = this.get('container');
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      close: function() {
-        var container = this.get('container');
-        container.setHTML('');
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#change-body');
-          }
-        }
-      }
-    });
-
-    var resolverView = new Y.ResolverView({ model : ticket });
-
-    // Unresolve
-    Y.UnresolverView = Y.Base.create('unresolverView', Y.View, [], {
-      events: {
-        '.cancel': { click: 'close'}
-      },
-      template: Y.one("#unresolver-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.destroy, this);
-      },
-      render: function () {
-        var container = this.get('container');
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      close: function() {
-        var container = this.get('container');
-        container.setHTML('');
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#change-body');
-          }
-        }
-      }
-    });
-
-    var unresolverView = new Y.UnresolverView({ model : ticket });
-
-    // Advance
-    Y.AdvanceView = Y.Base.create('advanceView', Y.View, [], {
-      events: {
-        '.cancel': { click: 'close'}
-      },
-      template: Y.one("#advance-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.destroy, this);
-      },
-      render: function () {
-        var container = this.get('container');
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      close: function() {
-        var container = this.get('container');
-        container.setHTML('');
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#change-body');
-          }
-        }
-      }
-    });
-
-    var advanceView = new Y.AdvanceView({ model : ticket });
-
-    // Revert
-    Y.RevertView = Y.Base.create('revertView', Y.View, [], {
-      events: {
-        '.cancel': { click: 'close'}
-      },
-      template: Y.one("#revert-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.destroy, this);
-      },
-      render: function () {
-        var container = this.get('container');
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      close: function() {
-        var container = this.get('container');
-        container.setHTML('');
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#change-body');
-          }
-        }
-      }
-    });
-
-    var revertView = new Y.RevertView({ model : ticket });
-
-    // Ticket Header
-    Y.TicketHeaderView = Y.Base.create('ticketItemView', Y.View, [], {
-      events: {
-        '#btn-resolver': { click: 'resolve' },
-        '#btn-unresolver': { click: 'unresolve' },
-        '#btn-advance': { click: 'advance' },
-        '#btn-revert': { click: 'revert' }
-      },
-      template: Y.one("#ticket-header-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.destroy, this);
-      },
-      render: function () {
-        var container = this.get('container');
-
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      resolve: function (e) {
-        resolverView.render();
-      },
-      unresolve: function(e) {
-        unresolverView.render();
-      },
-      advance: function (e) {
-        advanceView.render();
-      },
-      revert: function(e) {
-        revertView.render();
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#ticket-head');
-          }
-        }
-      }
-    });
-
-    var ticketHeadView = new Y.TicketHeaderView({ model: ticket });
-    ticketHeadView.render();
 
     Y.LinkerView = Y.Base.create('linkerView', Y.View, [], {
       events: {
@@ -394,136 +322,6 @@
     var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
     linkView.render();
   });
-</script>
-<script id="ticket-header-template" type="text/x-handlebars-template">
-<div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
- <h2><a href="/ticket/edit/{{ticket.ticket_id}}" class="btn btn-mini"><i class="icon-edit"></i></a> {{ticket.ticket_id}}, {{ticket.summary}}</h2>
- <ul id="ticket-info" class="unstyled pull-left">
-  <li>
-   <span class="label"><label>@Messages("ticket.resolution")</label> {{ticket.resolution_name_i18n}}</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #{{ticket.type_color}}"><label>@Messages("ticket.type")</label> {{ticket.type_name_i18n}}</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #{{ticket.priority_color}}"><label>@Messages("ticket.priority")</label> {{ticket.priority_name_i18n}}</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #{{ticket.severity_color}}"><label>@Messages("ticket.severity")</label> {{ticket.severity_name_i18n}}</span>
-  </li>
- </ul>
- <div class="btn-toolbar pull-right">
-  {{#if ticket.resolution_id}}
-  {{else}}
-  <div class="btn-group">
-   {{#if workflow.previous}}
-   <a href="#status-revert" class="btn btn-warning" id="btn-revert"><i class="icon-arrow-left icon-white"></i>  @Messages("ticket.revert") <i></i>{{workflow.previous.name_i18n}}</a>
-   {{/if}}
-   <a href="#" class="btn disabled">{{ticket.status_name_i18n}}</a>
-   {{#if workflow.next}}
-   <a class="btn btn-primary" id="btn-advance" href="#status-advance"> @Messages("ticket.advance") <i></i>{{workflow.next.name_i18n}} <i class="icon-arrow-right icon-white"></i></a>
-   {{else}}
-   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
-   {{/if}}
-  </div>
-  {{/if}}
-  <div class="btn-group">
-   {{#if ticket.resolution_id}}
-   <a class="btn btn-danger" id="btn-unresolver" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
-   {{else}}
-   <a class="btn btn-success" id="btn-resolver" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
-   {{/if}}
-  </div>
- </div>
-</div>
- <div class="well ticket-desc">
-  {{#if ticket.description}}
-  {{{ticket.description}}}
-  {{else}}
-  @Messages("ticket.description.none")
-  {{/if}}
- </div>
-</script>
-<script id="resolver-template" type="text/x-handlebars-template">
-<div id="resolver" class="modal">
- @helper.form(action = routes.Ticket.doResolve(ticket.ticketId), args = 'method -> "POST") {
- <div class="modal-header">
-  <button type="button" class="close cancel">×</button>
-  <h3>@Messages("ticket.resolve")</h3>
- </div>
- <div class="modal-body">
-  <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
-  <fieldset>
-   @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
-   @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
-  </fieldset>
- </div>
- <div class="modal-footer">
-  <a href="#" class="btn cancel">@Messages("form.cancel")</a>
-  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
- </div>
- }
-</div>
-</script>
-<script id="unresolver-template" type="text/x-handlebars-template">
-<div id="unresolver" class="modal">
- @helper.form(action = routes.Ticket.doUnResolve(ticket.ticketId), args = 'method -> "POST") {
- <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>@Messages("ticket.unresolve")</h3>
- </div>
- <div class="modal-body">
-   <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
-   <fieldset>
-     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
-   </fieldset>
- </div>
- <div class="modal-footer">
-  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
-  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
- </div>
- }
-</div>
-</script>
-<script id="advance-template" type="text/x-handlebars-template">
-<div id="status-advance" class="modal">
- @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
- <div class="modal-header">
-  <button type="button" class="close cancel">×</button>
-  <h3>@Messages("ticket.advance") <i></i>{{workflow.next.name_i18n}}</h3>
- </div>
- <div class="modal-body">
-  <fieldset>
-   <input type="hidden" name="status_id" value="{{workflow.next.status_id}}">
-   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
-  </fieldset>
- </div>
- <div class="modal-footer">
-  <a href="#" class="btn cancel">@Messages("form.cancel")</a>
-  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
- </div>
- }
-</div>
-</script>
-<script id="revert-template" type="text/x-handlebars-template">
-<div id="status-revert" class="modal">
- @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
- <div class="modal-header">
-  <button type="button" class="close cancel" data-dismiss="modal">×</button>
-  <h3>@Messages("ticket.revert") <i></i>{{workflow.previous.name_i18n}}</h3>
- </div>
- <div class="modal-body">
-  <fieldset>
-   <input type="hidden" name="status_id" value="{{workflow.previous.status_id}}">
-   @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
-  </fieldset>
- </div>
- <div class="modal-footer">
-  <a href="#" class="btn cancel">@Messages("form.cancel")</a>
-  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
- </div>
- }
-</div>
 </script>
 <script id="linker-template" type="text/x-handlebars-template">
 <div class="link-item">

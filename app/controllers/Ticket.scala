@@ -107,8 +107,8 @@ object Ticket extends Controller with Secured {
           errors => {
             BadRequest(views.html.ticket.error(request))
           }, {
-            case resolution: models.InitialComment => {
-              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(resolution.comment))
+            case unresolution: models.InitialComment => {
+              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(unresolution.comment))
               Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
@@ -269,11 +269,6 @@ object Ticket extends Controller with Secured {
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
 
-        val statuses: Map[String,Option[WorkflowStatus]] = Map(
-          "previous" -> prevStatus,
-          "next" -> nextStatus
-        )
-
         val apiTick: Map[String,JsValue] = Map(
           "ticket" -> Json.toJson(value),
           "workflow" -> Json.toJson(statuses)
@@ -322,7 +317,8 @@ object Ticket extends Controller with Secured {
           history = history,
           historyFacets = historyFacets,
           ticketJson = toJson(apiTick).toString,
-          workflowJson = toJson(statuses).toString,
+          previousStatus = prevStatus,
+          nextStatus = nextStatus,
           linkTypes = ltypes
         )(request))
       }

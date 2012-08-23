@@ -4,8 +4,9 @@
  * Add YUI model for Project
  * Remove old, unused templates
  * Add project-level defaults for various ticket fields
- * Upgrade to Bootstrap 2.1.0
  * Change link remove icon to an x
+ * Revert some of the Javascript work because it wasn't really any better than the scala
+ * Increase size of textareas in ticket modals (EMP-20)
 
 ## 0.0.6
  * There is now an edit button on the ticket view page. (EMP-2)
