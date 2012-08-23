@@ -2,6 +2,12 @@
 @main-subdued-color: #cccccc;
 
 .navbar {
+  .navbar-search .search-query {
+    font-size: 12px;
+    margin-right: 1em;
+    margin-top: 3px;
+    padding: 2px 12px;
+  }
   .navbar-inner {
     background: rgb(53,56,65); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(53,56,65,1) 0%, rgba(32,34,39,1) 100%); /* FF3.6+ */
@@ -16,6 +22,7 @@
     color: #93a8bd;
     font-family: 'Great Vibes', cursive;
     margin-top: 4px;
+    text-shadow: none;
   }
   .brand:hover {
     color: #fff;
@@ -31,18 +38,28 @@
       color: #eee
     }
   }
-  .nav .active a {
+  .nav .active a,
+  .nav .active a:hover {
     background-color: #15171a;
     -webkit-border-radius: 5px 5px 0px 0px;
     border-radius: 5px 5px 0px 0px;
     -webkit-box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, .35);
     box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, .35);
+    color: #fff;
+  }
+  .nav .active a:hover {
+    background-color: #222;
   }
   .btn {
-    margin-top: 7px;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  .btn-group {
+    margin-left: 7px;
   }
   .btn-group.open .btn-primary.dropdown-toggle {
     background-color: #616876;
+    color: #fff;
   }
 }
 .btn-primary {
@@ -90,7 +107,7 @@ ul.boxy {
     border: 1px solid @main-accent-color;
     margin: 0 0 1em 1em;
     float: left;
-    padding: 5px;
+    padding: 0 5px 5px 5px;
     width: 15em;
   }
   li:first-child {
@@ -98,6 +115,7 @@ ul.boxy {
   }
   h3 {
     border-bottom: 1px solid @main-accent-color;
+    margin-top: 0;
   }
   dl {
     margin-bottom: 5px;
@@ -201,8 +219,12 @@ table.ticket-search {
 }
 #ticket-header {
   .btn-toolbar {
-    margin-bottom: 0;
+    margin-bottom: 5px;
     margin-top: 0;
+
+    .btn-group .btn {
+      font-size: 12px;
+    }
   }
 }
 #history {
