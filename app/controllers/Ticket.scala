@@ -12,6 +12,7 @@ import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import models._
+import models.DefaultAssignee._
 import models.TicketModel._
 import org.clapper.markwrap._
 import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
@@ -219,7 +220,12 @@ object Ticket extends Controller with Secured {
             // If we got a project then copy the "default" ticket and modify
             // the appropriate settings for the project's defaults.
             startTicket.copy(
-              assigneeId = None, // XXX need to fix this
+              assigneeId = project.defaultAssignee match {
+                // Choose the appropriate default assignee based on the
+                // strategy set on the project.
+                case Some(da) if da == Def_Assign_Owner.id => project.ownerId
+                case _ => None
+              },
               projectId = pid,
               priorityId = project.defaultPriorityId.getOrElse(0),
               severityId = project.defaultSeverityId.getOrElse(0),
