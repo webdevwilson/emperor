@@ -1,4 +1,5 @@
 @(ticket: models.FullTicket,
+  links: Map[String,List[models.FullLink]],
   markdown: org.clapper.markwrap.MarkWrapParser,
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
@@ -74,6 +75,27 @@
 </div>
 <div id="change-body">
 </div>
+<h3>@Messages("ticket.links")</h3>
+@if(!links.isEmpty) {
+<table class="table table-striped table-condensed ticket-links">
+@links.map { lmem =>
+  @lmem._2.zipWithIndex.map { case(l,index) =>
+    <tr>
+    @if(index == 0) {
+    <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
+    }
+    @if(l.childId == ticket.ticketId) {
+      <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
+    } else {
+      <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
+    }
+    <td class="actions"><a href="#"><i class="icon-remove"></a></td>
+    </tr>
+  }
+}
+
+</table>
+}
 <h3>@Messages("ticket.links")</h3>
 <div id="ticket-links">
 </div>

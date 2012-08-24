@@ -270,8 +270,15 @@ object Ticket extends Controller with Secured {
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
 
         val apiTick: Map[String,JsValue] = Map(
-          "ticket" -> Json.toJson(value),
-          "workflow" -> Json.toJson(statuses)
+          "ticket" -> Json.toJson(value)
+        )
+
+        val links = TicketModel.getLinks(ticketId).groupBy( l =>
+          if(l.childId == ticketId) {
+            l.typeName + "_INVERT"
+          } else {
+            l.typeName
+          }
         )
 
         val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -308,6 +315,7 @@ object Ticket extends Controller with Secured {
 
         Ok(views.html.ticket.item(
           ticket = value,
+          links = links,
           markdown = mdParser,
           resolutions = resolutions,
           resolveForm = resolveForm,
