@@ -199,7 +199,6 @@
 <script type="text/javascript">
   YUI().use('emperor-models', 'base', 'view', 'node', 'pjax', 'io-base', function (Y) {
 
-
     var refreshLinks = function (transactionid, response, arguments) {
       // ticketLinks.add(JSON.parse(response.responseText))
       var pjax = new Y.Pjax({
@@ -266,15 +265,15 @@
         };
 
         var cfg = {
-            method: 'PUT',
-            data: JSON.stringify(link),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            on: {
-              success: refreshLinks,
-              failure: showAlert
-            }
+          method: 'PUT',
+          data: JSON.stringify(link),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          on: {
+            success: refreshLinks,
+            failure: showAlert
+          }
         };
 
         var request = Y.io(uri, cfg);
@@ -301,11 +300,11 @@
       var uri = '/api/ticket/link/' + linkid
 
       var cfg = {
-          method: 'DELETE',
-          on: {
-            success: refreshLinks,
-            failure: showAlert
-          }
+        method: 'DELETE',
+        on: {
+          success: refreshLinks,
+          failure: showAlert
+        }
       };
 
       var request = Y.io(uri, cfg);
@@ -316,7 +315,7 @@
 <div class="link-item">
 {{#if ticket_id}}
  <a class="btn btn-primary dropdown-toggle {{#if disabled}}disabled{{/if}}" data-toggle="dropdown" href="#">
-   @Messages("ticket.linker.label") <i></i>{{ticket_id}}
+   @Messages("ticket.linker.label") <i></i>{{ticket_id}}: {{short_summary}}
    <span class="caret"></span>
  </a>
  <ul id="link-menu" class="dropdown-menu">

@@ -27,7 +27,11 @@ object LinkTicket extends Controller with Secured {
                 case _    => false
               }),
               "ticket_id" -> JsString(t.ticketId),
-              "summary"   -> JsString(t.summary)
+              "summary"   -> JsString(t.summary),
+              "short_summary"   -> JsString(t.summary match {
+                case x if x.length > 15 => x.take(20) + "&hellip;"
+                case x => x
+              })
             )
 
             Ok(Json.toJson(lt))
@@ -44,11 +48,28 @@ object LinkTicket extends Controller with Secured {
     request.body.asJson.map { json =>
       (json \ "ticket_id").asOpt[String].map { ticketId =>
 
-        val resp = Map(
-          "ok" -> Messages("ticket.linker.start", id)
-        )
+        val ticket = TicketModel.getFullById(ticketId)
 
-        Ok(Json.toJson(resp)).withSession(session + ("link_ticket" -> ticketId))
+        ticket match {
+
+          case Some(t) => {
+            val lt: Map[String,JsValue] = Map(
+              "disabled"  -> JsBoolean(id match {
+                case x if x == ticketId  => true
+                case _    => false
+              }),
+              "ticket_id" -> JsString(t.ticketId),
+              "summary"   -> JsString(t.summary),
+              "short_summary"   -> JsString(t.summary match {
+                case x if x.length > 15 => x.take(20) + "&hellip;"
+                case x => x
+              })
+            )
+
+            Ok(Json.toJson(lt)).withSession(session + ("link_ticket" -> ticketId))
+          }
+          case None => NotFound
+        }
       }.getOrElse {
         // This is stupid, but it worked with frontend stuff…
         val resp = Map(

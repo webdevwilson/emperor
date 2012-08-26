@@ -331,6 +331,10 @@ object JsonFormats {
         "type_name"       -> JsString(ticket.ttype.name),
         "type_name_i18n"  -> JsString(Messages(ticket.ttype.name)),
         "summary"         -> JsString(ticket.summary),
+        "short_summary"   -> JsString(ticket.summary match {
+          case x if x.length > 15 => x.take(15) + "&hellip;"
+          case x => x
+        }),
         "description"     -> JsString(markdown.parseToHTML(ticket.description.getOrElse(""))),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
       )
