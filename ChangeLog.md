@@ -7,6 +7,8 @@
  * Change link remove icon to an x
  * Revert some of the Javascript work because it wasn't really any better than the scala
  * Increase size of textareas in ticket modals (EMP-20)
+ * Update play version to 2.0.3
+ * Update elasticsearch version to 0.19.9
 
 ## 0.0.6
  * There is now an edit button on the ticket view page. (EMP-2)
