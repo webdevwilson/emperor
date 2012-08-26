@@ -1,14 +1,19 @@
 ## 0.0.7
+ * Add a project owner field (EMP-16)
+ * Add project assignee strategies: unassigned or project owner
  * Show unresolved tickets on project page
  * Add JSON serialization for Ticket Priority
+ * Add edit button to projects (EMP-17)
  * Add YUI model for Project
  * Remove old, unused templates
- * Add project-level defaults for various ticket fields
- * Change link remove icon to an x
- * Revert some of the Javascript work because it wasn't really any better than the scala
+ * Add project-level defaults for various ticket fields (EMP-12)
+ * Default to "current" project when creating a ticket from various places (EMP-5)
+ * Change link remove icon to an x (EMP-21)
+ * Revamp link display to be more awesome (EMP-14)
  * Increase size of textareas in ticket modals (EMP-20)
  * Update play version to 2.0.3
  * Update elasticsearch version to 0.19.9
+ * Show (elided, if necessary) summary in link header (EMP-13)
 
 ## 0.0.6
  * There is now an edit button on the ticket view page. (EMP-2)
