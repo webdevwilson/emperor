@@ -8,7 +8,6 @@
   commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
   history: chc.Page[org.elasticsearch.search.SearchHit],
   historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
-  ticketJson: String,
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
@@ -71,33 +70,28 @@
     @Messages("ticket.description.none")
   }
  </div>
-
 </div>
-<div id="change-body">
-</div>
-<h3>@Messages("ticket.links")</h3>
-@if(!links.isEmpty) {
-<table class="table table-striped table-condensed ticket-links">
-@links.map { lmem =>
-  @lmem._2.zipWithIndex.map { case(l,index) =>
-    <tr>
-    @if(index == 0) {
-    <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
-    }
-    @if(l.childId == ticket.ticketId) {
-      <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
-    } else {
-      <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
-    }
-    <td class="actions"><a href="#"><i class="icon-remove"></a></td>
-    </tr>
-  }
-}
-
-</table>
-}
-<h3>@Messages("ticket.links")</h3>
-<div id="ticket-links">
+<div id="link-body">
+ <h3>@Messages("ticket.links")</h3>
+ @if(!links.isEmpty) {
+ <table class="table table-striped table-condensed ticket-links">
+ @links.map { lmem =>
+   @lmem._2.zipWithIndex.map { case(l,index) =>
+     <tr>
+     @if(index == 0) {
+     <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
+     }
+     @if(l.childId == ticket.ticketId) {
+       <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
+     } else {
+       <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
+     }
+     <td class="actions"><a href="#"><i data-linkid="@l.id" class="remover icon-remove"></a></td>
+     </tr>
+   }
+ }
+ </table>
+ }
 </div>
 <ul class="nav nav-tabs">
   <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
@@ -203,12 +197,21 @@
  }
 </div>
 <script type="text/javascript">
-  YUI().use('emperor-models', 'base', 'view', 'node', 'io-base', function (Y) {
+  YUI().use('emperor-models', 'base', 'view', 'node', 'pjax', 'io-base', function (Y) {
 
-    var ticket = new Y.Ticket(@Html(ticketJson));
 
-    var ticketLinks = new Y.TicketLinks({ url: '/api/ticket/link/@ticket.ticketId' });
-    ticketLinks.load();
+    var refreshLinks = function (transactionid, response, arguments) {
+      // ticketLinks.add(JSON.parse(response.responseText))
+      var pjax = new Y.Pjax({
+        container: '#link-body',
+        contentSelector: '#link-body'
+      });
+      pjax.navigate('@controllers.routes.Ticket.item(ticket.ticketId)');
+    }
+
+    var showAlert = function (transactionId, response, arguments) {
+      Y.ShowAlert('alert-error', response.responseText);
+    }
 
     Y.LinkerView = Y.Base.create('linkerView', Y.View, [], {
       events: {
@@ -268,18 +271,11 @@
             headers: {
               'Content-Type': 'application/json',
             },
+            on: {
+              success: refreshLinks,
+              failure: showAlert
+            }
         };
-
-        function onSuccess(transactionid, response, arguments) {
-          ticketLinks.add(JSON.parse(response.responseText))
-        }
-
-        function onFailure(transactionId, response, arguments) {
-          Y.ShowAlert('alert-error', response.responseText);
-        }
-
-        Y.on('io:success', onSuccess, Y, true);
-        Y.on('io:failure', onFailure, Y, true);
 
         var request = Y.io(uri, cfg);
       }
@@ -299,50 +295,21 @@
     var linkerView = new Y.LinkerView({ model: linkTicket });
     linkerView.render();
 
-    // Ticket Header
-    Y.TicketLinkView = Y.Base.create('ticketLinkView', Y.View, [], {
-      events: {
-        'a.remover': { click: 'delete' }
-      },
-      template: Y.one("#link-template").getHTML(),
-      initializer: function () {
-        var model = this.get('modelList');
-        model.after('reset', this.render, this);
-        model.after('destroy', this.destroy, this);
-        model.after('add', this.render, this);
-        model.after('remove', this.render, this);
-      },
-      render: function () {
-        var container = this.get('container');
+    Y.one("#link-body").delegate('click', function(e) {
+      var linkid = e.currentTarget.getAttribute('data-linkid');
 
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template({ links: this.get('modelList').toJSON() });
+      var uri = '/api/ticket/link/' + linkid
 
-        container.setHTML(html);
-
-        return this;
-      },
-      delete: function(e) {
-        var model = this.get('modelList');
-        var t = e.currentTarget;
-        var lid = t.getAttribute('data-linkid');
-
-        var link = model.getById(parseInt(lid))
-        link.destroy({ remove: true });
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#ticket-links');
+      var cfg = {
+          method: 'DELETE',
+          on: {
+            success: refreshLinks,
+            failure: showAlert
           }
-        }
-      }
-    });
+      };
 
-    var linkView = new Y.TicketLinkView({ modelList: ticketLinks });
-    linkView.render();
+      var request = Y.io(uri, cfg);
+    }, '.remover');
   });
 </script>
 <script id="linker-template" type="text/x-handlebars-template">
@@ -367,19 +334,6 @@
 <a class="btn" id="btn-start">@Messages("ticket.linker.action")</a>
 {{/if}}
 </div>
-</script>
-<script id="link-template" type="text/x-handlebars-template">
-<table class="table table-striped table-condensed">
- {{#each links}}
- <tr>
-  <td><a href="/ticket/{{parent_id}}" {{#if parent_resolution_id}}class="strike"{{/if}}>{{parent_id}}</a></td>
-  <td>{{name_i18n}}</td>
-  <td><a href="/ticket/{{child_id}}" {{#if child_resolution_id}}class="strike"{{/if}}>{{child_id}}</a></td>
-  <td width="70%">{{child_summary}}</td>
-  <td><a class="remover" href="#" data-linkid="{{id}}"><i class="icon-remove"></i></a></td>
- </tr>
- {{/each}}
-</table>
 </script>
 }
 

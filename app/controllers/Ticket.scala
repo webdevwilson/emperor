@@ -269,10 +269,6 @@ object Ticket extends Controller with Secured {
         val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
 
-        val apiTick: Map[String,JsValue] = Map(
-          "ticket" -> Json.toJson(value)
-        )
-
         val links = TicketModel.getLinks(ticketId).groupBy( l =>
           if(l.childId == ticketId) {
             l.typeName + "_INVERT"
@@ -324,7 +320,6 @@ object Ticket extends Controller with Secured {
           commFacets = commFacets,
           history = history,
           historyFacets = historyFacets,
-          ticketJson = toJson(apiTick).toString,
           previousStatus = prevStatus,
           nextStatus = nextStatus,
           linkTypes = ltypes
