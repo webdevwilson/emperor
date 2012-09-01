@@ -192,6 +192,7 @@ ticket.assignee=Assignee
 ticket.attention=Attention
 ticket.color=Color
 ticket.comment=Comment
+ticket.comment.add=Add Comment
 ticket.comment.added=Comment Added
 ticket.comment.attribution.postfix=on {0}
 ticket.comment.attribution.prefix=by
