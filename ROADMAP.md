@@ -19,10 +19,12 @@
   * API
     * Ruby gem
   * Authz
+  * Attachments (maybe use Tika?)
  * Ticket Features
   * Stacks
   * handle "old" names of tickets (if moved)
   * notice
+  * Draft?
  * Workflow editing
   * Drafts
   * Resolving problems
