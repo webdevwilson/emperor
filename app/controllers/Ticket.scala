@@ -235,6 +235,7 @@ object Ticket extends Controller with Secured {
           case None => startTicket
         }
       }
+      case None => startTicket
     }
 
     val defaultedForm = initialTicketForm.fill(finalTicket)
