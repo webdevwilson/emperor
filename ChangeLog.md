@@ -14,6 +14,7 @@
  * Update play version to 2.0.3
  * Update elasticsearch version to 0.19.9
  * Show (elided, if necessary) summary in link header (EMP-13)
+ * Add (bad) comment UI. (EMP-19)
 
 ## 0.0.6
  * There is now an edit button on the ticket view page. (EMP-2)
