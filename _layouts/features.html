@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{page.title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="http://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+
+    {% include header.html %}
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Features</li>
+              <li><a href="#technology">Technology</a></li>
+              <li><a href="#ticketing">Ticketing</a></li>
+              <li><a href="#projects">Project Management</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+{{content}}
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Cory Watson 2012</p>
+      </footer>
+
+    </div>
+
+    <script src="/js/jquery-1.8.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
