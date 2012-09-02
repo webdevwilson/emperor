@@ -22,6 +22,11 @@ class ProjectModelSpec extends Specification {
           name = "Test Project 1",
           key = "TEST1",
           workflowId = work.get.id.get,
+          ownerId = None,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
           dateCreated = new Date
         )
         val newProject = ProjectModel.create(p)
@@ -33,8 +38,17 @@ class ProjectModelSpec extends Specification {
         proj.get must beAnInstanceOf[models.Project]
 
         // // Change it
-        val cProj = proj.get.copy(name = "Test Project 1!")
-        val updateProj = ProjectModel.update(cProj.id.get, cProj)
+        val cProj = models.EditProject(
+          id = proj.get.id,
+          workflowId = proj.get.workflowId,
+          name = "Test Project 1!",
+          ownerId = proj.get.ownerId,
+          defaultPriorityId = proj.get.defaultPriorityId,
+          defaultSeverityId = proj.get.defaultSeverityId,
+          defaultTypeId = proj.get.defaultTypeId,
+          defaultAssignee = proj.get.defaultAssignee
+        )
+        val updateProj = ProjectModel.update(proj.get.id.get, cProj)
         updateProj must beSome
         updateProj.get.name mustEqual "Test Project 1!"
 
@@ -54,6 +68,11 @@ class ProjectModelSpec extends Specification {
           name = "Test Project 1",
           key = "TEST1",
           workflowId = work.get.id.get,
+          ownerId = None,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
           dateCreated = new Date
         )
         val newProject = ProjectModel.create(p)

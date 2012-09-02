@@ -22,6 +22,11 @@ class TicketModelSpec extends Specification {
           name = "Test Project 1",
           key = "TEST1",
           workflowId = work.get.id.get,
+          ownerId = None,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
           dateCreated = new Date
         )
         val newProject = ProjectModel.create(p)
@@ -64,6 +69,11 @@ class TicketModelSpec extends Specification {
           name = "Test Project 2",
           key = "TEST2",
           workflowId = work.get.id.get,
+          ownerId = None,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
           dateCreated = new Date
         )
         val newProject = ProjectModel.create(p)
@@ -154,6 +164,11 @@ class TicketModelSpec extends Specification {
           name = "Test Project 4",
           key = "TEST4",
           workflowId = work.get.id.get,
+          ownerId = None,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
           dateCreated = new Date
         )
         val newProject = ProjectModel.create(p)
