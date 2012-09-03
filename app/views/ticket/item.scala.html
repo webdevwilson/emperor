@@ -84,7 +84,7 @@
      @if(l.childId == ticket.ticketId) {
        <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
      } else {
-       <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
+       <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
      }
      <td class="actions"><a href="#"><i data-linkid="@l.id" class="remover icon-remove"></a></td>
      </tr>
