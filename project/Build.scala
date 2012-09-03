@@ -1,11 +1,12 @@
 import sbt._
 import Keys._
 import PlayProject._
+import sbtbuildinfo.Plugin._
 
 object ApplicationBuild extends Build {
 
   val appName         = "emperor"
-  val appVersion      = "0.1-SNAPSHOT"
+  val appVersion      = "0.0.8"
 
   val appDependencies = Seq(
     "org.scala-lang" % "scala-compiler"         % "2.9.1",
@@ -15,8 +16,12 @@ object ApplicationBuild extends Build {
     "org.clapper"   %% "markwrap"               % "0.5.4"
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
     // Add your own project settings here
     scalaVersion := "2.9.1"
+  ).settings(
+    sourceGenerators in Compile <+= buildInfo,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoPackage := "chc"
   )
 }
