@@ -9,7 +9,9 @@
 @import chc._
 @import util._
 
-  XXX Need empty stuff @Messages("ticket.history.none")
+@if(history.items.isEmpty) {
+  @Messages("ticket.history.none")
+} else {
     <div class="row">
      <div class="span2">
       <ul class="nav nav-list">
@@ -82,3 +84,4 @@
       @pager(history)
      </div>
     </div>
+}
