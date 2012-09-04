@@ -17,108 +17,121 @@
 @import util._
 
 @main(title = Messages("ticket.with.id", ticket.ticketId), currentProject = Some(ticket.project.id)) {
+<div class="row-fluid">
+
+ <div class="span2">
+  <ul id="ticket-info" class="pull-left">
+   <li>
+    <span class="label"><label>@Messages("ticket.resolution")</label> @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
+   </li>
+   <li>
+    <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
+   </li>
+   <li>
+    <span class="label" style="background-color: #@ticket.priority.color"><label>@Messages("ticket.priority")</label> @Messages(ticket.priority.name)</span>
+   </li>
+   <li>
+    <span class="label" style="background-color: #@ticket.severity.color"><label>@Messages("ticket.severity")</label> @Messages(ticket.severity.name)</span>
+   </li>
+  </ul>
+
+ </div>
+
+ <div class="span10">
+
 <div id="ticket-head" data-ticket="@ticket.ticketId">
-<div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
- <h2><a href="@routes.Ticket.edit(ticket.ticketId)" class="btn btn-mini"><i class="icon-edit"></i></a> @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
- <ul id="ticket-info" class="unstyled pull-left">
-  <li>
-   <span class="label"><label>@Messages("ticket.resolution")</label> @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #@ticket.priority.color"><label>@Messages("ticket.priority")</label> @Messages(ticket.priority.name)</span>
-  </li>
-  <li>
-   <span class="label" style="background-color: #@ticket.severity.color"><label>@Messages("ticket.severity")</label> @Messages(ticket.severity.name)</span>
-  </li>
- </ul>
- <div class="btn-toolbar pull-right">
-  @if(ticket.resolution.id.isEmpty) {
-  <div class="btn-group">
-   @previousStatus match {
-    case Some(status) => {
-   <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+ <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
+  <h2><a href="@routes.Ticket.edit(ticket.ticketId)" class="btn btn-mini"><i class="icon-edit"></i></a> @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
+  <div class="btn-toolbar pull-right">
+   @if(ticket.resolution.id.isEmpty) {
+   <div class="btn-group">
+    @previousStatus match {
+     case Some(status) => {
+    <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+     }
+     case None => { }
+     }
+    <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
+    @nextStatus match {
+     case Some(status) => {
+    <a class="btn btn-primary" data-toggle="modal" id="btn-advance" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+     }
+     case None => {
+    <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
+     }
     }
-    case None => { }
-    }
-   <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
-   @nextStatus match {
-    case Some(status) => {
-   <a class="btn btn-primary" data-toggle="modal" id="btn-advance" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
-    }
-    case None => {
-   <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
-    }
+   </div>
    }
-  </div>
-  }
-  <div class="btn-group">
-   @if(ticket.resolution.id.isDefined) {
-   <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
-   } else {
-   <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
-   }
+   <div class="btn-group">
+    @if(ticket.resolution.id.isDefined) {
+    <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+    } else {
+    <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
+    }
+   </div>
   </div>
  </div>
 </div>
- <div class="well ticket-desc">
-  @if(ticket.description) {
-    @ticket.description
-  } else {
-    @Messages("ticket.description.none")
-  }
+
+
+   <div class="well ticket-desc">
+    @if(ticket.description) {
+      @ticket.description
+    } else {
+      @Messages("ticket.description.none")
+    }
+   </div>
+   <div id="link-body">
+    <h3>@Messages("ticket.links")</h3>
+    @if(!links.isEmpty) {
+    <table class="table table-striped table-condensed ticket-links">
+    @links.map { lmem =>
+      @lmem._2.zipWithIndex.map { case(l,index) =>
+        <tr>
+        @if(index == 0) {
+        <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
+        }
+        @if(l.childId == ticket.ticketId) {
+          <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
+        } else {
+          <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
+        }
+        <td class="actions"><a href="#"><i data-linkid="@l.id" class="remover icon-remove"></a></td>
+        </tr>
+      }
+    }
+    </table>
+    }
+   </div>
+   <ul class="nav nav-tabs">
+     <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
+     <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
+   </ul>
+   <div class="tab-content">
+     <div class="tab-pane active" id="comments">
+      @helper.form(action = routes.Ticket.item(id = ticket.ticketId), 'class -> "navbar-search") {
+       <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
+      }
+      @commtab(
+       ticket      = ticket,
+       markdown    = markdown,
+       commentForm = commentForm,
+       comments    = comments,
+       facets      = commFacets
+      )
+     </div>
+     <div class="tab-pane" id="history">
+      @histtab(
+       ticket      = ticket,
+       markdown    = markdown,
+       history     = history,
+       facets      = historyFacets
+      )
+     </div>
+   </div>
  </div>
 </div>
-<div id="link-body">
- <h3>@Messages("ticket.links")</h3>
- @if(!links.isEmpty) {
- <table class="table table-striped table-condensed ticket-links">
- @links.map { lmem =>
-   @lmem._2.zipWithIndex.map { case(l,index) =>
-     <tr>
-     @if(index == 0) {
-     <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
-     }
-     @if(l.childId == ticket.ticketId) {
-       <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
-     } else {
-       <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
-     }
-     <td class="actions"><a href="#"><i data-linkid="@l.id" class="remover icon-remove"></a></td>
-     </tr>
-   }
- }
- </table>
- }
-</div>
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
-  <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
-</ul>
-<div class="tab-content">
-  <div class="tab-pane active" id="comments">
-   @helper.form(action = routes.Ticket.item(id = ticket.ticketId), 'class -> "navbar-search") {
-    <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
-   }
-   @commtab(
-    ticket      = ticket,
-    markdown    = markdown,
-    commentForm = commentForm,
-    comments    = comments,
-    facets      = commFacets
-   )
-  </div>
-  <div class="tab-pane" id="history">
-   @histtab(
-    ticket      = ticket,
-    markdown    = markdown,
-    history     = history,
-    facets      = historyFacets
-   )
-  </div>
-</div>
+
 @if(nextStatus.isDefined) {
 <div class="modal hide" id="status-advance">
  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
