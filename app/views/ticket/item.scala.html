@@ -21,6 +21,7 @@
 
  <div class="span2">
   <div class="well">
+  XXX attention here?
   <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> Edit</a>
   <form>
    <label>@Messages("ticket.date_created")</label>
@@ -38,6 +39,9 @@
    <label>@Messages("ticket.severity")</label>
    <span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span>
   </form>
+  XXX days open?
+  XXX comment count?
+  XXX users involved count?
   </div>
  </div>
 
@@ -86,7 +90,7 @@
     }
    </div>
    <div id="link-body">
-    <h3>@Messages("ticket.links")</h3>
+    <h3>@Messages("ticket.links") XXX collapse?</h3>
     @if(!links.isEmpty) {
     <table class="table table-striped table-condensed ticket-links">
     @links.map { lmem =>
