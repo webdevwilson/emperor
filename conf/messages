@@ -202,6 +202,7 @@ ticket.comment.facet.user_id=User
 ticket.comment.invalid=Invalid Comment
 ticket.comment.list=Comments
 ticket.comment.search.placeholder=Search Comments
+ticket.date_created=Date Created
 ticket.description=Description
 ticket.description.none=Ticket has no description.
 ticket.edit=Edit Ticket

@@ -20,28 +20,32 @@
 <div class="row-fluid">
 
  <div class="span2">
-  <ul id="ticket-info" class="pull-left">
-   <li>
-    <span class="label"><label>@Messages("ticket.resolution")</label> @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
-   </li>
-   <li>
-    <span class="label" style="background-color: #@ticket.ttype.color"><label>@Messages("ticket.type")</label> @Messages(ticket.ttype.name)</span>
-   </li>
-   <li>
-    <span class="label" style="background-color: #@ticket.priority.color"><label>@Messages("ticket.priority")</label> @Messages(ticket.priority.name)</span>
-   </li>
-   <li>
-    <span class="label" style="background-color: #@ticket.severity.color"><label>@Messages("ticket.severity")</label> @Messages(ticket.severity.name)</span>
-   </li>
-  </ul>
-
+  <div class="well">
+  <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> Edit</a>
+  <form>
+   <label>@Messages("ticket.date_created")</label>
+   <p>@ticket.dateCreated</p>
+   <label>@Messages("ticket.assignee")</label>
+   <p>@ticket.assignee.name</p>
+   <label>@Messages("ticket.reporter")</label>
+   <p>@ticket.reporter.name</p>
+   <label>@Messages("ticket.resolution")</label>
+   <span class="label">@Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
+   <label>@Messages("ticket.type")</label>
+   <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
+   <label>@Messages("ticket.priority")</label>
+   <span class="label" style="background-color: #@ticket.priority.color">@Messages(ticket.priority.name)</span>
+   <label>@Messages("ticket.severity")</label>
+   <span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span>
+  </form>
+  </div>
  </div>
 
  <div class="span10">
 
 <div id="ticket-head" data-ticket="@ticket.ticketId">
  <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
-  <h2><a href="@routes.Ticket.edit(ticket.ticketId)" class="btn btn-mini"><i class="icon-edit"></i></a> @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
+  <h2>@Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
   <div class="btn-toolbar pull-right">
    @if(ticket.resolution.id.isEmpty) {
    <div class="btn-group">
