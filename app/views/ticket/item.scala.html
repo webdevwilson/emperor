@@ -100,7 +100,7 @@
         <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
         }
         @if(l.childId == ticket.ticketId) {
-          <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(ticket.ticketId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
+          <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.parentId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
         } else {
           <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
         }
