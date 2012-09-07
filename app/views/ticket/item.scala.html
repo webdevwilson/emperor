@@ -50,7 +50,12 @@
 
 <div id="ticket-head" data-ticket="@ticket.ticketId">
  <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
-  <h2>@Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)</h2>
+  <h2>
+    @if(ticket.resolution.id.isDefined) {
+     <span class="label">@Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
+    }
+    @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)
+  </h2>
   <div class="btn-toolbar pull-right">
    @if(ticket.resolution.id.isEmpty) {
    <div class="btn-group">
