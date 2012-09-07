@@ -39,7 +39,7 @@
  </div>
 
  <div class="span10">
-
+XXX edit button!
 <div id="ticket-head" data-ticket="@ticket.ticketId">
  <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
   <h2>
@@ -81,8 +81,8 @@
 
 
    <div class="well ticket-desc">
-    @if(ticket.description) {
-      @ticket.description
+    @if(ticket.description.isDefined) {
+      @Html(markdown.parseToHTML(ticket.description.get))
     } else {
       @Messages("ticket.description.none")
     }
