@@ -1,6 +1,8 @@
 @main-accent-color: #e1e1e8;
 @main-subdued-color: #cccccc;
-
+body {
+  color: #333;
+}
 .navbar {
   .navbar-search .search-query {
     font-size: 12px;
@@ -40,6 +42,27 @@
 }
 #linker {
   font-size: 12px;
+}
+#link-body {
+  h4 {
+    a {
+      color: #333;
+    }
+    a:hover {
+      color: #333;
+      text-decoration: none;
+    }
+  }
+  .accordion-toggle i {
+    background-position: -288px -120px;
+  }
+  .accordion-inner i {
+    border-top: none;
+    padding: 0;
+  }
+  .collapsed i {
+    background-position: -313px -119px;
+  }
 }
 .btn-primary {
   background: rgb(129,139,158); /* Old browsers */
