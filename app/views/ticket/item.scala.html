@@ -21,25 +21,31 @@
 
  <div class="span2">
   <div id="ticket-info" class="well">
-  <label>@Messages("ticket.date_created")</label>
-  <span class="label">@ticket.dateCreated</span>
-  <label>@Messages("ticket.reporter")</label>
-  <span class="label"><a href="XXX">@ticket.reporter.name</a></span>
-  <label>@Messages("ticket.assignee")</label>
-  <span class="label"><a href="XXX">@ticket.assignee.name</a></span>
-  <label>@Messages("ticket.resolution")</label>
-  <span class="label">@Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
-  <label>@Messages("ticket.type")</label>
-  <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
-  <label>@Messages("ticket.priority")</label>
-  <span class="label" style="background-color: #@ticket.priority.color">@Messages(ticket.priority.name)</span>
-  <label>@Messages("ticket.severity")</label>
-  <span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span>
+
+   <div class="btn-group">
+    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
+    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
+    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
+   </div>
+
+   <label>@Messages("ticket.date_created")</label>
+   <span class="label">@ticket.dateCreated</span>
+   <label>@Messages("ticket.reporter")</label>
+   <span class="label"><a href="#">XXX @ticket.reporter.name</a></span>
+   <label>@Messages("ticket.assignee")</label>
+   <span class="label"><a href="#">XXX @ticket.assignee.name</a></span>
+   <label>@Messages("ticket.resolution")</label>
+   <span class="label">@Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span>
+   <label>@Messages("ticket.type")</label>
+   <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
+   <label>@Messages("ticket.priority")</label>
+   <span class="label" style="background-color: #@ticket.priority.color">@Messages(ticket.priority.name)</span>
+   <label>@Messages("ticket.severity")</label>
+   <span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span>
   </div>
  </div>
 
  <div class="span10">
-XXX edit button!
 <div id="ticket-head" data-ticket="@ticket.ticketId">
  <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
   <h2>
