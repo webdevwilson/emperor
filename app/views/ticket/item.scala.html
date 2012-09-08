@@ -18,7 +18,7 @@
  <div class="span2">
   <div id="ticket-info" class="well" data-spy="affix" data-offset-top="0">
    <label class="prime">@ticket.ticketId</label>
-   <span class="label">@if(ticket.resolution.id.isDefined) { @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")) } else { @Messages(ticket.status.name) }</span>
+   <span class="label label-prime">@if(ticket.resolution.id.isDefined) { @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")) } else { @Messages(ticket.status.name) }</span>
    <div class="btn-group">
     <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
     <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
@@ -174,7 +174,7 @@ YUI().use('pjax', function (Y) {
   <h3>@Messages("ticket.resolve")</h3>
  </div>
  <div class="modal-body">
-  <p>@Html(Messages("ticket.resolve.summary", ticket.id.get))</p>
+  <p>@Html(Messages("ticket.resolve.summary", ticket.ticketId))</p>
   <fieldset>
    @helper.select(field = resolveForm("resolution_id"), options = resolutions, args = '_label -> Messages("ticket.resolution"))
    @helper.textarea(field = resolveForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xlarge", 'rows -> 5)
