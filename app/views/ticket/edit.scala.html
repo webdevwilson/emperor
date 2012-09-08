@@ -17,7 +17,7 @@
   @helper.select(field = objForm("priority_id"), options = priorities, args = 'class -> "foo", '_label -> Messages("ticket.priority"))
   @helper.select(field = objForm("severity_id"), options = severities, args = 'class -> "foo", '_label -> Messages("ticket.severity"))
   <div class="form-actions">
-   <a href="@controllers.routes.Ticket.item(id)" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
+   <a href="@controllers.routes.Ticket.item("comments", id)" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
   </div>
  </fieldset>

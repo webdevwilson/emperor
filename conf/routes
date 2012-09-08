@@ -105,7 +105,11 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 GET     /stack                          controllers.Stack.index
 
 GET     /ticket/create                  controllers.Ticket.create(project: Option[Long] ?= None)
-GET     /ticket/:id                     controllers.Ticket.item(id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/:id                     controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/comments/:id            controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/history/:id             controllers.Ticket.item(tab ?= "history",  id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+
+
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: String)

@@ -21,9 +21,9 @@
    <tbody>
     @tickets.pager.items.map { hit =>
     <tr>
-     <td style="width: 10%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.id</a</td>
+     <td style="width: 10%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.id</a</td>
      <td><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages(hit.getSource.get("type_name").toString)</span></td>
-     <td style="width: 80%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item(hit.getId)">@hit.getSource.get("summary")</a></td>
+     <td style="width: 80%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.getSource.get("summary")</a></td>
      <td><span class="label" style="background-color: #@hit.getSource.get("priority_color")">@Messages(hit.getSource.get("priority_name").toString)</span></td>
      <td><span class="label" style="background-color: #@hit.getSource.get("severity_color")">@Messages(hit.getSource.get("severity_name").toString)</span></td>
      <td style="width: 10%" class="actions">
@@ -50,7 +50,7 @@
   <ul class="unstyled events">
    @timeline.pager.items.map { event =>
     <li>
-      <i class="@Messages("event.action.icon." + event.field("etype").getValue)"></i> @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item(event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
+      <i class="@Messages("event.action.icon." + event.field("etype").getValue)"></i> @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item("comments", event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
       <blockquote>@event.field("content").getValue</blockquote>
       <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.field("user_realname").getValue.toString</b> @Messages("ticket.comment.attribution.postfix", event.field("date_created").getValue.toString)</div>
     </li>

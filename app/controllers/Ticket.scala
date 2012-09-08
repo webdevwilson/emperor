@@ -88,7 +88,7 @@ object Ticket extends Controller with Secured {
           }, {
             case resolution: models.Resolution => {
               val nt = TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId,  comment = resolution.comment)
-              Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.resolution")
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.resolution") // XXX correct tab?
             }
           }
         )
@@ -109,7 +109,7 @@ object Ticket extends Controller with Secured {
           }, {
             case unresolution: models.InitialComment => {
               val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(unresolution.comment))
-              Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.unresolution")
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution") // XXX correct tab
             }
           }
         )
@@ -128,11 +128,11 @@ object Ticket extends Controller with Secured {
           errors => {
             val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
             val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
-            Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.error.status")
+            Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange => {
               TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong, comment = statusChange.comment)
-              Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.success.status")
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
             }
           }
         )
@@ -160,9 +160,9 @@ object Ticket extends Controller with Secured {
         ticket match {
           case Some(t) => {
             SearchModel.indexTicket(ticket.get)
-            Redirect(routes.Ticket.item(t.ticketId)).flashing("success" -> "ticket.add.success")
+            Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
           }
-          case None => Redirect(routes.Ticket.item(ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
+          case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
         }
       }
     )
@@ -172,13 +172,13 @@ object Ticket extends Controller with Secured {
 
     commentForm.bindFromRequest.fold(
       errors => {
-        Redirect(routes.Ticket.item(ticketId)).flashing("error" -> "ticket.comment.invalid")
+        Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
         val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.comment)
         SearchModel.indexComment(comm.get)
 
-        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.comment.added")
+        Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
       }
     )
   }
@@ -260,7 +260,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def item(ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+  def item(tab: String = "comments", ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
 
     val ticket = TicketModel.getFullById(ticketId)
 
@@ -280,51 +280,71 @@ object Ticket extends Controller with Secured {
 
         val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-        val commFilters = Map("ticket_id" -> Seq(ticketId))
-
-        // XXX Different page & count
-        val commRes = SearchModel.searchComment(
-          page, count, query, commFilters
-        )
-        val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
-
-        val commFacets = commRes.facets.facets.map { facet =>
-          facet match {
-            case t: InternalLongTermsFacet => t
-          }
-        } filter { f => f.entries.size > 1 }
-
-        val changeFilters = Map("ticket_id" -> Seq(ticketId))
-
-        // XXX Different page & count
-        val changeRes = SearchModel.searchChange(
-          page, count, "", changeFilters
-        )
-        val history = Page(changeRes.hits.hits, page, count, changeRes.hits.totalHits)
-
-        val historyFacets = changeRes.facets.facets.map { facet =>
-          facet match {
-            case t: InternalStringTermsFacet => t
-          }
-        } //filter { f => f.entries.size > 1 }
-
         val ltypes = TicketLinkTypeModel.getAll
 
-        Ok(views.html.ticket.item(
-          ticket = value,
-          links = links,
-          markdown = mdParser,
-          resolutions = resolutions,
-          resolveForm = resolveForm,
-          commentForm = commentForm,
-          comments = comments,
-          commFacets = commFacets,
-          history = history,
-          historyFacets = historyFacets,
-          previousStatus = prevStatus,
-          nextStatus = nextStatus,
-          linkTypes = ltypes
-        )(request))
+        tab match {
+          case "history"  => {
+
+            val changeFilters = Map("ticket_id" -> Seq(ticketId))
+
+            // XXX Different page & count
+            val changeRes = SearchModel.searchChange(
+              page, count, "", changeFilters
+            )
+
+            val history = Page(changeRes.hits.hits, page, count, changeRes.hits.totalHits)
+
+            val historyFacets = changeRes.facets.facets.map { facet =>
+              facet match {
+                case t: InternalStringTermsFacet => t
+              }
+            } //filter { f => f.entries.size > 1 }
+
+            Ok(views.html.ticket.history(
+              ticket = value,
+              links = links,
+              markdown = mdParser,
+              resolutions = resolutions,
+              resolveForm = resolveForm,
+              commentForm = commentForm,
+              history = history,
+              historyFacets = historyFacets,
+              previousStatus = prevStatus,
+              nextStatus = nextStatus,
+              linkTypes = ltypes
+            )(request))
+          }
+          case _ => {
+
+            val commFilters = Map("ticket_id" -> Seq(ticketId))
+
+            // XXX Different page & count
+            val commRes = SearchModel.searchComment(
+              page, count, query, commFilters
+            )
+            val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
+
+            val commFacets = commRes.facets.facets.map { facet =>
+              facet match {
+                case t: InternalLongTermsFacet => t
+              }
+            } filter { f => f.entries.size > 1 }
+
+            Ok(views.html.ticket.comments(
+              ticket = value,
+              links = links,
+              markdown = mdParser,
+              resolutions = resolutions,
+              resolveForm = resolveForm,
+              commentForm = commentForm,
+              comments = comments,
+              commFacets = commFacets,
+              previousStatus = prevStatus,
+              nextStatus = nextStatus,
+              linkTypes = ltypes
+            )(request))
+          }
+        }
       }
       case None => NotFound
     }
@@ -347,7 +367,7 @@ object Ticket extends Controller with Secured {
       value => {
         TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
         SearchModel.indexTicket(TicketModel.getFullById(ticketId).get)
-        Redirect(routes.Ticket.item(ticketId)).flashing("success" -> "ticket.edit.success")
+        Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )
   }

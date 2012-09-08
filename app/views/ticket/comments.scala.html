@@ -1,0 +1,68 @@
+@(ticket: models.FullTicket,
+  links: Map[String,List[models.FullLink]],
+  markdown: org.clapper.markwrap.MarkWrapParser,
+  resolutions: List[(String,String)],
+  resolveForm: Form[models.Resolution],
+  commentForm: Form[models.InitialComment],
+  comments: chc.Page[org.elasticsearch.search.SearchHit],
+  commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
+  previousStatus: Option[WorkflowStatus],
+  nextStatus: Option[WorkflowStatus],
+  linkTypes: List[models.TicketLinkType]
+)(implicit request: Request[AnyContent])
+
+@import helper.bootstrap._
+@import chc._
+@import util._
+
+@item(ticket = ticket, links = links, markdown = markdown, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+<div class="tabcontent">
+ <div class="navbar">
+  <div class="navbar-inner">
+   <div class="container">
+    <ul class="nav">
+     <li class="active"><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+     <li><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+    </ul>
+    @helper.form(action = routes.Ticket.item(tab = "comments", id = ticket.ticketId), 'class -> "navbar-search") {
+     <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
+    }
+   </div>
+  </div>
+ </div>
+ <div class="tab-pane active" id="comments">
+   @helper.form(action = routes.Ticket.comment(ticket.ticketId)) {
+    <fieldset>
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+     <div class="form-actions">
+      <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+     </div>
+    </fieldset>
+   }
+
+   <div class="row">
+    <div class="span2">
+     <ul class="nav nav-list">
+      @commFacets.map { facet =>
+        <li class="nav-header">@Messages("ticket.comment.facet." + facet.getName)</li>
+        @facet.entries.map { entry =>
+        <li><a href="@Library.filterLink(request = request, name = facet.getName, value = entry.getTerm)">@Messages(entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+        }
+      }
+     </ul>
+    </div>
+    <div class="span10">
+     <ul class="unstyled events">
+      @comments.items.map { comment =>
+      <li>
+       <blockquote>@{ Html(markdown.parseToHTML(comment.field("content").getValue.toString)) }</blockquote>
+       <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", comment.field("date_created").getValue.toString)</div>
+      </li>
+      }
+     </ul>
+     @pager(comments)
+    </div>
+   </div>
+  }
+ </div>
+</div>

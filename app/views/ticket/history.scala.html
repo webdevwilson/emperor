@@ -1,22 +1,41 @@
-@(
-  ticket: models.FullTicket,
+@(ticket: models.FullTicket,
+  links: Map[String,List[models.FullLink]],
   markdown: org.clapper.markwrap.MarkWrapParser,
+  resolutions: List[(String,String)],
+  commentForm: Form[models.InitialComment],
+  resolveForm: Form[models.Resolution],
   history: chc.Page[org.elasticsearch.search.SearchHit],
-  facets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet]
+  historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
+  previousStatus: Option[WorkflowStatus],
+  nextStatus: Option[WorkflowStatus],
+  linkTypes: List[models.TicketLinkType]
 )(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import chc._
 @import util._
 
-@if(history.items.isEmpty) {
-  @Messages("ticket.history.none")
-} else {
+@item(ticket = ticket, links = links, markdown = markdown, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+<div class="tabcontent">
+  <div class="navbar">
+   <div class="navbar-inner">
+    <div class="container">
+     <ul class="nav">
+      <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+      <li class="active"><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+     </ul>
+    </div>
+   </div>
+  </div>
+   <div class="tab-pane active" id="history">
     <div class="row">
-     <div class="span2">XXX why is this overflowing?
+    @if(history.items.isEmpty) {
+     @Messages("ticket.history.none")
+    } else {
+     <div class="span2">
       <ul class="nav nav-list">
        <li class="nav-header">@Messages("ticket.history.facet.fields")</li>
-       @facets.map { facet =>
+       @historyFacets.map { facet =>
         @facet.entries.map { entry =>
         <li><a href="@Library.filterLink(request = request, name = facet.getName, value = entry.getTerm)">@Messages("ticket.history.facet." + facet.getName, entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
         }
@@ -28,54 +47,54 @@
         @history.items.map { change =>
         <li>
           <ul class="unstyled">
-  	      @if(change.getSource.get("priority_changed").asInstanceOf[Boolean]) {
+          @if(change.getSource.get("priority_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.priority") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_priority_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("priority_name").asInstanceOf[String])</span></li>
-  	      }
-   	      @if(change.getSource.get("project_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("project_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.project") @Messages("ticket.history.change.from") <span class="badge badge-important"><a href="@controllers.routes.Project.item(change.getSource.get("old_project_id").asInstanceOf[Long])">@Messages(change.getSource.get("old_project_name").asInstanceOf[String])</a></span> @Messages("ticket.history.change.to") <span class="badge badge-success"><a href="@controllers.routes.Project.item(change.getSource.get("project_id").asInstanceOf[Long])">@Messages(change.getSource.get("project_name").asInstanceOf[String])</a></span></li>
-   	      }
-  	      @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("reporter_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important"><a href="@controllers.routes.Project.item(change.getSource.get("project_id").asInstanceOf[Long])">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</a></span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span></li>
-  	      }
-  	      @if(change.getSource.get("assignee_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("assignee_changed").asInstanceOf[Boolean]) {
             XXX warning here
             @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
             <li>@Messages("ticket.assignee") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("assignee_name").asInstanceOf[String])</span></li>
             } else {
             <li>@Messages("ticket.assignee") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_assignee_name").asInstanceOf[String]</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("assignee_name").asInstanceOf[String])</span></li>
             }
-  	      }
-  	      @if(change.getSource.get("attention_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("attention_changed").asInstanceOf[Boolean]) {
             XXX warning here
             @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
             <li>@Messages("ticket.attention") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("attention_name").asInstanceOf[String])</span></li>
             } else {
             <li>@Messages("ticket.attention") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_attention_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("attention_name").asInstanceOf[String])</span></li>
             }
-  	      }
-  	      @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("resolution_changed").asInstanceOf[Boolean]) {
             <li>
              @Messages("ticket.resolution") @Messages("ticket.history.change.from")
              <span class="badge badge-important">@defining(change.getSource.get("old_resolution_name").asInstanceOf[String]) { oldres => @if(oldres.isEmpty) { @Messages("ticket.history.empty") } else { @Messages(oldres) } }</span>
              @Messages("ticket.history.change.to")
              <span class="badge badge-success">@defining(change.getSource.get("resolution_name").asInstanceOf[String]) { res => @if(res.isEmpty) { @Messages("ticket.history.empty") } else { @Messages(res) } }</span>
             </li>
-  	      }
-  	      @if(change.getSource.get("severity_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("severity_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.severity") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_severity_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("severity_name").asInstanceOf[String])</span></li>
-  	      }
-  	      @if(change.getSource.get("status_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("status_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.status") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_status_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("status_name").asInstanceOf[String])</span></li>
-  	      }
-  	      @if(change.getSource.get("type_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("type_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.type") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_type_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("type_name").asInstanceOf[String])</span></li>
-  	      }
-  	      @if(change.getSource.get("summary_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("summary_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.summary") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_summary")</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@change.getSource.get("summary")</span></li>
-  	      }
-  	      @if(change.getSource.get("description_changed").asInstanceOf[Boolean]) {
+          }
+          @if(change.getSource.get("description_changed").asInstanceOf[Boolean]) {
             <li>@Messages("ticket.description") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_description")</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@change.getSource.get("description")</span></li>
-  	      }
+          }
           </ul>
          <div class="attr">@Messages("ticket.history.attribution.prefix") <b>@change.getSource.get("user_realname")</b> @Messages("ticket.history.attribution.postfix", change.getSource.get("date_created"))</div>
         </li>
@@ -84,4 +103,7 @@
       @pager(history)
      </div>
     </div>
+   }
+   </div>
+  </div>
 }

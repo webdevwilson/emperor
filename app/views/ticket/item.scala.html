@@ -2,16 +2,12 @@
   links: Map[String,List[models.FullLink]],
   markdown: org.clapper.markwrap.MarkWrapParser,
   resolutions: List[(String,String)],
-  resolveForm: Form[models.Resolution],
   commentForm: Form[models.InitialComment],
-  comments: chc.Page[org.elasticsearch.search.SearchHit],
-  commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
-  history: chc.Page[org.elasticsearch.search.SearchHit],
-  historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
+  resolveForm: Form[models.Resolution],
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
-)(implicit request: Request[AnyContent])
+)(content: Html)(implicit request: Request[AnyContent])
 
 @import helper.bootstrap._
 @import util._
@@ -104,9 +100,9 @@
         <td rowspan="@lmem._2.size" class="type">@Messages(lmem._1)</td>
         }
         @if(l.childId == ticket.ticketId) {
-          <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.parentId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
+          <td class="link"><a @if(l.parentResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item("comments", l.parentId)">@l.parentId</a></td><td class="summ">@l.parentSummary</td>
         } else {
-          <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item(l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
+          <td class="link"><a @if(l.childResolutionId.isDefined) { class="strike" } href="@controllers.routes.Ticket.item("comments", l.childId)">@l.childId</a></td><td class="summ">@l.childSummary</td>
         }
         <td class="actions"><a href="#"><i data-linkid="@l.id" class="remover icon-remove"></a></td>
         </tr>
@@ -115,32 +111,17 @@
     </table>
     }
    </div>
-   <ul class="nav nav-tabs">
-     <li class="active"><a href="#comments" data-toggle="tab">@Messages("ticket.comment.list")</a></li>
-     <li><a href="#history" data-toggle="tab">@Messages("ticket.history.list")</a></li>
-   </ul>
-   <div class="tab-content">
-     <div class="tab-pane active" id="comments">
-      @helper.form(action = routes.Ticket.item(id = ticket.ticketId), 'class -> "navbar-search") {
-       <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
-      }
-      @commtab(
-       ticket      = ticket,
-       markdown    = markdown,
-       commentForm = commentForm,
-       comments    = comments,
-       facets      = commFacets
-      )
-     </div>
-     <div class="tab-pane" id="history">
-      @histtab(
-       ticket      = ticket,
-       markdown    = markdown,
-       history     = history,
-       facets      = historyFacets
-      )
-     </div>
-   </div>
+   <div id="tabarea">
+    @content
+    </div>
+<script>
+YUI().use('pjax', function (Y) {
+    new Y.Pjax({
+      container: '#tabarea',
+      contentSelector: '.tabcontent'
+    });
+});
+</script>
  </div>
 </div>
 
@@ -230,7 +211,7 @@
         container: '#link-body',
         contentSelector: '#link-body'
       });
-      pjax.navigate('@controllers.routes.Ticket.item(ticket.ticketId)');
+      pjax.navigate('@controllers.routes.Ticket.item("comments", ticket.ticketId)');
     }
 
     var showAlert = function (transactionId, response, arguments) {
