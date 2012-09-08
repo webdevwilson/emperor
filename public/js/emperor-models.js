@@ -2,6 +2,7 @@ YUI.add('emperor-models', function(Y) {
 
   // Enable alerts
   $().alert();
+  $('#ticket-info').affix();
 
   Y.ShowAlert = function (aclass, message) {
 

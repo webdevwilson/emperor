@@ -33,7 +33,7 @@
  <div class="tab-pane active" id="comments">
    @helper.form(action = routes.Ticket.comment(ticket.ticketId)) {
     <fieldset>
-     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"))
+     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"))
      <div class="form-actions">
       <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
      </div>
