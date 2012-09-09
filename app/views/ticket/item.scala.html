@@ -3,6 +3,7 @@
   markdown: org.clapper.markwrap.MarkWrapParser,
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
+  assignForm: Form[models.Assignment],
   commentForm: Form[models.InitialComment],
   resolveForm: Form[models.Resolution],
   previousStatus: Option[WorkflowStatus],
@@ -215,8 +216,8 @@ YUI().use('pjax', function (Y) {
  <div class="modal-body">
    <p>@Html(Messages("ticket.assign.summary", ticket.ticketId))</p>
    <fieldset>
-     @helper.select(field = commentForm("user_id"), options = assignees, args = '_label -> Messages("ticket.assignee"))
-     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+     @helper.select(field = assignForm("user_id"), options = assignees, args = '_label -> Messages("ticket.assignee"))
+     @helper.textarea(field = assignForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
    </fieldset>
  </div>
  <div class="modal-footer">

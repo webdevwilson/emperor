@@ -3,6 +3,7 @@
   markdown: org.clapper.markwrap.MarkWrapParser,
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
+  assignForm: Form[models.Assignment],
   commentForm: Form[models.InitialComment],
   resolveForm: Form[models.Resolution],
   history: chc.Page[org.elasticsearch.search.SearchHit],
@@ -16,7 +17,7 @@
 @import chc._
 @import util._
 
-@item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">
   <div class="navbar">
    <div class="navbar-inner">
@@ -58,16 +59,14 @@
             <li>@Messages("ticket.reporter") @Messages("ticket.history.change.from") <span class="badge badge-important"><a href="@controllers.routes.Project.item(change.getSource.get("project_id").asInstanceOf[Long])">@Messages(change.getSource.get("old_reporter_name").asInstanceOf[String])</a></span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("reporter_name").asInstanceOf[String])</span></li>
           }
           @if(change.getSource.get("assignee_changed").asInstanceOf[Boolean]) {
-            XXX warning here
-            @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
+            @if(change.getSource.get("old_assignee_id").asInstanceOf[Int].toString == null) {
             <li>@Messages("ticket.assignee") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("assignee_name").asInstanceOf[String])</span></li>
             } else {
             <li>@Messages("ticket.assignee") @Messages("ticket.history.change.from") <span class="badge badge-important">@change.getSource.get("old_assignee_name").asInstanceOf[String]</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("assignee_name").asInstanceOf[String])</span></li>
             }
           }
           @if(change.getSource.get("attention_changed").asInstanceOf[Boolean]) {
-            XXX warning here
-            @if(change.getSource.get("old_assignee_id").asInstanceOf[Int] != null) {
+            @if(change.getSource.get("old_assignee_id").asInstanceOf[Int].toString != null) {
             <li>@Messages("ticket.attention") @Messages("ticket.history.change.set") <span class="badge badge-success">@Messages(change.getSource.get("attention_name").asInstanceOf[String])</span></li>
             } else {
             <li>@Messages("ticket.attention") @Messages("ticket.history.change.from") <span class="badge badge-important">@Messages(change.getSource.get("old_attention_name").asInstanceOf[String])</span> @Messages("ticket.history.change.to") <span class="badge badge-success">@Messages(change.getSource.get("attention_name").asInstanceOf[String])</span></li>
