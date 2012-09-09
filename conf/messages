@@ -186,14 +186,16 @@ search.results=Search Results
 
 ticket.action.assign=Assign
 ticket.action.edit=Edit
-ticket.action.more=More Actions
 ticket.add=Add Ticket
 ticket.add.success=Ticket Added
 ticket.add.failure=Error Creating Ticket XXX
 ticket.advance=Advance to {0}
 ticket.advance.confirm=Advance
 ticket.advance.end=At End
+ticket.assign=Assign Ticket
+ticket.assign.summary=You are assigning ticket {0}
 ticket.assignee=Assignee
+ticket.assignment.success=Ticket Assigned
 ticket.attention=Attention
 ticket.color=Color
 ticket.comment=Comment

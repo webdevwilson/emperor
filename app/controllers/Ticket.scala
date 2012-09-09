@@ -32,6 +32,13 @@ object Ticket extends Controller with Secured {
     )(models.StatusChange.apply)(models.StatusChange.unapply)
   )
 
+  val assignForm = Form(
+    mapping(
+      "user_id" -> optional(longNumber),
+      "comment" -> optional(text)
+    )(models.Assignment.apply)(models.Assignment.unapply)
+  )
+
   val resolveForm = Form(
     mapping(
       "resolution_id" -> longNumber,
@@ -89,7 +96,7 @@ object Ticket extends Controller with Secured {
           }, {
             case resolution: models.Resolution => {
               val nt = TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId,  comment = resolution.comment)
-              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.resolution") // XXX correct tab?
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.resolution")
             }
           }
         )
@@ -110,7 +117,28 @@ object Ticket extends Controller with Secured {
           }, {
             case unresolution: models.InitialComment => {
               val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(unresolution.comment))
-              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution") // XXX correct tab
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution")
+            }
+          }
+        )
+      }
+      case None => BadRequest(views.html.ticket.error(request))
+    }
+  }
+
+  def doAssign(ticketId: String) = IsAuthenticated { implicit request =>
+
+    val ticket = TicketModel.getFullById(ticketId)
+
+    ticket match {
+      case Some(value) => {
+        assignForm.bindFromRequest.fold(
+          errors => {
+            BadRequest(views.html.ticket.error(request))
+          }, {
+            case assignment: models.Assignment => {
+              val nt = TicketModel.assign(ticketId = ticketId, userId = request.session.get("userId").get.toLong, assigneeId = assignment.userId, comment = assignment.comment)
+              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.assignment.success")
             }
           }
         )
@@ -192,12 +220,12 @@ object Ticket extends Controller with Secured {
   def create(projectId: Option[Long]) = IsAuthenticated { implicit request =>
 
     // Should be i18ned in the view
-    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
     val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val assignees = ("" -> Messages("ticket.unassigned")) +: users
+    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+    val assignees = UserModel.getAssignable(projectId = projectId.get).map { x => (x.id.getOrElse("").toString -> x.realName) }
 
     // The worst case scenario, just the user id
     val startTicket = InitialTicket(
@@ -212,6 +240,8 @@ object Ticket extends Controller with Secured {
       description = None
     )
 
+    // XXX No, no. This is what's happening if there's no project? No project
+    // should be an error. Grrr.
     val finalTicket = projectId match {
       case Some(pid) => {
         val maybeProject = ProjectModel.getById(pid)
@@ -263,13 +293,13 @@ object Ticket extends Controller with Secured {
 
   def item(tab: String = "comments", ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullById(ticketId)
 
-    ticket match {
-      case Some(value) => {
+    maybeTicket match {
+      case Some(ticket) => {
 
-        val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
-        val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
+        val prevStatus = WorkflowModel.getPreviousStatus(ticket.workflowStatusId)
+        val nextStatus = WorkflowModel.getNextStatus(ticket.workflowStatusId)
 
         val links = TicketModel.getLinks(ticketId).groupBy( l =>
           if(l.childId == ticketId) {
@@ -279,7 +309,9 @@ object Ticket extends Controller with Secured {
           }
         )
 
-        val resolutions = TicketResolutionModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val resolutions = TicketResolutionModel.getAll.map { reso => (reso.id.get.toString -> Messages(reso.name)) }
+
+        val assignees = UserModel.getAssignable(projectId = ticket.project.id).map { user => (user.id.getOrElse("").toString -> user.realName) }
 
         val ltypes = TicketLinkTypeModel.getAll
 
@@ -302,9 +334,10 @@ object Ticket extends Controller with Secured {
             } //filter { f => f.entries.size > 1 }
 
             Ok(views.html.ticket.history(
-              ticket = value,
+              ticket = ticket,
               links = links,
               markdown = mdParser,
+              assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
               commentForm = commentForm,
@@ -332,9 +365,10 @@ object Ticket extends Controller with Secured {
             } filter { f => f.entries.size > 1 }
 
             Ok(views.html.ticket.comments(
-              ticket = value,
+              ticket = ticket,
               links = links,
               markdown = mdParser,
+              assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
               commentForm = commentForm,

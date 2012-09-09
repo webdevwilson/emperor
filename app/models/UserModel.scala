@@ -6,6 +6,7 @@ import chc._
 import java.util.Date
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.DB
+import play.api.i18n.Messages
 import play.api.Play.current
 
 case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String, dateCreated: Date)
@@ -85,6 +86,20 @@ object UserModel {
     DB.withConnection { implicit conn =>
       allQuery.as(user *)
     }
+  }
+
+  def getAssignable(projectId: Long, ticketId: Option[String] = None): List[User] = {
+
+    val users = UserModel.getAll
+    // Add the nobody. In the future this will likely be conditional based
+    // on a project setting for allowing unassigned tickets or something.
+    User(
+      username = "",
+      password = "",
+      realName = Messages("ticket.unassigned"),
+      email    = "",
+      dateCreated = new Date()
+    ) +: users
   }
 
   def getByUsername(username: String) : Option[User] = {

@@ -31,6 +31,13 @@ case class StatusChange(
 )
 
 /**
+ * Class for assignment.  Used with assignment form.
+ */
+case class Assignment(
+  userId: Option[Long], comment: Option[String]
+)
+
+/**
  * Class for resolution.  Used with resolution form.
  */
 case class Resolution(
@@ -349,6 +356,18 @@ object TicketModel {
     DB.withConnection { implicit conn =>
       deleteCommentQuery.on('id -> id).execute
     }
+  }
+
+  /**
+   * Assign a ticket with an optional comment.
+   */
+  def assign(ticketId: String, userId: Long, assigneeId: Option[Long], comment: Option[String] = None): FullTicket = {
+    val tick = this.getById(ticketId).get
+
+    val assigned = tick.copy(assigneeId = assigneeId)
+    val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
+    SearchModel.indexTicket(ticket = ft)
+    ft
   }
 
   /**

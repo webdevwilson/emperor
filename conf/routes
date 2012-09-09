@@ -114,6 +114,7 @@ GET     /ticket/history/:id             controllers.Ticket.item(tab ?= "history"
 POST    /ticket/:id                     controllers.Ticket.update(id: String)
 GET     /ticket/edit/:id                controllers.Ticket.edit(id: String)
 POST    /ticket                         controllers.Ticket.add
+POST    /ticket/assign/:id              controllers.Ticket.doAssign(id: String)
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: String)
 POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: String)
 POST    /ticket/status/:id              controllers.Ticket.status(id: String)

@@ -1,6 +1,7 @@
 @(ticket: models.FullTicket,
   links: Map[String,List[models.FullLink]],
   markdown: org.clapper.markwrap.MarkWrapParser,
+  assignees: List[(String,String)],
   resolutions: List[(String,String)],
   commentForm: Form[models.InitialComment],
   resolveForm: Form[models.Resolution],
@@ -15,7 +16,7 @@
 @import chc._
 @import util._
 
-@item(ticket = ticket, links = links, markdown = markdown, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">
   <div class="navbar">
    <div class="navbar-inner">
