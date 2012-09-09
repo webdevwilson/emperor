@@ -320,9 +320,9 @@ object Ticket extends Controller with Secured {
 
             val changeFilters = Map("ticket_id" -> Seq(ticketId))
 
-            // XXX Different page & count
+            // XXX Different page & count (100?)
             val changeRes = SearchModel.searchChange(
-              page, count, "", changeFilters
+              page, 100, "", changeFilters
             )
 
             val history = Page(changeRes.hits.hits, page, count, changeRes.hits.totalHits)
