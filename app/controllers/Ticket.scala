@@ -17,6 +17,7 @@ import models.TicketModel._
 import org.clapper.markwrap._
 import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
 import org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet
+import org.elasticsearch.search.sort._
 
 import com.codahale.jerkson.Json._
 
@@ -320,7 +321,7 @@ object Ticket extends Controller with Secured {
 
             // XXX Different page & count
             val commRes = SearchModel.searchComment(
-              page, count, query, commFilters
+              page, count, query, commFilters, Seq("date_created" -> SortOrder.ASC)
             )
             val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
 

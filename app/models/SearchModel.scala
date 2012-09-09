@@ -805,7 +805,7 @@ object SearchModel {
   /**
    * Search for ticket comments.
    */
-  def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResponse = {
+  def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]], sorting: Seq[Tuple2[String,SortOrder]] = Seq("date_created" -> SortOrder.DESC)): SearchResponse = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -838,7 +838,7 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page * count) - 1)
       },
-      sorting = Seq("date_created" -> SortOrder.DESC)
+      sorting = sorting
     )
   }
 
