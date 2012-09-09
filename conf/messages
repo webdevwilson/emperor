@@ -184,6 +184,9 @@ search.facet.type=Type
 search.facet.user=User
 search.results=Search Results
 
+ticket.action.assign=Assign
+ticket.action.edit=Edit
+ticket.action.more=More Actions
 ticket.add=Add Ticket
 ticket.add.success=Ticket Added
 ticket.add.failure=Error Creating Ticket XXX

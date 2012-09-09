@@ -20,9 +20,15 @@
    <label class="prime">@ticket.ticketId</label>
    <span class="label label-prime">@if(ticket.resolution.id.isDefined) { @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")) } else { @Messages(ticket.status.name) }</span>
    <div class="btn-group">
-    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
-    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
-    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn"><i class="icon-edit"></i> @Messages("general.edit")</a>
+    <a href="@routes.Ticket.edit(ticket.ticketId)" class="btn btn-mini"><i class="icon-edit"></i> @Messages("ticket.action.edit")</a>
+    <a href="XXX" class="btn btn-mini"><i class="icon-user"></i>XXX @Messages("ticket.action.assign")</a>
+    <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+      XXX @Messages("ticket.action.more")
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <a href="#">XXX ASDAD</a>
+    </ul>
    </div>
 
    <label>@Messages("ticket.date_created")</label>
