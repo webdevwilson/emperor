@@ -90,8 +90,8 @@
       @Messages("ticket.description.none")
     }
    </div>
-   @if(!links.isEmpty) {
    <div id="link-body">
+   @if(!links.isEmpty) {
     <h4><a class="accordion-toggle" data-toggle="collapse" data-parent="#link-body" href="#link-contents"><i class="icon-foo"></i>@Messages("ticket.links", links.size)</a></h4>
     <div id="link-contents" class="accordion-body collapse in">
     <div class="accordion-inner">
@@ -114,8 +114,8 @@
       </table>
     </div>
     </div>
-   </div>
    }
+   </div>
    <div id="tabarea">
     @content
     </div>
