@@ -225,7 +225,6 @@ object Ticket extends Controller with Secured {
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
-    val assignees = UserModel.getAssignable(projectId = projectId.get).map { x => (x.id.getOrElse("").toString -> x.realName) }
 
     // The worst case scenario, just the user id
     val startTicket = InitialTicket(
@@ -267,6 +266,11 @@ object Ticket extends Controller with Secured {
         }
       }
       case None => startTicket
+    }
+
+    val assignees = projectId match {
+      case Some(project) => UserModel.getAssignable(projectId = project).map { x => (x.id.getOrElse("").toString -> x.realName) }
+      case None => UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
     }
 
     val defaultedForm = initialTicketForm.fill(finalTicket)
