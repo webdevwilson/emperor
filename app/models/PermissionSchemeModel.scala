@@ -31,7 +31,7 @@ object PermissionSchemeModel {
   val deleteGroupPermQuery = SQL("DELETE FROM permission_scheme_groups WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND group_id={group_id}")
   val deleteUserPermQuery = SQL("DELETE FROM permission_scheme_users WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND user_id={user_id}")
   val getByIdQuery = SQL("SELECT * from permission_schemes WHERE id={id}")
-  val getPermForUserQuery = SQL("SELECT count(*) FROM full_permissions WHERE project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}")
+  val getPermForUserQuery = SQL("SELECT source FROM full_permissions WHERE project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}")
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {group_id}, UTC_TIMESTAMP())")
   val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {user_id}, UTC_TIMESTAMP())")
@@ -143,21 +143,19 @@ object PermissionSchemeModel {
 
   /**
    * Determine if the supplied user has the supplied permission in the
-   * supplied project.
+   * supplied project.  Returns an Option[String] that (if Some) contains a
+   * String representing the actual row that granted the permission. If None
+   * then the user does not have permission for the supplied project and
+   * permission combination.
    */
-  def hasPermission(projectId: Long, perm: String, userId: Long): Boolean = {
+  def hasPermission(projectId: Long, perm: String, userId: Long): Option[String] = {
 
     DB.withConnection { implicit conn =>
-      val count = getPermForUserQuery.on(
+      getPermForUserQuery.on(
         'project_id     -> projectId,
         'permission_id  -> perm,
         'user_id         -> userId
-      ).as(scalar[Long].single)
-      if(count > 0) {
-        true
-      } else {
-        false
-      }
+      ).as(scalar[String].singleOpt)
     }
   }
 

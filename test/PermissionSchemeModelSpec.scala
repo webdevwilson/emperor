@@ -96,7 +96,7 @@ class PermissionSchemeModelSpec extends Specification {
           perm = perms.head.name,
           userId = newUser.id.get
         )
-        cant must beFalse
+        cant must beNone
 
         // Now add the permission
         PermissionSchemeModel.addUserToScheme(
@@ -110,7 +110,7 @@ class PermissionSchemeModelSpec extends Specification {
           perm = perms.head.name,
           userId = newUser.id.get
         )
-        can must beTrue
+        can must beSome
 
         ProjectModel.delete(newProject.id.get)
         PermissionSchemeModel.removeUserFromScheme(
@@ -172,7 +172,7 @@ class PermissionSchemeModelSpec extends Specification {
           perm = perms.head.name,
           userId = newUser.id.get
         )
-        cant must beFalse
+        cant must beNone
 
         // Now add the permission
         PermissionSchemeModel.addGroupToScheme(
@@ -186,7 +186,7 @@ class PermissionSchemeModelSpec extends Specification {
           perm = perms.head.name,
           userId = newUser.id.get
         )
-        can must beTrue
+        can must beSome
 
         ProjectModel.delete(newProject.id.get)
         PermissionSchemeModel.removeGroupFromScheme(
