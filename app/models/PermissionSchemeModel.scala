@@ -28,6 +28,8 @@ object PermissionSchemeModel {
   val allQuery = SQL("SELECT * FROM permission_schemes")
   val allPermissionsQuery = SQL("SELECT * FROM permissions")
   val deleteQuery = SQL("DELETE FROM permission_schemes WHERE id={id}")
+  val deleteGroupPermQuery = SQL("DELETE FROM permission_scheme_groups WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND group_id={group_id}")
+  val deleteUserPermQuery = SQL("DELETE FROM permission_scheme_users WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND user_id={user_id}")
   val getByIdQuery = SQL("SELECT * from permission_schemes WHERE id={id}")
   val getPermForUserQuery = SQL("SELECT count(*) FROM full_permissions WHERE project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}")
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
@@ -63,11 +65,11 @@ object PermissionSchemeModel {
   def addGroupToScheme(permissionSchemeId: Long, perm: String, groupId: Long) {
 
     DB.withConnection { implicit conn =>
-      insertUserPermQuery.on(
+      insertGroupPermQuery.on(
         'permission_scheme_id -> permissionSchemeId,
         'permission_id        -> perm,
         'group_id             -> groupId
-      )
+      ).execute
     }
   }
 
@@ -81,7 +83,7 @@ object PermissionSchemeModel {
         'permission_scheme_id -> permissionSchemeId,
         'permission_id        -> perm,
         'user_id              -> userId
-      )
+      ).execute
     }
   }
 
@@ -156,6 +158,34 @@ object PermissionSchemeModel {
       } else {
         false
       }
+    }
+  }
+
+  /**
+   * Remove a group from the supplied permission scheme.
+   */
+  def removeGroupFromScheme(permissionSchemeId: Long, perm: String, groupId: Long) = {
+
+    DB.withConnection { implicit conn =>
+      deleteGroupPermQuery.on(
+        'permission_scheme_id -> permissionSchemeId,
+        'permission_id        -> perm,
+        'group_id             -> groupId
+      ).execute
+    }
+  }
+
+  /**
+   * Remove a user from the supplied permission scheme.
+   */
+  def removeUserFromScheme(permissionSchemeId: Long, perm: String, userId: Long) = {
+
+    DB.withConnection { implicit conn =>
+      deleteUserPermQuery.on(
+        'permission_scheme_id -> permissionSchemeId,
+        'permission_id        -> perm,
+        'user_id              -> userId
+      ).execute
     }
   }
 

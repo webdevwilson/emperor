@@ -105,15 +105,100 @@ class PermissionSchemeModelSpec extends Specification {
           userId = newUser.id.get
         )
 
-        // val can = PermissionSchemeModel.hasPermission(
-        //   projectId = newProject.id.get,
-        //   perm = perms.head.name,
-        //   userId = newUser.id.get
-        // )
-        // can must beTrue
+        val can = PermissionSchemeModel.hasPermission(
+          projectId = newProject.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
+        can must beTrue
 
         ProjectModel.delete(newProject.id.get)
+        PermissionSchemeModel.removeUserFromScheme(
+          permissionSchemeId = newPs.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
         PermissionSchemeModel.delete(newPs.id.get)
+        UserModel.delete(newUser.id.get)
+      }
+    }
+
+    "allow adding groups" in {
+      running(FakeApplication()) {
+
+        val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+        val group = models.Group(id = NotAssigned, name = "Test Group!", dateCreated = new Date())
+        val newGroup = GroupModel.create(group)
+
+        val iu = models.InitialUser(
+          username = "testuser1",
+          password = "1234",
+          realName = "Test User",
+          email    = "test@example.com",
+          dateCreated = new Date
+        )
+        val newUser = UserModel.create(iu)
+
+        // Add user to the group
+        GroupModel.addUser(userId = newUser.id.get, groupId = newGroup.id.get)
+
+        val psObj = models.PermissionScheme(
+          name = "Test Permission Schema",
+          description = Some("Testing!"),
+          dateCreated = new Date
+        )
+        val newPs = PermissionSchemeModel.create(psObj)
+
+        val p = models.Project(
+          name = "Test Project 1",
+          key = "TEST1",
+          workflowId = work.get.id.get,
+          ownerId = None,
+          permissionSchemeId = newPs.id.get,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
+          dateCreated = new Date
+        )
+        val newProject = ProjectModel.create(p)
+
+        val perms = PermissionSchemeModel.getAllPermissions
+
+        // Start with no permission
+        val cant = PermissionSchemeModel.hasPermission(
+          projectId = newProject.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
+        cant must beFalse
+
+        // Now add the permission
+        PermissionSchemeModel.addGroupToScheme(
+          permissionSchemeId = newPs.id.get,
+          perm = perms.head.name,
+          groupId = newGroup.id.get
+        )
+
+        val can = PermissionSchemeModel.hasPermission(
+          projectId = newProject.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
+        can must beTrue
+
+        ProjectModel.delete(newProject.id.get)
+        PermissionSchemeModel.removeGroupFromScheme(
+          permissionSchemeId = newPs.id.get,
+          perm = perms.head.name,
+          groupId = newGroup.id.get
+        )
+
+        PermissionSchemeModel.delete(newPs.id.get)
+
+        GroupModel.removeUser(userId = newUser.id.get, groupId = newGroup.id.get)
+        GroupModel.delete(newGroup.id.get)
         UserModel.delete(newUser.id.get)
       }
     }
