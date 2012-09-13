@@ -5,6 +5,7 @@
  * Compile handlebars
  * Replace jQuery mess
  * https://github.com/schaloner/deadbolt-2
+ * Plugins: https://github.com/playframework/Play20/wiki/Modules
 
 ## Future!
  * General
@@ -18,7 +19,6 @@
   * Y.Handlebars
   * API
     * Ruby gem
-  * Authz
   * Attachments (maybe use Tika?)
  * Ticket Features
   * Stacks
