@@ -15,6 +15,7 @@ case class EditProject(
   workflowId: Long,
   name: String,
   ownerId: Option[Long],
+  permissionSchemeId: Long,
   defaultPriorityId: Option[Long],
   defaultSeverityId: Option[Long],
   defaultTypeId: Option[Long],
@@ -31,6 +32,7 @@ case class Project(
   name: String,
   key: String,
   ownerId: Option[Long],
+  permissionSchemeId: Long,
   defaultPriorityId: Option[Long],
   defaultSeverityId: Option[Long],
   defaultTypeId: Option[Long],
@@ -63,14 +65,15 @@ object ProjectModel {
     get[String]("name") ~
     get[String]("pkey") ~
     get[Option[Long]]("owner_id") ~
+    get[Long]("permission_scheme_id") ~
     get[Option[Long]]("default_priority_id") ~
     get[Option[Long]]("default_severity_id") ~
     get[Option[Long]]("default_ticket_type_id") ~
     get[Option[Int]]("default_assignee") ~
     get[Date]("date_created") map {
-      case id~workflowId~seqCurr~name~pkey~ownerId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
+      case id~workflowId~seqCurr~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
         id = id, workflowId = workflowId, name = name, key = pkey,
-        sequenceCurrent = seqCurr, ownerId = ownerId,
+        sequenceCurrent = seqCurr, permissionSchemeId = permId, ownerId = ownerId,
         defaultPriorityId = defPrioId, defaultSeverityId = defSevId,
         defaultTypeId = defTypeId, defaultAssignee = defAss,
         dateCreated = dateCreated
@@ -89,6 +92,7 @@ object ProjectModel {
         'pkey         -> project.key,
         'workflow_id  -> project.workflowId,
         'owner_id     -> project.ownerId,
+        'permission_scheme_id -> project.permissionSchemeId,
         'default_priority_id -> project.defaultPriorityId,
         'default_severity_id -> project.defaultSeverityId,
         'default_ticket_type_id -> project.defaultTypeId,
@@ -170,6 +174,7 @@ object ProjectModel {
         'name       -> project.name,
         'workflow_id-> project.workflowId,
         'owner_id   -> project.ownerId,
+        'permission_scheme_id -> project.permissionSchemeId,
         'default_priority_id -> project.defaultPriorityId,
         'default_severity_id -> project.defaultSeverityId,
         'default_ticket_type_id -> project.defaultTypeId,

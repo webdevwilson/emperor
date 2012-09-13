@@ -68,9 +68,14 @@ object Auth extends Controller {
 trait Secured {
 
   /**
-   * Retrieve the connected user email.
+   * Retrieve the current username.
    */
   private def username(request: RequestHeader) = request.session.get("username")
+
+  /**
+   * Get the current userId
+   */
+  private def userId(request: RequestHeader) = request.session.get("userId")
 
   /**
    * Redirect to login if the user in not authorized.
