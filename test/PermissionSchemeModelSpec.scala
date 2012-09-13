@@ -9,7 +9,7 @@ import play.api.test.Helpers._
 
 class PermissionSchemeModelSpec extends Specification {
 
-  import models.PermissionSchemeModel
+  import models._
 
   "PermissionScheme model" should {
 
@@ -50,6 +50,71 @@ class PermissionSchemeModelSpec extends Specification {
 
         val perms = PermissionSchemeModel.getAllPermissions
         perms.isEmpty must beFalse
+      }
+    }
+
+    "allow adding users" in {
+      running(FakeApplication()) {
+
+        val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+        val iu = models.InitialUser(
+          username = "testuser1",
+          password = "1234",
+          realName = "Test User",
+          email    = "test@example.com",
+          dateCreated = new Date
+        )
+        val newUser = UserModel.create(iu)
+
+        val psObj = models.PermissionScheme(
+          name = "Test Permission Schema",
+          description = Some("Testing!"),
+          dateCreated = new Date
+        )
+        val newPs = PermissionSchemeModel.create(psObj)
+
+        val p = models.Project(
+          name = "Test Project 1",
+          key = "TEST1",
+          workflowId = work.get.id.get,
+          ownerId = None,
+          permissionSchemeId = newPs.id.get,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
+          dateCreated = new Date
+        )
+        val newProject = ProjectModel.create(p)
+
+        val perms = PermissionSchemeModel.getAllPermissions
+
+        // Start with no permission
+        val cant = PermissionSchemeModel.hasPermission(
+          projectId = newProject.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
+        cant must beFalse
+
+        // Now add the permission
+        PermissionSchemeModel.addUserToScheme(
+          permissionSchemeId = newPs.id.get,
+          perm = perms.head.name,
+          userId = newUser.id.get
+        )
+
+        // val can = PermissionSchemeModel.hasPermission(
+        //   projectId = newProject.id.get,
+        //   perm = perms.head.name,
+        //   userId = newUser.id.get
+        // )
+        // can must beTrue
+
+        ProjectModel.delete(newProject.id.get)
+        PermissionSchemeModel.delete(newPs.id.get)
+        UserModel.delete(newUser.id.get)
       }
     }
   }

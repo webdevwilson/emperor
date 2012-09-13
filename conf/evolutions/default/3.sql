@@ -90,10 +90,13 @@ INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_RESOLVE', @emp_user_group_id, UTC_TIMESTAMP());
 
 # Add permission_scheme_id to projects
-ALTER TABLE projects ADD COLUMN permission_scheme_id INT UNSIGNED;
-ALTER TABLE projects ADD CONSTRAINT `fk_permission_scheme_id_permission_schemes` FOREIGN KEY (permission_scheme_id) REFERENCES permission_schemes(id);
+ALTER TABLE projects ADD COLUMN permission_scheme_id INT UNSIGNED NOT NULL DEFAULT '1';
 # Set all projects to use this default scheme, since it's the only one.
 UPDATE projects SET permission_scheme_id=@emp_default_scheme;
+# Drop the default
+ALTER TABLE projects MODIFY permission_scheme_id INT UNSIGNED NOT NULL;
+# Add FK constraint
+ALTER TABLE projects ADD CONSTRAINT `fk_permission_scheme_id_permission_schemes` FOREIGN KEY (permission_scheme_id) REFERENCES permission_schemes(id);
 
 # Create a view of all the permissions for easy selection!
 CREATE VIEW full_permissions AS
