@@ -15,6 +15,12 @@ admin.group.with.id=Group {0}
 admin.group.add.success=Group Added
 admin.group.edit.success=Group Updated
 
+admin.permission_scheme.add=Add Permission Scheme
+admin.permission_scheme.edit=Edit Permission Scheme
+admin.permission_scheme.list=Permission Schemes
+admin.permission_scheme.menu.list=Permission Schemes
+admin.permission_scheme.with.id=Permission Schemes {0}
+
 admin.projects=Projects
 admin.project.menu.list=Projects
 
@@ -29,6 +35,8 @@ admin.role.edit.success=Role Updated
 admin.role.list=Roles
 admin.role.menu.list=Roles
 admin.role.with.id=Role {0}
+
+admin.security=Security
 
 admin.tickets=Tickets
 
@@ -140,6 +148,9 @@ pager.empty=No items.
 pager.next=Next
 pager.prev=Prev
 pager.summary=Displaying {0} to {1} of {2}
+
+permission_scheme.description=Description
+permission_scheme.name=Name
 
 project.add=Add Project
 project.add.success=Project Added
@@ -289,6 +300,8 @@ user.password.confirm=Confirm Password
 user.realname=Real Name
 user.with.id=User {0}
 user.username=Username
+
+EMP_PERM_SCHEME_DEFAULT=Emperor Default
 
 ROLE_QA=QA
 ROLE_DEVELOPER=Developer

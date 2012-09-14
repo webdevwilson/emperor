@@ -2,6 +2,7 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import chc._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
@@ -35,6 +36,8 @@ object PermissionSchemeModel {
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {group_id}, UTC_TIMESTAMP())")
   val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {user_id}, UTC_TIMESTAMP())")
+  val listQuery = SQL("SELECT * FROM permission_schemes LIMIT {offset},{count}")
+  val listCountQuery = SQL("SELECT count(*) FROM permission_schemes")
   val updateQuery = SQL("UPDATE permission_schemes SET name={name}, description={description} WHERE id={id}")
 
   // Parser for retrieving a permission
@@ -157,6 +160,22 @@ object PermissionSchemeModel {
         'user_id         -> userId
       ).as(scalar[String].singleOpt)
     }
+  }
+
+  def list(page: Int = 1, count: Int = 10) : Page[PermissionScheme] = {
+
+      val offset = count * (page - 1)
+
+      DB.withConnection { implicit conn =>
+        val pms = listQuery.on(
+          'count  -> count,
+          'offset -> offset
+        ).as(permissionScheme *)
+
+        val totalRows = listCountQuery.as(scalar[Long].single)
+
+        Page(pms, page, count, totalRows)
+      }
   }
 
   /**
