@@ -28,6 +28,7 @@ object UserModel {
   val listQuery = SQL("SELECT * FROM users LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
+  val startsWithQuery = SQL("SELECT * FROM users WHERE username LIKE {username}")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM users WHERE id={id}")
@@ -106,6 +107,21 @@ object UserModel {
 
     DB.withConnection { implicit conn =>
       getByUsernameQuery.on('username -> username).as(UserModel.user.singleOpt)
+    }
+  }
+
+  /**
+   * Find all users starting with a specific string. Used for
+   * autocomplete.
+   */
+  def getStartsWith(query: String) : Seq[User] = {
+
+    val likeQuery = query + "%"
+
+    DB.withConnection { implicit conn =>
+      startsWithQuery.on(
+        'username -> likeQuery
+      ).as(user *)
     }
   }
 

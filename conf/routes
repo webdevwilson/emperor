@@ -5,8 +5,6 @@
 # Home page
 GET     /                               controllers.Core.index
 
-GET     /group/startswith               controllers.Group.startsWith
-
 GET     /admin                          controllers.Admin.index
 GET     /admin/reindex                  controllers.Admin.reindex
 
@@ -80,6 +78,7 @@ GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Lo
 POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
+GET     /api/group/startswith           controllers.api.Group.startsWith(q: Option[String])
 GET     /api/project/:id                controllers.api.Project.item(id: Long)
 GET     /api/ticket/link/:ticketId      controllers.api.Ticket.links(ticketId: String)
 PUT     /api/ticket/link/:ticketId      controllers.api.Ticket.link(ticketId: String)
@@ -87,6 +86,7 @@ DELETE  /api/ticket/link/:id            controllers.api.Ticket.deleteLink(id: Lo
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String)
 GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String)
 PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String)
+GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String])
 
 GET     /auth/login                     controllers.Auth.login
 GET     /auth/logout                    controllers.Auth.logout

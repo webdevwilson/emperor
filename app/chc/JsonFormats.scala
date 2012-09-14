@@ -343,6 +343,28 @@ object JsonFormats {
   }
 
   /**
+   * JSON conversion for Group
+   */
+  implicit object GroupFormat extends Format[Group] {
+
+    def reads(json: JsValue): Group = Group(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(obj: Group): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(obj.id.get),
+        "name"            -> JsString(obj.name),
+        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
    * JSON conversion for Link
    */
   implicit object LinkFormat extends Format[Link] {
@@ -352,7 +374,7 @@ object JsonFormats {
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "name").as[String],
       parentId    = (json \ "parent_id").as[String],
-      childId     = (json \ "parent_id").as[String],
+      childId     = (json \ "child_id").as[String],
       dateCreated = new Date() // XXX
     )
 
@@ -434,6 +456,35 @@ object JsonFormats {
       toJson(doc)
     }
   }
+
+  /**
+   * JSON conversion for User
+   */
+  implicit object UserFormat extends Format[User] {
+
+    def reads(json: JsValue): User = User(
+      id          = Id((json \ "id").as[Long]),
+      username    = (json \ "username").as[String],
+      password    = (json \ "password").as[String],
+      realName    = (json \ "real_name").as[String],
+      email       = (json \ "email").as[String],
+      dateCreated = new Date() // XXX
+    )
+
+    def writes(obj: User): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"              -> JsNumber(obj.id.get),
+        "username"        -> JsString(obj.username),
+        "password"        -> JsString(obj.password),
+        "real_name"       -> JsString(obj.realName),
+        "email"           -> JsString(obj.email),
+        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
 
   /**
    * JSON conversion for WorkflowStatus

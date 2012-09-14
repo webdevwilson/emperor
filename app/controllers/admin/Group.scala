@@ -33,7 +33,7 @@ object Group extends Controller with Secured {
       }
     )
   }
-  
+
   def create = IsAuthenticated { implicit request =>
 
     Ok(views.html.admin.group.create(addForm)(request))
@@ -57,18 +57,17 @@ object Group extends Controller with Secured {
   }
 
   def item(groupId: Long) = IsAuthenticated { implicit request =>
-    
+
     val group = GroupModel.getById(groupId)
-    val allUsers = UserModel.getAll
     val userGroups = GroupModel.getGroupUsersForGroup(groupId)
 
     group match {
-      case Some(value) => Ok(views.html.admin.group.item(value, allUsers, userGroups)(request))
+      case Some(value) => Ok(views.html.admin.group.item(value, userGroups)(request))
       case None => NotFound
     }
-    
+
   }
-  
+
   def update(groupId: Long) = IsAuthenticated { implicit request =>
 
     addForm.bindFromRequest.fold(

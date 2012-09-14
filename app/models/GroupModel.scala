@@ -108,11 +108,9 @@ object GroupModel {
     val likeQuery = query + "%"
 
     DB.withConnection { implicit conn =>
-      val groups = startsWithQuery.on(
+      startsWithQuery.on(
         'name -> likeQuery
       ).as(group *)
-
-      groups
     }
   }
 
