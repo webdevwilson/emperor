@@ -1,18 +1,18 @@
 # --- !Ups
 
 # Make the new emperor-users group
-INSERT INTO groups (name, date_created) VALUES ('EMP_GROUP_USERS', UTC_TIMESTAMP());
+INSERT INTO groups (name, date_created) VALUES ('emperor-users', UTC_TIMESTAMP());
 
 # And the new emperor-admins group
-INSERT INTO groups (name, date_created) VALUES ('EMP_GROUP_ADMINS', UTC_TIMESTAMP());
+INSERT INTO groups (name, date_created) VALUES ('emperor-admins', UTC_TIMESTAMP());
 
 # Add everyone to the new group
-SELECT id INTO @emp_user_group_id FROM groups WHERE name='EMP_GROUP_USERS';
+SELECT id INTO @emp_user_group_id FROM groups WHERE name='emperor-users';
 INSERT INTO group_users (group_id, user_id, date_created)
   SELECT @emp_user_group_id, id, UTC_TIMESTAMP() FROM users;
 
 # Add admin to the new group
-SELECT id INTO @emp_admin_group_id FROM groups WHERE name='EMP_GROUP_ADMINS';
+SELECT id INTO @emp_admin_group_id FROM groups WHERE name='emperor-admins';
 INSERT INTO group_users (group_id, user_id, date_created)
   SELECT @emp_admin_group_id, id, UTC_TIMESTAMP() FROM users WHERE username='admin';
 
@@ -118,11 +118,11 @@ DROP TABLE permission_scheme_users;
 DROP TABLE permission_schemes;
 DROP TABLE permissions;
 
-SELECT id INTO @emp_user_group_id FROM groups WHERE name='EMP_GROUP_USERS';
+SELECT id INTO @emp_user_group_id FROM groups WHERE name='emperor-users';
 DELETE FROM group_users WHERE group_id=@emp_user_group_id;
 DELETE FROM groups WHERE id=@emp_user_group_id;
 
-SELECT id INTO @emp_admin_group_id FROM groups WHERE name='EMP_GROUP_ADMINS';
+SELECT id INTO @emp_admin_group_id FROM groups WHERE name='emperor-admins';
 DELETE FROM group_users WHERE group_id=@emp_admin_group_id;
 DELETE FROM groups WHERE id=@emp_admin_group_id;
 
