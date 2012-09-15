@@ -24,6 +24,25 @@ case class PermissionScheme(
   dateCreated: Date
 )
 
+case class PermissionSchemeGroup(
+  id: Pk[Long] = NotAssigned,
+  permissionSchemeId: Long,
+  permissionId: String,
+  groupId: Long,
+  groupName: String,
+  dateCreated: Date
+)
+
+case class PermissionSchemeUser(
+  id: Pk[Long] = NotAssigned,
+  permissionSchemeId: Long,
+  permissionId: String,
+  userId: Long,
+  username: String,
+  realName: String,
+  dateCreated: Date
+)
+
 object PermissionSchemeModel {
 
   val allQuery = SQL("SELECT * FROM permission_schemes")
@@ -32,7 +51,11 @@ object PermissionSchemeModel {
   val deleteGroupPermQuery = SQL("DELETE FROM permission_scheme_groups WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND group_id={group_id}")
   val deleteUserPermQuery = SQL("DELETE FROM permission_scheme_users WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND user_id={user_id}")
   val getByIdQuery = SQL("SELECT * from permission_schemes WHERE id={id}")
+  val getGroupsForPermissionQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
+  val getGroupsQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id}")
   val getPermForUserQuery = SQL("SELECT source FROM full_permissions WHERE project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}")
+  val getUsersForPermissionQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
+  val getUsersQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id}")
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
   val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {group_id}, UTC_TIMESTAMP())")
   val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {user_id}, UTC_TIMESTAMP())")
@@ -57,6 +80,44 @@ object PermissionSchemeModel {
         id = id,
         name = name,
         description = description,
+        dateCreated = dateCreated
+      )
+    }
+  }
+
+  val permissionSchemeGroup = {
+    get[Pk[Long]]("id") ~
+    get[Long]("permission_scheme_id") ~
+    get[String]("permission_id") ~
+    get[Long]("group_id") ~
+    get[String]("name") ~
+    get[Date]("date_created") map {
+      case id~permSchemeId~permId~groupId~name~dateCreated => PermissionSchemeGroup(
+        id = id,
+        permissionSchemeId = permSchemeId,
+        permissionId = permId,
+        groupId = groupId,
+        groupName = name,
+        dateCreated = dateCreated
+      )
+    }
+  }
+
+  val permissionSchemeUser = {
+    get[Pk[Long]]("id") ~
+    get[Long]("permission_scheme_id") ~
+    get[String]("permission_id") ~
+    get[Long]("user_id") ~
+    get[String]("username") ~
+    get[String]("realname") ~
+    get[Date]("date_created") map {
+      case id~permSchemeId~permId~userId~username~realName~dateCreated => PermissionSchemeUser(
+        id = id,
+        permissionSchemeId = permSchemeId,
+        permissionId = permId,
+        userId = userId,
+        username = username,
+        realName = realName,
         dateCreated = dateCreated
       )
     }
@@ -143,6 +204,41 @@ object PermissionSchemeModel {
       getByIdQuery.on('id -> id).as(permissionScheme.singleOpt)
     }
   }
+
+  def getGroups(id: Long): List[PermissionSchemeGroup] = {
+
+    DB.withConnection { implicit conn =>
+      getGroupsQuery.on('permission_scheme_id -> id).as(permissionSchemeGroup *)
+    }
+  }
+
+  def getGroupsForPermission(id: Long, permissionId: String): List[PermissionSchemeGroup] = {
+
+    DB.withConnection { implicit conn =>
+      getGroupsForPermissionQuery.on(
+        'permission_scheme_id -> id,
+        'permission_id -> permissionId
+      ).as(permissionSchemeGroup *)
+    }
+  }
+
+  def getUsers(id: Long): List[PermissionSchemeUser] = {
+
+    DB.withConnection { implicit conn =>
+      getUsersQuery.on('permission_scheme_id -> id).as(permissionSchemeUser *)
+    }
+  }
+
+  def getUsersForPermission(id: Long, permissionId: String): List[PermissionSchemeUser] = {
+
+    DB.withConnection { implicit conn =>
+      getUsersQuery.on(
+        'permission_scheme_id -> id,
+        'permission_id -> permissionId
+      ).as(permissionSchemeUser *)
+    }
+  }
+
 
   /**
    * Determine if the supplied user has the supplied permission in the

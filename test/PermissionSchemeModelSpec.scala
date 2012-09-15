@@ -105,6 +105,16 @@ class PermissionSchemeModelSpec extends Specification {
           userId = newUser.id.get
         )
 
+        val psu = PermissionSchemeModel.getUsers(newPs.id.get);
+        psu.size must beEqualTo(1)
+        psu.head.userId must beEqualTo(newUser.id.get)
+        psu.head.permissionId must beEqualTo(perms.head.name)
+
+        val psup = PermissionSchemeModel.getUsersForPermission(newPs.id.get, perms.head.name)
+        psup.size must beEqualTo(1)
+        psup.head.userId must beEqualTo(newUser.id.get)
+        psup.head.permissionId must beEqualTo(perms.head.name)
+
         val can = PermissionSchemeModel.hasPermission(
           projectId = newProject.id.get,
           perm = perms.head.name,
@@ -180,6 +190,16 @@ class PermissionSchemeModelSpec extends Specification {
           perm = perms.head.name,
           groupId = newGroup.id.get
         )
+
+        val psg = PermissionSchemeModel.getGroups(newPs.id.get);
+        psg.size must beEqualTo(1)
+        psg.head.groupId must beEqualTo(newGroup.id.get)
+        psg.head.permissionId must beEqualTo(perms.head.name)
+
+        val psgp = PermissionSchemeModel.getGroupsForPermission(newPs.id.get, perms.head.name)
+        psgp.size must beEqualTo(1)
+        psgp.head.groupId must beEqualTo(newGroup.id.get)
+        psgp.head.permissionId must beEqualTo(perms.head.name)
 
         val can = PermissionSchemeModel.hasPermission(
           projectId = newProject.id.get,
