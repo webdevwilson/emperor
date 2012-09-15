@@ -6,6 +6,9 @@ INSERT INTO groups (name, date_created) VALUES ('emperor-users', UTC_TIMESTAMP()
 # And the new emperor-admins group
 INSERT INTO groups (name, date_created) VALUES ('emperor-admins', UTC_TIMESTAMP());
 
+# Only allow one entry per user in a group
+ALTER TABLE group_users ADD CONSTRAINT users_and_groups UNIQUE (group_id, user_id);
+
 # Add everyone to the new group
 SELECT id INTO @emp_user_group_id FROM groups WHERE name='emperor-users';
 INSERT INTO group_users (group_id, user_id, date_created)

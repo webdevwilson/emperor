@@ -13,6 +13,7 @@ admin.group.menu.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
 admin.group.add.success=Group Added
+admin.group.add.user.success=User Added to Group
 admin.group.edit.success=Group Updated
 
 admin.permission_scheme.add=Add Permission Scheme

@@ -31,6 +31,10 @@ YUI.add('emperor-models', function(Y) {
     }
   }
 
+  Y.LinkTicket = Y.Base.create('linkTicket', Y.Model, [Y.ModelSync.REST], {
+    root: '/api/linkticket'
+  });
+
   Y.Project = Y.Base.create('project', Y.Model, [Y.ModelSync.REST], {
     root: '/api/project'
   })
@@ -39,15 +43,16 @@ YUI.add('emperor-models', function(Y) {
     root: '/api/ticket'
   });
 
-  Y.LinkTicket = Y.Base.create('linkTicket', Y.Model, [Y.ModelSync.REST], {
-    root: '/api/linkticket'
-  });
-
   Y.TicketLink = Y.Base.create('ticketLink', Y.Model, [Y.ModelSync.REST], {
     root: '/api/ticket/link'
   });
 
   Y.TicketLinks = Y.Base.create('ticketLinks', Y.ModelList, [Y.ModelSync.REST], {
     model: Y.TicketLink
+  });
+
+  Y.UserGroupModel = Y.Base.create('userGroup', Y.Model, [Y.ModelSync.REST], {
+    root: '/api/group',
+    url: '/api/group/{id}/{user_id}'
   });
 });

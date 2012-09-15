@@ -14,6 +14,45 @@ All timestamps are in ISO 8601 format.
 
 2. Sending the wrong type of JSON values will result in a `400 Bad Request` response.
 
+## Group
+
+### Add a user
+
+    PUT /api/group/:id/:userId
+
+#### Response
+
+    {
+      "ok": "ok"
+    }
+
+## Group
+
+### Remove a user
+
+    DELETE /api/group/:id/:userId
+
+#### Response
+
+    {
+      "ok": "ok"
+    }
+
+### Find groups that start with a string
+
+    GET /api/group/startsWith?q=foo
+
+#### Response
+
+    [
+      {
+        "date_created":"20120805T033343Z",
+        "id":11,
+        "name":"emperor-users"
+      },
+      …
+    ]
+
 ## Project
 
 ### Get a project
@@ -79,3 +118,23 @@ All timestamps are in ISO 8601 format.
 #### Response
 
     { "ok" : "ok" }
+
+## User
+
+### Find users that start with a string
+
+    GET /api/user/startsWith?q=foo
+
+#### Response
+
+    [
+      {
+        "date_created":"20120805T033343Z",
+        "email":"park@example.com",
+        "username":"park",
+        "id":11,
+        "real_name":"Park Chu-Young",
+        "password":"$2a$12$OPppaFb5A.E2GpB0LbQN9ePyF6mlWrJsC4tFKIVsvva4H5Jl.0Gi2"
+      },
+      …
+    ]

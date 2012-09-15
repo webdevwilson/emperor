@@ -16,19 +16,26 @@ case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 /**
  * Class for users in a group.
  */
-case class GroupUser(id: Pk[Long] = NotAssigned, user_id: Long, group_id: Long)
+case class GroupUser(
+  id: Pk[Long] = NotAssigned,
+  user_id: Long,
+  username: String,
+  realName: String,
+  group_id: Long,
+  dateCreated: Date
+)
 
 object GroupModel {
 
   val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id, date_created) VALUES ({userId}, {groupId}, UTC_TIMESTAMP())")
   val removeUserQuery = SQL("DELETE FROM group_users WHERE user_id={userId} AND group_id={groupId}")
   val allQuery = SQL("SELECT * FROM groups")
-  val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users WHERE group_id={groupId}")
-  val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users WHERE user_id={userId}")
+  val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE group_id={groupId} ORDER BY u.username")
+  val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE user_id={userId}")
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.group_id WHERE gu.user_id={userId}")
   val startsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM groups LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM groups ORDER BY name LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
   val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
@@ -47,8 +54,18 @@ object GroupModel {
   val groupUser = {
     get[Pk[Long]]("id") ~
     get[Long]("group_id") ~
-    get[Long]("user_id") map {
-      case id~group_id~user_id => GroupUser(id, group_id, user_id)
+    get[Long]("user_id") ~
+    get[String]("username") ~
+    get[String]("realname") ~
+    get[Date]("date_created") map {
+      case id~group_id~user_id~username~realname~date_created => GroupUser(
+        id = id,
+        group_id = group_id,
+        user_id = user_id,
+        username = username,
+        realName = realname,
+        dateCreated = date_created
+      )
     }
   }
 

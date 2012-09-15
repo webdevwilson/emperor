@@ -26,4 +26,20 @@ object Group extends Controller with Secured {
       case None => NotFound
     }
   }
+
+  /**
+   * Add a user to the specified group.
+   */
+  def addUser(id: Long, userId: Long) = IsAuthenticated { implicit request =>
+    GroupModel.addUser(userId, id) // XXX This should return something…
+    Ok(Json.toJson(Map("ok" -> "ok")))
+  }
+
+  /**
+   * Remove a user from the specified group.
+   */
+  def removeUser(id: Long, userId: Long) = IsAuthenticated { implicit request =>
+    GroupModel.removeUser(userId, id);
+    Ok(Json.toJson(Map("ok" -> "ok")))
+  }
 }

@@ -4,7 +4,6 @@
  * Compile LESS
  * Compile handlebars
  * Replace jQuery mess
- * https://github.com/schaloner/deadbolt-2
  * Plugins: https://github.com/playframework/Play20/wiki/Modules
 
 ## Future!

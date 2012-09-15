@@ -10,36 +10,39 @@
  <li class="active">@group.name</li>
 </ul>
 <h2>@Messages("admin.group.members")</h2>
-<input type="text" id="ac-input">
-<ul id="userGroups">
-@userGroups.map { userGroup =>
-  <li>@userGroup</li>
-}
+<form id="add-user">
+ <input type="text" id="ac-input">
+</form>
+XXX NEED REMOVAL AND STYLE
+<div id="user-list">
+ <ul id="userGroups">
+ @userGroups.map { userGroup =>
+  <li>@userGroup.username (@userGroup.realName)</li>
+ }
+</div>
 </ul>
 <script type="text/javascript">
-YUI().use('autocomplete', 'autocomplete-highlighters', function (Y) {
-  Y.one('#ac-input').plug(Y.Plugin.AutoComplete, {
+
+YUI().use('emperor-models', 'pjax', 'autocomplete', 'autocomplete-highlighters', function (Y) {
+
+  var acNode = Y.one('#ac-input');
+  acNode.plug(Y.Plugin.AutoComplete, {
     resultHighlighter: 'startsWith',
     resultTextLocator: function (result) {
-      return result.username + ' (' + result.real_name + ')';
+      return result.username // + ' (' + result.real_name + ')';
     },
     source: '/api/user/startswith?q={query}&callback={callback}'
   });
-});
-YUI().use('node', 'model', 'model-list', 'gallery-model-sync-rest', function (Y) {
-  UserGroupModel = Y.Base.create('UserGroup', Y.Model, [ Y.ModelSync.REST ],
-    {
-      url : '/admin/user/{id}/group/@group.id'
-    }
-  );
-
-  Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
-    var model = new UserGroupModel({ id: @group.id });
-    if ( e.target.get('checked') ) {
-      model.save();
-    } else {
-      model.destroy({ 'delete' : true });
-    }
+  acNode.ac.on('select', function (e) {
+    var model = new Y.UserGroupModel({ id: @group.id, user_id: e.result.raw.id });
+    model.save();
+    Y.ShowAlert('alert-success', '@Messages("admin.group.add.user.success")');
+    var pjax = new Y.Pjax({
+      container: '#user-list',
+      contentSelector: '#user-list'
+    });
+    pjax.navigate('@controllers.admin.routes.Group.item(group.id.get)');
+    acNode.set('value', '');
   });
 });
 </script>
