@@ -1,5 +1,5 @@
-@(role: models.PermissionScheme)(implicit request: Request[AnyContent])
-@main(Messages("admin.permission_scheme.with.id", role.name)) {
+@(ps: models.PermissionScheme, perms: List[models.Permission], permGroups: Map[String,List[PermissionSchemeGroup]], permUsers: Map[String,List[PermissionSchemeUser]])(implicit request: Request[AnyContent])
+@main(Messages("admin.permission_scheme.with.id", ps.name)) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
@@ -7,7 +7,39 @@
  <li>
   <a href="@controllers.admin.routes.PermissionScheme.index()">@Messages("admin.permission_scheme.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages(role.name)</li>
+ <li class="active">@Messages(ps.name)</li>
 </ul>
-XXX Need to see it!
+<table class="table table-bordered table-striped">
+ <thead>
+  <tr>
+   <th>@Messages("admin.permission")</th>
+   <th>@Messages("admin.permission_scheme.groups")</th>
+   <th>@Messages("admin.permission_scheme.users")</th>
+  </tr>
+ </thead>
+ <tbody>
+  @perms.map { perm =>
+  <tr>
+   <td>@Messages(perm.name)</td>
+   <td>
+    <ul>
+    @permGroups.get(perm.name).map { groups =>
+      @groups.map { group =>
+       <li><a href="@controllers.admin.routes.Group.item(group.groupId)">@group.groupName</a></li>
+      }
+    }
+   </td>
+   <td>
+    <ul>
+    @permUsers.get(perm.name).map { users =>
+      @users.map { user =>
+        <li><a href="@controllers.admin.routes.User.item(user.userId)">@user.username</a></li>
+      }
+    }
+    </ul>
+   </td>
+  </tr>
+  }
+ </tbody>
+</table>
 }

@@ -46,7 +46,7 @@ case class PermissionSchemeUser(
 object PermissionSchemeModel {
 
   val allQuery = SQL("SELECT * FROM permission_schemes")
-  val allPermissionsQuery = SQL("SELECT * FROM permissions")
+  val allPermissionsQuery = SQL("SELECT * FROM permissions ORDER BY name")
   val deleteQuery = SQL("DELETE FROM permission_schemes WHERE id={id}")
   val deleteGroupPermQuery = SQL("DELETE FROM permission_scheme_groups WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND group_id={group_id}")
   val deleteUserPermQuery = SQL("DELETE FROM permission_scheme_users WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND user_id={user_id}")

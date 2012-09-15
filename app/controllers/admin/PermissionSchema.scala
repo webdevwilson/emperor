@@ -57,7 +57,15 @@ object PermissionScheme extends Controller with Secured {
   def item(pmId: Long) = IsAuthenticated { implicit request =>
 
     PermissionSchemeModel.getById(pmId) match {
-      case Some(value) => Ok(views.html.admin.permission_scheme.item(value)(request))
+      case Some(value) => {
+
+        val perms = PermissionSchemeModel.getAllPermissions
+
+        val pgg = PermissionSchemeModel.getGroups(pmId).groupBy( pg => pg.permissionId )
+        val pgu = PermissionSchemeModel.getUsers(pmId).groupBy(pu => pu.permissionId )
+
+        Ok(views.html.admin.permission_scheme.item(value, perms, pgg, pgu)(request))
+      }
       case None => NotFound
     }
 
