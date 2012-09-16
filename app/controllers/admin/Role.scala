@@ -23,7 +23,7 @@ object Role extends Controller with Secured {
     )(models.Role.apply)(models.Role.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.create(errors)),
@@ -33,20 +33,20 @@ object Role extends Controller with Secured {
       }
     )
   }
-  
-  def create = IsAuthenticated { implicit request =>
+
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.role.create(objForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val roles = RoleModel.list(page = page, count = count)
 
     Ok(views.html.admin.role.index(roles)(request))
   }
 
-  def edit(roleId: Long) = IsAuthenticated { implicit request =>
+  def edit(roleId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val role = RoleModel.getById(roleId)
 
@@ -56,18 +56,18 @@ object Role extends Controller with Secured {
     }
   }
 
-  def item(roleId: Long) = IsAuthenticated { implicit request =>
-    
+  def item(roleId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+
     val role = RoleModel.getById(roleId)
 
     role match {
       case Some(value) => Ok(views.html.admin.role.item(value)(request))
       case None => NotFound
     }
-    
+
   }
-  
-  def update(roleId: Long) = IsAuthenticated { implicit request =>
+
+  def update(roleId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.role.edit(roleId, errors)),

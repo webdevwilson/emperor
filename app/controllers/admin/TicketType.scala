@@ -24,7 +24,7 @@ object TicketType extends Controller with Secured {
     )(models.TicketType.apply)(models.TicketType.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.create(errors)),
@@ -35,19 +35,19 @@ object TicketType extends Controller with Secured {
     )
   }
 
-  def create = IsAuthenticated { implicit request =>
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.ttype.create(typeForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val types = TicketTypeModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.ttype.index(types)(request))
   }
 
-  def edit(typeId: Long) = IsAuthenticated { implicit request =>
+  def edit(typeId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val ttype = TicketTypeModel.getById(typeId)
 
@@ -57,7 +57,7 @@ object TicketType extends Controller with Secured {
     }
   }
 
-  def item(typeId: Long) = IsAuthenticated { implicit request =>
+  def item(typeId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val ttype = TicketTypeModel.getById(typeId)
 
@@ -68,7 +68,7 @@ object TicketType extends Controller with Secured {
 
   }
 
-  def update(typeId: Long) = IsAuthenticated { implicit request =>
+  def update(typeId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     typeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.ttype.edit(typeId, errors)),

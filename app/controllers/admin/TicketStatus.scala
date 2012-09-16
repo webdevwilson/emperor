@@ -22,7 +22,7 @@ object TicketStatus extends Controller with Secured {
     )(models.TicketStatus.apply)(models.TicketStatus.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.create(errors)),
@@ -32,20 +32,20 @@ object TicketStatus extends Controller with Secured {
       }
     )
   }
-  
-  def create = IsAuthenticated { implicit request =>
+
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.status.create(statusForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val statuses = TicketStatusModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.status.index(statuses)(request))
   }
 
-  def edit(statusId: Long) = IsAuthenticated { implicit request =>
+  def edit(statusId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val status = TicketStatusModel.getById(statusId)
 
@@ -55,18 +55,18 @@ object TicketStatus extends Controller with Secured {
     }
   }
 
-  def item(statusId: Long) = IsAuthenticated { implicit request =>
-    
+  def item(statusId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+
     val status = TicketStatusModel.getById(statusId)
 
     status match {
       case Some(value) => Ok(views.html.admin.ticket.status.item(value)(request))
       case None => NotFound
     }
-    
+
   }
-  
-  def update(statusId: Long) = IsAuthenticated { implicit request =>
+
+  def update(statusId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.edit(statusId, errors)),

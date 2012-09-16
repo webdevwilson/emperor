@@ -23,7 +23,7 @@ object Group extends Controller with Secured {
     )(models.Group.apply)(models.Group.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.create(errors)),
@@ -34,19 +34,19 @@ object Group extends Controller with Secured {
     )
   }
 
-  def create = IsAuthenticated { implicit request =>
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.group.create(addForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val groups = GroupModel.list(page = page, count = count)
 
     Ok(views.html.admin.group.index(groups)(request))
   }
 
-  def edit(groupId: Long) = IsAuthenticated { implicit request =>
+  def edit(groupId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val group = GroupModel.getById(groupId)
 
@@ -56,7 +56,7 @@ object Group extends Controller with Secured {
     }
   }
 
-  def item(groupId: Long) = IsAuthenticated { implicit request =>
+  def item(groupId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val group = GroupModel.getById(groupId)
     val userGroups = GroupModel.getGroupUsersForGroup(groupId)
@@ -68,7 +68,7 @@ object Group extends Controller with Secured {
 
   }
 
-  def update(groupId: Long) = IsAuthenticated { implicit request =>
+  def update(groupId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     addForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.group.edit(groupId, errors)),

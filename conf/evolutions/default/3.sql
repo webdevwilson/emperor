@@ -26,7 +26,8 @@ INSERT INTO users (username, password, realname, email, date_created) VALUES ('a
 CREATE TABLE permissions (
   name VARCHAR(32) NOT NULL,
   global TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY(name)
+  PRIMARY KEY(name),
+  UNIQUE KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_ADMIN', 1);
@@ -108,9 +109,13 @@ ALTER TABLE projects ADD CONSTRAINT `fk_permission_scheme_id_permission_schemes`
 
 # Create a view of all the permissions for easy selection!
 CREATE VIEW full_permissions AS
-  SELECT p.id as project_id, psg.permission_id as permission_id, gu.user_id as user_id, CONCAT('permission_scheme_groups:',psg.id) AS source FROM projects p JOIN permission_scheme_groups psg ON psg.permission_scheme_id=p.permission_scheme_id JOIN group_users gu ON gu.group_id = psg.group_id
+  SELECT p.id as project_id, p.pkey AS project_key, psg.permission_id as permission_id, gu.user_id as user_id, CONCAT('permission_scheme_groups:',psg.id) AS source FROM projects p JOIN permission_scheme_groups psg ON psg.permission_scheme_id=p.permission_scheme_id JOIN group_users gu ON gu.group_id = psg.group_id
   UNION
-  SELECT p.id as project_id, psu.permission_id as permission_id, psu.user_id as user_id,CONCAT('permission_scheme_users:',psu.id) AS source FROM projects p JOIN permission_scheme_users psu ON psu.permission_scheme_id=p.permission_scheme_id;
+  SELECT p.id as project_id, p.pkey AS project_key, psu.permission_id as permission_id, psu.user_id as user_id,CONCAT('permission_scheme_users:',psu.id) AS source FROM projects p JOIN permission_scheme_users psu ON psu.permission_scheme_id=p.permission_scheme_id;
+
+# Create a project for emperor itself.
+SELECT id INTO @emp_default_work FROM workflows WHERE name='WORK_EMP_DEFAULT';
+INSERT INTO projects (name, pkey, workflow_id, permission_scheme_id, date_created) VALUES ("Emperor Core", "EMPCORE", @emp_default_work, @emp_core_scheme, UTC_TIMESTAMP());
 
 # --- !Downs
 

@@ -24,7 +24,7 @@ object Workflow extends Controller with Secured {
     )(models.Workflow.apply)(models.Workflow.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.create(errors)),
@@ -34,20 +34,20 @@ object Workflow extends Controller with Secured {
       }
     )
   }
-  
-  def create = IsAuthenticated { implicit request =>
+
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.workflow.create(objForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val workflows = WorkflowModel.list(page = page, count = count)
 
     Ok(views.html.admin.workflow.index(workflows)(request))
   }
 
-  def edit(workflowId: Long) = IsAuthenticated { implicit request =>
+  def edit(workflowId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val workflow = WorkflowModel.getById(workflowId)
 
@@ -57,8 +57,8 @@ object Workflow extends Controller with Secured {
     }
   }
 
-  def item(workflowId: Long) = IsAuthenticated { implicit request =>
-    
+  def item(workflowId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+
     val workflow = WorkflowModel.getById(workflowId)
     val statuses = WorkflowModel.getStatuses(workflowId)
 
@@ -67,9 +67,9 @@ object Workflow extends Controller with Secured {
       case None => NotFound
     }
   }
-  
-  def modify(workflowId: Long) = IsAuthenticated { implicit request =>
-    
+
+  def modify(workflowId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+
     val workflow = WorkflowModel.getById(workflowId)
     val statuses = WorkflowModel.getStatuses(workflowId)
     val unused = TicketStatusModel.getAll filterNot { status => statuses exists { ws => ws.statusId == status.id.get } }
@@ -79,8 +79,8 @@ object Workflow extends Controller with Secured {
       case None => NotFound
     }
   }
-  
-  def update(workflowId: Long) = IsAuthenticated { implicit request =>
+
+  def update(workflowId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.workflow.edit(workflowId, errors)),
@@ -91,7 +91,7 @@ object Workflow extends Controller with Secured {
     )
   }
 
-  def save(workflowId: Long) = IsAuthenticated { implicit request =>
+  def save(workflowId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     // XXX Do me!
     Redirect(routes.Workflow.item(workflowId)).flashing("success" -> "admin.workflow.edit.success")

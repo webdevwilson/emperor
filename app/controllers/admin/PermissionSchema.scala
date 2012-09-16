@@ -23,7 +23,7 @@ object PermissionScheme extends Controller with Secured {
     )(models.PermissionScheme.apply)(models.PermissionScheme.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.permission_scheme.create(errors)),
@@ -34,19 +34,19 @@ object PermissionScheme extends Controller with Secured {
     )
   }
 
-  def create = IsAuthenticated { implicit request =>
+  def create = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.permission_scheme.create(objForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val pms = PermissionSchemeModel.list(page = page, count = count)
 
     Ok(views.html.admin.permission_scheme.index(pms)(request))
   }
 
-  def edit(pmId: Long) = IsAuthenticated { implicit request =>
+  def edit(pmId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     PermissionSchemeModel.getById(pmId) match {
       case Some(value) => Ok(views.html.admin.permission_scheme.edit(pmId, objForm.fill(value))(request))
@@ -54,7 +54,7 @@ object PermissionScheme extends Controller with Secured {
     }
   }
 
-  def item(pmId: Long) = IsAuthenticated { implicit request =>
+  def item(pmId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     PermissionSchemeModel.getById(pmId) match {
       case Some(value) => {
@@ -71,7 +71,7 @@ object PermissionScheme extends Controller with Secured {
 
   }
 
-  def update(pmId: Long) = IsAuthenticated { implicit request =>
+  def update(pmId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.permission_scheme.edit(pmId, errors)),

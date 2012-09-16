@@ -95,7 +95,7 @@ object Ticket extends Controller with Secured {
             BadRequest(views.html.ticket.error(request))
           }, {
             case resolution: models.Resolution => {
-              val nt = TicketModel.resolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, resolutionId = resolution.resolutionId,  comment = resolution.comment)
+              val nt = TicketModel.resolve(ticketId = ticketId, userId = request.session.get(Security.username).get.toLong, resolutionId = resolution.resolutionId,  comment = resolution.comment)
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.resolution")
             }
           }
