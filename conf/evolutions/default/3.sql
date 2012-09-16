@@ -37,6 +37,7 @@ INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_PROJECT_CREATE', 1);
 INSERT INTO permissions (name) VALUES ('PERM_PROJECT_ADMIN');
 INSERT INTO permissions (name) VALUES ('PERM_PROJECT_BROWSE');
 
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_COMMENT');
 INSERT INTO permissions (name) VALUES ('PERM_TICKET_CREATE');
 INSERT INTO permissions (name) VALUES ('PERM_TICKET_EDIT');
 INSERT INTO permissions (name) VALUES ('PERM_TICKET_LINK');
@@ -93,6 +94,7 @@ SELECT id INTO @emp_default_scheme FROM permission_schemes WHERE name='EMP_PERM_
 
 # Give all other permissions to emperor-users
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_PROJECT_BROWSE', @emp_user_group_id, UTC_TIMESTAMP());
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_COMMENT', @emp_user_group_id, UTC_TIMESTAMP());
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_CREATE', @emp_user_group_id, UTC_TIMESTAMP());
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_EDIT', @emp_user_group_id, UTC_TIMESTAMP());
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_LINK', @emp_user_group_id, UTC_TIMESTAMP());

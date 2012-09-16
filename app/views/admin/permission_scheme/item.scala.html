@@ -20,7 +20,7 @@
  <tbody>
   @perms.map { perm =>
   <tr>
-   <td>@Messages(perm.name)<p><small>@Messages(perm.name + "_DESC")</small></p></td>
+   <td><strong>@Messages(perm.name)</strong><p><small>@Messages(perm.name + "_DESC")</small></p></td>
    <td>
     <ul>
     @permGroups.get(perm.name).map { groups =>
@@ -28,6 +28,7 @@
        <li><a href="@controllers.admin.routes.Group.item(group.groupId)">@group.groupName</a></li>
       }
     }
+    </ul>
    </td>
    <td>
     <ul>

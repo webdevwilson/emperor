@@ -5,7 +5,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.Logger
 import play.api.mvc._
-import models.{LoginUser,PermissionSchemeModel,UserModel}
+import models._
 import org.mindrot.jbcrypt.BCrypt
 
 object Auth extends Controller {
@@ -71,8 +71,8 @@ trait Secured {
   private def username(request: RequestHeader): Option[String] = {
     val user = request.session.get("user_id").getOrElse(UserModel.getByUsername("anonymous").get.id.get.toString)
     Logger.debug("Checking for log in privileges for user " + user)
-    val ps = PermissionSchemeModel.getByName("EMP_PERM_SCHEME_CORE").get // XXX Some sort of settings table to hold this information?
-    val maybePerm = PermissionSchemeModel.hasPermission(ps.id.get, "PERM_GLOBAL_LOGIN", user.toLong) // Can Anonymous log in?
+    val proj = ProjectModel.getByKey("EMPCORE").get // XXX Some sort of settings table to hold this information?
+    val maybePerm = PermissionSchemeModel.hasPermission(proj.id.get, "PERM_GLOBAL_LOGIN", user.toLong) // Can Anonymous log in?
     maybePerm match {
       case Some(cause) => {
         Logger.info("User " + user + " allowed login via " + cause)

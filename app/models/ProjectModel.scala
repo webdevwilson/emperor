@@ -49,6 +49,7 @@ object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects WHERE pkey != 'EMPCORE'")
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
+  val getByKeyQuery = SQL("SELECT * FROM projects WHERE pkey={pkey}")
   val getByWorkflowQuery = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id} AND pkey != 'EMPCORE'")
   val updateSequenceQuery = SQL("UPDATE projects SET sequence_current = LAST_INSERT_ID(sequence_current + 1) WHERE id={id}")
   val listQuery = SQL("SELECT * FROM projects WHERE pkey != 'EMPCORE' LIMIT {offset},{count}")
@@ -119,6 +120,16 @@ object ProjectModel {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(project.singleOpt)
+    }
+  }
+
+  /**
+   * Get a project by id.
+   */
+  def getByKey(pkey: String) : Option[Project] = {
+
+    DB.withConnection { implicit conn =>
+      getByKeyQuery.on('pkey -> pkey).as(project.singleOpt)
     }
   }
 
