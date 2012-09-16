@@ -310,6 +310,8 @@ user.username=Username
 EMP_PERM_SCHEME_CORE=Emperor Core
 EMP_PERM_SCHEME_DEFAULT=Emperor Default
 
+EMP_USER_ANONYMOUS=Anonymous
+
 PERM_GLOBAL_ADMIN=Administrator
 PERM_GLOBAL_ADMIN_DESC=Allows the user to administor all parts of Emperor.
 PERM_GLOBAL_LOGIN=Login

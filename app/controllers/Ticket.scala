@@ -116,7 +116,7 @@ object Ticket extends Controller with Secured {
             BadRequest(views.html.ticket.error(request))
           }, {
             case unresolution: models.InitialComment => {
-              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("userId").get.toLong, comment = Some(unresolution.comment))
+              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.session.get("user_id").get.toLong, comment = Some(unresolution.comment))
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
@@ -137,7 +137,7 @@ object Ticket extends Controller with Secured {
             BadRequest(views.html.ticket.error(request))
           }, {
             case assignment: models.Assignment => {
-              val nt = TicketModel.assign(ticketId = ticketId, userId = request.session.get("userId").get.toLong, assigneeId = assignment.userId, comment = assignment.comment)
+              val nt = TicketModel.assign(ticketId = ticketId, userId = request.session.get("user_id").get.toLong, assigneeId = assignment.userId, comment = assignment.comment)
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.assignment.success")
             }
           }
@@ -160,7 +160,7 @@ object Ticket extends Controller with Secured {
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange => {
-              TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("userId").get.toLong, comment = statusChange.comment)
+              TicketModel.changeStatus(ticketId, statusChange.statusId, request.session.get("user_id").get.toLong, comment = statusChange.comment)
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
             }
           }
@@ -185,7 +185,7 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.create(errors, users, assignees, projs, ttypes, prios, sevs))
       },
       value => {
-        val ticket = TicketModel.create(userId = request.session.get("userId").get.toLong, ticket = value)
+        val ticket = TicketModel.create(userId = request.session.get("user_id").get.toLong, ticket = value)
         ticket match {
           case Some(t) => {
             SearchModel.indexTicket(ticket.get)
@@ -204,7 +204,7 @@ object Ticket extends Controller with Secured {
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
-        val comm = TicketModel.addComment(ticketId, request.session.get("userId").get.toLong, value.comment)
+        val comm = TicketModel.addComment(ticketId, request.session.get("user_id").get.toLong, value.comment)
         SearchModel.indexComment(comm.get)
 
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
@@ -224,11 +224,11 @@ object Ticket extends Controller with Secured {
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+    val users = UserModel.getAll.map { x => (x.id.get.toString -> Messages(x.realName)) }
 
     // The worst case scenario, just the user id
     val startTicket = InitialTicket(
-      reporterId = request.session.get("userId").get.toLong,
+      reporterId = request.session.get("user_id").get.toLong,
       assigneeId = None, // XXX need to fix this
       projectId = 0,
       priorityId = 0,
@@ -269,8 +269,8 @@ object Ticket extends Controller with Secured {
     }
 
     val assignees = projectId match {
-      case Some(project) => UserModel.getAssignable(projectId = project).map { x => (x.id.getOrElse("").toString -> x.realName) }
-      case None => UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
+      case Some(project) => UserModel.getAssignable(projectId = project).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
+      case None => UserModel.getAll.map { x => (x.id.get.toString -> Messages(x.realName)) }
     }
 
     val defaultedForm = initialTicketForm.fill(finalTicket)
@@ -315,7 +315,7 @@ object Ticket extends Controller with Secured {
 
         val resolutions = TicketResolutionModel.getAll.map { reso => (reso.id.get.toString -> Messages(reso.name)) }
 
-        val assignees = UserModel.getAssignable(projectId = ticket.project.id).map { user => (user.id.getOrElse("").toString -> user.realName) }
+        val assignees = UserModel.getAssignable(projectId = ticket.project.id).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
 
         val ltypes = TicketLinkTypeModel.getAll
 
@@ -406,7 +406,7 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.edit(ticketId, errors, users, assignees, attentions, projs, ttypes, prios, sevs))
       },
       value => {
-        TicketModel.update(request.session.get("userId").get.toLong, ticketId, value)
+        TicketModel.update(request.session.get("user_id").get.toLong, ticketId, value)
         SearchModel.indexTicket(TicketModel.getFullById(ticketId).get)
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
       }

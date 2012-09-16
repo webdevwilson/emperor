@@ -44,7 +44,7 @@ object Project extends Controller with Secured {
     )(models.EditProject.apply)(models.EditProject.unapply)
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthorized(0, "PERM_GLOBAL_PROJECT_CREATE") { implicit request =>
 
     addProjectForm.bindFromRequest.fold(
       errors => {
@@ -65,7 +65,7 @@ object Project extends Controller with Secured {
     )
   }
 
-  def create = IsAuthenticated { implicit request =>
+  def create = IsAuthorized(0, "PERM_GLOBAL_PROJECT_CREATE") { implicit request =>
 
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
@@ -85,7 +85,7 @@ object Project extends Controller with Secured {
     Ok(views.html.project.index(projs)(request))
   }
 
-  def edit(projectId: Long) = IsAuthenticated { implicit request =>
+  def edit(projectId: Long) = IsAuthorized(projectId, "PERM_PROJECT_ADMIN") { implicit request =>
 
     val project = ProjectModel.getById(projectId)
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -115,7 +115,7 @@ object Project extends Controller with Secured {
     }
   }
 
-  def item(projectId: Long) = IsAuthenticated { implicit request =>
+  def item(projectId: Long) = IsAuthorized(projectId, "PERM_PROJECT_BROWSE") { implicit request =>
 
     val project = ProjectModel.getById(projectId)
 
@@ -143,7 +143,7 @@ object Project extends Controller with Secured {
     Ok(views.html.project.list(groups)(request))
   }
 
-  def update(projectId: Long) = IsAuthenticated { implicit request =>
+  def update(projectId: Long) = IsAuthorized(projectId, "PERM_PROJECT_ADMIN") { implicit request =>
 
     editProjectForm.bindFromRequest.fold(
       errors => {

@@ -3,14 +3,12 @@ package controllers
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
+import play.api.Logger
 import play.api.mvc._
 import models.{LoginUser,PermissionSchemeModel,UserModel}
 import org.mindrot.jbcrypt.BCrypt
-import org.slf4j.{Logger,LoggerFactory}
 
 object Auth extends Controller {
-
-  val logger = LoggerFactory.getLogger("application")
 
   val loginForm = Form(
     mapping(
@@ -71,17 +69,16 @@ trait Secured {
    * Retrieve the current username.
    */
   private def username(request: RequestHeader): Option[String] = {
-    val maybeUser = request.session.get("user_id")
-    maybeUser match {
-      case Some(user) => maybeUser
-      case None => {
-        val ps = PermissionSchemeModel.getByName("EMP_PERM_SCHEME_CORE").get // XXX Some sort of settings table to hold this information?
-        val maybePerm = PermissionSchemeModel.hasPermission(ps.id.get, "PERM_GLOBAL_LOGIN", 0) // Can Anonymous log in?
-        maybePerm match {
-          case Some(cause) => Some("0") // XXX Should log "cause" here
-          case None => None
-        }
+    val user = request.session.get("user_id").getOrElse(UserModel.getByUsername("anonymous").get.id.get.toString)
+    Logger.debug("Checking for log in privileges for user " + user)
+    val ps = PermissionSchemeModel.getByName("EMP_PERM_SCHEME_CORE").get // XXX Some sort of settings table to hold this information?
+    val maybePerm = PermissionSchemeModel.hasPermission(ps.id.get, "PERM_GLOBAL_LOGIN", user.toLong) // Can Anonymous log in?
+    maybePerm match {
+      case Some(cause) => {
+        Logger.info("User " + user + " allowed login via " + cause)
+        Some(user)
       }
+      case None => None
     }
   }
 
