@@ -13,17 +13,29 @@
 <form id="add-user">
  <input type="text" id="ac-input">
 </form>
-XXX NEED REMOVAL AND STYLE
+XXX NEED CONFIRM AND STYLE
 <div id="user-list">
- <ul id="userGroups">
+ <ul id="group-users">
  @userGroups.map { userGroup =>
-  <li>@userGroup.username (@userGroup.realName)</li>
+  <li><a href="#"><i data-userid="@userGroup.userId" class="remover icon-remove"></i></a> @userGroup.username (@Messages(userGroup.realName))</li>
  }
 </div>
 </ul>
 <script type="text/javascript">
 
-YUI().use('emperor-models', 'pjax', 'autocomplete', 'autocomplete-highlighters', function (Y) {
+YUI().use('emperor-models', 'pjax', 'io-base', 'autocomplete', 'autocomplete-highlighters', function (Y) {
+
+  var refreshUsers = function (transactionid, response, arguments) {
+    var pjax = new Y.Pjax({
+      container: '#user-list',
+      contentSelector: '#user-list'
+    });
+    pjax.navigate('@controllers.admin.routes.Group.item(group.id.get)');
+  }
+
+  var showAlert = function (transactionId, response, arguments) {
+    Y.ShowAlert('alert-error', response.responseText);
+  }
 
   var acNode = Y.one('#ac-input');
   acNode.plug(Y.Plugin.AutoComplete, {
@@ -34,16 +46,27 @@ YUI().use('emperor-models', 'pjax', 'autocomplete', 'autocomplete-highlighters',
     source: '/api/user/startswith?q={query}&callback={callback}'
   });
   acNode.ac.on('select', function (e) {
-    var model = new Y.UserGroupModel({ id: @group.id, user_id: e.result.raw.id });
+    var model = new Y.UserGroup({ id: @group.id, user_id: e.result.raw.id });
     model.save();
     Y.ShowAlert('alert-success', '@Messages("admin.group.add.user.success")');
-    var pjax = new Y.Pjax({
-      container: '#user-list',
-      contentSelector: '#user-list'
-    });
-    pjax.navigate('@controllers.admin.routes.Group.item(group.id.get)');
-    acNode.set('value', '');
+    refreshUsers();
   });
+
+  Y.one("#group-users").delegate('click', function(e) {
+    var linkid = e.currentTarget.getAttribute('data-userid');
+    var uri = '/api/group/@group.id.get/' + linkid
+
+    var cfg = {
+      method: 'DELETE',
+      on: {
+        success: refreshUsers,
+        failure: showAlert
+      }
+    };
+
+    var request = Y.io(uri, cfg);
+    e.preventDefault();
+  }, '.remover');
 });
 </script>
 }

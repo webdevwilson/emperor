@@ -14,6 +14,8 @@ admin.group.members=Members
 admin.group.with.id=Group {0}
 admin.group.add.success=Group Added
 admin.group.add.user.success=User Added to Group
+admin.group.remove.user=Remove User from Group
+admin.group.remove.user.confirm=Are you sure you want to remove {0} from group {1}?
 admin.group.edit.success=Group Updated
 
 admin.permission=Permission
@@ -130,7 +132,9 @@ event.action.ticket_change=modified
 event.action.ticket_create=created
 
 form.cancel=Cancel
+form.no=No, Nevermind
 form.submit=Submit
+form.yes=Yes
 
 general.actions=Actions
 general.admin=Administration

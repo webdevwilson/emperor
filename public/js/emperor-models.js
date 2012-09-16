@@ -47,11 +47,7 @@ YUI.add('emperor-models', function(Y) {
     root: '/api/ticket/link'
   });
 
-  Y.TicketLinks = Y.Base.create('ticketLinks', Y.ModelList, [Y.ModelSync.REST], {
-    model: Y.TicketLink
-  });
-
-  Y.UserGroupModel = Y.Base.create('userGroup', Y.Model, [Y.ModelSync.REST], {
+  Y.UserGroup = Y.Base.create('userGroup', Y.Model, [Y.ModelSync.REST], {
     root: '/api/group',
     url: '/api/group/{id}/{user_id}'
   });

@@ -18,10 +18,10 @@ case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
  */
 case class GroupUser(
   id: Pk[Long] = NotAssigned,
-  user_id: Long,
+  userId: Long,
   username: String,
   realName: String,
-  group_id: Long,
+  groupId: Long,
   dateCreated: Date
 )
 
@@ -60,8 +60,8 @@ object GroupModel {
     get[Date]("date_created") map {
       case id~group_id~user_id~username~realname~date_created => GroupUser(
         id = id,
-        group_id = group_id,
-        user_id = user_id,
+        groupId = group_id,
+        userId = user_id,
         username = username,
         realName = realname,
         dateCreated = date_created

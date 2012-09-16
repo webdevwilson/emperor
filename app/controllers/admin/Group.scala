@@ -65,7 +65,6 @@ object Group extends Controller with Secured {
       case Some(value) => Ok(views.html.admin.group.item(value, userGroups)(request))
       case None => NotFound
     }
-
   }
 
   def update(groupId: Long) = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
