@@ -11,7 +11,8 @@ import play.api.Play.current
  * Class for a permission.
  */
 case class Permission(
-  name: String
+  name: String,
+  global: Int
 )
 
 /**
@@ -65,8 +66,9 @@ object PermissionSchemeModel {
 
   // Parser for retrieving a permission
   val permission = {
-    get[String]("name") map {
-      case name => Permission(name = name)
+    get[String]("name") ~
+    get[Int]("global") map {
+      case name~global => Permission(name = name, global = global)
     }
   }
 

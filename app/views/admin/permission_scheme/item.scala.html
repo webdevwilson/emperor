@@ -20,7 +20,7 @@
  <tbody>
   @perms.map { perm =>
   <tr>
-   <td>@Messages(perm.name)</td>
+   <td>@Messages(perm.name)<p><small>@Messages(perm.name + "_DESC")</small></p></td>
    <td>
     <ul>
     @permGroups.get(perm.name).map { groups =>

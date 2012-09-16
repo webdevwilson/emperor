@@ -306,7 +306,28 @@ user.realname=Real Name
 user.with.id=User {0}
 user.username=Username
 
+EMP_PERM_SCHEME_CORE=Emperor Core
 EMP_PERM_SCHEME_DEFAULT=Emperor Default
+
+PERM_GLOBAL_ADMIN=Administrator
+PERM_GLOBAL_ADMIN_DESC=Allows the user to administor all parts of Emperor.
+PERM_GLOBAL_LOGIN=Login
+PERM_GLOBAL_LOGIN_DESC=Allows the user to log in.
+PERM_GLOBAL_PROJECT_CREATE=Project Creation
+PERM_GLOBAL_PROJECT_CREATE_DESC=Allows a user to create new projects.
+
+PERM_PROJECT_ADMIN=Project Administration
+PERM_PROJECT_ADMIN_DESC=Allows a user to modify the core settings of a project.
+PERM_PROJECT_BROWSE=Project Browse
+PERM_PROJECT_BROWSE_DESC=Allows a user to "see" a project and view it's contents such as tickets, etc.
+PERM_TICKET_CREATE=Ticket Creation
+PERM_TICKET_CREATE_DESC=Allows a user to create tickets.
+PERM_TICKET_EDIT=Ticket Edit
+PERM_TICKET_EDIT_DESC=Allows a user to edit tickets.
+PERM_TICKET_LINK=Ticket Linking
+PERM_TICKET_LINK_DESC=Allows a user to link tickets together.
+PERM_TICKET_RESOLVE=Ticket Resolution
+PERM_TICKET_RESOLVE_DESC=Allows a user to resolve tickets.
 
 ROLE_QA=QA
 ROLE_DEVELOPER=Developer

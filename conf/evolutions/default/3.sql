@@ -25,15 +25,16 @@ INSERT INTO users (username, password, realname, email, date_created) VALUES ('a
 # Start permissions stuff
 CREATE TABLE permissions (
   name VARCHAR(32) NOT NULL,
+  global TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY(name)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
-INSERT INTO permissions (name) VALUES ('PERM_OVERALL_ADMIN');
-INSERT INTO permissions (name) VALUES ('PERM_OVERALL_LOGIN');
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_ADMIN', 1);
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_LOGIN', 1);
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_PROJECT_CREATE', 1);
 
 INSERT INTO permissions (name) VALUES ('PERM_PROJECT_ADMIN');
 INSERT INTO permissions (name) VALUES ('PERM_PROJECT_BROWSE');
-INSERT INTO permissions (name) VALUES ('PERM_PROJECT_CREATE');
 
 INSERT INTO permissions (name) VALUES ('PERM_TICKET_CREATE');
 INSERT INTO permissions (name) VALUES ('PERM_TICKET_EDIT');
@@ -75,16 +76,20 @@ CREATE TABLE permission_scheme_groups (
   FOREIGN KEY (group_id) REFERENCES groups(id)
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
+# Setup the core scheme
+INSERT INTO permission_schemes (name, date_created) VALUES ('EMP_PERM_SCHEME_CORE', UTC_TIMESTAMP());
+SELECT id INTO @emp_core_scheme FROM permission_schemes WHERE name='EMP_PERM_SCHEME_CORE';
+
+# Give emperor-admins admin permission
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_core_scheme, 'PERM_GLOBAL_ADMIN', @emp_admin_group_id, UTC_TIMESTAMP());
+# Give emperor-users login permission
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_core_scheme, 'PERM_GLOBAL_LOGIN', @emp_user_group_id, UTC_TIMESTAMP());
+
 # Setup the default scheme
 INSERT INTO permission_schemes (name, date_created) VALUES ('EMP_PERM_SCHEME_DEFAULT', UTC_TIMESTAMP());
 # Get the scheme's id ready for use
 SELECT id INTO @emp_default_scheme FROM permission_schemes WHERE name='EMP_PERM_SCHEME_DEFAULT';
 
-# Give emperor-admins admin permission
-INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_OVERALL_ADMIN', @emp_admin_group_id, UTC_TIMESTAMP());
-
-# Give emperor-users login permission
-INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_OVERALL_LOGIN', @emp_user_group_id, UTC_TIMESTAMP());
 # Give all other permissions to emperor-users
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_PROJECT_BROWSE', @emp_user_group_id, UTC_TIMESTAMP());
 INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES (@emp_default_scheme, 'PERM_TICKET_CREATE', @emp_user_group_id, UTC_TIMESTAMP());
@@ -108,6 +113,8 @@ CREATE VIEW full_permissions AS
   SELECT p.id as project_id, psu.permission_id as permission_id, psu.user_id as user_id,CONCAT('permission_scheme_users:',psu.id) AS source FROM projects p JOIN permission_scheme_users psu ON psu.permission_scheme_id=p.permission_scheme_id;
 
 # --- !Downs
+
+ALTER TABLE group_users DROP KEY users_and_groups;
 
 DROP VIEW full_permissions;
 
