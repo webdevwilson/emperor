@@ -95,18 +95,40 @@ trait Secured {
   /**
    * Action for authenticated users.
    */
-  def IsAuthenticated(f: Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthenticated) { user =>
-    Action(request => f(request))
+  def IsAuthenticated(f: Request[AnyContent] => Result) = {
+    Security.Authenticated(username, onUnauthenticated) { user =>
+      Action(request => f(request))
+    }
   }
 
-  def IsAuthorized(projectId: Long, reqPerm: String)(f: Request[AnyContent] => Result) = IsAuthenticated { request =>
+  def IsAuthorized(projectId: Option[Long] = None, ticketId: Option[String] = None, perm: String)(f: Request[AnyContent] => Result) = IsAuthenticated { request =>
 
     val maybeUser = username(request)
     maybeUser match {
+
+      // We have a user
       case Some(user) => {
-        val maybePerm = PermissionSchemeModel.hasPermission(projectId = projectId, perm = reqPerm, userId = user.toLong)
-        maybePerm match {
-          case Some(cause) => f(request) // Log the cause!
+        // Try and get the project id.  We might've gotten a ticketid
+        val maybeProjectId = if(projectId.isDefined) {
+          projectId
+        } else if(ticketId.isDefined) {
+          // Got a ticket id.  Fetch the ticket
+          TicketModel.getById(ticketId.get) match {
+            case Some(ticket) => Some(ticket.projectId)
+            case None => None
+          }
+        } else {
+          Some(ProjectModel.getByKey("EMPCORE").get.id.get) // Return the default project id, this must be a global check
+        }
+
+        maybeProjectId match {
+          case Some(projectId) => {
+            val maybePerm = PermissionSchemeModel.hasPermission(projectId = projectId, perm = perm, userId = user.toLong)
+            maybePerm match {
+              case Some(cause) => f(request) // Log the cause!
+              case None => onUnauthorized(request)
+            }
+          }
           case None => onUnauthorized(request)
         }
       }

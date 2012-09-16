@@ -7,12 +7,12 @@ import models.SearchModel
 
 object Admin extends Controller with Secured {
 
-  def index = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.index(request))
   }
 
-  def reindex = IsAuthorized(0, "PERM_GLOBAL_ADMIN") { implicit request =>
+  def reindex = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     SearchModel.reIndex
     Redirect(routes.Admin.index).flashing("success" -> "admin.reindex.success")
