@@ -230,7 +230,6 @@ YUI().use('pjax', function (Y) {
   YUI().use('emperor-models', 'base', 'view', 'node', 'pjax', 'io-base', function (Y) {
 
     var refreshLinks = function (transactionid, response, arguments) {
-      // ticketLinks.add(JSON.parse(response.responseText))
       var pjax = new Y.Pjax({
         container: '#link-body',
         contentSelector: '#link-body'
