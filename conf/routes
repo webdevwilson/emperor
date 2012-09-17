@@ -97,9 +97,9 @@ GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: Stri
 PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String)
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String])
 
-GET     /auth/login                     controllers.Auth.login
+GET     /auth/login                     controllers.Auth.login(redirectUrl: String ?= "/")
 GET     /auth/logout                    controllers.Auth.logout
-POST    /auth/login                     controllers.Auth.doLogin
+POST    /auth/login                     controllers.Auth.doLogin(redirectUrl: String ?= "/")
 
 GET     /project/create                 controllers.Project.create
 GET     /project/edit/:id               controllers.Project.edit(id: Long)

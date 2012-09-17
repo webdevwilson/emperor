@@ -14,7 +14,7 @@
  }
  <div class="btn-group pull-right">
   @if(request.user.isAnonymous) {
-   <a href="@controllers.routes.Auth.login" class="btn btn-primary">@Messages("auth.login")</a>
+   <a href="@controllers.routes.Auth.login(redirectUrl = request.request.uri)" class="btn btn-primary">@Messages("auth.login")</a>
   } else {
    <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
      @request.user.username

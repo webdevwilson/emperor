@@ -29,9 +29,9 @@ object Auth extends Controller {
     })
   )
 
-  def login = Action { implicit request =>
+  def login(redirectUrl: String = "/") = Action { implicit request =>
 
-    Ok(views.html.auth.login(loginForm)(request))
+    Ok(views.html.auth.login(loginForm, redirectUrl)(request))
   }
 
   def logout = Action { implicit request =>
@@ -39,26 +39,22 @@ object Auth extends Controller {
     Redirect(routes.Auth.login()).withNewSession.flashing("error" -> "auth.logout.success")
   }
 
-  def doLogin = Action { implicit request =>
+  def doLogin(redirectUrl: String = "/") = Action { implicit request =>
 
     loginForm.bindFromRequest.fold(
       errors => {
-        BadRequest(views.html.auth.login(errors)(request))
+        BadRequest(views.html.auth.login(errors, redirectUrl)(request))
       }, {
         case loginUser => {
 
           val user = UserModel.getByUsername(loginUser.username).get // We know this exists, so just get it
 
-          Redirect(flash.get("redirect_url").getOrElse("/")).withSession("user_id" -> user.id.get.toString).flashing("success" -> "auth.success")
+          Redirect(redirectUrl).withSession("user_id" -> user.id.get.toString).flashing("success" -> "auth.success")
         }
       }
     )
   }
 }
-
-//
-// https://github.com/playframework/Play20/blob/master/samples/scala/zentasks/app/controllers/Application.scala
-//
 
 case class AuthenticatedRequest(
   val user: User, request: Request[AnyContent]
@@ -72,7 +68,7 @@ trait Secured {
   /**
    * Redirect to login if the user in not authenticated.
    */
-  private def onUnauthenticated(request: RequestHeader) = Results.Redirect(routes.Auth.login).flashing("error" -> "auth.mustlogin")
+  private def onUnauthenticated(request: RequestHeader) = Results.Redirect("/auth/login", Map("redirectUrl" -> Seq(request.uri))).flashing("error" -> "auth.mustlogin")
 
   /**
    * Redirect to index if the user in not authenticated.

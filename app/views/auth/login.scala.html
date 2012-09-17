@@ -1,4 +1,4 @@
-@(objForm: Form[LoginUser])(implicit request: Request[AnyContent])
+@(objForm: Form[LoginUser], redirectUrl: String)(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -10,7 +10,7 @@
       @Messages(error.message)
     </div>
   }
-  @helper.form(action = controllers.routes.Auth.doLogin) {
+  @helper.form(action = controllers.routes.Auth.doLogin(redirectUrl)) {
    <fieldset>
     @helper.inputText(objForm("username"), '_label -> Messages("general.username"))
     @helper.inputPassword(objForm("password"), '_label -> Messages("general.password"))
