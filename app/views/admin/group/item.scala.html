@@ -1,4 +1,4 @@
-@(group: models.Group, userGroups: List[GroupUser])(implicit request: Request[AnyContent])
+@(group: models.Group, userGroups: List[GroupUser])(implicit request: AuthenticatedRequest)
 @main(Messages("admin.group.with.id", group.name)) {
 <ul class="breadcrumb">
  <li>

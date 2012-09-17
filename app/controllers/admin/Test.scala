@@ -17,7 +17,7 @@ import play.db._
 
 object Test extends Controller with Secured {
 
-  def generate = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def generate = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val projects = List(
       ("Campaign", "CAMP"),

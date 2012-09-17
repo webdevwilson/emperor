@@ -11,7 +11,7 @@ object Timeline extends Controller with Secured {
 
   val logger = LoggerFactory.getLogger("application")
 
-  def index(page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int, query: String) = IsAuthenticated() { implicit request =>
 
     val filters = request.queryString filterKeys { key =>
       key match {

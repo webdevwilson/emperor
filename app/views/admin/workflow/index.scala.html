@@ -1,4 +1,4 @@
-@(page: chc.Page[models.Workflow])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.Workflow])(implicit request: AuthenticatedRequest)
 @import util._
 @main(Messages("admin.workflow.list")) {
 <ul class="breadcrumb">

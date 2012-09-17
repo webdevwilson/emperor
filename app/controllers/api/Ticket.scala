@@ -10,7 +10,7 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
-  def item(ticketId: String) = IsAuthenticated { implicit request =>
+  def item(ticketId: String) = IsAuthenticated() { implicit request =>
 
     val lid = request.session.get("link_ticket")
     val ticket = TicketModel.getFullById(ticketId)
@@ -36,12 +36,12 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def deleteLink(id: Long) = IsAuthenticated { implicit request =>
+  def deleteLink(id: Long) = IsAuthenticated() { implicit request =>
     TicketModel.removeLink(id)
     Ok(Json.toJson(Map("ok" -> "ok")))
   }
 
-  def link(ticketId: String) = IsAuthenticated { implicit request =>
+  def link(ticketId: String) = IsAuthenticated() { implicit request =>
 
     request.body.asJson.map { json =>
       val childId = (json \ "child_ticket_id").asOpt[String]
@@ -71,7 +71,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def links(ticketId: String) = IsAuthenticated { implicit request =>
+  def links(ticketId: String) = IsAuthenticated() { implicit request =>
 
     val links = TicketModel.getLinks(ticketId)
 

@@ -1,4 +1,4 @@
-@(role: models.Role)(implicit request: Request[AnyContent])
+@(role: models.Role)(implicit request: AuthenticatedRequest)
 @main(Messages("admin.role.with.id", role.name)) {
 <ul class="breadcrumb">
  <li>

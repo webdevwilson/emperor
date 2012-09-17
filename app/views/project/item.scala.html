@@ -1,4 +1,4 @@
-@(project: models.Project, tickets: chc.SearchResult[org.elasticsearch.search.SearchHit], timeline: chc.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: Request[AnyContent])
+@(project: models.Project, tickets: chc.SearchResult[org.elasticsearch.search.SearchHit], timeline: chc.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: AuthenticatedRequest)
 
 @import util._
 

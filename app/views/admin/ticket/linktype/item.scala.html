@@ -1,4 +1,4 @@
-@(obj: models.TicketLinkType)(implicit request: Request[AnyContent])
+@(obj: models.TicketLinkType)(implicit request: AuthenticatedRequest)
 @main(Messages("admin.ticket_link_type.with.id", Messages(obj.name))) {
 <ul class="breadcrumb">
  <li>

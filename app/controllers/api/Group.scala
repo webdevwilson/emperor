@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 
 object Group extends Controller with Secured {
 
-  def startsWith(q: Option[String]) = IsAuthenticated { implicit request =>
+  def startsWith(q: Option[String]) = IsAuthenticated() { implicit request =>
 
     q match {
       case Some(query) => {
@@ -30,7 +30,7 @@ object Group extends Controller with Secured {
   /**
    * Add a user to the specified group.
    */
-  def addUser(id: Long, userId: Long) = IsAuthenticated { implicit request =>
+  def addUser(id: Long, userId: Long) = IsAuthenticated() { implicit request =>
     GroupModel.addUser(userId, id) // XXX This should return something…
     Ok(Json.toJson(Map("ok" -> "ok")))
   }
@@ -38,7 +38,7 @@ object Group extends Controller with Secured {
   /**
    * Remove a user from the specified group.
    */
-  def removeUser(id: Long, userId: Long) = IsAuthenticated { implicit request =>
+  def removeUser(id: Long, userId: Long) = IsAuthenticated() { implicit request =>
     GroupModel.removeUser(userId, id);
     Ok(Json.toJson(Map("ok" -> "ok")))
   }

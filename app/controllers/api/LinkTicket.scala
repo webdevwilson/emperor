@@ -10,7 +10,7 @@ import play.api.mvc._
 
 object LinkTicket extends Controller with Secured {
 
-  def item(id: String) = IsAuthenticated { implicit request =>
+  def item(id: String) = IsAuthenticated() { implicit request =>
 
     val tid = request.session.get("link_ticket")
 
@@ -43,7 +43,7 @@ object LinkTicket extends Controller with Secured {
     }
   }
 
-  def link(id: String) = IsAuthenticated { implicit request =>
+  def link(id: String) = IsAuthenticated() { implicit request =>
 
     request.body.asJson.map { json =>
       (json \ "ticket_id").asOpt[String].map { ticketId =>

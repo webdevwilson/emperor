@@ -1,4 +1,4 @@
-@(objForm: Form[(TicketType)])(implicit request: Request[AnyContent])
+@(objForm: Form[(TicketType)])(implicit request: AuthenticatedRequest)
 
 @import helper._
 @import helper.bootstrap._

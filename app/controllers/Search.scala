@@ -8,7 +8,7 @@ import play.api.mvc._
 
 object Search extends Controller with Secured {
 
-  def index(page: Int, count: Int, query: String) = IsAuthenticated { implicit request =>
+  def index(page: Int, count: Int, query: String) = IsAuthenticated() { implicit request =>
 
     val filters = request.queryString filterKeys { key =>
       key match {

@@ -9,7 +9,9 @@ import play.api.db.DB
 import play.api.i18n.Messages
 import play.api.Play.current
 
-case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String, dateCreated: Date)
+case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String, dateCreated: Date) {
+  def isAnonymous = username.equals("anonymous")
+}
 
 case class EditUser(username: String, realName: String, email: String)
 

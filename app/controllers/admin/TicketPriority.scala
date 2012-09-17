@@ -24,7 +24,7 @@ object TicketPriority extends Controller with Secured {
     )(models.TicketPriority.apply)(models.TicketPriority.unapply)
   )
 
-  def add = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.create(errors)),
@@ -35,19 +35,19 @@ object TicketPriority extends Controller with Secured {
     )
   }
 
-  def create = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.priority.create(priorityForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val priorities = TicketPriorityModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.priority.index(priorities)(request))
   }
 
-  def edit(priorityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def edit(priorityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val priority = TicketPriorityModel.getById(priorityId)
 
@@ -57,7 +57,7 @@ object TicketPriority extends Controller with Secured {
     }
   }
 
-  def item(priorityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def item(priorityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val priority = TicketPriorityModel.getById(priorityId)
 
@@ -67,7 +67,7 @@ object TicketPriority extends Controller with Secured {
     }
   }
 
-  def update(priorityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def update(priorityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     priorityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.priority.edit(priorityId, errors)),

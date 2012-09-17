@@ -11,7 +11,7 @@
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
-)(implicit request: Request[AnyContent])
+)(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
 @import chc._

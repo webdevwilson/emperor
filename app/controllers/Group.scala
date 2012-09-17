@@ -9,7 +9,7 @@ import models.GroupModel
 
 object Group extends Controller with Secured {
 
-  def startsWith() = IsAuthenticated { implicit request =>
+  def startsWith() = IsAuthenticated() { implicit request =>
 
     val param = request.queryString.get("query");
 

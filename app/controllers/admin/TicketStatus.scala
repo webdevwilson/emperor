@@ -22,7 +22,7 @@ object TicketStatus extends Controller with Secured {
     )(models.TicketStatus.apply)(models.TicketStatus.unapply)
   )
 
-  def add = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.create(errors)),
@@ -33,19 +33,19 @@ object TicketStatus extends Controller with Secured {
     )
   }
 
-  def create = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.status.create(statusForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val statuses = TicketStatusModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.status.index(statuses)(request))
   }
 
-  def edit(statusId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def edit(statusId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val status = TicketStatusModel.getById(statusId)
 
@@ -55,7 +55,7 @@ object TicketStatus extends Controller with Secured {
     }
   }
 
-  def item(statusId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def item(statusId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val status = TicketStatusModel.getById(statusId)
 
@@ -66,7 +66,7 @@ object TicketStatus extends Controller with Secured {
 
   }
 
-  def update(statusId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def update(statusId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     statusForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.status.edit(statusId, errors)),

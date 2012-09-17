@@ -24,7 +24,7 @@ object TicketLinkType extends Controller with Secured {
     )(models.TicketLinkType.apply)(models.TicketLinkType.unapply)
   )
 
-  def add = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.create(errors)),
@@ -35,19 +35,19 @@ object TicketLinkType extends Controller with Secured {
     )
   }
 
-  def create = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.linktype.create(ltypeForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val types = TicketLinkTypeModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.linktype.index(types)(request))
   }
 
-  def edit(ltypeId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def edit(ltypeId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val tltype = TicketLinkTypeModel.getById(ltypeId)
 
@@ -57,7 +57,7 @@ object TicketLinkType extends Controller with Secured {
     }
   }
 
-  def item(ltypeId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def item(ltypeId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val tltype = TicketLinkTypeModel.getById(ltypeId)
 
@@ -68,7 +68,7 @@ object TicketLinkType extends Controller with Secured {
 
   }
 
-  def update(ltypeId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def update(ltypeId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     ltypeForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.linktype.edit(ltypeId, errors)),

@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 
 object User extends Controller with Secured {
 
-  def startsWith(q: Option[String]) = IsAuthenticated { implicit request =>
+  def startsWith(q: Option[String]) = IsAuthenticated() { implicit request =>
 
     q match {
       case Some(query) => {

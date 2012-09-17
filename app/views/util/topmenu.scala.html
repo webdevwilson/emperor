@@ -1,4 +1,4 @@
-@(currentProject: Option[Long] = None)(implicit request: Request[AnyContent])
+@(currentProject: Option[Long] = None)(implicit request: AuthenticatedRequest)
 
 <div class="nav-collapse">
  <ul class="nav">
@@ -13,13 +13,17 @@
   <input type="text" name="query" class="search-query" placeholder="@Messages("search.placeholder")">
  }
  <div class="btn-group pull-right">
+  @if(request.user.isAnonymous) {
+   <a href="@controllers.routes.Auth.login" class="btn btn-primary">@Messages("auth.login")</a>
+  } else {
    <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
-     @request.session.get("username")
+     @request.user.username
      <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
     <li><a href="@routes.Auth.logout"><i class="icon-eject"></i> @Messages("auth.logout")</a></li>
    </ul>
+  }
  </div>
  <div id="linker" class="btn-group pull-right"></div>
 </div>

@@ -10,7 +10,7 @@ import play.api.mvc._
 
 object Project extends Controller with Secured {
 
-  def item(id: Long) = IsAuthenticated { implicit request =>
+  def item(id: Long) = IsAuthenticated() { implicit request =>
 
     ProjectModel.getById(id) match {
       case Some(project) => {

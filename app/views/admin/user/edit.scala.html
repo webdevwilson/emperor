@@ -1,4 +1,4 @@
-@(id: Long, objForm: Form[(EditUser)], passForm: Form[(NewPassword)])(implicit request: Request[AnyContent])
+@(id: Long, objForm: Form[(EditUser)], passForm: Form[(NewPassword)])(implicit request: AuthenticatedRequest)
 
 @import helper._
 @import helper.bootstrap._

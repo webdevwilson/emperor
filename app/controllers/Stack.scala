@@ -8,7 +8,7 @@ import play.api.mvc._
 
 object Stack extends Controller with Secured {
 
-  def index = IsAuthenticated { implicit request =>
+  def index = IsAuthenticated() { implicit request =>
 
     Ok(views.html.stack.index()(request))
   }

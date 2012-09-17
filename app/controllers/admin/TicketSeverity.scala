@@ -24,7 +24,7 @@ object TicketSeverity extends Controller with Secured {
     )(models.TicketSeverity.apply)(models.TicketSeverity.unapply)
   )
 
-  def add = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.create(errors)),
@@ -35,19 +35,19 @@ object TicketSeverity extends Controller with Secured {
     )
   }
 
-  def create = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.ticket.severity.create(severityForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val severities = TicketSeverityModel.list(page = page, count = count)
 
     Ok(views.html.admin.ticket.severity.index(severities)(request))
   }
 
-  def edit(severityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def edit(severityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val severity = TicketSeverityModel.getById(severityId)
 
@@ -57,7 +57,7 @@ object TicketSeverity extends Controller with Secured {
     }
   }
 
-  def item(severityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def item(severityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val severity = TicketSeverityModel.getById(severityId)
 
@@ -68,7 +68,7 @@ object TicketSeverity extends Controller with Secured {
 
   }
 
-  def update(severityId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def update(severityId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     severityForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.ticket.severity.edit(severityId, errors)),

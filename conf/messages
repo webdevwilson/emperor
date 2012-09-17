@@ -113,6 +113,7 @@ admin.workflow.with.id=Workflow {0}
 
 app.footer.blurb=This is <a href="http://emperorapp.com">Emperor</a> version {0}. Copyright &copy; 2012 Cory Watson
 
+auth.login=Login
 auth.failure=Login failed.
 auth.logout=Logout
 auth.logout.success=You have been logged out.

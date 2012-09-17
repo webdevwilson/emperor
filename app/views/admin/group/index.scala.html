@@ -1,4 +1,4 @@
-@(page: chc.Page[models.Group])(implicit request: Request[AnyContent])
+@(page: chc.Page[models.Group])(implicit request: AuthenticatedRequest)
 @import util._
 @main(Messages("admin.group.list")) {
 <ul class="breadcrumb">

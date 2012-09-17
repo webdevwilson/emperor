@@ -1,4 +1,4 @@
-@(result: chc.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: Request[AnyContent])
+@(result: chc.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: AuthenticatedRequest)
 
 @import chc._
 @import util._

@@ -1,4 +1,4 @@
-@(title: String, currentProject: Option[Long] = None)(content: Html)(implicit request: Request[AnyContent])
+@(title: String, currentProject: Option[Long] = None)(content: Html)(implicit request: AuthenticatedRequest)
 
 @import util._
 

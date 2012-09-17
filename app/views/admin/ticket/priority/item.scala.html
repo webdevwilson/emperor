@@ -1,4 +1,4 @@
-@(obj: models.TicketPriority)(implicit request: Request[AnyContent])
+@(obj: models.TicketPriority)(implicit request: AuthenticatedRequest)
 @main(Messages("admin.ticket_priority.with.id", Messages(obj.name))) {
 <ul class="breadcrumb">
  <li>

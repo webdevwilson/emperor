@@ -36,7 +36,7 @@ object Auth extends Controller {
 
   def logout = Action { implicit request =>
 
-    Redirect(routes.Auth.login).withNewSession.flashing("error" -> "auth.logout.success")
+    Redirect(routes.Auth.login()).withNewSession.flashing("error" -> "auth.logout.success")
   }
 
   def doLogin = Action { implicit request =>
@@ -49,7 +49,7 @@ object Auth extends Controller {
 
           val user = UserModel.getByUsername(loginUser.username).get // We know this exists, so just get it
 
-          Redirect(routes.Core.index).withSession("user_id" -> user.id.get.toString).flashing("success" -> "auth.success")
+          Redirect(flash.get("redirect_url").getOrElse("/")).withSession("user_id" -> user.id.get.toString).flashing("success" -> "auth.success")
         }
       }
     )
@@ -60,27 +60,14 @@ object Auth extends Controller {
 // https://github.com/playframework/Play20/blob/master/samples/scala/zentasks/app/controllers/Application.scala
 //
 
+case class AuthenticatedRequest(
+  val user: User, request: Request[AnyContent]
+) extends WrappedRequest(request)
+
 /**
  * Provide security features
  */
 trait Secured {
-
-  /**
-   * Retrieve the current username.
-   */
-  private def username(request: RequestHeader): Option[String] = {
-    val user = request.session.get("user_id").getOrElse(UserModel.getByUsername("anonymous").get.id.get.toString)
-    Logger.debug("Checking for log in privileges for user " + user)
-    val proj = ProjectModel.getByKey("EMPCORE").get // XXX Some sort of settings table to hold this information?
-    val maybePerm = PermissionSchemeModel.hasPermission(proj.id.get, "PERM_GLOBAL_LOGIN", user.toLong) // Can Anonymous log in?
-    maybePerm match {
-      case Some(cause) => {
-        Logger.info("User " + user + " allowed login via " + cause)
-        Some(user)
-      }
-      case None => None
-    }
-  }
 
   /**
    * Redirect to login if the user in not authenticated.
@@ -93,46 +80,55 @@ trait Secured {
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Core.index).flashing("error" -> "auth.notauthorized")
 
   /**
-   * Action for authenticated users.
+   * Action for verifying authentication and authorization of users.
    */
-  def IsAuthenticated(f: Request[AnyContent] => Result) = {
-    Security.Authenticated(username, onUnauthenticated) { user =>
-      Action(request => f(request))
-    }
-  }
+  def IsAuthenticated(projectId: Option[Long] = None, ticketId: Option[String] = None, perm: String = "PERM_GLOBAL_LOGIN")(f: AuthenticatedRequest => Result) = {
+    Action { request =>
 
-  def IsAuthorized(projectId: Option[Long] = None, ticketId: Option[String] = None, perm: String)(f: Request[AnyContent] => Result) = IsAuthenticated { request =>
+      // First grab the user_id from the session, maybe
+      val maybeUserId = request.session.get("user_id")
 
-    val maybeUser = username(request)
-    maybeUser match {
-
-      // We have a user
-      case Some(user) => {
-        // Try and get the project id.  We might've gotten a ticketid
-        val maybeProjectId = if(projectId.isDefined) {
-          projectId
-        } else if(ticketId.isDefined) {
-          // Got a ticket id.  Fetch the ticket
-          TicketModel.getById(ticketId.get) match {
-            case Some(ticket) => Some(ticket.projectId)
-            case None => None
-          }
-        } else {
-          Some(ProjectModel.getByKey("EMPCORE").get.id.get) // Return the default project id, this must be a global check
+      // Try and fetch the user with the specified name. If we find it, great.
+      // If we don't then check to see if we allow login by the anonymous
+      // user.
+      val maybeUser: Option[User] = maybeUserId.map(userId => UserModel.getById(userId.toLong)).getOrElse({
+        val proj = ProjectModel.getByKey("EMPCORE").get
+        val anon = UserModel.getByUsername("anonymous")
+        val anonLogin = PermissionSchemeModel.hasPermission(proj.id.get, "PERM_GLOBAL_LOGIN", anon.get.id.get)
+        anonLogin match {
+          case Some(cause) => anon
+          case None => None
         }
+      })
 
-        maybeProjectId match {
-          case Some(projectId) => {
-            val maybePerm = PermissionSchemeModel.hasPermission(projectId = projectId, perm = perm, userId = user.toLong)
-            maybePerm match {
-              case Some(cause) => f(request) // Log the cause!
-              case None => onUnauthorized(request)
+      maybeUser match {
+        case Some(user) => {
+          val maybeProjectId = if(projectId.isDefined) {
+            projectId
+          } else if(ticketId.isDefined) {
+            // Got a ticket id.  Fetch the ticket to get the project
+            TicketModel.getById(ticketId.get) match {
+              case Some(ticket) => Some(ticket.projectId)
+              case None => None
             }
+          } else {
+            // Worse case, get the core Emperor project
+            Some(ProjectModel.getByKey("EMPCORE").get.id.get) // Return the default project id, this must be a global check
           }
-          case None => onUnauthorized(request)
+
+          maybeProjectId match {
+            case Some(projectId) => {
+              val maybePerm = PermissionSchemeModel.hasPermission(projectId = projectId, perm = perm, userId = user.id.get)
+              maybePerm match {
+                case Some(cause) => f(AuthenticatedRequest(user, request))
+                case None => onUnauthorized(request)
+              }
+            }
+            case None => onUnauthorized(request)
+          }
         }
+        case None => onUnauthenticated(request)
       }
-      case None => onUnauthenticated(request)
     }
   }
 }

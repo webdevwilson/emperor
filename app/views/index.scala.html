@@ -1,4 +1,4 @@
-@(timeline: chc.SearchResult[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: Request[AnyContent])
+@(timeline: chc.SearchResult[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: AuthenticatedRequest)
 
 @import chc._
 @import util._

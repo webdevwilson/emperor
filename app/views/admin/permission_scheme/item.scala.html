@@ -1,4 +1,4 @@
-@(ps: models.PermissionScheme, perms: List[models.Permission], permGroups: Map[String,List[PermissionSchemeGroup]], permUsers: Map[String,List[PermissionSchemeUser]])(implicit request: Request[AnyContent])
+@(ps: models.PermissionScheme, perms: List[models.Permission], permGroups: Map[String,List[PermissionSchemeGroup]], permUsers: Map[String,List[PermissionSchemeUser]])(implicit request: AuthenticatedRequest)
 @main(Messages("admin.permission_scheme.with.id", ps.name)) {
 <ul class="breadcrumb">
  <li>

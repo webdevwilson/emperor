@@ -1,4 +1,4 @@
-@(workflow: models.Workflow, statuses: Seq[models.WorkflowStatus])(implicit request: Request[AnyContent])
+@(workflow: models.Workflow, statuses: Seq[models.WorkflowStatus])(implicit request: AuthenticatedRequest)
 @main(Messages("admin.workflow.with.id", workflow.name)) {
 <ul class="breadcrumb">
  <li>

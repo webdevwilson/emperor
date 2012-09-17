@@ -43,7 +43,7 @@ object User extends Controller with Secured {
     verifying("admin.user.password.match", np => { np.password.equals(np.password2) })
   )
 
-  def add = IsAuthenticated { implicit request =>
+  def add = IsAuthenticated() { implicit request =>
 
     newForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.create(errors)),
@@ -54,7 +54,7 @@ object User extends Controller with Secured {
     )
   }
 
-  def addToGroup(userId: Long, groupId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def addToGroup(userId: Long, groupId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val user = UserModel.getById(userId)
 
@@ -70,7 +70,7 @@ object User extends Controller with Secured {
     ))
   }
 
-  def removeFromGroup(userId: Long, groupId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def removeFromGroup(userId: Long, groupId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val user = UserModel.getById(userId)
 
@@ -86,19 +86,19 @@ object User extends Controller with Secured {
     ))
   }
 
-  def create = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     Ok(views.html.admin.user.create(newForm)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val users = UserModel.list(page = page, count = count)
 
     Ok(views.html.admin.user.index(users)(request))
   }
 
-  def edit(userId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def edit(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val user = UserModel.getById(userId)
 
@@ -111,7 +111,7 @@ object User extends Controller with Secured {
     }
   }
 
-  def item(userId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def item(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val user = UserModel.getById(userId)
     val allGroups = GroupModel.getAll
@@ -124,7 +124,7 @@ object User extends Controller with Secured {
 
   }
 
-  def update(userId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def update(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     editForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.edit(userId, errors, passwordForm)),
@@ -136,7 +136,7 @@ object User extends Controller with Secured {
     )
   }
 
-  def updatePassword(userId: Long) = IsAuthorized(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def updatePassword(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val user = UserModel.getById(userId)
 

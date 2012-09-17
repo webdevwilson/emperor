@@ -1,4 +1,4 @@
-@(implicit request: Request[AnyContent])
+@(implicit request: AuthenticatedRequest)
 
 @main(Messages("admin.title")) {
 <div class="well">
