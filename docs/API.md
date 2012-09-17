@@ -111,7 +111,7 @@ All timestamps are in ISO 8601 format.
 
 ### Remove a link between tickets
 
-    DELETE /api/ticket/link/:linkid
+    DELETE /api/ticket/link/:ticketid/:linkid
 
 #### Input
 
