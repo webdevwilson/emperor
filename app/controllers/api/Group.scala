@@ -30,7 +30,7 @@ object Group extends Controller with Secured {
   /**
    * Add a user to the specified group.
    */
-  def addUser(id: Long, userId: Long) = IsAuthenticated() { implicit request =>
+  def addUser(id: Long, userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     GroupModel.addUser(userId, id) // XXX This should return something…
     Ok(Json.toJson(Map("ok" -> "ok")))
   }
@@ -38,7 +38,7 @@ object Group extends Controller with Secured {
   /**
    * Remove a user from the specified group.
    */
-  def removeUser(id: Long, userId: Long) = IsAuthenticated() { implicit request =>
+  def removeUser(id: Long, userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     GroupModel.removeUser(userId, id);
     Ok(Json.toJson(Map("ok" -> "ok")))
   }

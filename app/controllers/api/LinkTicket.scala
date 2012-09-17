@@ -43,7 +43,7 @@ object LinkTicket extends Controller with Secured {
     }
   }
 
-  def link(id: String) = IsAuthenticated() { implicit request =>
+  def link(id: String) = IsAuthenticated(ticketId = Some(id), perm = "PERM_TICKET_LINK") { implicit request =>
 
     request.body.asJson.map { json =>
       (json \ "ticket_id").asOpt[String].map { ticketId =>

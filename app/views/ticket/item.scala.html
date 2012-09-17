@@ -326,7 +326,7 @@ YUI().use('pjax', function (Y) {
     Y.one("#link-body").delegate('click', function(e) {
       var linkid = e.currentTarget.getAttribute('data-linkid');
 
-      var uri = '/api/ticket/link/' + linkid
+      var uri = '/api/ticket/link/@ticket.ticketId/' + linkid
 
       var cfg = {
         method: 'DELETE',
