@@ -180,7 +180,7 @@ object ProjectModel {
   def update(id: Long, project: EditProject): Option[Project] = {
 
     DB.withConnection { implicit conn =>
-      val foo = updateQuery.on(
+      updateQuery.on(
         'id         -> id,
         'name       -> project.name,
         'workflow_id-> project.workflowId,
