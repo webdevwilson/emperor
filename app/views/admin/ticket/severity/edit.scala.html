@@ -9,15 +9,15 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.TicketPriority.index()">@Messages("admin.ticket_severity.add")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.TicketSeverity.index()">@Messages("admin.ticket_severity.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages("ticket_severity.with.id", id)</li>
+ <li class="active">@Messages("admin.ticket_severity.with.id", id)</li>
 </ul>
 <h1>@Messages("admin.ticket_severity.edit")</h1>
 @helper.form(action = controllers.admin.routes.TicketSeverity.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_severity.name"))
-  @helper.inputText(objForm("color"), '_label -> Messages("ticket_severity.color"))
+  @helper.inputText(objForm("color"), 'prepend -> "#", '_label -> Messages("ticket_severity.color"))
   @helper.inputText(objForm("position"), '_label -> Messages("ticket_severity.position"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.TicketSeverity.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>

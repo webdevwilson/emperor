@@ -9,7 +9,7 @@
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li>
-  <a href="@controllers.admin.routes.TicketPriority.index()">@Messages("admin.ticket_priority.add")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
+  <a href="@controllers.admin.routes.TicketPriority.index()">@Messages("admin.ticket_priority.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
  <li class="active">@Messages("ticket_priority.with.id", id)</li>
 </ul>
@@ -17,7 +17,7 @@
 @helper.form(action = controllers.admin.routes.TicketPriority.update(id)) {
  <fieldset>
   @helper.inputText(objForm("name"), '_label -> Messages("ticket_priority.name"))
-  @helper.inputText(objForm("color"), '_label -> Messages("ticket_priority.color"))
+  @helper.inputText(objForm("color"), 'prepend -> "#", '_label -> Messages("ticket_priority.color"))
   @helper.inputText(objForm("position"), '_label -> Messages("ticket_priority.position"))
   <div class="form-actions">
    <a href="@controllers.admin.routes.TicketPriority.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
