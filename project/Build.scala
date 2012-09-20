@@ -13,7 +13,9 @@ object ApplicationBuild extends Build {
     "org.specs2"    %% "specs2"                 % "1.12.1"           % "test",
     "mysql"         % "mysql-connector-java"    % "5.1.21",
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
-    "org.clapper"   %% "markwrap"               % "0.5.4"
+    "org.clapper"   %% "markwrap"               % "0.5.4",
+    "javax.mail"    % "mail"                    % "1.4.1",
+    "org.apache.commons" % "commons-email"      % "1.2"
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
