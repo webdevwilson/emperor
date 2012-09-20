@@ -1,7 +1,7 @@
 package controllers.admin
 
 import anorm._
-import chc._
+import emp._
 import controllers._
 import java.util.Date
 import models.PermissionSchemeModel

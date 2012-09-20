@@ -1,6 +1,6 @@
-@(result: chc.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: AuthenticatedRequest)
+@(result: emp.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: AuthenticatedRequest)
 
-@import chc._
+@import emp._
 @import util._
 
 @main(Messages("general.timeline")) {

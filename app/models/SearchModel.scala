@@ -1,7 +1,7 @@
 package models
 
-import chc._
-import chc.JsonFormats._
+import emp._
+import emp.JsonFormats._
 import com.traackr.scalastic.elasticsearch.Indexer
 import java.text.SimpleDateFormat
 import java.util.{Date,TimeZone}

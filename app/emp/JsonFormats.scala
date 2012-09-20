@@ -1,4 +1,4 @@
-package chc
+package emp
 
 import anorm.Id
 import java.text.SimpleDateFormat

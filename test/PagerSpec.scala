@@ -5,7 +5,7 @@ import play.api.test._
 
 class PagerSpec extends Specification {
 
-  import chc._
+  import emp._
 
   "Page" should {
 

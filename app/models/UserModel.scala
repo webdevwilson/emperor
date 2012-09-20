@@ -2,7 +2,7 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import chc._
+import emp._
 import java.util.Date
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.DB

@@ -1,6 +1,6 @@
-@(timeline: chc.SearchResult[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: AuthenticatedRequest)
+@(timeline: emp.SearchResult[org.elasticsearch.search.SearchHit], projects: List[Project])(implicit request: AuthenticatedRequest)
 
-@import chc._
+@import emp._
 @import util._
 
 @main(Messages("general.home")) {

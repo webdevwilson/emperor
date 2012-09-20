@@ -1,4 +1,4 @@
-package chc
+package emp
 
 import collection.JavaConversions._
 import org.elasticsearch.action.search.SearchResponse

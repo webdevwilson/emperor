@@ -1,6 +1,6 @@
 package controllers.api
 
-import chc.JsonFormats._
+import emp.JsonFormats._
 import com.codahale.jerkson.Json._
 import controllers._
 import models.UserModel

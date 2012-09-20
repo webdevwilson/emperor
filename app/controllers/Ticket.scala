@@ -1,8 +1,8 @@
 package controllers
 
 import anorm._
-import chc._
-import chc.JsonFormats._
+import emp._
+import emp.JsonFormats._
 import collection.JavaConversions._
 import play.api._
 import play.api.data._

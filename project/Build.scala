@@ -22,6 +22,6 @@ object ApplicationBuild extends Build {
   ).settings(
     sourceGenerators in Compile <+= buildInfo,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "chc"
+    buildInfoPackage := "emp"
   )
 }

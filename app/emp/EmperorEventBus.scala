@@ -1,4 +1,4 @@
-package chc
+package emp
 
 import akka.event.ActorEventBus
 import akka.event.LookupClassification
@@ -6,13 +6,6 @@ import akka.actor.ActorSystem
 import akka.actor.Props
 import akka.actor.Actor
 import models._
-
-// "project/created"
-// "project/edited"
-// "ticket/created"
-// "ticket/edited"
-// "ticket/linked"
-// "ticket/resolved"
 
 case class EmperorEvent(
   name: String

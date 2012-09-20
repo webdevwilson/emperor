@@ -1,6 +1,6 @@
 package controllers
 
-import chc._
+import emp._
 import collection.JavaConversions._
 import models.SearchModel
 import org.elasticsearch.search.facet.terms.strings._

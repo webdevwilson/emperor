@@ -1,4 +1,4 @@
-package chc
+package emp
 
 import java.io.{BufferedWriter,File,FileWriter}
 import java.sql.{Connection,DriverManager}
