@@ -18,7 +18,7 @@
 <div class="row-fluid">
 
  <div class="span2">
-  <div id="ticket-info" class="well" data-spy="affix" data-offset-top="0">
+  <div id="ticket-info" class="well well-small" data-spy="affix" data-offset-top="0">
    <div class="btn-group">
     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
       @ticket.ticketId
@@ -83,7 +83,7 @@
 </div>
 
 
-   <div class="well ticket-desc">
+   <div class="well well-small ticket-desc">
     @if(ticket.description.isDefined) {
       @Html(markdown.parseToHTML(ticket.description.get))
     } else {
