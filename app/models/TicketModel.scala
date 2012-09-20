@@ -458,6 +458,12 @@ object TicketModel {
               url           = "",
               dateCreated   = t.dateCreated
             ))
+            // Get on the bus!
+            EmperorEventBus.publish(
+              NewTicketEvent(
+                ticketId = t.ticketId
+              )
+            )
           }
           nt
         }
@@ -789,6 +795,13 @@ object TicketModel {
           val comm = addComment(ticketId = id, userId = userId, content = content)
           SearchModel.indexComment(comm.get)
         } }
+
+        // Get on the bus!
+        EmperorEventBus.publish(
+          ChangedTicketEvent(
+            ticketId = id
+          )
+        )
       }
 
       val newTicket = DB.withConnection { implicit conn =>

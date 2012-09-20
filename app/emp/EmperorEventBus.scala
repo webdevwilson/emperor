@@ -7,9 +7,27 @@ import akka.actor.Props
 import akka.actor.Actor
 import models._
 
-case class EmperorEvent(
-  name: String
-)
+class EmperorEvent(n: String) {
+  val name: String = n
+}
+
+case class ChangedTicketEvent(
+  ticketId: String
+) extends EmperorEvent("ticket/changed")
+
+case class LinkTicketEvent(
+  ticketId: String
+) extends EmperorEvent("ticket/linked")
+
+case class NewTicketEvent(
+  ticketId: String
+) extends EmperorEvent("ticket/created")
+
+case class UnlinkTicketEvent(
+  ticketId: String
+) extends EmperorEvent("ticket/unlinked")
+
+// Found help from https://gist.github.com/3163791
 
 object EmperorEventBus extends ActorEventBus with LookupClassification{
   type Event=EmperorEvent
