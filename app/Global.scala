@@ -18,7 +18,7 @@ object Global extends GlobalSettings {
 
     val system = ActorSystem("Emperor")
 
-    val emailNotifier = system.actorOf(Props(new EmailNotifier()))
+    val emailNotifier = system.actorOf(Props(new EmailNotifier(Play.configuration)))
 
     EmailNotifier.relevantEvents.foreach { ev =>
       Logger.debug("Subscribed Email Notifier to '" + ev + "'")

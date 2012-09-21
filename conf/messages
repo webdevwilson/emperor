@@ -124,6 +124,9 @@ auth.success=Successfully logged in.
 Def_Assign_Nobody=Nobody
 Def_Assign_Owner=Owner of Project
 
+email.subject=[EMPEROR] {0}
+email.subject.ticket.new=New Ticket {0}
+
 event.action={0} {1}
 event.action.icon.comment=icon-bullhorn
 event.action.icon.ticket_change=icon-pencil

@@ -26,6 +26,8 @@
 
 ## Security
 * Passwords are stored using bcrypt.
+* Per-project permission schemes
+* Choice to allow anonymous users
 
 ## Features in Progress
 * No-nonsense UI with great user experience

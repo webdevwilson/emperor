@@ -27,6 +27,20 @@ Create a database called `emperor`.
 
   git clone https://github.com/gphat/emperor.git
 
+## Create Configuration
+
+Here are some configuration options you may want to define:
+
+* emperor.mail.smtp.server
+* emperor.mail.smtp.from.address
+* emperor.mail.smtp.from.name
+* emperor.mail.smtp.tls (true or false)
+* emperor.mail.smtp.username
+* emperor.mail.smtp.password
+
+You can enter these configurations in `conf/application-local.conf` and it
+will be automatically included.
+
 ## Start the Application
 
   cd emperor
