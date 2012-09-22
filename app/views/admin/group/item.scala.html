@@ -21,7 +21,7 @@
 <div id="user-list">
  <ul class="grid gridded-list" id="group-users">
  @userGroups.map { userGroup =>
-  <li><a href="#"><i data-userid="@userGroup.userId" class="remover icon-remove"></i></a> @userGroup.username (@Messages(userGroup.realName))</li>
+  <li style="min-width: 12em;"><a href="#"><i data-userid="@userGroup.userId" class="remover icon-remove"></i></a> @userGroup.username (@Messages(userGroup.realName))</li>
  }
 </div>
 </ul>
