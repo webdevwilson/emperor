@@ -35,7 +35,6 @@ YUI().use('emperor-models', 'pjax', 'io-base', 'autocomplete', 'autocomplete-hig
       contentSelector: '#user-list'
     });
     pjax.navigate('@controllers.admin.routes.Group.item(group.id.get)');
-    Y.ShowAlert('alert-success', '@Messages("admin.group.remove.user.success")')
   }
 
   var showAlert = function (transactionId, response, arguments) {
@@ -54,17 +53,20 @@ YUI().use('emperor-models', 'pjax', 'io-base', 'autocomplete', 'autocomplete-hig
     var model = new Y.UserGroup({ id: @group.id, user_id: e.result.raw.id });
     model.save();
     Y.ShowAlert('alert-success', '@Messages("admin.group.add.user.success")');
+    acNode.set('value', '');
     refreshUsers();
   });
 
-  Y.one("#group-users").delegate('click', function(e) {
+  Y.one("#group-users").get('parentNode').delegate('click', function(e) {
     var linkid = e.currentTarget.getAttribute('data-userid');
     var uri = '/api/group/@group.id.get/' + linkid
-
     var cfg = {
       method: 'DELETE',
       on: {
-        success: refreshUsers,
+        success: function() {
+          Y.ShowAlert('alert-success', '@Messages("admin.group.remove.user.success")');
+          refreshUsers();
+        },
         failure: showAlert
       }
     };
