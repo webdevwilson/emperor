@@ -2,6 +2,7 @@ var
 filter    = (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'min',
 YUI_config = {
   filter : filter,
+  fetchCSS: false,
   groups : {
     emperor : {
       combine  : false,

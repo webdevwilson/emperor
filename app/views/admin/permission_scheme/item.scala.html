@@ -9,7 +9,7 @@
  </li>
  <li class="active">@Messages(ps.name)</li>
 </ul>
-<table class="table table-bordered table-striped">
+<table id="perm-table" class="table table-bordered table-striped">
  <thead>
   <tr>
    <th>@Messages("admin.permission")</th>
@@ -34,7 +34,7 @@
     <ul>
     @permUsers.get(perm.name).map { users =>
       @users.map { user =>
-        <li><a href="@controllers.admin.routes.User.item(user.userId)">@user.username</a></li>
+       <li><a href="@controllers.admin.routes.User.item(user.userId)">@user.username</a></li>
       }
     }
     </ul>
@@ -43,4 +43,40 @@
   }
  </tbody>
 </table>
+<script>
+YUI().use('panel', function (Y) {
+  // XXX FIX ME
+  Y.one("#group-users").get('parentNode').delegate('click', function(e) {
+    var nestedPanel = new Y.Panel({
+      headerContent: 'Header',
+      bodyContent: 'Are you sure you want to remove all items?',
+      width      : 400,
+      zIndex     : 6,
+      centered   : true,
+      modal      : true,
+      render     : '#nestedPanel',
+      buttons: [
+          {
+              value  : 'Cancel',
+              section: Y.WidgetStdMod.FOOTER,
+              classNames: 'btn',
+              action : function (e) {
+                  e.preventDefault();
+                  nestedPanel.hide();
+              }
+          },
+          {
+              value  : 'Submit',
+              section: Y.WidgetStdMod.FOOTER,
+              classNames: ['btn','btn-primary'],
+              action : function (e) {
+                  e.preventDefault();
+                  nestedPanel.hide();
+              }
+          }
+      ]
+    });
+  });
+});
+</script>
 }

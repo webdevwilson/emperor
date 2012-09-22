@@ -10,6 +10,7 @@ admin.group.add=Add Group
 admin.group.edit=Edit Group
 admin.group.list=Groups
 admin.group.menu.list=Groups
+admin.group.menu.list.help=Check To Add
 admin.group.members=Members
 admin.group.with.id=Group {0}
 admin.group.add.success=Group Added

@@ -11,7 +11,7 @@
  <li>
   <a href="@controllers.admin.routes.User.index()">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages("admin.user.with.id", "XXX")</li>
+ <li class="active">@Messages("admin.user.with.id", objForm("username").value.get)</li>
 </ul>
 <div class="row-fluid">
  <div class="span6">

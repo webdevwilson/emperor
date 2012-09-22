@@ -9,9 +9,19 @@
  </li>
  <li class="active">@user.username</li>
 </ul>
-<h1>@Messages("user.with.id", user.username)</h1>
-XXX edit link
-<h2>@Messages("admin.user.groups.list")</h2>
+<h1><a class="btn" href="@controllers.admin.routes.User.edit(user.id.get)"><i class="icon-edit"></i></a> @Messages("user.with.id", user.username)</h1>
+<div class="well well-small obj-info">
+  XXX more here
+ <div class="row">
+  <div class="span4">
+   <div class="info"><label>@Messages("user.username")</label><span>@user.username</span></div>
+   <div class="info"><label>@Messages("user.realname")</label><span>@user.realName</span></div>
+  </div>
+ </div>
+</div>
+<div class="pager-header">
+ <h2>@Messages("admin.user.groups.list") <small>@Messages("admin.group.menu.list.help")</small></h2>
+</div>
 <ul id="userGroups" class="unstyled bordered">
 @allGroups.map { group =>
   <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.groupId == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>
@@ -19,15 +29,13 @@ XXX edit link
 </ul>
 }
 <script type="text/javascript">
-YUI({gallery: 'gallery-2012.06.20-20-07'}).use('node', 'model', function (Y) {
-  UserGroupModel = Y.Base.create('UserGroup', Y.Model, [ Y.ModelSync.REST ],
-    {
-      root : '/admin/user/' +  @user.id + '/group'
-    }
-  );
+YUI().use('emperor-models', 'node', function (Y) {
 
   Y.all('#userGroups input[type=checkbox]').on('change', function(e) {
-    var model = new UserGroupModel({ id: e.target.get('value') });
+    var model = new Y.UserGroup({
+      id: e.target.get('value'),
+      user_id: @user.id.get
+    });
     if ( e.target.get('checked') ) {
       model.save();
     } else {
