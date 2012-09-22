@@ -13,9 +13,11 @@ admin.group.menu.list=Groups
 admin.group.members=Members
 admin.group.with.id=Group {0}
 admin.group.add.success=Group Added
+admin.group.add.user=Add User
 admin.group.add.user.success=User Added to Group
 admin.group.remove.user=Remove User from Group
 admin.group.remove.user.confirm=Are you sure you want to remove {0} from group {1}?
+admin.group.remove.user.success=Removed User from Group
 admin.group.edit.success=Group Updated
 
 admin.permission=Permission
