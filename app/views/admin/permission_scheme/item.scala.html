@@ -29,6 +29,7 @@
       }
     }
     </ul>
+    <a class="group-adder" data-permission-id="@perm.name" data-permission-name="@Messages(perm.name)">XXX Add Group</a>
    </td>
    <td>
     <ul>
@@ -44,39 +45,53 @@
  </tbody>
 </table>
 <script>
-YUI().use('panel', function (Y) {
-  // XXX FIX ME
-  Y.one("#group-users").get('parentNode').delegate('click', function(e) {
+YUI().use('emperor-models', 'panel', function (Y) {
+  Y.one("#perm-table").delegate('click', function(e) {
+
+    // Do the templatey bit for group or user here.
+    var target = e.target;
+    var template = Handlebars.compile(Y.one("#group-modal").getHTML());
+    var html = template({
+      permission_id: target.getAttribute('data-permission-id'),
+      permission_name: target.getAttribute('data-permission-name')
+    });
+
     var nestedPanel = new Y.Panel({
-      headerContent: 'Header',
-      bodyContent: 'Are you sure you want to remove all items?',
-      width      : 400,
-      zIndex     : 6,
+      headerContent: '@Messages("admin.permission_scheme.group.add.title")',
+      bodyContent: html,
+      zIndex     : 1031,
       centered   : true,
       modal      : true,
       render     : '#nestedPanel',
       buttons: [
-          {
-              value  : 'Cancel',
-              section: Y.WidgetStdMod.FOOTER,
-              classNames: 'btn',
-              action : function (e) {
-                  e.preventDefault();
-                  nestedPanel.hide();
-              }
-          },
-          {
-              value  : 'Submit',
-              section: Y.WidgetStdMod.FOOTER,
-              classNames: ['btn','btn-primary'],
-              action : function (e) {
-                  e.preventDefault();
-                  nestedPanel.hide();
-              }
+        {
+          value  : '@Messages("form.cancel")',
+          section: Y.WidgetStdMod.FOOTER,
+          classNames: 'btn',
+          action : function (e) {
+            e.preventDefault();
+            nestedPanel.destroy(true);
           }
+        },
+        {
+          value  : '@Messages("form.submit")',
+          section: Y.WidgetStdMod.FOOTER,
+          classNames: ['btn','btn-primary'],
+          action : function (e) {
+            e.preventDefault();
+            nestedPanel.hide();
+          }
+        }
       ]
     });
-  });
+  }, 'a.group-adder');
 });
+</script>
+<script id="group-modal" type="text/x-handlebars-template">
+@Messages("admin.permission_scheme.group.add.help")
+{{permission_name}}
+<form>
+ <input type="hidden" name="permission_id" value="{{permission_id}}">
+</form>
 </script>
 }

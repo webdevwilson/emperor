@@ -317,6 +317,9 @@ table.ticket-links {
     }
   }
 }
+.yui3-panel-hidden {
+  display: none;
+}
 .yui3-panel {
   background-color: white;
   border: 1px solid #999;
@@ -330,6 +333,7 @@ table.ticket-links {
   -moz-background-clip: padding-box;
   background-clip: padding-box;
   outline: none;
+  position: absolute;
 
   .yui3-widget-hd {
     border-bottom: 1px solid #EEE;
@@ -360,6 +364,15 @@ table.ticket-links {
   .yui3-button {
     margin-left: 5px;
   }
+}
+.yui3-widget-mask {
+  background-color: black;
+  opacity: 0.8;
+  -webkit-transition: opacity 0.15s linear;
+  -moz-transition: opacity 0.15s linear;
+  -o-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear;
+  z-index: 1050;
 }
 .yui3-aclist-list {
   z-index: 1000;
