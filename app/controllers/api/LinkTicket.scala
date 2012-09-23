@@ -6,11 +6,12 @@ import models._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.libs.json.Json
+import play.api.libs.Jsonp
 import play.api.mvc._
 
 object LinkTicket extends Controller with Secured {
 
-  def item(id: String) = IsAuthenticated() { implicit request =>
+  def item(id: String, callback: Option[String]) = IsAuthenticated() { implicit request =>
 
     val tid = request.session.get("link_ticket")
 
@@ -34,7 +35,10 @@ object LinkTicket extends Controller with Secured {
               })
             )
 
-            Ok(Json.toJson(lt))
+            callback match {
+              case Some(callback) => Ok(Jsonp(callback, Json.toJson(lt)))
+              case None => Ok(Json.toJson(lt))
+            }
           }
           case None => NotFound
         }
@@ -43,7 +47,7 @@ object LinkTicket extends Controller with Secured {
     }
   }
 
-  def link(id: String) = IsAuthenticated(ticketId = Some(id), perm = "PERM_TICKET_LINK") { implicit request =>
+  def link(id: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(id), perm = "PERM_TICKET_LINK") { implicit request =>
 
     request.body.asJson.map { json =>
       (json \ "ticket_id").asOpt[String].map { ticketId =>
@@ -65,8 +69,14 @@ object LinkTicket extends Controller with Secured {
                 case x => x
               })
             )
+            val json = Json.toJson(lt)
 
-            Ok(Json.toJson(lt)).withSession(session + ("link_ticket" -> ticketId))
+            val ret = callback match {
+              case Some(callback) => Ok(Jsonp(callback, json))
+              case None => Ok(json)
+            }
+
+            ret.withSession(session + ("link_ticket" -> ticketId))
           }
           case None => NotFound
         }
@@ -76,7 +86,13 @@ object LinkTicket extends Controller with Secured {
           "ok" -> Messages("ticket.linker.stop", id)
         )
 
-        Ok(Json.toJson(resp)).withSession(session - "link_ticket")
+        val ret = callback match {
+          case Some(callback) => Ok(Jsonp(callback, Json.toJson(resp)))
+          case None => Ok(Json.toJson(resp))
+        }
+
+
+        ret.withSession(session - "link_ticket")
       }
     }.getOrElse {
       BadRequest("Expecting Json data")

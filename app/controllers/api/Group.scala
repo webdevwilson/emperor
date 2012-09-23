@@ -30,16 +30,24 @@ object Group extends Controller with Secured {
   /**
    * Add a user to the specified group.
    */
-  def addUser(id: Long, userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def addUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     GroupModel.addUser(userId, id) // XXX This should return something…
-    Ok(Json.toJson(Map("ok" -> "ok")))
+    val json = Json.toJson(Map("ok" -> "ok"))
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
   }
 
   /**
    * Remove a user from the specified group.
    */
-  def removeUser(id: Long, userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def removeUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     GroupModel.removeUser(userId, id);
-    Ok(Json.toJson(Map("ok" -> "ok")))
+    val json = Json.toJson(Map("ok" -> "ok"))
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
   }
 }

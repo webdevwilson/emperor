@@ -14,8 +14,14 @@ object PermissionScheme extends Controller with Secured {
   /**
    * Revoke permission from the specified group.
    */
-  def removeGroup(id: Long, permission: String, groupId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def removeGroup(id: Long, permission: String, groupId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     PermissionSchemeModel.removeGroupFromScheme(permissionSchemeId = id, perm = permission, groupId = groupId);
-    Ok(Json.toJson(Map("ok" -> "ok")))
+
+    val json = Json.toJson(Map("ok" -> "ok"))
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
   }
 }
