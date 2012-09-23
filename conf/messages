@@ -34,7 +34,7 @@ admin.permission_scheme.group.add.title=Add Group to Permission Scheme
 admin.permission_scheme.list=Permission Schemes
 admin.permission_scheme.menu.list=Permission Schemes
 admin.permission_scheme.users=Users
-admin.permission_scheme.with.id=Permission Schemes {0}
+admin.permission_scheme.with.id=Permission Scheme {0}
 
 admin.projects=Projects
 admin.project.menu.list=Projects

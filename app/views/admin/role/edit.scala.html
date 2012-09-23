@@ -11,7 +11,7 @@
  <li>
   <a href="@controllers.admin.routes.Role.index()">@Messages("admin.role.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
  </li>
- <li class="active">@Messages("admin.role.with.id", "XXX")</li>
+ <li class="active">@Messages("admin.role.with.id", id)</li>
 </ul>
 <h1>@Messages("admin.role.edit")</h1>
 @helper.form(action = controllers.admin.routes.Role.update(id)) {
