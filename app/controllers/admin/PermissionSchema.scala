@@ -12,6 +12,11 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 
+case class AddedPermissionSchemeGroup (
+  permissionId: String,
+  groupId: Long
+)
+
 object PermissionScheme extends Controller with Secured {
 
   val objForm = Form(
@@ -23,6 +28,13 @@ object PermissionScheme extends Controller with Secured {
     )(models.PermissionScheme.apply)(models.PermissionScheme.unapply)
   )
 
+  val groupForm = Form(
+    mapping(
+      "permission_id" -> nonEmptyText,
+      "group_id" -> longNumber
+    )(AddedPermissionSchemeGroup.apply)(AddedPermissionSchemeGroup.unapply)
+  )
+
   def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     objForm.bindFromRequest.fold(
@@ -30,6 +42,17 @@ object PermissionScheme extends Controller with Secured {
       value => {
         val pm = PermissionSchemeModel.create(value)
         Redirect(routes.PermissionScheme.item(pm.id.get)).flashing("success" -> "admin.permission_scheme.add.success")
+      }
+    )
+  }
+
+  def addGroup(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    groupForm.bindFromRequest.fold(
+      errors => Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.group.add.error"),
+      value => {
+        PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = value.groupId)
+        Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
       }
     )
   }

@@ -40,6 +40,9 @@ body {
     color: #0088cc;
   }
 }
+.remover {
+  cursor: pointer;
+}
 #linker {
   font-size: 12px;
 }
@@ -364,6 +367,9 @@ table.ticket-links {
   .yui3-button {
     margin-left: 5px;
   }
+  form {
+    margin-bottom: 0;
+  }
 }
 .yui3-widget-mask {
   background-color: black;
@@ -373,6 +379,10 @@ table.ticket-links {
   -o-transition: opacity 0.15s linear;
   transition: opacity 0.15s linear;
   z-index: 1050;
+}
+.yui3-aclist-aria {
+  left: -9999px;
+  position: absolute;
 }
 .yui3-aclist-list {
   z-index: 1000;
@@ -393,6 +403,9 @@ table.ticket-links {
   -moz-background-clip: padding;
   background-clip: padding-box;
 
+  .yui3-aclist-item {
+    padding: 0 5px;
+  }
   .yui3-aclist-item-active {
     color: #ffffff;
     text-decoration: none;
@@ -408,12 +421,15 @@ table.ticket-links {
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
   }
 }
+.yui3-aclist-hidden {
+  display: none;
+}
 .page-header {
   small {
   }
 }
 .gridded-list {
-  margin-left: 0;
+  margin: 0;
 }
 label {
   color: #999;

@@ -30,7 +30,7 @@ object UserModel {
   val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
-  val startsWithQuery = SQL("SELECT * FROM users WHERE username LIKE {username}")
+  val startsWithQuery = SQL("SELECT * FROM users WHERE username COLLATE utf8_unicode_ci LIKE {username}")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM users WHERE id={id}")

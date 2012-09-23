@@ -33,7 +33,7 @@ object GroupModel {
   val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE group_id={groupId} ORDER BY u.username")
   val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE user_id={userId}")
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.group_id WHERE gu.user_id={userId}")
-  val startsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
+  val startsWithQuery = SQL("SELECT * FROM groups WHERE name COLLATE utf8_unicode_ci LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val listQuery = SQL("SELECT * FROM groups ORDER BY name LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")

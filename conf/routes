@@ -16,6 +16,7 @@ GET     /admin/group/edit/:id           controllers.admin.Group.edit(id: Long)
 POST    /admin/group                    controllers.admin.Group.add
 
 GET     /admin/permission_scheme          controllers.admin.PermissionScheme.index(page: Int ?= 1, count: Int ?= 10)
+POST    /admin/permission_scheme/group/:id controllers.admin.PermissionScheme.addGroup(id: Long)
 GET     /admin/permission_scheme/create   controllers.admin.PermissionScheme.create
 GET     /admin/permission_scheme/:id      controllers.admin.PermissionScheme.item(id: Long)
 POST    /admin/permission_scheme/:id      controllers.admin.PermissionScheme.update(id: Long)
@@ -85,9 +86,10 @@ GET     /admin/workflow/modify/:id      controllers.admin.Workflow.modify(id: Lo
 POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
-GET     /api/group/startswith           controllers.api.Group.startsWith(q: Option[String])
+GET     /api/group/startswith           controllers.api.Group.startsWith(q: Option[String], callback: Option[String])
 PUT     /api/group/:id/:userId          controllers.api.Group.addUser(id: Long, userId: Long)
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long)
+DELETE  /api/permission_scheme/:id/:perm/:groupId controller.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long)
 GET     /api/project/:id                controllers.api.Project.item(id: Long)
 GET     /api/ticket/link/:ticketId      controllers.api.Ticket.links(ticketId: String)
 PUT     /api/ticket/link/:ticketId      controllers.api.Ticket.link(ticketId: String)

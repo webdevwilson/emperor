@@ -22,14 +22,14 @@
   <tr>
    <td><strong>@Messages(perm.name)</strong><p><small>@Messages(perm.name + "_DESC")</small></p></td>
    <td>
-    <ul>
+    <ul class="clearfix grid gridded-list">
     @permGroups.get(perm.name).map { groups =>
       @groups.map { group =>
-       <li><a href="@controllers.admin.routes.Group.item(group.groupId)">@group.groupName</a></li>
+       <li><i data-permission-id="@perm.name" data-group-id="@group.id.get" class="remover icon-remove"></i> <a href="@controllers.admin.routes.Group.item(group.groupId)">@group.groupName</a></li>
       }
     }
     </ul>
-    <a class="group-adder" data-permission-id="@perm.name" data-permission-name="@Messages(perm.name)">XXX Add Group</a>
+    <a class="btn btn-mini clearfix group-adder" data-permission-id="@perm.name" data-permission-name="@Messages(perm.name)">@Messages("admin.permission_scheme.group.add")</a>
    </td>
    <td>
     <ul>
@@ -45,10 +45,9 @@
  </tbody>
 </table>
 <script>
-YUI().use('emperor-models', 'panel', function (Y) {
+YUI().use('emperor-models', 'autocomplete', 'autocomplete-highlighters', 'panel', function (Y) {
   Y.one("#perm-table").delegate('click', function(e) {
 
-    // Do the templatey bit for group or user here.
     var target = e.target;
     var template = Handlebars.compile(Y.one("#group-modal").getHTML());
     var html = template({
@@ -78,20 +77,54 @@ YUI().use('emperor-models', 'panel', function (Y) {
           section: Y.WidgetStdMod.FOOTER,
           classNames: ['btn','btn-primary'],
           action : function (e) {
-            e.preventDefault();
-            nestedPanel.hide();
+            Y.one("#add-group-form").submit();
           }
         }
       ]
     });
+    var acNode = Y.one('#ac-input');
+    acNode.plug(Y.Plugin.AutoComplete, {
+      resultHighlighter: 'startsWith',
+      resultTextLocator: function (result) {
+        return result.name;
+      },
+      source: '/api/group/startswith?q={query}&callback={callback}'
+    });
+    acNode.ac.on('select', function (e) {
+      Y.one('#group_id').set('value', e.result.raw.id)
+    });
   }, 'a.group-adder');
+
+  var showAlert = function (transactionId, response, arguments) {
+    Y.ShowAlert('alert-error', response.responseText);
+  }
+
+  Y.one("#perm-table").delegate('click', function(e) {
+    var groupid = e.currentTarget.getAttribute('data-group-id');
+    var perm = e.currentTarget.getAttribute('data-permission-id');
+    var uri = '/api/permission_scheme/@ps.id.get/' + perm + '/' + groupid;
+    var cfg = {
+      method: 'DELETE',
+      on: {
+        success: function() {
+          e.currentTarget.get('parentNode').remove();
+          Y.ShowAlert('alert-success', '@Messages("admin.group.remove.user.success")');
+        },
+        failure: showAlert
+      }
+    };
+    var request = Y.io(uri, cfg);
+    e.preventDefault();
+  }, '.remover');
 });
 </script>
 <script id="group-modal" type="text/x-handlebars-template">
 @Messages("admin.permission_scheme.group.add.help")
-{{permission_name}}
-<form>
+{{permission_name}}<br><br>
+@helper.form(action = controllers.admin.routes.PermissionScheme.addGroup(ps.id.get), 'id -> "add-group-form") {
  <input type="hidden" name="permission_id" value="{{permission_id}}">
-</form>
+ <input type="hidden" id="group_id" name="group_id" value="">
+ <input type="text" id="ac-input">
+}
 </script>
 }
