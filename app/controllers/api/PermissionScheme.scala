@@ -24,4 +24,18 @@ object PermissionScheme extends Controller with Secured {
       case None => Ok(json)
     }
   }
+
+  /**
+   * Revoke permission from the specified group.
+   */
+  def removeUser(id: Long, permission: String, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+    PermissionSchemeModel.removeUserFromScheme(permissionSchemeId = id, perm = permission, userId = userId);
+
+    val json = Json.toJson(Map("ok" -> "ok"))
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
+  }
 }

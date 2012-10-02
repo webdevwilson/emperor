@@ -17,6 +17,11 @@ case class AddedPermissionSchemeGroup (
   groupId: Long
 )
 
+case class AddedPermissionSchemeUser (
+  permissionId: String,
+  userId: Long
+)
+
 object PermissionScheme extends Controller with Secured {
 
   val objForm = Form(
@@ -33,6 +38,13 @@ object PermissionScheme extends Controller with Secured {
       "permission_id" -> nonEmptyText,
       "group_id" -> longNumber
     )(AddedPermissionSchemeGroup.apply)(AddedPermissionSchemeGroup.unapply)
+  )
+
+  val userForm = Form(
+    mapping(
+      "permission_id" -> nonEmptyText,
+      "user_id" -> longNumber
+    )(AddedPermissionSchemeUser.apply)(AddedPermissionSchemeUser.unapply)
   )
 
   def add = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
@@ -53,6 +65,17 @@ object PermissionScheme extends Controller with Secured {
       value => {
         PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = value.groupId)
         Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
+      }
+    )
+  }
+
+  def addUser(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    userForm.bindFromRequest.fold(
+      errors => Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.user.add.error"),
+      value => {
+        PermissionSchemeModel.addUserToScheme(permissionSchemeId = id, perm = value.permissionId, userId = value.userId)
+        Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.user.add.success")
       }
     )
   }
