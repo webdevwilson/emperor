@@ -31,6 +31,7 @@ admin.permission_scheme.group.add.error=Error adding group to scheme.
 admin.permission_scheme.group.add.help=Select a group to add to permission:
 admin.permission_scheme.group.add.success=Added Group to Permission Scheme
 admin.permission_scheme.group.add.title=Add Group to Permission Scheme
+admin.permission_scheme.group.remove.success=Removed Group from Permission Scheme
 admin.permission_scheme.list=Permission Schemes
 admin.permission_scheme.menu.list=Permission Schemes
 admin.permission_scheme.users=Users

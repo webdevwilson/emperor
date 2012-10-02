@@ -108,7 +108,7 @@ YUI().use('emperor-models', 'autocomplete', 'autocomplete-highlighters', 'panel'
       on: {
         success: function() {
           e.currentTarget.get('parentNode').remove();
-          Y.ShowAlert('alert-success', '@Messages("admin.group.remove.user.success")');
+          Y.ShowAlert('alert-success', '@Messages("admin.permission_scheme.group.remove.success")');
         },
         failure: showAlert
       }
