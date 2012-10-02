@@ -6,7 +6,7 @@ Emperor aims to replicate features of established bug-trackers such as JIRA, Fog
 
 ## See It
 
-Please have a look at the [project page](http://gphat.github.com/emperor/).
+Please have a look at the [project page](http://emperorapp.com).
 
 ## Mission Statement
 
