@@ -4,7 +4,7 @@ import anorm._
 import emp._
 import controllers._
 import java.util.Date
-import models.PermissionSchemeModel
+import models.{PermissionSchemeModel,ProjectModel}
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -88,8 +88,9 @@ object PermissionScheme extends Controller with Secured {
   def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val pms = PermissionSchemeModel.list(page = page, count = count)
+    val projects = ProjectModel.getAll.groupBy(p => p.permissionSchemeId)
 
-    Ok(views.html.admin.permission_scheme.index(pms)(request))
+    Ok(views.html.admin.permission_scheme.index(pms, projects)(request))
   }
 
   def edit(pmId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>

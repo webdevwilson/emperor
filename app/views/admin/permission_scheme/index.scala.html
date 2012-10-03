@@ -1,4 +1,4 @@
-@(page: emp.Page[models.PermissionScheme])(implicit request: AuthenticatedRequest)
+@(page: emp.Page[models.PermissionScheme], projects: Map[Long,List[models.Project]])(implicit request: AuthenticatedRequest)
 @import util._
 @main(Messages("admin.permission_scheme.list")) {
 <ul class="breadcrumb">
@@ -15,12 +15,24 @@
 <table class="table table-bordered table-rounded table-striped">
  <thead>
   <th>@Messages("permission_scheme.name")</th>
+  <th>@Messages("admin.projects")
   <th>@Messages("general.actions")</th>
  </thead>
  <tbody>
   @items.map { item =>
   <tr>
    <td><a href="@controllers.admin.routes.PermissionScheme.item(item.id.get)">@Messages(item.name)</a></td>
+   <td>
+    @if(projects.isDefinedAt(item.id.get)) {
+    <ul class="gridded-list">
+      @projects.get(item.id.get).map { ps =>
+        @ps.map { p =>
+        <li><a href="@controllers.routes.Project.item(p.id.get)">@p.name</a></li>
+        }
+      }
+    </ul>
+    }
+   </td>
    <td class="actions" style="width: 10%">
     <div class="btn-toolbar">
      <div class="btn-group">

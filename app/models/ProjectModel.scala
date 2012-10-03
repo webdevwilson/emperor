@@ -114,6 +114,16 @@ object ProjectModel {
   }
 
   /**
+   * Get all the projects!
+   */
+  def getAll: List[Project] = {
+
+    DB.withConnection { implicit conn =>
+      allQuery.as(project *)
+    }
+  }
+
+  /**
    * Get a project by id.
    */
   def getById(id: Long) : Option[Project] = {
@@ -130,13 +140,6 @@ object ProjectModel {
 
     DB.withConnection { implicit conn =>
       getByKeyQuery.on('pkey -> pkey).as(project.singleOpt)
-    }
-  }
-
-  def getAll: List[Project] = {
-
-    DB.withConnection { implicit conn =>
-      allQuery.as(project *)
     }
   }
 
