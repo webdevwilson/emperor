@@ -848,7 +848,7 @@ object SearchModel {
   /**
    * Search for events.
    */
-  def searchEvent(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchEvent(userId: Long, page: Int = 1, count: Int = 10, query: String = "", filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -857,16 +857,19 @@ object SearchModel {
       q = "*"
     }
 
-    var actualQuery : BaseQueryBuilder = queryString(q)
+    // Get the projects this user can see
+    val pids = ProjectModel.getVisibleProjectIds(userId).map { p => p.toString }
 
-    // If we have filters, build up a filterquery and swap out our actualQuery
-    // with a filtered version!
-    if(!filters.isEmpty) {
-      val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(eventFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
-      }
-      actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
+    val finalProjs: Seq[String] = filters.get("project_id").map { upids =>
+      val ps = pids.intersect(upids)
+      if(ps.isEmpty) pids else pids
+    }.getOrElse(pids)
+    val finalFilters = (filters - "project_id") + ("project_id" -> finalProjs)
+
+    val fqs : Iterable[FilterBuilder] = finalFilters map {
+      case (key, values) => termFilter(eventFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
     }
+    val actualQuery = filteredQuery(queryString(q), andFilter(fqs.toSeq:_*))
 
     val res = indexer.search(
       query = actualQuery,
@@ -892,7 +895,7 @@ object SearchModel {
   /**
    * Search for a ticket.
    */
-  def searchTicket(page: Int, count: Int, query: String, filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchTicket(userId: Long, page: Int = 1, count: Int = 10, query: String = "", filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
 
     // This shouldn't have to live here. It annoys me. Surely there's a better
     // way.
@@ -901,16 +904,19 @@ object SearchModel {
       q = "*"
     }
 
-    var actualQuery : BaseQueryBuilder = queryString(q)
+    // Get the projects this user can see
+    val pids = ProjectModel.getVisibleProjectIds(userId).map { p => p.toString }
 
-    // If we have filters, build up a filterquery and swap out our actualQuery
-    // with a filtered version!
-    if(!filters.isEmpty) {
-      val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(ticketFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
-      }
-      actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
+    val finalProjs: Seq[String] = filters.get("project_id").map { upids =>
+      val ps = pids.intersect(upids)
+      if(ps.isEmpty) pids else pids
+    }.getOrElse(pids)
+    val finalFilters = (filters - "project_id") + ("project_id" -> finalProjs)
+
+    val fqs : Iterable[FilterBuilder] = filters map {
+      case (key, values) => termFilter(ticketFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
     }
+    val actualQuery = filteredQuery(queryString(q), andFilter(fqs.toSeq:_*))
 
     val res = indexer.search(
       query = actualQuery,

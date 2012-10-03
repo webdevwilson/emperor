@@ -24,7 +24,8 @@ object Search extends Controller with Secured {
       }
     }
 
-    val result = SearchModel.searchTicket(page, count, query, filters)
+    val userId = request.session.get("user_id").get.toLong
+    val result = SearchModel.searchTicket(userId = userId, page = page, count = count, query = query, filters = filters)
 
     Ok(views.html.search.index(filters, result)(request))
   }

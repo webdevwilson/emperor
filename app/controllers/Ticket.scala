@@ -176,7 +176,7 @@ object Ticket extends Controller with Secured {
       errors => {
         // Should be i18ned in the view
         val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
-        val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -220,7 +220,7 @@ object Ticket extends Controller with Secured {
   def create(projectId: Option[Long]) = IsAuthenticated() { implicit request =>
 
     // Should be i18ned in the view
-    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -282,7 +282,7 @@ object Ticket extends Controller with Secured {
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
     val ticket = TicketModel.getById(ticketId)
-    val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
@@ -396,7 +396,7 @@ object Ticket extends Controller with Secured {
     ticketForm.bindFromRequest.fold(
       errors => {
         val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
-        val projs = ProjectModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }

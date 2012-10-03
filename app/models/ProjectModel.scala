@@ -48,14 +48,16 @@ object DefaultAssignee extends Enumeration {
 object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects WHERE pkey != 'EMPCORE'")
+  val allVisibleProjectsQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE'")
+  val getAllVisibleProjectIdsQuery = SQL("SELECT p.id FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE'")
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
   val getByKeyQuery = SQL("SELECT * FROM projects WHERE pkey={pkey}")
   val getByWorkflowQuery = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id} AND pkey != 'EMPCORE'")
   val updateSequenceQuery = SQL("UPDATE projects SET sequence_current = LAST_INSERT_ID(sequence_current + 1) WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM projects WHERE pkey != 'EMPCORE' LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE' LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM projects WHERE pkey != 'EMPCORE'")
   val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, owner_id, permission_scheme_id, default_priority_id, default_severity_id, default_ticket_type_id, default_assignee, date_created) VALUES ({name}, {pkey}, {workflow_id}, {owner_id}, {permission_scheme_id}, {default_priority_id}, {default_severity_id}, {default_ticket_type_id}, {default_assignee}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id}, owner_id={owner_id}, default_priority_id={default_priority_id}, default_severity_id={default_severity_id}, default_ticket_type_id={default_ticket_type_id}, default_assignee={default_assignee} WHERE id={id}")
+  val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id}, owner_id={owner_id}, permission_scheme_id={permission_scheme_id}, default_priority_id={default_priority_id}, default_severity_id={default_severity_id}, default_ticket_type_id={default_ticket_type_id}, default_assignee={default_assignee} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM projects WHERE id={id}")
 
   // Parser for retrieving a project.
@@ -114,12 +116,11 @@ object ProjectModel {
   }
 
   /**
-   * Get all the projects!
+   * Get all visible projects for a user
    */
-  def getAll: List[Project] = {
-
+  def getAll(userId: Long): List[Project] = {
     DB.withConnection { implicit conn =>
-      allQuery.as(project *)
+      allVisibleProjectsQuery.on('user_id -> userId).as(project *)
     }
   }
 
@@ -154,19 +155,26 @@ object ProjectModel {
     }
   }
 
-  def getWithWorkflow(id: Long) : Seq[Project] = {
+  def getVisibleProjectIds(userId: Long): List[Long] = {
+    DB.withConnection { implicit conn =>
+      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id") *)
+    }
+  }
+
+  def getWithWorkflow(id: Long): Seq[Project] = {
 
     DB.withConnection { implicit conn =>
       getByWorkflowQuery.on('workflow_id -> id).as(project *)
     }
   }
 
-  def list(page: Int = 1, count: Int = 10) : Page[Project] = {
+  def list(userId: Long, page: Int = 1, count: Int = 10) : Page[Project] = {
 
       val offset = count * (page - 1)
 
       DB.withConnection { implicit conn =>
-        val projects = listQuery.on(
+        val projects = allVisibleProjectsQuery.on(
+          'user_id -> userId,
           'count  -> count,
           'offset -> offset
         ).as(project *)

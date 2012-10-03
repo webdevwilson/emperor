@@ -80,7 +80,7 @@ object Project extends Controller with Secured {
 
   def index(page: Int, count: Int) = IsAuthenticated() { implicit request =>
 
-    val projs = ProjectModel.list(page = page, count = count)
+    val projs = ProjectModel.list(userId = request.session.get("user_id").get.toLong, page = page, count = count)
 
     Ok(views.html.project.index(projs)(request))
   }
@@ -122,14 +122,15 @@ object Project extends Controller with Secured {
 
     val efilters = Map("project_id" -> Seq(projectId.toString))
 
-    val events = SearchModel.searchEvent(1, 10, "", efilters) // XXX fixed page, count, query
+    val userId = request.session.get("user_id").get.toLong
+    val events = SearchModel.searchEvent(userId = userId, filters = efilters) // XXX fixed page, count, query
 
     val tfilters = Map(
       "project_id"  -> Seq(projectId.toString),
       "resolution"  -> Seq("TICK_RESO_UNRESOLVED")
     )
 
-    val tickets = SearchModel.searchTicket(1, 10, "", tfilters) // XXX Fixed page, count, query
+    val tickets = SearchModel.searchTicket(userId = userId, filters = tfilters) // XXX Fixed page, count, query
 
     project match {
       case Some(value) => Ok(views.html.project.item(value, tickets, events)(request))
@@ -139,9 +140,9 @@ object Project extends Controller with Secured {
 
   def list(page: Int, count: Int) = IsAuthenticated() { implicit request =>
 
-    val groups = ProjectModel.list(page = page, count = count)
+    val objs = ProjectModel.list(userId = request.session.get("user_id").get.toLong, page = page, count = count)
 
-    Ok(views.html.project.list(groups)(request))
+    Ok(views.html.project.list(objs)(request))
   }
 
   def update(projectId: Long) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_PROJECT_ADMIN") { implicit request =>

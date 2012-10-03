@@ -14,7 +14,8 @@ object Core extends Controller with Secured {
 
   def index = IsAuthenticated() { implicit request =>
 
-    val projects = models.ProjectModel.getAll
+    val userId = request.session.get("user_id").get.toLong
+    val projects = models.ProjectModel.getAll(userId = userId)
 
     val filters = request.queryString filterKeys { key =>
       key match {
@@ -27,7 +28,7 @@ object Core extends Controller with Secured {
       }
     }
 
-    val response = SearchModel.searchEvent(1, 10, "", filters) // XX fixed page, count, query
+    val response = SearchModel.searchEvent(userId = userId, page = 1, count = 10, filters = filters) // XX fixed page, count, query
 
     Ok(views.html.index(response, projects))
   }
