@@ -41,11 +41,14 @@ object SearchModel {
   val ticketIndex = "tickets"
   val ticketType = "ticket"
   val ticketFilterMap = Map(
-    "project"    -> "project_name",
-    "priority"   -> "priority_name",
-    "resolution" -> "resolution_name",
-    "severity"   -> "severity_name",
-    "type"       -> "type_name"
+    "assignee"    -> "assignee_name",
+    "project"     -> "project_name",
+    "priority"    -> "priority_name",
+    "reporter"    -> "reporter_name",
+    "resolution"  -> "resolution_name",
+    "severity"    -> "severity_name",
+    "status"      -> "status_name",
+    "type"        -> "type_name"
   )
   val ticketMapping = """
   {
