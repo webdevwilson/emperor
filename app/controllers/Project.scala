@@ -130,7 +130,9 @@ object Project extends Controller with Secured {
       "resolution"  -> Seq("TICK_RESO_UNRESOLVED")
     )
 
-    val tickets = SearchModel.searchTicket(userId = userId, filters = tfilters) // XXX Fixed page, count, query
+    val ticketQuery = SearchQuery(userId = userId, filters = tfilters)
+
+    val tickets = SearchModel.searchTicket(ticketQuery) // XXX Fixed page, count, query
 
     project match {
       case Some(value) => Ok(views.html.project.item(value, tickets, events)(request))

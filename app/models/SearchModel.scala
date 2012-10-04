@@ -6,7 +6,7 @@ import com.traackr.scalastic.elasticsearch.Indexer
 import java.text.SimpleDateFormat
 import java.util.{Date,TimeZone}
 import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.index.query.{BaseQueryBuilder,FilterBuilder}
+import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.FilterBuilders._
 import org.elasticsearch.index.query.QueryBuilders._
 import org.elasticsearch.search.SearchHit
@@ -21,6 +21,19 @@ import org.elasticsearch.client._, transport._
 import org.elasticsearch.common.settings.ImmutableSettings._
 import org.elasticsearch.node._, NodeBuilder._
 import scala.collection.JavaConversions._
+
+/**
+ * Case class for search queries
+ */
+case class SearchQuery(
+  userId: Long,
+  page: Int = 1,
+  count: Int = 10,
+  query: String = "",
+  filters: Map[String, Seq[String]] = Map.empty,
+  sortBy: String = "date_created",
+  sortOrder: SortOrder = SortOrder.DESC
+)
 
 object SearchModel {
 
@@ -499,6 +512,18 @@ object SearchModel {
   }
   """
 
+  // Facets
+  val ticketFacets = Map(
+    "resolution" -> "resolution_name",
+    "type" -> "type_name",
+    "project" -> "project_name",
+    "priority" -> "priority_name",
+    "severity" -> "severity_name",
+    "status" -> "status_name",
+    "assignee" -> "assignee_name",
+    "reporter" ->"reporter_name"
+  )
+
   /**
    * Check that all the necessary indices exist.  If they don't, create them.
    */
@@ -866,10 +891,10 @@ object SearchModel {
     }.getOrElse(pids)
     val finalFilters = (filters - "project_id") + ("project_id" -> finalProjs)
 
-    val fqs : Iterable[FilterBuilder] = finalFilters map {
-      case (key, values) => termFilter(eventFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
+    val fqs : Iterable[Seq[FilterBuilder]] = finalFilters map {
+      case (key, values) => values.map { v => termFilter(eventFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder] }
     }
-    val actualQuery = filteredQuery(queryString(q), andFilter(fqs.toSeq:_*))
+    val actualQuery = if(fqs.isEmpty) queryString(q) else filteredQuery(queryString(q), andFilter(fqs.flatten.toSeq:_*))
 
     val res = indexer.search(
       query = actualQuery,
@@ -895,52 +920,51 @@ object SearchModel {
   /**
    * Search for a ticket.
    */
-  def searchTicket(userId: Long, page: Int = 1, count: Int = 10, query: String = "", filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchTicket(query: SearchQuery): SearchResult[org.elasticsearch.search.SearchHit] = {
 
-    // This shouldn't have to live here. It annoys me. Surely there's a better
-    // way.
-    var q = query
-    if(q.isEmpty) {
-      q = "*"
-    }
+    runQuery(ticketIndex, query, ticketFacets)
+  }
+
+  private def runQuery(index: String, query: SearchQuery, facets: Map[String,String] = Map.empty): SearchResult[SearchHit] = {
 
     // Get the projects this user can see
-    val pids = ProjectModel.getVisibleProjectIds(userId).map { p => p.toString }
+    val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
 
-    val finalProjs: Seq[String] = filters.get("project_id").map { upids =>
-      val ps = pids.intersect(upids)
-      if(ps.isEmpty) pids else pids
-    }.getOrElse(pids)
-    val finalFilters = (filters - "project_id") + ("project_id" -> finalProjs)
-
-    val fqs : Iterable[FilterBuilder] = filters map {
-      case (key, values) => termFilter(ticketFilterMap.get(key).getOrElse(key), values.head).asInstanceOf[FilterBuilder]
+    val termFilters : Iterable[Seq[FilterBuilder]] = query.filters map {
+      case (key, values) => values.map { v => termFilter(ticketFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder] }
     }
-    val actualQuery = filteredQuery(queryString(q), andFilter(fqs.toSeq:_*))
+
+    // Make a bool filter to collect all our filters together
+    val finalFilter: BoolFilterBuilder = boolFilter
+
+    // Definitely going to have a project filter, everyone does
+    val projFilter = orFilter(pids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
+    // Add this to our bool filter
+    finalFilter.must(projFilter)
+
+    // Might not have user filters
+    if(!termFilters.isEmpty) {
+      val userFilter = andFilter(termFilters.flatten.toSeq:_*)
+      finalFilter.must(userFilter)
+    }
+    val acqualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
 
     val res = indexer.search(
-      query = actualQuery,
-      indices = Seq(ticketIndex),
-      facets = Seq(
-        termsFacet("resolution").field("resolution_name"),
-        termsFacet("type").field("type_name"),
-        termsFacet("project").field("project_name"),
-        termsFacet("priority").field("priority_name"),
-        termsFacet("severity").field("severity_name"),
-        termsFacet("status").field("status_name"),
-        termsFacet("assignee").field("assignee_name"),
-        termsFacet("reporter").field("reporter_name")
-      ),
-      size = Some(count),
-      from = page match {
+      query = acqualQuery,
+      indices = Seq(index),
+      facets = facets.map { case (name, field) =>
+        termsFacet(name).field(field)
+      },
+      size = Some(query.count),
+      from = query.page match {
         case 0 => Some(0)
         case 1 => Some(0)
-        case _ => Some((page * count) - 1)
+        case _ => Some((query.page * query.count) - 1)
       },
-      sorting = Seq("date_created" -> SortOrder.DESC)
+      sorting = Seq(query.sortBy -> query.sortOrder)
     )
 
-    val pager = Page(res.hits.hits, page, count, res.hits.totalHits)
+    val pager = Page(res.hits.hits, query.page, query.count, res.hits.totalHits)
     Library.parseSearchResponse(pager = pager, response = res)
   }
 
