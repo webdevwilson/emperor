@@ -930,15 +930,25 @@ object SearchModel {
     // Get the projects this user can see
     val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
 
-    val termFilters : Iterable[Seq[FilterBuilder]] = query.filters map {
-      case (key, values) => values.map { v => termFilter(ticketFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder] }
+    val finalPids = {
+      // If the user supplied a project id (or the app did on the users behalf,
+      // whatever) intersect it with the list we got from permissions.
+      query.filters.get("project_id").map({ upids => pids.intersect(upids) }).getOrElse(pids)
+    }
+
+    val termFilters : Iterable[Seq[FilterBuilder]] = query.filters.filter { kv =>
+      kv._1 != "project_id"
+    } map {
+      case (key, values) => values.map { v =>
+        termFilter(ticketFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder]
+      }
     }
 
     // Make a bool filter to collect all our filters together
     val finalFilter: BoolFilterBuilder = boolFilter
 
     // Definitely going to have a project filter, everyone does
-    val projFilter = orFilter(pids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
+    val projFilter = orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
     // Add this to our bool filter
     finalFilter.must(projFilter)
 
