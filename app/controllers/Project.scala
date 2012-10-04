@@ -123,7 +123,10 @@ object Project extends Controller with Secured {
     val efilters = Map("project_id" -> Seq(projectId.toString))
 
     val userId = request.session.get("user_id").get.toLong
-    val events = SearchModel.searchEvent(userId = userId, filters = efilters) // XXX fixed page, count, query
+
+    val eventQuery = SearchQuery(userId = userId, filters = efilters)
+
+    val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
 
     val tfilters = Map(
       "project_id"  -> Seq(projectId.toString),

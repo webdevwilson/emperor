@@ -28,7 +28,9 @@ object Core extends Controller with Secured {
       }
     }
 
-    val response = SearchModel.searchEvent(userId = userId, page = 1, count = 10, filters = filters) // XX fixed page, count, query
+    val query = models.SearchQuery(userId = userId, filters = filters)
+
+    val response = SearchModel.searchEvent(query) // XX fixed page, count, query
 
     Ok(views.html.index(response, projects))
   }

@@ -22,7 +22,10 @@ object Timeline extends Controller with Secured {
     }
 
     val userId = request.session.get("user_id").get.toLong
-    val result = SearchModel.searchEvent(userId = userId, page = page, count = count, query = query, filters = filters)
+
+    val q = models.SearchQuery(userId = userId, page = page, count = count, query = query, filters = filters)
+
+    val result = SearchModel.searchEvent(q)
 
     Ok(views.html.timeline.index(result, filters)(request))
   }

@@ -513,6 +513,10 @@ object SearchModel {
   """
 
   // Facets
+  val eventFacets = Map(
+    "project" -> "project_name",
+    "user" -> "user_realname"
+  )
   val ticketFacets = Map(
     "resolution" -> "resolution_name",
     "type" -> "type_name",
@@ -873,48 +877,9 @@ object SearchModel {
   /**
    * Search for events.
    */
-  def searchEvent(userId: Long, page: Int = 1, count: Int = 10, query: String = "", filters: Map[String, Seq[String]]): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchEvent(query: SearchQuery): SearchResult[SearchHit] = {
 
-    // This shouldn't have to live here. It annoys me. Surely there's a better
-    // way.
-    var q = query
-    if(q.isEmpty) {
-      q = "*"
-    }
-
-    // Get the projects this user can see
-    val pids = ProjectModel.getVisibleProjectIds(userId).map { p => p.toString }
-
-    val finalProjs: Seq[String] = filters.get("project_id").map { upids =>
-      val ps = pids.intersect(upids)
-      if(ps.isEmpty) pids else pids
-    }.getOrElse(pids)
-    val finalFilters = (filters - "project_id") + ("project_id" -> finalProjs)
-
-    val fqs : Iterable[Seq[FilterBuilder]] = finalFilters map {
-      case (key, values) => values.map { v => termFilter(eventFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder] }
-    }
-    val actualQuery = if(fqs.isEmpty) queryString(q) else filteredQuery(queryString(q), andFilter(fqs.flatten.toSeq:_*))
-
-    val res = indexer.search(
-      query = actualQuery,
-      indices = Seq(eventIndex),
-      facets = Seq(
-        termsFacet("project").field("project_name"),
-        termsFacet("user").field("user_realname")
-      ),
-      fields = List("project_id", "project_name", "user_id", "user_realname", "ekey", "etype", "content", "url", "date_created"),
-      size = Some(count),
-      from = page match {
-        case 0 => Some(0)
-        case 1 => Some(0)
-        case _ => Some((page * count) - 1)
-      },
-      sorting = Seq("date_created" -> SortOrder.DESC)
-    )
-
-    val pager = Page(res.hits.hits, page, count, res.hits.totalHits)
-    Library.parseSearchResponse(pager = pager, response = res)
+    runQuery(eventIndex, query, eventFacets)
   }
 
   /**
@@ -965,6 +930,7 @@ object SearchModel {
       facets = facets.map { case (name, field) =>
         termsFacet(name).field(field)
       },
+      fields = List("*"),
       size = Some(query.count),
       from = query.page match {
         case 0 => Some(0)
