@@ -14,6 +14,11 @@ object JsonFormats {
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
   val markdown = MarkWrap.parserFor(MarkupType.Markdown)
 
+  private def optionLongtoJsValue(maybeId: Option[Long]) = maybeId.map({ l => JsNumber(l) }).getOrElse(JsNull)
+
+  private def optionI18nStringtoJsValue(maybeId: Option[String]) = maybeId.map({ s => JsString(Messages(s)) }).getOrElse(JsNull)
+  private def optionStringtoJsValue(maybeId: Option[String]) = maybeId.map({ s => JsString(s) }).getOrElse(JsNull)
+
   // XXX UNIT TESTS FOR THE LOVE OF GOD
 
   /**
@@ -85,39 +90,18 @@ object JsonFormats {
 
     def writes(ticket: EditTicket): JsValue = {
 
-      val assId  = ticket.assigneeId match {
-        case Some(assId)=> JsNumber(assId)
-        case None       => JsNull
-      }
-      val resId = ticket.resolutionId match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }
-      val propResId = ticket.proposedResolutionId match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }
-      val pos = ticket.position match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }
-      val desc = ticket.description match {
-        case Some(d)    => JsString(d)
-        case None       => JsNull
-      }
-
       val tdoc: Map[String,JsValue] = Map(
         "ticket_id"   -> JsString(ticket.ticketId.get),
         "reporter_id" -> JsNumber(ticket.reporterId),
-        "assignee_id" -> assId,
+        "assignee_id" -> optionLongtoJsValue(ticket.assigneeId),
         "priority_id" -> JsNumber(ticket.priorityId),
-        "resolution_id" -> resId,
-        "proposed_resolution_id" -> propResId,
+        "resolution_id" -> optionLongtoJsValue(ticket.resolutionId),
+        "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolutionId),
         "severity_id" -> JsNumber(ticket.severityId),
         "type_id"     -> JsNumber(ticket.typeId),
-        "position"    -> pos,
+        "position"    -> optionLongtoJsValue(ticket.position),
         "summary"     -> JsString(ticket.summary),
-        "description" -> desc
+        "description" -> optionStringtoJsValue(ticket.description)
       )
       toJson(tdoc)
     }
@@ -219,16 +203,16 @@ object JsonFormats {
         name  = (json \ "reporter_name").as[String]
       ),
       assignee = OptionalNamedThing(
-        id    = Some((json \ "assignee_id").as[Long]),
-        name  = Some((json \ "assignee_name").as[String])
+        id    = (json \ "assignee_id").as[Option[Long]],
+        name  = (json \ "assignee_name").as[Option[String]]
       ),
       attention = OptionalNamedThing(
-        id    = Some((json \ "attention_id").as[Long]),
-        name  = Some((json \ "attention_name").as[String])
+        id    = (json \ "attention_id").as[Option[Long]],
+        name  = (json \ "attention_name").as[Option[String]]
       ),
       project  = NamedThing(
         id    = (json \ "project_id").as[Long],
-        name  = (json \ "project_id").as[String]
+        name  = (json \ "project_name").as[String]
       ),
       priority  = ColoredThing(
         id    = (json \ "priority_id").as[Long],
@@ -236,12 +220,12 @@ object JsonFormats {
         color = (json \ "priority_color").as[String]
       ),
       resolution = OptionalNamedThing(
-        id    = Some((json \ "resolution_id").as[Long]),
-        name  = Some((json \ "resolution_name").as[String])
+        id    = (json \ "resolution_id").as[Option[Long]],
+        name  = (json \ "resolution_name").as[Option[String]]
       ),
       proposedResolution = OptionalNamedThing(
-        id    = Some((json \ "proposed_resolution_id").as[Long]),
-        name  = Some((json \ "proposed_resolution_name").as[String])
+        id    = (json \ "proposed_resolution_id").as[Option[Long]],
+        name  = (json \ "proposed_resolution_name").as[Option[String]]
       ),
       severity  = ColoredThing(
         id    = (json \ "severity_id").as[Long],
@@ -258,46 +242,14 @@ object JsonFormats {
         name  = (json \ "type_name").as[String],
         color = (json \ "type_color").as[String]
       ),
-      position = Some((json \ "position").as[Long]),
+      position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
-      description = Some((json \ "description").as[String]),
+      description = (json \ "description").as[Option[String]],
       dateCreated = new Date() // XXX
     )
 
     def writes(ticket: FullTicket): JsValue = {
 
-      val resId = ticket.resolution.id match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }
-      val resName = ticket.resolution.name match {
-        case Some(name) => name
-        case None       => "TICK_RESO_UNRESOLVED"
-      }
-      val propResId = ticket.proposedResolution.id match {
-        case Some(id)   => JsNumber(id)
-        case None       => JsNull
-      }
-      val propResName = ticket.proposedResolution.name match {
-        case Some(name) => name
-        case None       => "TICK_RESO_UNRESOLVED"
-      }
-      val assId = ticket.assignee.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      }
-      val assName = ticket.assignee.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      }
-      val attId = ticket.attention.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      }
-      val attName = ticket.attention.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      }
       val tdoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(ticket.id.get),
         "ticket_id"       -> JsString(ticket.ticketId),
@@ -307,18 +259,18 @@ object JsonFormats {
         "priority_name"   -> JsString(ticket.priority.name),
         "priority_name_i18n" -> JsString(Messages(ticket.priority.name)),
         "priority_color"  -> JsString(ticket.priority.color),
-        "resolution_id"   -> resId,
-        "resolution_name" -> JsString(resName),
-        "resolution_name_i18n" -> JsString(Messages(resName)),
-        "proposed_resolution_id" -> propResId,
-        "proposed_resolution_name" -> JsString(propResName),
-        "proposed_resolution_name_i18n" -> JsString(Messages(propResName)),
+        "resolution_id"   -> optionLongtoJsValue(ticket.resolution.id),
+        "resolution_name" -> optionStringtoJsValue(ticket.resolution.name),
+        "resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.resolution.name),
+        "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolution.id),
+        "proposed_resolution_name" -> optionStringtoJsValue(ticket.proposedResolution.name),
+        "proposed_resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.proposedResolution.name),
         "reporter_id"     -> JsNumber(ticket.reporter.id),
         "reporter_name"   -> JsString(ticket.reporter.name),
-        "assignee_id"     -> assId,
-        "assignee_name"   -> assName,
-        "attention_id"    -> attId,
-        "attention_name"  -> attName,
+        "assignee_id"     -> optionLongtoJsValue(ticket.assignee.id),
+        "assignee_name"   -> optionStringtoJsValue(ticket.assignee.name),
+        "attention_id"    -> optionLongtoJsValue(ticket.attention.id),
+        "attention_name"  -> optionStringtoJsValue(ticket.attention.name),
         "severity_id"     -> JsNumber(ticket.severity.id),
         "severity_color"  -> JsString(ticket.severity.color),
         "severity_name"   -> JsString(ticket.severity.name),
@@ -330,11 +282,14 @@ object JsonFormats {
         "type_color"      -> JsString(ticket.ttype.color),
         "type_name"       -> JsString(ticket.ttype.name),
         "type_name_i18n"  -> JsString(Messages(ticket.ttype.name)),
+        "user_id"         -> JsNumber(ticket.user.id),
+        "user_name"       -> JsString(ticket.user.name),
         "summary"         -> JsString(ticket.summary),
         "short_summary"   -> JsString(ticket.summary match {
           case x if x.length > 15 => x.take(15) + "&hellip;"
           case x => x
         }),
+        "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(markdown.parseToHTML(ticket.description.getOrElse(""))),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
       )

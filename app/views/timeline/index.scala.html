@@ -1,4 +1,4 @@
-@(result: emp.SearchResult[org.elasticsearch.search.SearchHit], filters: Map[String,Seq[String]])(implicit request: AuthenticatedRequest)
+@(result: emp.SearchResult[models.Event], filters: Map[String,Seq[String]])(implicit request: AuthenticatedRequest)
 
 @import emp._
 @import util._
@@ -32,9 +32,9 @@
    <ul class="unstyled events">
    @result.pager.items.map { event =>
     <li>
-      <i class="@Messages("event.action.icon." + event.field("etype").getValue)"></i> @Messages("event.action", event.field("user_realname").getValue, Messages("event.action." + event.field("etype").getValue)) <a href="@controllers.routes.Ticket.item("comments", event.field("ekey").getValue.toString)">@event.field("ekey").getValue</a>
-      <blockquote>@event.field("content").getValue</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.field("user_realname").getValue.toString</b> @Messages("ticket.comment.attribution.postfix", event.field("date_created").getValue.toString)</div>
+      <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", event.userRealName, Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+      <blockquote>@event.content</blockquote>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.userRealName</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
     </li>
    }
    </ul>

@@ -67,6 +67,14 @@ object SearchModel {
   {
     "ticket": {
       "properties": {
+        "user_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
+        "user_realname": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "project_id": {
           "type": "long",
           "index": "not_analyzed"
@@ -157,6 +165,10 @@ object SearchModel {
         },
         "type_name": {
           "type": "string",
+          "index": "not_analyzed"
+        },
+        "workflow_status_id": {
+          "type": "long",
           "index": "not_analyzed"
         },
         "summary": {
@@ -877,20 +889,28 @@ object SearchModel {
   /**
    * Search for events.
    */
-  def searchEvent(query: SearchQuery): SearchResult[SearchHit] = {
+  def searchEvent(query: SearchQuery): SearchResult[Event] = {
 
-    runQuery(eventIndex, query, eventFacets)
+    val res = runQuery(eventIndex, query, eventFacets)
+    val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())) }
+
+    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
+    Library.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
    * Search for a ticket.
    */
-  def searchTicket(query: SearchQuery): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def searchTicket(query: SearchQuery): SearchResult[FullTicket] = {
 
-    runQuery(ticketIndex, query, ticketFacets)
+    val res = runQuery(ticketIndex, query, ticketFacets)
+    val hits = res.hits.map { hit => println(hit.sourceAsString()); Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
+
+    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
+    Library.parseSearchResponse(pager = pager, response = res)
   }
 
-  private def runQuery(index: String, query: SearchQuery, facets: Map[String,String] = Map.empty): SearchResult[SearchHit] = {
+  private def runQuery(index: String, query: SearchQuery, facets: Map[String,String] = Map.empty): SearchResponse = {
 
     // Get the projects this user can see
     val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
@@ -922,15 +942,17 @@ object SearchModel {
       val userFilter = andFilter(termFilters.flatten.toSeq:_*)
       finalFilter.must(userFilter)
     }
-    val acqualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
+    val actualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
 
-    val res = indexer.search(
-      query = acqualQuery,
+    Logger.debug("Running ES query:")
+    Logger.debug(actualQuery.toString)
+
+    indexer.search(
+      query = actualQuery,
       indices = Seq(index),
       facets = facets.map { case (name, field) =>
         termsFacet(name).field(field)
       },
-      fields = List("*"),
       size = Some(query.count),
       from = query.page match {
         case 0 => Some(0)
@@ -939,9 +961,6 @@ object SearchModel {
       },
       sorting = Seq(query.sortBy -> query.sortOrder)
     )
-
-    val pager = Page(res.hits.hits, query.page, query.count, res.hits.totalHits)
-    Library.parseSearchResponse(pager = pager, response = res)
   }
 
   /**

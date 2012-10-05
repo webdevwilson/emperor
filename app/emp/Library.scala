@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Helper for pagination.
  */
-case class Page[+A](items: Seq[A], requestedPage: Int, count: Int, total: Long) {
+case class Page[+A](items: Iterable[A], requestedPage: Int, count: Int, total: Long) {
   lazy val lastPage = (total.toDouble / count).ceil.toInt
   lazy val page = requestedPage match {
       case p if p < firstPage => firstPage
@@ -53,7 +53,7 @@ object Library {
    * to provide the base query path.
    * To override the base path you can pass in a `path`.
    */
-  def filterLink(request: Request[AnyContent], path: Option[String] = None, name: String, value: String) : String = {
+  def filterLink(request: Request[AnyContent], path: Option[String] = None, name: String, value: String): String = {
 
     var q = request.queryString
     q += name -> List(value)
@@ -81,7 +81,7 @@ object Library {
     }
   }
 
-  def parseSearchResponse(pager: Page[org.elasticsearch.search.SearchHit], response: SearchResponse): SearchResult[org.elasticsearch.search.SearchHit] = {
+  def parseSearchResponse[A](pager: Page[A], response: SearchResponse): SearchResult[A] = {
 
     val facets = response.facets.facets map { facet =>
       Facets(
@@ -107,7 +107,6 @@ object Library {
       )
     } filter { f => f.items.size > 1 } // Eliminate facets with only one item
 
-    // val pager = Page(response.hits.hits, page, count, response.hits.totalHits)
     SearchResult(pager = pager, facets = facets)
   }
 }

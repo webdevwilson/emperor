@@ -1,4 +1,4 @@
-@(filters: Map[String,Seq[String]], result: emp.SearchResult[org.elasticsearch.search.SearchHit])(implicit request: AuthenticatedRequest)
+@(filters: Map[String,Seq[String]], result: emp.SearchResult[models.FullTicket])(implicit request: AuthenticatedRequest)
 
 @import emp._
 @import util._
@@ -34,18 +34,18 @@
     <th>@Messages("general.actions")</th>
    </thead>
    <tbody>
-    @result.pager.items.map { hit =>
+    @result.pager.items.map { ticket =>
     <tr>
-     <td style="width: 10%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.id</a</td>
-     <td><span class="label" style="background-color: #@hit.getSource.get("type_color")">@Messages(hit.getSource.get("type_name").toString)</span></td>
-     <td><span class="label">@Messages(hit.getSource.get("resolution_name").toString)</span></td>
-     <td style="width: 80%"><a @if(hit.getSource.get("resolution_id") != null) { class="strike" } href="@controllers.routes.Ticket.item("comments", hit.getId)">@hit.getSource.get("summary")</a></td>
-     <td><span class="label" style="background-color: #@hit.getSource.get("priority_color")">@Messages(hit.getSource.get("priority_name").toString)</span></td>
-     <td><span class="label" style="background-color: #@hit.getSource.get("severity_color")">@Messages(hit.getSource.get("severity_name").toString)</span></td>
+     <td style="width: 10%"><a @if(!ticket.resolution.id) { class="strike" } href="@controllers.routes.Ticket.item("comments", ticket.ticketId)">@ticket.ticketId</a</td>
+     <td><span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span></td>
+     <td><span class="label">@Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))</span></td>
+     <td style="width: 80%"><a @if(!ticket.resolution.id) { class="strike" } href="@controllers.routes.Ticket.item("comments", ticket.ticketId)">@ticket.summary</a></td>
+     <td><span class="label" style="background-color: #@ticket.priority.color">@Messages(ticket.priority.name)</span></td>
+     <td><span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span></td>
      <td style="width: 10%" class="actions">
       <div class="btn-toolbar">
        <div class="btn-group">
-        <a class="btn btn-mini" href="@routes.Ticket.edit(hit.getId)"><i class="icon-edit"></i> @Messages("general.edit")</a>
+        <a class="btn btn-mini" href="@routes.Ticket.edit(ticket.ticketId)"><i class="icon-edit"></i> @Messages("general.edit")</a>
        </div>
       </div>
      </td>
