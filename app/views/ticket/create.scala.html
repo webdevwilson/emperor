@@ -10,8 +10,8 @@
   @helper.select(field = objForm("project_id"), options = projs, args = '_label -> Messages("ticket.project"))
   @helper.inputText(field = objForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
   @helper.textarea(field = objForm("description"), args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
-  @helper.select(field = objForm("reporter_id"), options = users, args = '_label -> Messages("ticket.reporter"))
   <div id="projectable" class="per-project">
+  @helper.select(field = objForm("reporter_id"), options = users, args = '_label -> Messages("ticket.reporter"))
   @helper.select(field = objForm("assignee_id"), options = assignees, args = '_label -> Messages("ticket.assignee"))
   @helper.select(field = objForm("type_id"), options = ttypes, args = '_label -> Messages("ticket.type"))
   @helper.select(field = objForm("priority_id"), options = priorities, args = '_label -> Messages("ticket.priority"))
