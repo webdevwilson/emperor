@@ -28,11 +28,14 @@
 YUI().use('pjax', 'event', 'node', function (Y) {
   Y.one("#project_id").after("change", function(e) {
     var pid = Y.one("#project_id").get('value');
-    var pjax = new Y.Pjax({
-      container: '#projectable',
-      contentSelector: '.per-project'
-    });
-    pjax.navigate('@controllers.routes.Ticket.create()' + '?project=' + pid);
+    console.log("P: " + pid)
+    if(pid) {
+      var pjax = new Y.Pjax({
+        container: '#projectable',
+        contentSelector: '.per-project'
+      });
+      pjax.navigate('@controllers.routes.Ticket.create()' + '?project=' + pid);
+    }
   });
 });
 </script>

@@ -193,6 +193,7 @@ project.key=Key
 project.list=Projects
 project.name=Name
 project.owner=Owner
+project.choose=Choose A Project
 project.permission_scheme=Permission Scheme
 project.with.id=Project {0}
 project.workflow=Workflow

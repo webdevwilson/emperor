@@ -175,14 +175,14 @@ object Ticket extends Controller with Secured {
     initialTicketForm.bindFromRequest.fold(
       errors => {
         // Should be i18ned in the view
-        val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
         val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val assignees = ("" -> Messages("ticket.unassigned")) +: users
-
-        BadRequest(views.html.ticket.create(errors, users, assignees, projs, ttypes, prios, sevs))
+        val projId = errors("project_id").value.map({ pid => if(pid.isEmpty) None else Some(pid.toLong) }).getOrElse(None)
+        val assignees = UserModel.getAssignable(projectId = projId).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
+        val finalProjects = if(errors("project_id").value.isEmpty) projs else ("" -> Messages("project.choose")) +: projs
+        BadRequest(views.html.ticket.create(errors, assignees, assignees, finalProjects, ttypes, prios, sevs))
       },
       value => {
         val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
@@ -224,12 +224,11 @@ object Ticket extends Controller with Secured {
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val users = UserModel.getAll.map { x => (x.id.get.toString -> Messages(x.realName)) }
 
     // The worst case scenario, just the user id
     val startTicket = InitialTicket(
       reporterId = request.user.id.get,
-      assigneeId = None, // XXX need to fix this
+      assigneeId = None,
       projectId = 0,
       priorityId = 0,
       severityId = 0,
@@ -239,8 +238,6 @@ object Ticket extends Controller with Secured {
       description = None
     )
 
-    // XXX No, no. This is what's happening if there's no project? No project
-    // should be an error. Grrr.
     val finalTicket = projectId match {
       case Some(pid) => {
         val maybeProject = ProjectModel.getById(pid)
@@ -268,29 +265,28 @@ object Ticket extends Controller with Secured {
       case None => startTicket
     }
 
-    val assignees = projectId match {
-      case Some(project) => UserModel.getAssignable(projectId = project).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
-      case None => UserModel.getAll.map { x => (x.id.get.toString -> Messages(x.realName)) }
-    }
+    val assignees = UserModel.getAssignable(projectId = projectId).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
 
     val defaultedForm = initialTicketForm.fill(finalTicket)
 
-    Ok(views.html.ticket.create(defaultedForm, users, assignees, projs, ttypes, prios, sevs)(request))
+    val finalProjects = projectId.map({ pid => projs }).getOrElse(("" -> Messages("project.choose")) +: projs)
+
+    Ok(views.html.ticket.create(defaultedForm, assignees, assignees, finalProjects, ttypes, prios, sevs)(request))
   }
 
   def edit(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
-    val ticket = TicketModel.getById(ticketId)
-    val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
-    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val assignees = ("" -> Messages("ticket.unassigned")) +: users
-    val attentions = ("" -> Messages("ticket.unassigned")) +: users
+    val maybeTicket = TicketModel.getById(ticketId)
 
-    ticket match {
-      case Some(value) => Ok(views.html.ticket.edit(ticketId, ticketForm.fill(value), users, assignees, attentions, projs, ttypes, prios, sevs)(request))
+    maybeTicket match {
+      case Some(ticket) => {
+        val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
+        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val assignees = UserModel.getAssignable(projectId = Some(ticket.projectId)).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
+        Ok(views.html.ticket.edit(ticketId, ticketForm.fill(ticket), assignees, assignees, assignees, projs, ttypes, prios, sevs)(request))
+      }
       case None => NotFound
     }
   }
@@ -315,7 +311,7 @@ object Ticket extends Controller with Secured {
 
         val resolutions = TicketResolutionModel.getAll.map { reso => (reso.id.get.toString -> Messages(reso.name)) }
 
-        val assignees = UserModel.getAssignable(projectId = ticket.project.id).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
+        val assignees = UserModel.getAssignable(projectId = Some(ticket.project.id)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
 
         val ltypes = TicketLinkTypeModel.getAll
 
@@ -395,17 +391,17 @@ object Ticket extends Controller with Secured {
 
     ticketForm.bindFromRequest.fold(
       errors => {
-        val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
         val projs = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val assignees = ("" -> Messages("ticket.unassigned")) +: users
-        val attentions = ("" -> Messages("ticket.unassigned")) +: users
+        val projId = errors("project_id").value.get.toLong
+        val assignees = UserModel.getAssignable(projectId = Some(projId)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
 
-        BadRequest(views.html.ticket.edit(ticketId, errors, users, assignees, attentions, projs, ttypes, prios, sevs))
+        BadRequest(views.html.ticket.edit(ticketId, errors, assignees, assignees, assignees, projs, ttypes, prios, sevs))
       },
       value => {
+        // XXX validate assignability
         TicketModel.update(request.user.id.get, ticketId, value)
         SearchModel.indexTicket(TicketModel.getFullById(ticketId).get)
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")

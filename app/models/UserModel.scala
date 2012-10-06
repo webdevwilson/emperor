@@ -24,6 +24,7 @@ case class NewPassword(password: String, password2: String)
 object UserModel {
 
   val allQuery = SQL("SELECT * FROM users")
+  val getAllAssignableQuery = SQL("SELECT u.* FROM full_permissions AS fp JOIN users u on u.id = fp.user_id WHERE permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_id={project_id}")
   val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
   val getByGroupIdQuery = SQL("SELECT * FROM users")
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
@@ -99,9 +100,14 @@ object UserModel {
     }
   }
 
-  def getAssignable(projectId: Long, ticketId: Option[String] = None): List[User] = {
+  def getAssignable(projectId: Option[Long], ticketId: Option[String] = None): List[User] = {
 
-    val users = UserModel.getAll
+    val users = projectId.map({ pid =>
+      DB.withConnection { implicit conn =>
+        getAllAssignableQuery.on('project_id -> pid).as(user *)
+      }
+    }).getOrElse(UserModel.getAll)
+
     // Add the nobody. In the future this will likely be conditional based
     // on a project setting for allowing unassigned tickets or something.
     User(
