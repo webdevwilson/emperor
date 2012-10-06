@@ -102,6 +102,14 @@ object ProjectModel {
         'default_assignee -> project.defaultAssignee
       ).executeInsert()
 
+      id.map { pid =>
+        EmperorEventBus.publish(
+          NewProjectEvent(
+            projectId = pid
+          )
+        )
+      }
+
       this.getById(id.get).get
     }
   }
@@ -202,6 +210,13 @@ object ProjectModel {
         'default_ticket_type_id -> project.defaultTypeId,
         'default_assignee -> project.defaultAssignee
       ).execute
+
+      EmperorEventBus.publish(
+        ChangeProjectEvent(
+          projectId = id
+        )
+      )
+
       getById(id)
     }
   }

@@ -74,13 +74,13 @@ class EmailNotifier(configuration: Configuration) extends Actor {
         email.setFrom(maybeFrom.getOrElse("emperor@example.com"), maybeName.getOrElse("Emperor"))
         email.setSubject(result.subject)
 
-        // set the html message
+        // Set the html message
         email.setHtmlMsg(result.body)
 
-        // set the alternative message
+        // Set the alternative message
         email.setTextMsg("Your email client does not support HTML messages") // XXX
 
-        // send the email
+        // Send the email
         email.send()
       }
     }

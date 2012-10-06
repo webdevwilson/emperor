@@ -1,5 +1,6 @@
 package controllers
 
+import emp._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -48,6 +49,11 @@ object Auth extends Controller {
         case loginUser => {
 
           val user = UserModel.getByUsername(loginUser.username).get // We know this exists, so just get it
+          EmperorEventBus.publish(
+            LogInUserEvent(
+              userId = user.id.get
+            )
+          )
 
           Redirect(redirectUrl).withSession("user_id" -> user.id.get.toString).flashing("success" -> "auth.success")
         }

@@ -59,6 +59,14 @@ object UserModel {
         'email      -> user.email
       ).executeInsert()
 
+      id.map { uid =>
+        EmperorEventBus.publish(
+          NewUserEvent(
+            userId = uid
+          )
+        )
+      }
+
       this.getById(id.get).get
     }
   }

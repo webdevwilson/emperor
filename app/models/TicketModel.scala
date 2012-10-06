@@ -342,6 +342,13 @@ object TicketModel {
             'ticket_id  -> ticketId,
             'content    -> content
           ).executeInsert()
+
+          EmperorEventBus.publish(
+            CommentTicketEvent(
+              ticketId = ticketId
+            )
+          )
+
           getCommentById(id.get)
         }
       }
@@ -665,10 +672,15 @@ object TicketModel {
         'parent_ticket_id -> parentId,
         'child_ticket_id  -> childId
       ).executeInsert()
-      li match {
-        case Some(lid) => getFullLinkById(lid)
-        case None => None
-      }
+      li.map({ lid =>
+        EmperorEventBus.publish(
+          LinkTicketEvent(
+            parentId = parentId,
+            childId = childId
+          )
+        )
+        getFullLinkById(lid)
+      }).getOrElse(None)
     }
   }
 
@@ -677,24 +689,33 @@ object TicketModel {
    */
   def removeLink(id: Long) {
     DB.withConnection { implicit conn =>
-      deleteLinkQuery.on('id -> id).execute()
+      val link = getFullLinkById(id)
+      link.map({ l =>
+        deleteLinkQuery.on('id -> id).execute()
+        EmperorEventBus.publish(
+          UnlinkTicketEvent(
+            parentId = l.parentId,
+            childId = l.childId
+          )
+        )
+      })
     }
   }
 
   def list(page: Int = 1, count: Int = 10) : Page[Ticket] = {
 
-      val offset = count * (page - 1)
+    val offset = count * (page - 1)
 
-      DB.withConnection { implicit conn =>
-        val tickets = listQuery.on(
-          'count  -> count,
-          'offset -> offset
-        ).as(ticket *)
+    DB.withConnection { implicit conn =>
+      val tickets = listQuery.on(
+        'count  -> count,
+        'offset -> offset
+      ).as(ticket *)
 
-        val totalRows = listCountQuery.as(scalar[Long].single)
+      val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(tickets, page, count, totalRows)
-      }
+      Page(tickets, page, count, totalRows)
+    }
   }
 
   /**
@@ -729,42 +750,32 @@ object TicketModel {
       case false  => resolutionId.getOrElse(oldTicket.resolution.id)
     }
 
-    var changed = false
-    if(oldTicket.project.id != ticket.projectId) {
-      changed = true
-    }
-    if(!changed && (oldTicket.priority.id != ticket.priorityId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.resolution.id != newResId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.proposedResolution.id != ticket.proposedResolutionId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.reporter.id != ticket.reporterId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.assignee.id != ticket.assigneeId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.attention.id != ticket.attentionId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.severity.id != ticket.severityId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.status.id != statusId.getOrElse(oldTicket.status.id))) {
-      changed = true
-    }
-    if(!changed && (oldTicket.ttype.id != ticket.typeId)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.description != ticket.description)) {
-      changed = true
-    }
-    if(!changed && (oldTicket.summary != ticket.summary)) {
-      changed = true
+    val changed = if(oldTicket.project.id != ticket.projectId) {
+      true
+    } else if(oldTicket.priority.id != ticket.priorityId) {
+      true
+    } else if(oldTicket.resolution.id != newResId) {
+      true
+    } else if(oldTicket.proposedResolution.id != ticket.proposedResolutionId) {
+      true
+    } else if(oldTicket.reporter.id != ticket.reporterId) {
+      true
+    } else if(oldTicket.assignee.id != ticket.assigneeId) {
+      true
+    } else if(oldTicket.attention.id != ticket.attentionId) {
+      true
+    } else if(oldTicket.severity.id != ticket.severityId) {
+      true
+    } else if(oldTicket.status.id != statusId.getOrElse(oldTicket.status.id)) {
+      true
+    } else if(oldTicket.ttype.id != ticket.typeId) {
+      true
+    } else if(oldTicket.description != ticket.description) {
+      true
+    } else if(oldTicket.summary != ticket.summary) {
+      true
+    } else {
+      false
     }
 
     if(changed) {
@@ -791,15 +802,18 @@ object TicketModel {
         ).executeInsert()
 
         // Add a comment, if we had one.
-        comment.map { content => {
+        comment.map { content =>
           val comm = addComment(ticketId = id, userId = userId, content = content)
           SearchModel.indexComment(comm.get)
-        } }
+        }
 
         // Get on the bus!
         EmperorEventBus.publish(
-          ChangedTicketEvent(
-            ticketId = id
+          ChangeTicketEvent(
+            ticketId = id,
+            // This logic should probably be tested… XXX
+            resolved = if(changed && (oldTicket.resolution.id != newResId)) true else false,
+            unresolved = if(clearResolution && !oldTicket.resolution.id.isEmpty) true else false
           )
         )
       }
