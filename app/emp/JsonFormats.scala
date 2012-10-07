@@ -191,6 +191,8 @@ object JsonFormats {
    */
   implicit object FullTicketFormat extends Format[FullTicket] {
 
+    // XX This is allllll wrong.  To be able to inflate it should verify
+    // all these IDs then poll the database for the values.
     def reads(json: JsValue): FullTicket = FullTicket(
       id        = Id((json \ "id").as[Long]),
       ticketId  = (json \ "ticket_id").as[String],
@@ -214,10 +216,11 @@ object JsonFormats {
         id    = (json \ "project_id").as[Long],
         name  = (json \ "project_name").as[String]
       ),
-      priority  = ColoredThing(
+      priority  = ColoredPositionedThing(
         id    = (json \ "priority_id").as[Long],
         name  = (json \ "priority_name").as[String],
-        color = (json \ "priority_color").as[String]
+        color = (json \ "priority_color").as[String],
+        position = (json \ "priority_position").as[Int]
       ),
       resolution = OptionalNamedThing(
         id    = (json \ "resolution_id").as[Option[Long]],
@@ -227,10 +230,11 @@ object JsonFormats {
         id    = (json \ "proposed_resolution_id").as[Option[Long]],
         name  = (json \ "proposed_resolution_name").as[Option[String]]
       ),
-      severity  = ColoredThing(
+      severity  = ColoredPositionedThing(
         id    = (json \ "severity_id").as[Long],
         name  = (json \ "severity_name").as[String],
-        color = (json \ "severity_color").as[String]
+        color = (json \ "severity_color").as[String],
+        position = (json \ "severity_position").as[Int]
       ),
       workflowStatusId = (json \ "workflow_status_id").as[Long],
       status  = NamedThing(
@@ -259,6 +263,7 @@ object JsonFormats {
         "priority_name"   -> JsString(ticket.priority.name),
         "priority_name_i18n" -> JsString(Messages(ticket.priority.name)),
         "priority_color"  -> JsString(ticket.priority.color),
+        "priority_position" -> JsNumber(ticket.priority.position),
         "resolution_id"   -> optionLongtoJsValue(ticket.resolution.id),
         // A ticket with no resolution gets a default name, hence the differing logic here
         "resolution_name" -> JsString(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")),
@@ -276,6 +281,7 @@ object JsonFormats {
         "severity_color"  -> JsString(ticket.severity.color),
         "severity_name"   -> JsString(ticket.severity.name),
         "severity_name_i18n" -> JsString(Messages(ticket.severity.name)),
+        "severity_position" -> JsNumber(ticket.severity.position),
         "status_id"       -> JsNumber(ticket.status.id),
         "status_name"     -> JsString(ticket.status.name),
         "status_name_i18n"-> JsString(Messages(ticket.status.name)),

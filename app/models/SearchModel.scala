@@ -50,9 +50,6 @@ object SearchModel {
     ).node
   ).start
 
-  // Ticket ES index
-  val ticketIndex = "tickets"
-  val ticketType = "ticket"
   val ticketFilterMap = Map(
     "assignee"    -> "assignee_name",
     "project"     -> "project_name",
@@ -63,6 +60,10 @@ object SearchModel {
     "status"      -> "status_name",
     "type"        -> "type_name"
   )
+
+  // Ticket ES index
+  val ticketIndex = "tickets"
+  val ticketType = "ticket"
   val ticketMapping = """
   {
     "ticket": {
@@ -93,6 +94,10 @@ object SearchModel {
         },
         "priority_color": {
           "type": "string",
+          "index": "not_analyzed"
+        },
+        "priority_position": {
+          "type": "integer",
           "index": "not_analyzed"
         },
         "resolution_id": {
@@ -145,6 +150,10 @@ object SearchModel {
         },
         "severity_name": {
           "type": "string",
+          "index": "not_analyzed"
+        },
+        "severity_position": {
+          "type": "integer",
           "index": "not_analyzed"
         },
         "status_id": {

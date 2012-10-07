@@ -25,13 +25,13 @@
  <div class="span10">
   <table class="table table-bordered table-rounded table-striped ticket-search">
    <thead>
-    <th>@Messages("ticket.ticket")</th>
-    <th>@Messages("ticket.type")</th>
-    <th>@Messages("ticket.resolution")</th>
-    <th>@Messages("ticket.summary")</th>
-    <th>@Messages("ticket.priority")</th>
-    <th>@Messages("ticket.severity")</th>
-    <th>@Messages("general.actions")</th>
+    <th><a href="#">@Messages("ticket.ticket")</a></th>
+    <th><a href="#">@Messages("ticket.type")</a></th>
+    <th><a href="#">@Messages("ticket.resolution")</a></th>
+    <th><a href="#">@Messages("ticket.summary")</a></th>
+    <th><a href="#">@Messages("ticket.priority")</a></th>
+    <th><a href="#">@Messages("ticket.severity")</a></th>
+    <th><a href="#">@Messages("general.actions")</a></th>
    </thead>
    <tbody>
     @result.pager.items.map { ticket =>

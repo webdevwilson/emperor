@@ -93,10 +93,10 @@ case class EditTicket(
 case class FullTicket(
   id: Pk[Long] = NotAssigned, ticketId: String, user: NamedThing, reporter: NamedThing,
   assignee: OptionalNamedThing, attention: OptionalNamedThing,
-  project: NamedThing,  priority: ColoredThing,
+  project: NamedThing,  priority: ColoredPositionedThing,
   resolution: OptionalNamedThing,
   proposedResolution: OptionalNamedThing,
-  severity: ColoredThing, workflowStatusId: Long, status: NamedThing,
+  severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: Date
 )
@@ -124,6 +124,13 @@ case class NamedThing(
  */
 case class ColoredThing(
   id: Long, name: String, color: String
+)
+
+/**
+ * A thing with an id, name, priority and a color.
+ */
+case class ColoredPositionedThing(
+  id: Long, name: String, color: String, position: Int
 )
 
 /**
@@ -257,6 +264,7 @@ object TicketModel {
     get[Long]("priority_id") ~
     get[String]("priority_name") ~
     get[String]("priority_color") ~
+    get[Int]("priority_position") ~
     get[Option[Long]]("resolution_id") ~
     get[Option[String]]("resolution_name") ~
     get[Option[Long]]("proposed_resolution_id") ~
@@ -264,6 +272,7 @@ object TicketModel {
     get[Long]("severity_id") ~
     get[String]("severity_name") ~
     get[String]("severity_color") ~
+    get[Int]("severity_position") ~
     get[Long]("status_id") ~
     get[Long]("workflow_status_id") ~
     get[String]("status_name") ~
@@ -274,7 +283,7 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[Date]("date_created") map {
-      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~resId~resName~propResId~propResName~sevId~sevName~sevColor~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
+      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~propResId~propResName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
           ticketId = tickId,
@@ -283,10 +292,10 @@ object TicketModel {
           assignee = OptionalNamedThing(assId, assName),
           attention = OptionalNamedThing(attId, attName),
           project = NamedThing(projId, projName),
-          priority = ColoredThing(priId, priName, priColor),
+          priority = ColoredPositionedThing(priId, priName, priColor, priPos),
           resolution = OptionalNamedThing(resId, resName),
           proposedResolution = OptionalNamedThing(propResId, propResName),
-          severity = ColoredThing(sevId, sevName, sevColor),
+          severity = ColoredPositionedThing(sevId, sevName, sevColor, sevPos),
           workflowStatusId = workflowStatusId,
           status = NamedThing(statusId, statusName),
           ttype = ColoredThing(typeId, typeName, typeColor),
