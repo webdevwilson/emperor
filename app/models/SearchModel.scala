@@ -904,7 +904,7 @@ object SearchModel {
   def searchTicket(query: SearchQuery): SearchResult[FullTicket] = {
 
     val res = runQuery(ticketIndex, query, ticketFacets)
-    val hits = res.hits.map { hit => println(hit.sourceAsString()); Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
+    val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
     Library.parseSearchResponse(pager = pager, response = res)
