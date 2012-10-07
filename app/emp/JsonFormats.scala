@@ -260,8 +260,9 @@ object JsonFormats {
         "priority_name_i18n" -> JsString(Messages(ticket.priority.name)),
         "priority_color"  -> JsString(ticket.priority.color),
         "resolution_id"   -> optionLongtoJsValue(ticket.resolution.id),
-        "resolution_name" -> optionStringtoJsValue(ticket.resolution.name),
-        "resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.resolution.name),
+        // A ticket with no resolution gets a default name, hence the differing logic here
+        "resolution_name" -> JsString(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")),
+        "resolution_name_i18n" -> JsString(Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))),
         "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolution.id),
         "proposed_resolution_name" -> optionStringtoJsValue(ticket.proposedResolution.name),
         "proposed_resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.proposedResolution.name),
