@@ -25,9 +25,10 @@ object Search extends Controller with Secured {
     }
 
     val userId = request.session.get("user_id").get.toLong
-    val q = models.SearchQuery(
+    val sort: Option[String] = request.queryString.get("sort").map({ vals => Some(vals.first) }).getOrElse(None);
+    val q = emp.util.Search.SearchQuery(
       userId = userId, page = page, count = count, query = query,
-      filters = filters
+      filters = filters, sortBy = sort
     )
     val result = SearchModel.searchTicket(q)
 

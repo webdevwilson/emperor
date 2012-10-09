@@ -1,7 +1,7 @@
-@(timeline: emp.SearchResult[models.Event], projects: List[Project])(implicit request: AuthenticatedRequest)
+@(timeline: emp.util.Search.SearchResult[models.Event], projects: List[Project])(implicit request: AuthenticatedRequest)
 
 @import emp._
-@import util._
+@import views.html.util._
 
 @main(Messages("general.home")) {
 <div class="row-fluid">

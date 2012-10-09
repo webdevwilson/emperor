@@ -14,8 +14,7 @@
 )(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
-@import emp._
-@import util._
+@import views.html.util._
 
 @item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">

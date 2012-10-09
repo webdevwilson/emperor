@@ -2,6 +2,7 @@ package controllers
 
 import anorm._
 import emp._
+import emp.util.Search._
 import java.util.Date
 import play.api._
 import play.api.data._

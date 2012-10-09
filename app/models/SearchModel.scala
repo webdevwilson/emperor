@@ -1,39 +1,31 @@
 package models
 
 import emp._
+import emp.util.Search
+import emp.util.Search._
 import emp.JsonFormats._
 import com.traackr.scalastic.elasticsearch.Indexer
 import java.text.SimpleDateFormat
 import java.util.{Date,TimeZone}
-import org.elasticsearch.action.search.SearchResponse
-import org.elasticsearch.index.query._
-import org.elasticsearch.index.query.FilterBuilders._
-import org.elasticsearch.index.query.QueryBuilders._
-import org.elasticsearch.search.SearchHit
-import org.elasticsearch.search.facet.FacetBuilders._
-import org.elasticsearch.search.sort._
 import play.api._
 import play.api.Play.current
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
+import org.elasticsearch.action.search.SearchResponse
+import org.elasticsearch.index.query._
+import org.elasticsearch.index.query.FilterBuilders._
+import org.elasticsearch.index.query.QueryBuilders._
+import org.elasticsearch.search.facet.terms.strings._
+import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
+import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.facet.FacetBuilders._
+import org.elasticsearch.search.sort._
+
 import org.elasticsearch.client._, transport._
 import org.elasticsearch.common.settings.ImmutableSettings._
 import org.elasticsearch.node._, NodeBuilder._
 import scala.collection.JavaConversions._
-
-/**
- * Case class for search queries
- */
-case class SearchQuery(
-  userId: Long,
-  page: Int = 1,
-  count: Int = 10,
-  query: String = "",
-  filters: Map[String, Seq[String]] = Map.empty,
-  sortBy: String = "date_created",
-  sortOrder: SortOrder = SortOrder.DESC
-)
 
 object SearchModel {
 
@@ -50,6 +42,9 @@ object SearchModel {
     ).node
   ).start
 
+  // Ticket ES index
+  val ticketIndex = "tickets"
+  val ticketType = "ticket"
   val ticketFilterMap = Map(
     "assignee"    -> "assignee_name",
     "project"     -> "project_name",
@@ -60,10 +55,14 @@ object SearchModel {
     "status"      -> "status_name",
     "type"        -> "type_name"
   )
-
-  // Ticket ES index
-  val ticketIndex = "tickets"
-  val ticketType = "ticket"
+  val ticketSortMap = Map(
+    "date_created"-> "date_created",
+    "id"          -> "id",
+    "priority"    -> "priority_position",
+    "severity"    -> "severity_position",
+    "type"        -> "type_name",
+    "resolution"  -> "resolution_id"
+  )
   val ticketMapping = """
   {
     "ticket": {
@@ -203,6 +202,9 @@ object SearchModel {
   val eventFilterMap = Map(
     "user" -> "user_realname",
     "project" -> "project_name"
+  )
+  val eventSortMap = Map(
+    "date_created" -> "date_created"
   )
   val eventMapping = """
   {
@@ -798,19 +800,6 @@ object SearchModel {
     }
   }
 
-  // XXX
-  def searchProjectStats(projectId: Long): SearchResponse = {
-
-    var actualQuery = filteredQuery(queryString("*"), andFilter(termFilter("project_id", projectId)))
-
-    indexer.search(
-      query = actualQuery,
-      indices = Seq("tickets"),
-      facets = Seq(
-      )
-    )
-  }
-
   /**
    * Search for ticket changes, or history.
    */
@@ -900,11 +889,11 @@ object SearchModel {
    */
   def searchEvent(query: SearchQuery): SearchResult[Event] = {
 
-    val res = runQuery(eventIndex, query, eventFacets)
+    val res = Search.runQuery(indexer, eventIndex, query, eventFilterMap, eventSortMap, eventFacets)
     val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    Library.parseSearchResponse(pager = pager, response = res)
+    Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
@@ -912,64 +901,11 @@ object SearchModel {
    */
   def searchTicket(query: SearchQuery): SearchResult[FullTicket] = {
 
-    val res = runQuery(ticketIndex, query, ticketFacets)
+    val res = runQuery(indexer, ticketIndex, query, ticketFilterMap, ticketSortMap, ticketFacets)
     val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    Library.parseSearchResponse(pager = pager, response = res)
-  }
-
-  private def runQuery(index: String, query: SearchQuery, facets: Map[String,String] = Map.empty): SearchResponse = {
-
-    // Get the projects this user can see
-    val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
-
-    val finalPids = {
-      // If the user supplied a project id (or the app did on the users behalf,
-      // whatever) intersect it with the list we got from permissions.
-      query.filters.get("project_id").map({ upids => pids.intersect(upids) }).getOrElse(pids)
-    }
-
-    val termFilters : Iterable[Seq[FilterBuilder]] = query.filters.filter { kv =>
-      kv._1 != "project_id"
-    } map {
-      case (key, values) => values.map { v =>
-        termFilter(ticketFilterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder]
-      }
-    }
-
-    // Make a bool filter to collect all our filters together
-    val finalFilter: BoolFilterBuilder = boolFilter
-
-    // Definitely going to have a project filter, everyone does
-    val projFilter = orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
-    // Add this to our bool filter
-    finalFilter.must(projFilter)
-
-    // Might not have user filters
-    if(!termFilters.isEmpty) {
-      val userFilter = andFilter(termFilters.flatten.toSeq:_*)
-      finalFilter.must(userFilter)
-    }
-    val actualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
-
-    Logger.debug("Running ES query:")
-    Logger.debug(actualQuery.toString)
-
-    indexer.search(
-      query = actualQuery,
-      indices = Seq(index),
-      facets = facets.map { case (name, field) =>
-        termsFacet(name).field(field)
-      },
-      size = Some(query.count),
-      from = query.page match {
-        case 0 => Some(0)
-        case 1 => Some(0)
-        case _ => Some((query.page * query.count) - 1)
-      },
-      sorting = Seq(query.sortBy -> query.sortOrder)
-    )
+    Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**

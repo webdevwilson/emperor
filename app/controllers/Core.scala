@@ -1,6 +1,7 @@
 package controllers
 
 import emp._
+import emp.util.Search._
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Security._
@@ -28,7 +29,7 @@ object Core extends Controller with Secured {
       }
     }
 
-    val query = models.SearchQuery(userId = userId, filters = filters)
+    val query = SearchQuery(userId = userId, filters = filters)
 
     val response = SearchModel.searchEvent(query) // XX fixed page, count, query
 
