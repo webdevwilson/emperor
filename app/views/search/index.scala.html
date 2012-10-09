@@ -25,12 +25,12 @@
  <div class="span10">
   <table class="table table-bordered table-rounded table-striped ticket-search">
    <thead>
-    <th><a href="#">@Messages("ticket.ticket")</a></th>
-    <th><a href="#">@Messages("ticket.type")</a></th>
-    <th><a href="#">@Messages("ticket.resolution")</a></th>
+    <th><a href="@Library.sortLink(request = request, name = "id")">@Messages("ticket.ticket")</a></th>
+    <th><a href="@Library.sortLink(request = request, name = "type")">@Messages("ticket.type")</a></th>
+    <th><a href="@Library.sortLink(request = request, name = "resolution")">@Messages("ticket.resolution")</a></th>
     <th>@Messages("ticket.summary")</th>
-    <th><a href="#">@Messages("ticket.priority")</a></th>
-    <th><a href="#">@Messages("ticket.severity")</a></th>
+    <th><a href="@Library.sortLink(request = request, name = "priority")">@Messages("ticket.priority")</a></th>
+    <th><a href="@Library.sortLink(request = request, name = "severity")">@Messages("ticket.severity")</a></th>
    </thead>
    <tbody>
     @result.pager.items.map { ticket =>

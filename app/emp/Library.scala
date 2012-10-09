@@ -53,10 +53,7 @@ object Library {
       )
     )
 
-    path match {
-      case Some(p) => p + "?" + qs
-      case None => request.path + "?" + qs
-    }
+    path.map({ p => p + "?" + qs }).getOrElse(request.path + "?" + qs)
   }
 
   def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
@@ -64,6 +61,34 @@ object Library {
     var q = request.queryString
     q += "page" -> List(page.toString)
     q += "count" -> List(count.toString)
+
+    val qs = q.foldLeft("")(
+      (acc, value) => acc + value._2.foldLeft("")(
+        (acc2, param) => acc2 + value._1 + "=" + param + "&"
+      )
+    )
+
+    request.path + "?" + qs
+  }
+
+  def sortLink(request: Request[AnyContent], name: String): String = {
+
+    val q: Map[String,Seq[String]] = request.queryString.map { case (key, value) =>
+      key match {
+        case n if n.equalsIgnoreCase("sort") => (key -> Seq(name))
+        case n if n.equalsIgnoreCase("order") => {
+          val newsort = if(value.isEmpty) {
+            "desc"
+          } else if(value.first.equalsIgnoreCase("desc")) {
+            "asc"
+          } else {
+            "desc"
+          }
+          ("order" -> Seq(newsort))
+        }
+        case _ => (key -> value)
+      }
+    }
 
     val qs = q.foldLeft("")(
       (acc, value) => acc + value._2.foldLeft("")(
