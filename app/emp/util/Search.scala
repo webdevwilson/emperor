@@ -27,7 +27,7 @@ object Search {
     query: String = "",
     filters: Map[String, Seq[String]] = Map.empty,
     sortBy: Option[String] = Some("date_created"),
-    sortOrder: Option[SortOrder] = Some(SortOrder.DESC)
+    sortOrder: Option[String] = None
   )
 
   case class Facet(value: String, count: Long)
@@ -75,7 +75,7 @@ object Search {
     }
 
     val termFilters : Iterable[Seq[FilterBuilder]] = query.filters.filter { kv =>
-      kv._1 != "project_id"
+      kv._1 != "project_id" && filterMap.get(kv._1).isDefined
     } map {
       case (key, values) => values.map { v =>
         termFilter(filterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder]
@@ -100,6 +100,11 @@ object Search {
     Logger.debug("Running ES query:")
     Logger.debug(actualQuery.toString)
 
+    val sortOrder = query.sortOrder match {
+      case Some(s) => if(s.equalsIgnoreCase("desc")) SortOrder.DESC else SortOrder.ASC
+      case None => SortOrder.DESC
+    }
+
     indexer.search(
       query = actualQuery,
       indices = Seq(index),
@@ -114,7 +119,7 @@ object Search {
       },
       sorting = Seq(
         // This is a bit messy… but it gets the job done.
-        sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created") -> query.sortOrder.getOrElse(SortOrder.DESC)
+        sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created") -> sortOrder
       )
     )
   }

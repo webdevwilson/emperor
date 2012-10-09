@@ -25,21 +25,6 @@ case class Page[+A](items: Iterable[A], requestedPage: Int, count: Int, total: L
 
 object Library {
 
-  def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
-
-    var q = request.queryString
-    q += "page" -> List(page.toString)
-    q += "count" -> List(count.toString)
-
-    val qs = q.foldLeft("")(
-      (acc, value) => acc + value._2.foldLeft("")(
-        (acc2, param) => acc2 + value._1 + "=" + param + "&"
-      )
-    )
-
-    request.path + "?" + qs
-  }
-
   /**
    * Return a String (URL) with a query parameter (`name`) and `value`.
    * It uses the request to populate existing query params and also
@@ -72,5 +57,20 @@ object Library {
       case Some(p) => p + "?" + qs
       case None => request.path + "?" + qs
     }
+  }
+
+  def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
+
+    var q = request.queryString
+    q += "page" -> List(page.toString)
+    q += "count" -> List(count.toString)
+
+    val qs = q.foldLeft("")(
+      (acc, value) => acc + value._2.foldLeft("")(
+        (acc2, param) => acc2 + value._1 + "=" + param + "&"
+      )
+    )
+
+    request.path + "?" + qs
   }
 }

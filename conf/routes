@@ -113,7 +113,7 @@ POST    /project/:id                    controllers.Project.update(id: Long)
 GET     /project                        controllers.Project.index(page: Int ?= 1, count: Int ?= 10)
 POST    /project                        controllers.Project.add
 
-GET     /search                         controllers.Search.index(page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /search                         controllers.Search.index(page: Int ?= 1, count: Int ?= 10, query: String ?= "*", sort: Option[String] = None, order: Option[String] = None)
 
 GET     /stack                          controllers.Stack.index
 

@@ -12,7 +12,7 @@
 )(content: Html)(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
-@import util._
+@import views.html.util._
 
 @main(title = Messages("ticket.with.id", ticket.ticketId), currentProject = Some(ticket.project.id)) {
 <div class="row-fluid">

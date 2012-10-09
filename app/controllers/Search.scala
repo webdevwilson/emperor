@@ -8,27 +8,19 @@ import play.api.mvc._
 
 object Search extends Controller with Secured {
 
-  def index(page: Int, count: Int, query: String) = IsAuthenticated() { implicit request =>
+  def index(page: Int, count: Int, query: String, sort: Option[String] = None, order: Option[String] = None) = IsAuthenticated() { implicit request =>
 
+    // XXX This can go if we use the responses filter's in the templates
     val filters = request.queryString filterKeys { key =>
-      key match {
-        case "assignee"   => true
-        case "project"    => true
-        case "priority"   => true
-        case "reporter"   => true
-        case "resolution" => true
-        case "severity"   => true
-        case "status"     => true
-        case "type"       => true
-        case _            => false // Nothing else is useful as a filter
-      }
+      SearchModel.ticketFilterMap.get(key).isDefined
     }
 
     val userId = request.session.get("user_id").get.toLong
-    val sort: Option[String] = request.queryString.get("sort").map({ vals => Some(vals.first) }).getOrElse(None);
+    val sort = request.queryString.get("sort").map({ vals => Some(vals.first) }).getOrElse(None);
+    val order = request.queryString.get("order").map({ vals => Some(vals.first) }).getOrElse(None);
     val q = emp.util.Search.SearchQuery(
       userId = userId, page = page, count = count, query = query,
-      filters = filters, sortBy = sort
+      filters = filters, sortBy = sort, sortOrder = order
     )
     val result = SearchModel.searchTicket(q)
 
