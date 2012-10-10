@@ -63,16 +63,10 @@ object Search {
     SearchResult(pager = pager, facets = facets)
   }
 
-  def runQuery(indexer: Indexer, index: String, query: SearchQuery, filterMap: Map[String,String], sortMap: Map[String,String], facets: Map[String,String] = Map.empty): SearchResponse = {
+  def runQuery(indexer: Indexer, index: String, query: SearchQuery, filterMap: Map[String,String], sortMap: Map[String,String], facets: Map[String,String] = Map.empty, filterProjects: Boolean = true): SearchResponse = {
 
-    // Get the projects this user can see
-    val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
-
-    val finalPids = {
-      // If the user supplied a project id (or the app did on the users behalf,
-      // whatever) intersect it with the list we got from permissions.
-      query.filters.get("project_id").map({ upids => pids.intersect(upids) }).getOrElse(pids)
-    }
+    // Make a bool filter to collect all our filters together
+    val finalFilter: BoolFilterBuilder = boolFilter
 
     val termFilters : Iterable[Seq[FilterBuilder]] = query.filters.filter { kv =>
       kv._1 != "project_id" && filterMap.get(kv._1).isDefined
@@ -82,13 +76,22 @@ object Search {
       }
     }
 
-    // Make a bool filter to collect all our filters together
-    val finalFilter: BoolFilterBuilder = boolFilter
+    // There are some rare cases where we don't want the project filter added.
+    if(filterProjects) {
+      // Get the projects this user can see
+      val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
 
-    // Definitely going to have a project filter, everyone does
-    val projFilter = orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
-    // Add this to our bool filter
-    finalFilter.must(projFilter)
+      val finalPids = {
+        // If the user supplied a project id (or the app did on the users behalf,
+        // whatever) intersect it with the list we got from permissions.
+        query.filters.get("project_id").map({ upids => pids.intersect(upids) }).getOrElse(pids)
+      }
+
+      // Definitely going to have a project filter, everyone does
+      val projFilter = orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
+      // Add this to our bool filter
+      finalFilter.must(projFilter)
+    }
 
     // Might not have user filters
     if(!termFilters.isEmpty) {
