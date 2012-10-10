@@ -61,8 +61,10 @@ object JsonFormats {
 
     def writes(comment: Comment): JsValue = {
       val cdoc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(comment.id.get),
         "ticket_id"     -> JsString(comment.ticketId),
         "user_id"       -> JsNumber(comment.userId),
+        "user_name"     -> JsString(comment.username),
         "user_realname" -> JsString(comment.realName),
         "content"       -> JsString(comment.content),
         "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
