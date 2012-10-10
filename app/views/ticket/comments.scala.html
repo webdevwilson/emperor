@@ -6,8 +6,7 @@
   resolveForm: Form[models.Resolution],
   assignForm: Form[models.Assignment],
   commentForm: Form[models.InitialComment],
-  comments: emp.Page[org.elasticsearch.search.SearchHit],
-  commFacets: Seq[org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet],
+  comments: emp.util.Search.SearchResult[models.Comment],
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
@@ -33,17 +32,17 @@
  </div>
  <div class="tab-pane active" id="comments">
    <ul class="unstyled events">
-    @comments.items.map { comment =>
+    @comments.pager.items.map { comment =>
     <li>
-     <blockquote>@{ Html(markdown.parseToHTML(comment.field("content").getValue.toString)) }</blockquote>
-     <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.field("user_realname").getValue.toString</a> @Messages("ticket.comment.attribution.postfix", comment.field("date_created").getValue.toString)</div>
+     <blockquote>@{ Html(markdown.parseToHTML(comment.content)) }</blockquote>
+     <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
     </li>
     }
    </ul>
-   @if(comments.total > comments.items.size) {
-   @pager(comments)
+   @if(comments.pager.total > comments.pager.items.size) {
+   @pager(comments.pager)
    }
-   <h4>Add A Comment</h4>
+   <h4>@Messages("ticket.comment.add")</h4>
    @helper.form(action = routes.Ticket.comment(ticket.ticketId)) {
     <fieldset>
      @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "span6", 'rows -> 6)

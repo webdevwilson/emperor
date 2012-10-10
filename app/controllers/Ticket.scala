@@ -2,6 +2,7 @@ package controllers
 
 import anorm._
 import emp._
+import emp.util.Search._
 import emp.JsonFormats._
 import collection.JavaConversions._
 import play.api._
@@ -331,7 +332,7 @@ object Ticket extends Controller with Secured {
               facet match {
                 case t: InternalStringTermsFacet => t
               }
-            } //filter { f => f.entries.size > 1 }
+            } // filter { f => f.entries.size > 1 } // only show facets with > 1 item
 
             Ok(views.html.ticket.history(
               ticket = ticket,
@@ -353,17 +354,18 @@ object Ticket extends Controller with Secured {
 
             val commFilters = Map("ticket_id" -> Seq(ticketId))
 
-            // XXX Different page & count
-            val commRes = SearchModel.searchComment(
-              page, count, query, commFilters, Seq("date_created" -> SortOrder.ASC)
+            val q = SearchQuery(
+              userId = request.session.get("user_id").get.toLong, page = page,
+              count = count, query = query, filters = commFilters
             )
-            val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
+            val commRes = SearchModel.searchComment(q)
+            // val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
 
-            val commFacets = commRes.facets.facets.map { facet =>
-              facet match {
-                case t: InternalLongTermsFacet => t
-              }
-            } filter { f => f.entries.size > 1 }
+            // val commFacets = commRes.facets.facets.map { facet =>
+            //   facet match {
+            //     case t: InternalLongTermsFacet => t
+            //   }
+            // } filter { f => f.entries.size > 1 }
 
             Ok(views.html.ticket.comments(
               ticket = ticket,
@@ -374,8 +376,8 @@ object Ticket extends Controller with Secured {
               resolveForm = resolveForm,
               assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
               commentForm = commentForm,
-              comments = comments,
-              commFacets = commFacets,
+              comments = commRes,
+              // commFacets = commFacets,
               previousStatus = prevStatus,
               nextStatus = nextStatus,
               linkTypes = ltypes

@@ -254,10 +254,20 @@ object SearchModel {
   // Ticket Comment ES index
   val ticketCommentIndex = "ticket_comments"
   val ticketCommentType = "ticket_comment"
+  val ticketCommentFilterMap = Map(
+    "ticket_id" -> "ticket_id"
+  )
+  val ticketCommentSortMap = Map(
+    "date_created"-> "date_created"
+  )
   val ticketCommentMapping = """
   {
     "ticket": {
       "properties": {
+        "project_id": {
+          "type": "long",
+          "index": "not_analyzed"
+        },
         "ticket_id": {
           "type": "string",
           "index": "not_analyzed"
@@ -536,6 +546,9 @@ object SearchModel {
   """
 
   // Facets
+  val ticketCommentFacets = Map(
+    "user_id" -> "user_id"
+  )
   val eventFacets = Map(
     "project" -> "project_name",
     "user" -> "user_realname"
@@ -847,41 +860,18 @@ object SearchModel {
   /**
    * Search for ticket comments.
    */
-  def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]], sorting: Seq[Tuple2[String,SortOrder]] = Seq("date_created" -> SortOrder.DESC)): SearchResponse = {
+  // def searchComment(page: Int, count: Int, query: String, filters: Map[String, Seq[String]], sorting: Seq[Tuple2[String,SortOrder]] = Seq("date_created" -> SortOrder.DESC)): SearchResponse = {
+  def searchComment(query: SearchQuery): SearchResult[Comment] = {
 
-    // This shouldn't have to live here. It annoys me. Surely there's a better
-    // way.
-    var q = query
-    if(q.isEmpty) {
-      q = "*"
-    }
-
-    var actualQuery : BaseQueryBuilder = queryString(q)
-
-    // If we have filters, build up a filterquery and swap out our actualQuery
-    // with a filtered version!
-    if(!filters.isEmpty) {
-      val fqs : Iterable[FilterBuilder] = filters map {
-        case (key, values) => termFilter(key, values.head).asInstanceOf[FilterBuilder]
-      }
-      actualQuery = filteredQuery(actualQuery, andFilter(fqs.toSeq:_*))
-    }
-
-    indexer.search(
-      query = actualQuery,
-      indices = Seq(ticketCommentIndex),
-      facets = Seq(
-        termsFacet("user_id").field("user_id")
-      ),
-      fields = List("content", "user_id", "user_realname", "date_created"),
-      size = Some(count),
-      from = page match {
-        case 0 => Some(0)
-        case 1 => Some(0)
-        case _ => Some((page * count) - 1)
-      },
-      sorting = sorting
+    val res = Search.runQuery(
+      indexer = indexer, index = ticketCommentIndex, query = query,
+      filterMap = ticketCommentFilterMap, sortMap = ticketCommentSortMap,
+      ticketCommentFacets, filterProjects = false
     )
+    val hits: Iterable[Comment] = res.hits.map { hit => println(hit.sourceAsString()); Json.fromJson[Comment](Json.parse(hit.sourceAsString())) }
+
+    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
+    Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
