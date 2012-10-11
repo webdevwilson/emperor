@@ -73,22 +73,31 @@ object Library {
 
   def sortLink(request: Request[AnyContent], name: String): String = {
 
-    val q: Map[String,Seq[String]] = request.queryString.map { case (key, value) =>
-      key match {
-        case n if n.equalsIgnoreCase("sort") => (key -> Seq(name))
-        case n if n.equalsIgnoreCase("order") => {
-          val newsort = if(value.isEmpty) {
-            "desc"
-          } else if(value.first.equalsIgnoreCase("desc")) {
-            "asc"
-          } else {
-            "desc"
-          }
-          ("order" -> Seq(newsort))
-        }
-        case _ => (key -> value)
-      }
+    // Get rid of sort and order, we'll re-set those
+    val cleanQ: Map[String,Seq[String]] = request.queryString.filterKeys { key => !key.equalsIgnoreCase("sort") && !key.equalsIgnoreCase("order") }
+
+    val order = request.queryString.get("order") match {
+      case Some(v) if v.first.isEmpty => "desc"
+      case Some(v) if v.first.equalsIgnoreCase("desc") => "asc"
+      case _ => "desc"
     }
+    val q = cleanQ ++ Map("sort" -> Seq(name), "order" -> Seq(order))
+    // val q: Map[String,Seq[String]] = request.queryString.map { case (key, value) =>
+    //   key match {
+    //     case n if n.equalsIgnoreCase("sort") => (key -> Seq(name))
+    //     case n if n.equalsIgnoreCase("order") => {
+    //       val newsort = if(value.isEmpty) {
+    //         "desc"
+    //       } else if(value.first.equalsIgnoreCase("desc")) {
+    //         "asc"
+    //       } else {
+    //         "desc"
+    //       }
+    //       ("order" -> Seq(newsort))
+    //     }
+    //     case _ => (key -> value)
+    //   }
+    // }
 
     val qs = q.foldLeft("")(
       (acc, value) => acc + value._2.foldLeft("")(

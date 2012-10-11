@@ -868,7 +868,7 @@ object SearchModel {
       filterMap = ticketCommentFilterMap, sortMap = ticketCommentSortMap,
       ticketCommentFacets, filterProjects = false
     )
-    val hits: Iterable[Comment] = res.hits.map { Json.fromJson[Comment](Json.parse(hit.sourceAsString())) }
+    val hits: Iterable[Comment] = res.hits.map { hit => Json.fromJson[Comment](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
     Search.parseSearchResponse(pager = pager, response = res)
