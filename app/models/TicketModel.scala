@@ -7,6 +7,7 @@ import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
 import scala.collection.mutable.ListBuffer
+import royal.ends._
 
 /**
  * Class for creating a comment.  Requires only a string.

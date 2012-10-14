@@ -6,6 +6,7 @@ import emp._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
+import royal.ends._
 
 case class TicketResolution(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
 

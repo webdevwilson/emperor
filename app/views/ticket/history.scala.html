@@ -6,7 +6,7 @@
   assignForm: Form[models.Assignment],
   commentForm: Form[models.InitialComment],
   resolveForm: Form[models.Resolution],
-  history: emp.Page[org.elasticsearch.search.SearchHit],
+  history: royal.ends.Page[org.elasticsearch.search.SearchHit],
   historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
@@ -14,7 +14,7 @@
 )(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
-@import emp._
+@import royal.ends._
 @import views.html.util._
 
 @item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {

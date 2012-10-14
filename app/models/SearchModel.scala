@@ -25,6 +25,8 @@ import org.elasticsearch.search.sort._
 import org.elasticsearch.client._, transport._
 import org.elasticsearch.common.settings.ImmutableSettings._
 import org.elasticsearch.node._, NodeBuilder._
+
+import royal.ends._
 import scala.collection.JavaConversions._
 
 object SearchModel {

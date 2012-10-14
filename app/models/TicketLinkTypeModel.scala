@@ -6,6 +6,7 @@ import emp._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
+import royal.ends._
 
 /**
  * Class for types of links.

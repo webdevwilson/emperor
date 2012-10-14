@@ -6,6 +6,7 @@ import emp._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
+import royal.ends._
 
 case class TicketSeverity(id: Pk[Long] = NotAssigned, name: String, color: String, position: Int, dateCreated: Date)
 
