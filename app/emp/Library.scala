@@ -1,7 +1,6 @@
 package emp
 
 import collection.JavaConversions._
-import play.api.mvc._
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -31,10 +30,9 @@ object Library {
    * to provide the base query path.
    * To override the base path you can pass in a `path`.
    */
-  def filterLink(request: Request[AnyContent], path: Option[String] = None, name: String, value: String): String = {
+  def filterLink(params: Map[String,Seq[String]], path: String, name: String, value: String): String = {
 
-    var q = request.queryString
-    q += name -> List(value)
+    val q = params + (name -> List(value))
 
     // Filter out any empty values
     val clean = q.filterNot { p =>
@@ -53,14 +51,13 @@ object Library {
       )
     )
 
-    path.map({ p => p + "?" + qs }).getOrElse(request.path + "?" + qs)
+    path + "?" + qs
   }
 
-  def pagerLink(request: Request[AnyContent], page: Int = 1, count: Int = 10) : String = {
+  def pagerLink(params: Map[String,Seq[String]], path: String, page: Int = 1, count: Int = 10) : String = {
 
-    var q = request.queryString
-    q += "page" -> List(page.toString)
-    q += "count" -> List(count.toString)
+    val q = params + ("page" -> List(page.toString)) + ("count" -> List(count.toString))
+
 
     val qs = q.foldLeft("")(
       (acc, value) => acc + value._2.foldLeft("")(
@@ -68,17 +65,17 @@ object Library {
       )
     )
 
-    request.path + "?" + qs
+    path + "?" + qs
   }
 
-  def sortLink(request: Request[AnyContent], name: String): String = {
+  def sortLink(params: Map[String,Seq[String]], path: String, name: String): String = {
 
     // Get rid of sort and order, we'll re-set those
-    val cleanQ: Map[String,Seq[String]] = request.queryString.filterKeys { key => !key.equalsIgnoreCase("sort") && !key.equalsIgnoreCase("order") }
+    val cleanQ: Map[String,Seq[String]] = params.filterKeys { key => !key.equalsIgnoreCase("sort") && !key.equalsIgnoreCase("order") }
 
-    val order = request.queryString.get("order") match {
-      case Some(v) if v.first.isEmpty => "desc"
-      case Some(v) if v.first.equalsIgnoreCase("desc") => "asc"
+    val order = params.get("order") match {
+      case Some(v) if v.head.isEmpty => "desc"
+      case Some(v) if v.head.equalsIgnoreCase("desc") => "asc"
       case _ => "desc"
     }
     val q = cleanQ ++ Map("sort" -> Seq(name), "order" -> Seq(order))
@@ -105,6 +102,6 @@ object Library {
       )
     )
 
-    request.path + "?" + qs
+    path + "?" + qs
   }
 }
