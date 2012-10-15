@@ -16,8 +16,8 @@ object Search extends Controller with Secured {
     }
 
     val userId = request.session.get("user_id").get.toLong
-    val sort = request.queryString.get("sort").map({ vals => Some(vals.first) }).getOrElse(None);
-    val order = request.queryString.get("order").map({ vals => Some(vals.first) }).getOrElse(None);
+    val sort = request.queryString.get("sort").map({ vals => Some(vals.head) }).getOrElse(None);
+    val order = request.queryString.get("order").map({ vals => Some(vals.head) }).getOrElse(None);
     val q = royal.ends.Search.SearchQuery(
       userId = userId, page = page, count = count, query = query,
       filters = filters, sortBy = sort, sortOrder = order
