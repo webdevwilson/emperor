@@ -57,8 +57,9 @@ object Project extends Controller with Secured {
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val perms = PermissionSchemeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-        BadRequest(views.html.project.create(errors, workflows, users, asses.toList, ttypes, prios, sevs))
+        BadRequest(views.html.project.create(errors, workflows, users, asses.toList, ttypes, prios, sevs, perms))
       },
       value => {
         val project = ProjectModel.create(value)
@@ -76,8 +77,9 @@ object Project extends Controller with Secured {
     val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val perms = PermissionSchemeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-    Ok(views.html.project.create(addProjectForm, workflows, users, asses.toList, ttypes, prios, sevs)(request))
+    Ok(views.html.project.create(addProjectForm, workflows, users, asses.toList, ttypes, prios, sevs, perms)(request))
   }
 
   def index(page: Int, count: Int) = IsAuthenticated() { implicit request =>

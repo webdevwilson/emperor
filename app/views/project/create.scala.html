@@ -1,4 +1,4 @@
-@(objForm: Form[(Project)], workflows: List[(String,String)], users: List[(String,String)], asses: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)])(implicit request: AuthenticatedRequest)
+@(objForm: Form[(Project)], workflows: List[(String,String)], users: List[(String,String)], asses: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)], perms: List[(String,String)])(implicit request: AuthenticatedRequest)
 
 @import helper._
 @import helper.bootstrap._
@@ -11,6 +11,7 @@
   @helper.inputText(objForm("key"), '_label -> Messages("project.key"))
   @helper.select(field = objForm("workflow_id"), options = workflows, args = 'class -> "foo", '_label -> Messages("project.workflow"))
   @helper.select(field = objForm("owner_id"), options = users, args = '_label -> Messages("project.owner"))
+  @helper.select(field = objForm("permission_scheme_id"), options = perms, args = '_label -> Messages("project.permission_scheme"))
   @helper.select(field = objForm("default_assignee"), options = asses, args = '_label -> Messages("project.default.assignee"))
   @helper.select(field = objForm("default_priority_id"), options = priorities, args = '_label -> Messages("project.default.priority"))
   @helper.select(field = objForm("default_severity_id"), options = severities, args = '_label -> Messages("project.default.severity"))
