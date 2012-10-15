@@ -6,11 +6,9 @@ import play.api.mvc._
 import play.api.mvc.Security._
 import play.db._
 import models.SearchModel
-import org.slf4j.{Logger,LoggerFactory}
+import royal.ends.Search._
 
 object Timeline extends Controller with Secured {
-
-  val logger = LoggerFactory.getLogger("application")
 
   def index(page: Int, count: Int, query: String) = IsAuthenticated() { implicit request =>
 

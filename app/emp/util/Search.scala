@@ -3,7 +3,6 @@ package emp.util
 import models.{ProjectModel,SearchModel}
 import collection.JavaConversions._
 import com.traackr.scalastic.elasticsearch.Indexer
-import royal.ends._
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.FilterBuilders._
@@ -14,6 +13,8 @@ import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.facet.FacetBuilders._
 import org.elasticsearch.search.sort._
 import play.api.Logger
+import royal.ends._
+import royal.ends.Search._
 
 object Search {
 

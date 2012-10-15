@@ -27,6 +27,7 @@ import org.elasticsearch.common.settings.ImmutableSettings._
 import org.elasticsearch.node._, NodeBuilder._
 
 import royal.ends._
+import royal.ends.Search._
 import scala.collection.JavaConversions._
 
 object SearchModel {
@@ -873,7 +874,7 @@ object SearchModel {
     val hits: Iterable[Comment] = res.hits.map { hit => Json.fromJson[Comment](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    Search.parseSearchResponse(pager = pager, response = res)
+    royal.ends.Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
@@ -885,7 +886,7 @@ object SearchModel {
     val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    Search.parseSearchResponse(pager = pager, response = res)
+    royal.ends.Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**
@@ -897,7 +898,7 @@ object SearchModel {
     val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    Search.parseSearchResponse(pager = pager, response = res)
+    royal.ends.Search.parseSearchResponse(pager = pager, response = res)
   }
 
   /**

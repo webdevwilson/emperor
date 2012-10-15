@@ -8,6 +8,7 @@ import play.api.mvc.Security._
 import play.db._
 import models.{ProjectModel,SearchModel}
 import org.slf4j.{Logger,LoggerFactory}
+import royal.ends.Search._
 
 object Core extends Controller with Secured {
 

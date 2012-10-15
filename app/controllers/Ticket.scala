@@ -13,6 +13,7 @@ import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import royal.ends._
+import royal.ends.Search._
 import models._
 import models.DefaultAssignee._
 import models.TicketModel._

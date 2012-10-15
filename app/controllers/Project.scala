@@ -11,6 +11,7 @@ import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json.Json
 import models._
+import royal.ends.Search._
 
 object Project extends Controller with Secured {
 
