@@ -19,7 +19,6 @@ object Auth extends Controller {
     // XXX This whole login block could be replaced by a single method that checks everything and returns a boolean
     // XXX could eliminate one of these by combining, reducing one of the queries
     .verifying("auth.failure", params => !params.username.equalsIgnoreCase("anonymous"))
-    .verifying("auth.failure", params => UserModel.getByUsername(params.username) != None)
     .verifying("auth.failure", params => {
       val maybeUser = UserModel.getByUsername(params.username)
       maybeUser match {
