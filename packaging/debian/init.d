@@ -26,15 +26,11 @@ if [ `id -u` -ne 0 ]; then
   exit 1
 fi
 
-
 . /lib/lsb/init-functions
 
 if [ -r /etc/default/rcS ]; then
   . /etc/default/rcS
 fi
-
-
-# The following variables can be overwritten in $DEFAULT
 
 # Run Emperor as this user ID and group ID
 EMP_USER=emperor
@@ -60,15 +56,6 @@ MAX_OPEN_FILES=65535
 # Emperor log directory
 LOG_DIR=/var/log/$NAME
 
-# Emperor data directory
-DATA_DIR=/var/lib/$NAME
-
-# Emperor configuration directory
-CONF_DIR=/etc/$NAME
-
-# Emperor configuration file (emperor.conf)
-CONF_FILE=$CONF_DIR/emperor.conf
-
 # End of variables that can be overwritten in $DEFAULT
 
 # overwrite settings from default file
@@ -79,7 +66,7 @@ fi
 # Define other required variables
 PID_FILE=/var/run/$NAME.pid
 DAEMON=$EMP_HOME/bin/emperor
-DAEMON_OPTS="-p $PID_FILE"
+DAEMON_OPTS="-Dconfig.file=/etc/emperor/application.conf"
 
 
 # Check DAEMON exists
@@ -92,20 +79,20 @@ case "$1" in
     exit 1
   fi
 
-  if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
-    log_failure_msg "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
+  if [ -n "$MAX_LOCKED_MEMORY" -a -z "$EMP_HEAP_SIZE" ]; then
+    log_failure_msg "MAX_LOCKED_MEMORY is set - EMP_HEAP_SIZE must also be set"
     exit 1
   fi
 
   log_daemon_msg "Starting $DESC"
 
   if start-stop-daemon --test --start --pidfile "$PID_FILE" \
-    --user "$ES_USER" --exec "$JAVA_HOME/bin/java" \
+    --user "$EMP_USER" --exec "$JAVA_HOME/bin/java" \
     >/dev/null; then
 
     # Prepare environment
     mkdir -p "$LOG_DIR" "$DATA_DIR" "$WORK_DIR" && chown "$EMP_USER":"$EMP_GROUP" "$LOG_DIR" "$DATA_DIR" "$WORK_DIR"
-    touch "$PID_FILE" && chown "$ES_USER":"$ES_GROUP" "$PID_FILE"
+    touch "$PID_FILE" && chown "$EMP_USER":"$EMP_GROUP" "$PID_FILE"
 
     if [ -n "$MAX_OPEN_FILES" ]; then
       ulimit -n $MAX_OPEN_FILES
@@ -116,11 +103,11 @@ case "$1" in
     fi
 
     # Start Daemon
-    start-stop-daemon --start -b --user "$ES_USER" -c "$ES_USER" --pidfile "$PID_FILE" --exec /bin/bash -- -c "$DAEMON $DAEMON_OPTS"
+    start-stop-daemon --start -b --user "$EMP_USER" -c "$EMP_USER" --pidfile "$PID_FILE" --exec /bin/bash -- -c "$DAEMON $DAEMON_OPTS"
 
     sleep 1
     if start-stop-daemon --test --start --pidfile "$PID_FILE" \
-      --user "$ES_USER" --exec "$JAVA_HOME/bin/java" \
+      --user "$EMP_USER" --exec "$JAVA_HOME/bin/java" \
       >/dev/null; then
       if [ -f "$PID_FILE" ]; then
         rm -f "$PID_FILE"
@@ -141,7 +128,7 @@ case "$1" in
   set +e
   if [ -f "$PID_FILE" ]; then
     start-stop-daemon --stop --pidfile "$PID_FILE" \
-      --user "$ES_USER" \
+      --user "$EMP_USER" \
       --retry=TERM/20/KILL/5 >/dev/null
     if [ $? -eq 1 ]; then
       log_progress_msg "$DESC is not running but pid file exists, cleaning up"
@@ -160,7 +147,7 @@ case "$1" in
   status)
   set +e
   start-stop-daemon --test --start --pidfile "$PID_FILE" \
-    --user "$ES_USER" --exec "$JAVA_HOME/bin/java" \
+    --user "$EMP_USER" --exec "$JAVA_HOME/bin/java" \
     >/dev/null 2>&1
   if [ "$?" = "0" ]; then
 

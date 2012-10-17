@@ -1,12 +1,12 @@
 Source: emperor
 Section: web
 Priority: optional
-Maintainer: Cory Watson <cory@emperorapp.com>
+Maintainer: Cory Watson <cory@royalends.com>
 Build-Depends: debhelper (>= 8)
 Standards-Version: 3.9.2
 Homepage: http://www.emperorapp.com/
 
-Depends: libc6, java7-runtime-headless | java6-runtime-headless | java7-runtime | java6-runtime
+Depends: libc6, adduser, java7-runtime-headless | java6-runtime-headless | java7-runtime | java6-runtime
 Package: emperor
 Architecture: any
 Description: Issue Tracker and Project Management

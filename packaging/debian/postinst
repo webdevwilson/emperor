@@ -3,4 +3,27 @@ set -e
 
 case "$1" in
   configure)
+    [ -z "$EMP_USER" ] && EMP_USER="emperor"
+    [ -z "$EMP_GROUP" ] && EMP_GROUP="emperor"
+    if ! getent group "$EMP_GROUP" > /dev/null 2>&1 ; then
+        addgroup --system "$EMP_GROUP" --quiet
+    fi
+    if ! id $EMP_USER > /dev/null 2>&1 ; then
+        adduser --system --home /usr/share/emperor --no-create-home \
+      --ingroup "$EMP_GROUP" --disabled-password --shell /bin/false \
+      "$EMP_USER"
+    fi
+
+    mkdir -p /var/lib/emperor
+    chown -R $EMP_USER:$EMP_GROUP /var/lib/emperor
+  ;;
 esac
+
+if [ -x "/etc/init.d/emperor" ]; then
+  update-rc.d emperor defaults 95 10 >/dev/null
+  if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+    invoke-rc.d emperor start || true
+  else
+    /etc/init.d/emperor start || true
+  fi
+fi
