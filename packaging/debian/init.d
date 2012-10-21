@@ -65,12 +65,7 @@ fi
 
 # Define other required variables
 PID_FILE=/var/run/$NAME.pid
-DAEMON=$EMP_HOME/bin/emperor
-DAEMON_OPTS="-Dconfig.file=/etc/emperor/application.conf"
-
-
-# Check DAEMON exists
-test -x $DAEMON || exit 0
+DAEMON_OPTS="-cp \"/usr/share/$NAME/lib*\" -Dconfig.file=/etc/emperor/application.conf play.core.server.NettyServer"
 
 case "$1" in
   start)
@@ -91,7 +86,7 @@ case "$1" in
     >/dev/null; then
 
     # Prepare environment
-    mkdir -p "$LOG_DIR" "$DATA_DIR" "$WORK_DIR" && chown "$EMP_USER":"$EMP_GROUP" "$LOG_DIR" "$DATA_DIR" "$WORK_DIR"
+    mkdir -p "$LOG_DIR" && chown "$EMP_USER":"$EMP_GROUP" "$LOG_DIR"
     touch "$PID_FILE" && chown "$EMP_USER":"$EMP_GROUP" "$PID_FILE"
 
     if [ -n "$MAX_OPEN_FILES" ]; then
@@ -103,7 +98,7 @@ case "$1" in
     fi
 
     # Start Daemon
-    start-stop-daemon --start -b --user "$EMP_USER" -c "$EMP_USER" --pidfile "$PID_FILE" --exec /bin/bash -- -c "$DAEMON $DAEMON_OPTS"
+    start-stop-daemon --start -b --user "$EMP_USER" -c "$EMP_USER" --pidfile "$PID_FILE" --exec /bin/bash -- -c "$JAVA_HOME/bin/java $DAEMON_OPTS"
 
     sleep 1
     if start-stop-daemon --test --start --pidfile "$PID_FILE" \
