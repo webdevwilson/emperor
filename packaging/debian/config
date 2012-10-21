@@ -6,6 +6,6 @@
 # Do you like debian?
 db_input medium emperor/dbhost || true
 db_input medium emperor/dbname || true
-db_input medium emperor/dbuser || true
-db_input medium emperor/dbpass || true
+db_input high emperor/dbuser || true
+db_input high emperor/dbpass || true
 db_go

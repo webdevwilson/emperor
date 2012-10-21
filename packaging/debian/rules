@@ -9,6 +9,7 @@ binary-indep:
 	dh_installdirs
 	dh_install
 	dh_installdeb
+	dh_installdebconf
 	dh_installinit
 	dh_gencontrol
 	dh_builddeb
