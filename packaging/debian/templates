@@ -1,0 +1,22 @@
+Template: emperor/dbhost
+Type: string
+Default: localhost
+Description: Database host
+ What host will your database be running?
+
+Template: emperor/dbname
+Type: string
+Default: emperor
+Description: Database name
+ What is the name of the database?
+
+Template: emperor/dbuser
+Type: string
+Default: emperor
+Description: Databaser username
+ What is the username to use for connecting to the database?
+
+Template: emperor/dbpass
+Type: string
+Description: Databaser password
+ What is the password to use for connecting to the database?

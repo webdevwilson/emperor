@@ -20,6 +20,11 @@ case "$1" in
     # Remove user/group
     deluser emperor || true
     delgroup emperor || true
+
+    # Source debconf library.
+    . /usr/share/debconf/confmodule
+    # Remove my changes to the db.
+    db_purge
   ;;
 
   upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
