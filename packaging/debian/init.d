@@ -65,7 +65,7 @@ fi
 
 # Define other required variables
 PID_FILE=/var/run/$NAME.pid
-DAEMON_OPTS="-cp \"/usr/share/$NAME/lib*\" -Dconfig.file=/etc/emperor/application.conf play.core.server.NettyServer"
+DAEMON_OPTS="-cp \"/usr/share/$NAME/lib*\" -Dconfig.file=/etc/emperor/application.conf -Dpidfile.path=$PIDFILE -Dplay.core.server.NettyServer"
 
 case "$1" in
   start)
