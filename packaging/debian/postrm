@@ -14,12 +14,11 @@ case "$1" in
     # Remove service
     update-rc.d emperor remove >/dev/null || true
 
-    # Remove logs and data
-    rm -rf /var/log/emperor /var/lib/emperor
+    # Remove logs, config and data
+    rm -rf /var/log/emperor /var/lib/emperor /etc/emperor
 
     # Remove user/group
-    deluser emperor || true
-    delgroup emperor || true
+    userdel emperor 2>/dev/null || true
 
     # Source debconf library.
     . /usr/share/debconf/confmodule
