@@ -18,6 +18,20 @@ case "$1" in
 
     mkdir -p /var/lib/emperor
     chown -R $EMP_USER:$EMP_GROUP /var/lib/emperor
+
+    db_get emperor/dbhost
+    DB_HOST=$RET
+    db_get emperor/dbname
+    DB_NAME=$RET
+    db_get emperor/dbuser
+    DB_USER=$RET
+    db_get emperor/dbpass
+    DB_PASS=$RET
+
+    sed -i 's/${DB_HOST}/$DB_HOST/g' /etc/emperor/application.conf
+    sed -i 's/${DB_NAME}/$DB_NAME/g' /etc/emperor/application.conf
+    sed -i 's/${DB_USER}/$DB_USER/g' /etc/emperor/application.conf
+    sed -i 's/${DB_PASS}/$DB_PASS/g' /etc/emperor/application.conf
   ;;
 esac
 
