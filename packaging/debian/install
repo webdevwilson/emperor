@@ -1,2 +1,2 @@
 ../target/staged/* usr/share/emperor/lib
-../conf/application.conf.tmpl etc/emperor/application.conf
+application.conf etc/emperor
