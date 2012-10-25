@@ -20,6 +20,6 @@ namespace :deploy do
     run "nohup current/start -Dconfig.resource=production.conf -Dpidfile.path=/home/ubuntu/emperor.pid >/dev/null 2>&1 &"
   end
   task :stop do
-    run "kill -SIGTERM `cat /home/ubuntu/emperor.pid`"
+    run "kill -15 `cat /home/ubuntu/emperor.pid`"
   end
 end
