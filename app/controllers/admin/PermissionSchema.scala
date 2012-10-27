@@ -88,7 +88,7 @@ object PermissionScheme extends Controller with Secured {
   def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val pms = PermissionSchemeModel.list(page = page, count = count)
-    val projects = ProjectModel.getAll(userId = request.session.get("user_id").get.toLong).groupBy(p => p.permissionSchemeId)
+    val projects = ProjectModel.getAll(userId = request.user.id.get).groupBy(p => p.permissionSchemeId)
 
     Ok(views.html.admin.permission_scheme.index(pms, projects)(request))
   }

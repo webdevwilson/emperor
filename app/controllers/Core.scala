@@ -16,7 +16,7 @@ object Core extends Controller with Secured {
 
   def index = IsAuthenticated() { implicit request =>
 
-    val userId = request.session.get("user_id").get.toLong
+    val userId = request.user.id.get
     val projects = models.ProjectModel.getAll(userId = userId)
 
     val filters = request.queryString filterKeys { key =>

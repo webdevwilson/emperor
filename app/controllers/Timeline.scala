@@ -20,7 +20,7 @@ object Timeline extends Controller with Secured {
       }
     }
 
-    val userId = request.session.get("user_id").get.toLong
+    val userId = request.user.id.get
 
     val q = SearchQuery(userId = userId, page = page, count = count, query = query, filters = filters)
 

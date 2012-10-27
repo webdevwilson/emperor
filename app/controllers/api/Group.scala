@@ -31,6 +31,7 @@ object Group extends Controller with Secured {
    * Add a user to the specified group.
    */
   def addUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+    println("WHAT THE FUCK")
     GroupModel.addUser(userId, id) // XXX This should return something…
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {

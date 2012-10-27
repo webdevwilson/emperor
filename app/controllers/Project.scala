@@ -84,7 +84,7 @@ object Project extends Controller with Secured {
 
   def index(page: Int, count: Int) = IsAuthenticated() { implicit request =>
 
-    val projs = ProjectModel.list(userId = request.session.get("user_id").get.toLong, page = page, count = count)
+    val projs = ProjectModel.list(userId = request.user.id.get, page = page, count = count)
 
     Ok(views.html.project.index(projs)(request))
   }
@@ -126,7 +126,7 @@ object Project extends Controller with Secured {
 
     val efilters = Map("project_id" -> Seq(projectId.toString))
 
-    val userId = request.session.get("user_id").get.toLong
+    val userId = request.user.id.get
 
     val eventQuery = SearchQuery(userId = userId, filters = efilters)
 
@@ -149,7 +149,7 @@ object Project extends Controller with Secured {
 
   def list(page: Int, count: Int) = IsAuthenticated() { implicit request =>
 
-    val objs = ProjectModel.list(userId = request.session.get("user_id").get.toLong, page = page, count = count)
+    val objs = ProjectModel.list(userId = request.user.id.get, page = page, count = count)
 
     Ok(views.html.project.list(objs)(request))
   }

@@ -15,7 +15,7 @@ object Search extends Controller with Secured {
       SearchModel.ticketFilterMap.get(key).isDefined
     }
 
-    val userId = request.session.get("user_id").get.toLong
+    val userId = request.user.id.get
     val sort = request.queryString.get("sort").map({ vals => Some(vals.head) }).getOrElse(None);
     val order = request.queryString.get("order").map({ vals => Some(vals.head) }).getOrElse(None);
     val q = emp.util.Search.SearchQuery(

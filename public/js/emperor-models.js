@@ -17,7 +17,7 @@ YUI.add('emperor-models', function(Y) {
     al.hide();
 
     // Stick the append into a function so we can use it later.
-    var appender = function() { al.appendTo(area).slideDown(); }
+    var appender = function() { al.appendTo(area).slideDown(); };
 
     // If we have any existing alerts, trash 'em
     if(existing.size() > 0) {
