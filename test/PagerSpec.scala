@@ -5,7 +5,7 @@ import play.api.test._
 
 class PagerSpec extends Specification {
 
-  import emp._
+  import emp.util.Pagination._
 
   "Page" should {
 
@@ -87,14 +87,6 @@ class PagerSpec extends Specification {
       pager.prev must beNone
       pager.next must beSome
       pager.next.get mustEqual 2
-    }
-
-    "creates proper pager links" in {
-
-      Library.pagerLink(FakeRequest(), 1, 10) mustEqual "/?page=1&count=10&"
-      Library.pagerLink(FakeRequest(), 2, 4) mustEqual "/?page=2&count=4&"
-      Library.pagerLink(FakeRequest()) mustEqual "/?page=1&count=10&"
-      Library.pagerLink(request = FakeRequest(), count = 5) mustEqual "/?page=1&count=5&"
     }
   }
 }

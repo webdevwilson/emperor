@@ -1,9 +1,9 @@
-package emp
+package emp.util
 
 import collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 
-object Library {
+object Links {
 
   /**
    * Return a String (URL) with a query parameter (`name`) and `value`.

@@ -14,7 +14,7 @@
 )(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
-@import emp._
+@import emp.util.Links
 @import views.html.util._
 
 @item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
@@ -39,7 +39,7 @@
        <li class="nav-header">@Messages("ticket.history.facet.fields")</li>
        @historyFacets.map { facet =>
         @facet.entries.map { entry =>
-        <li><a href="@Library.filterLink(params = request.queryString, path = request.path, name = facet.getName, value = entry.getTerm)">@Messages("ticket.history.facet." + facet.getName, entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
+        <li><a href="@Links.filterLink(params = request.queryString, path = request.path, name = facet.getName, value = entry.getTerm)">@Messages("ticket.history.facet." + facet.getName, entry.getTerm) <span class="badge">@entry.getCount</span></a></li>
         }
        }
        </ul>
