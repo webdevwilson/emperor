@@ -17,7 +17,7 @@ after "deploy:restart", "deploy:cleanup"
 
 namespace :deploy do
   task :start do
-    run "nohup current/start -Dconfig.resource=production.conf -Dpidfile.path=/home/ubuntu/emperor.pid >/dev/null 2>&1 &"
+    run "nohup current/start -Dconfig.file=/home/ubuntu/production.conf -Dpidfile.path=/home/ubuntu/emperor.pid >/dev/null 2>&1 &"
   end
   task :stop do
     run "kill -15 `cat /home/ubuntu/emperor.pid`"
