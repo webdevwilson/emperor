@@ -1,6 +1,6 @@
 package controllers
 
-import emp._
+import emp.event._
 import play.api._
 import play.api.data._
 import play.api.data.Forms._

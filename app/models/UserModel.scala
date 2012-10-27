@@ -2,6 +2,7 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.event._
 import emp.util.Pagination.Page
 import java.util.Date
 import org.mindrot.jbcrypt.BCrypt

@@ -1,7 +1,7 @@
 import akka.actor.ActorSystem
 import akka.actor.Props
 import akka.actor.Actor
-import emp._
+import emp.event._
 import emp.plugin._
 import play.api._
 import play.api.Play.current

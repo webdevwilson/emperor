@@ -1,4 +1,4 @@
-package emp
+package emp.event
 
 import akka.event.ActorEventBus
 import akka.event.LookupClassification

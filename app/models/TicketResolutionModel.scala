@@ -2,7 +2,7 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import emp._
+import emp.util.Pagination._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current

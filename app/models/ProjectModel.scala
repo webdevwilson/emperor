@@ -2,7 +2,7 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import emp._
+import emp.event._
 import emp.util.Pagination.Page
 import java.util.Date
 import play.api.db.DB

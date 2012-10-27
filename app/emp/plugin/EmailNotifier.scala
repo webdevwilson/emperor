@@ -1,23 +1,23 @@
 package emp.plugin
 
 import akka.actor.Actor
-import emp._
+import emp.event._
 import java.net.URL
 import models.{TicketModel,UserModel}
 import org.apache.commons.mail.HtmlEmail
 import play.api.Configuration
 import play.api.i18n.Messages
 
-/**
- * Case class that defines the result of an event
- */
-case class EmailResult(
-  subject: String,
-  recipient: models.User,
-  body: String
-)
-
 class EmailNotifier(configuration: Configuration) extends Actor {
+
+  /**
+   * Case class that defines the result of an event
+   */
+  case class EmailResult(
+    subject: String,
+    recipient: models.User,
+    body: String
+  )
 
   val maybeSmtp     = configuration.getString("emperor.mail.smtp.server")
   val maybeFrom     = configuration.getString("emperor.mail.smtp.from.address")

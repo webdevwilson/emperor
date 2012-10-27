@@ -3,8 +3,7 @@ package models
 import anorm._
 import anorm.SqlParser._
 import emp.util.Pagination.Page
-import emp.EmperorEventBus
-import emp.EmperorEventBus._
+import emp.event._
 import java.util.Date
 import play.api.db.DB
 import play.api.Play.current
