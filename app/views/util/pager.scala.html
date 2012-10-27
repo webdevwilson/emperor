@@ -1,6 +1,6 @@
-@(page: royal.ends.Page[Any])(implicit request: Request[AnyContent])
+@(page: emp.util.Pagination.Page[Any])(implicit request: Request[AnyContent])
 
-@import royal.ends._
+@import emp._
 
 @if(page.items.isEmpty) {
 @Messages("pager.empty")

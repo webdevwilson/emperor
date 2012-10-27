@@ -2,11 +2,11 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import royal.ends._
 import java.util.Date
 import play.api.db.DB
 import play.api.Logger
 import play.api.Play.current
+import emp.util.Pagination._
 
 /**
  * Class for a permission.

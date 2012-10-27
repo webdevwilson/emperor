@@ -1,6 +1,6 @@
-@(filters: Map[String,Seq[String]], result: royal.ends.Search.SearchResult[models.FullTicket])(implicit request: AuthenticatedRequest)
+@(filters: Map[String,Seq[String]], result: emp.util.Search.SearchResult[models.FullTicket])(implicit request: AuthenticatedRequest)
 
-@import royal.ends._
+@import emp._
 @import views.html.util._
 
 @main(Messages("search.results")) {

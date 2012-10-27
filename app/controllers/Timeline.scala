@@ -6,7 +6,7 @@ import play.api.mvc._
 import play.api.mvc.Security._
 import play.db._
 import models.SearchModel
-import royal.ends.Search._
+import emp.util.Search._
 
 object Timeline extends Controller with Secured {
 

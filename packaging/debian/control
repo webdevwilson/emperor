@@ -1,7 +1,7 @@
 Source: emperor
 Section: web
 Priority: optional
-Maintainer: Cory Watson <cory@royalends.com>
+Maintainer: Cory Watson <cory@onemogin.com>
 Build-Depends: debhelper (>= 8)
 Standards-Version: 3.9.2
 Homepage: http://www.emperorapp.com/
