@@ -195,11 +195,10 @@ project.name=Name
 project.owner=Owner
 project.choose=Choose A Project
 project.permission_scheme=Permission Scheme
+project.summary.milestones=Milestones
+project.summary.owner=Project Owner
 project.with.id=Project {0}
 project.workflow=Workflow
-project.tickets.open=Open Tickets
-project.tickets.today=Tickets Today
-project.tickets.this_week=Tickets This Week
 
 role.description=Description
 role.name=Name

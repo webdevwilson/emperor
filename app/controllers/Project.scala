@@ -113,29 +113,33 @@ object Project extends Controller with Secured {
 
   def item(projectId: Long) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val project = ProjectModel.getById(projectId)
+    val maybeProject = ProjectModel.getById(projectId)
 
-    val efilters = Map("project_id" -> Seq(projectId.toString))
+    maybeProject match {
+      case Some(project) => {
+        val efilters = Map("project_id" -> Seq(projectId.toString))
 
-    val userId = request.user.id.get
+        val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters)
 
-    val eventQuery = SearchQuery(userId = userId, filters = efilters)
+        val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
 
-    val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
+        val tfilters = Map(
+          "project_id"  -> Seq(projectId.toString),
+          "resolution"  -> Seq("TICK_RESO_UNRESOLVED"),
+          "type"        -> Seq("TICK_TYPE_MILESTONE")
+        )
 
-    val tfilters = Map(
-      "project_id"  -> Seq(projectId.toString),
-      "resolution"  -> Seq("TICK_RESO_UNRESOLVED")
-    )
+        val ticketQuery = SearchQuery(userId = request.user.id.get, filters = tfilters)
 
-    val ticketQuery = SearchQuery(userId = userId, filters = tfilters)
+        val tickets = SearchModel.searchTicket(ticketQuery) // XXX Fixed page, count, query
 
-    val tickets = SearchModel.searchTicket(ticketQuery) // XXX Fixed page, count, query
+        val owner = project.ownerId.map({ userId => UserModel.getById(userId) }).getOrElse(None)
 
-    project match {
-      case Some(value) => Ok(views.html.project.item(value, tickets, events)(request))
+        Ok(views.html.project.item(project, owner, tickets, events)(request))
+      }
       case None => NotFound
     }
+
   }
 
   def list(page: Int, count: Int) = IsAuthenticated() { implicit request =>
