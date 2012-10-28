@@ -17,7 +17,7 @@ import emp.util.Pagination.Page
 
 /**
  * Utilities for search.
- *?
+ */
 object Search {
 
   /**
