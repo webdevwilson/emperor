@@ -7,16 +7,25 @@ import akka.actor.Props
 import akka.actor.Actor
 import models._
 
+/**
+ * Base class for events.
+ */
 class EmperorEvent(n: String) {
   val name: String = n
 }
 
 // XXX Tests for the emission of these events would be awesome.
 
+/**
+ * Represents a modification of a project.
+ */
 case class ChangeProjectEvent(
   projectId: Long
 ) extends EmperorEvent("project/changed")
 
+/**
+ * Represents a modification of a ticket.
+ */
 case class ChangeTicketEvent(
   ticketId: String,
   // Will be set to true if this change resolved the ticket
@@ -25,31 +34,52 @@ case class ChangeTicketEvent(
   unresolved: Boolean = false
 ) extends EmperorEvent("ticket/changed")
 
+/**
+ * Represents a comment added to a ticket.
+ */
 case class CommentTicketEvent(
   ticketId: String
 ) extends EmperorEvent("ticket/commentedon")
 
+/**
+ * Represents a link created between two tickets.
+ */
 case class LinkTicketEvent(
   parentId: String,
   childId: String
 ) extends EmperorEvent("ticket/linked")
 
+/**
+ * Represents a user logging in.
+ */
 case class LogInUserEvent(
   userId: Long
 ) extends EmperorEvent("user/loggedin")
 
+/**
+ * Represents the creation of a project.
+ */
 case class NewProjectEvent(
   projectId: Long
 ) extends EmperorEvent("project/created")
 
+/**
+ * Represents the creation of a ticket.
+ */
 case class NewTicketEvent(
   ticketId: String
 ) extends EmperorEvent("ticket/created")
 
+/**
+ * Represents the creation of a user.
+ */
 case class NewUserEvent(
   userId: Long
 ) extends EmperorEvent("user/created")
 
+/**
+ * Represents the removal of a link between two tickets.
+ */
 case class UnlinkTicketEvent(
   childId: String,
   parentId: String
@@ -57,6 +87,10 @@ case class UnlinkTicketEvent(
 
 // Found help from https://gist.github.com/3163791
 
+/**
+ * Internal event bus used to notify interested plugins about activity within
+ * emperor.
+ */
 object EmperorEventBus extends ActorEventBus with LookupClassification{
   type Event=EmperorEvent
   type Classifier=String

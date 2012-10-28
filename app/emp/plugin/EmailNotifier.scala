@@ -11,7 +11,7 @@ import play.api.i18n.Messages
 class EmailNotifier(configuration: Configuration) extends Actor {
 
   /**
-   * Case class that defines the result of an event
+   * Case class that defines the result of an event.
    */
   case class EmailResult(
     subject: String,
@@ -26,10 +26,16 @@ class EmailNotifier(configuration: Configuration) extends Actor {
   val maybeUsername = configuration.getString("emperor.mail.smtp.username")
   val maybePassword = configuration.getString("emperor.mail.smtp.password")
 
+  /**
+   * Receive an event.
+   */
   def receive = {
     case event: EmperorEvent => sendEmail(event)
   }
 
+  /**
+   * Send an email after catching an event.
+   */
   def sendEmail(event: EmperorEvent) = {
 
     maybeSmtp.map { smtp =>
@@ -87,7 +93,7 @@ class EmailNotifier(configuration: Configuration) extends Actor {
   }
 }
 
-// XXX This should be a trait?
+// XXX This should be a trait!
 object EmailNotifier {
 
   def relevantEvents = List("ticket/changed", "ticket/created")

@@ -15,25 +15,46 @@ import org.elasticsearch.search.sort._
 import play.api.Logger
 import emp.util.Pagination.Page
 
+/**
+ * Utilities for search.
+ *?
 object Search {
 
   /**
-   * Case class for search queries
+   * Class for search queries
    */
   case class SearchQuery(
     userId: Long,
     page: Int = 1,
     count: Int = 10,
     query: String = "",
+    /**
+     * Map of filters.  Key is the name.
+     */
     filters: Map[String, Seq[String]] = Map.empty,
     sortBy: Option[String] = Some("date_created"),
     sortOrder: Option[String] = None
   )
 
+  /**
+   * A facet of a search.
+   */
   case class Facet(value: String, count: Long)
+
+  /**
+   * A collection of facets.
+   */
   case class Facets(name: String, items: Seq[Facet])
+
+  /**
+   * A search result.
+   */
   case class SearchResult[A](pager: Page[A], facets: Seq[Facets])
 
+  /**
+   * Transform an ElasticSearch SearchResponse into a SearchResult.  Contains
+   * logic for converting ES' crazy Facet classes into something sane.
+   */
   def parseSearchResponse[A](pager: Page[A], response: SearchResponse): SearchResult[A] = {
 
     val facets = response.facets.facets map { facet =>
@@ -64,6 +85,15 @@ object Search {
   }
 
   // XXX this could be abstracted if we pre-did the project id stuff…
+  /**
+   * Run a query against ElasticSearch. Creates a boolean filter query that
+   * wraps a project limiting filter and the the supplied filters.
+   *
+   * It's worth mentioning that this method will strip filters for `project_id`
+   * <b>out</b> of the filters supplied in `query`.  If `filterProjects` is true
+   * it will use the user in `query` to create a filter of visible projects. See
+   * `getVisibileProjects` in [[models.ProjectModel]].
+   */
   def runQuery(indexer: Indexer, index: String, query: SearchQuery, filterMap: Map[String,String], sortMap: Map[String,String], facets: Map[String,String] = Map.empty, filterProjects: Boolean = true): SearchResponse = {
 
     // Make a bool filter to collect all our filters together

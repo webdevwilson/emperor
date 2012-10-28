@@ -9,6 +9,9 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
+/**
+ * Code for converting Emperor entities into JSON.
+ */
 object JsonFormats {
 
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
