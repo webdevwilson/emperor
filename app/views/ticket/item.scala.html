@@ -3,7 +3,7 @@
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   assignForm: Form[models.Assignment],
-  commentForm: Form[models.InitialComment],
+  commentForm: Form[models.Comment],
   resolveForm: Form[models.Resolution],
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
@@ -198,7 +198,7 @@ YUI().use('pjax', function (Y) {
  <div class="modal-body">
    <p>@Html(Messages("ticket.unresolve.summary", ticket.ticketId))</p>
    <fieldset>
-     @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
    </fieldset>
  </div>
  <div class="modal-footer">

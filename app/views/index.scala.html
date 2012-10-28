@@ -15,9 +15,9 @@
    <ul class="unstyled events">
    @timeline.pager.items.map { event =>
     <li>
-      <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", event.userRealName, Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+      <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
       <blockquote>@event.content</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.userRealName</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
     </li>
    }
    </ul>

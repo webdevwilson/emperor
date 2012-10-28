@@ -10,13 +10,6 @@ import play.api.Play.current
 import scala.collection.mutable.ListBuffer
 
 /**
- * Class for creating a comment.  Requires only a string.
- */
-case class InitialComment(
-  comment: String
-)
-
-/**
  * Class for a comment.
  */
 case class Comment(

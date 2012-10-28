@@ -5,6 +5,7 @@ import emp.util.Pagination.Page
 import emp.util.Search._
 import emp.JsonFormats._
 import collection.JavaConversions._
+import java.util.Date
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -41,14 +42,20 @@ object Ticket extends Controller with Secured {
   val resolveForm = Form(
     mapping(
       "resolution_id" -> longNumber,
-      "comment" -> optional(text)
+      "comment"       -> optional(text)
     )(models.Resolution.apply)(models.Resolution.unapply)
   )
 
   val commentForm = Form(
     mapping(
-      "comment" -> nonEmptyText
-    )(models.InitialComment.apply)(models.InitialComment.unapply)
+      "id"      -> ignored(NotAssigned:Pk[Long]),
+      "user_id" -> ignored[Long](0.toLong),
+      "username"-> ignored[String](""),
+      "realname"-> ignored[String](""),
+      "ticket_id" -> ignored[String](""),
+      "content" -> nonEmptyText,
+      "date_created" -> ignored[Date](new Date())
+    )(models.Comment.apply)(models.Comment.unapply)
   )
 
   val initialTicketForm = Form(
@@ -114,8 +121,8 @@ object Ticket extends Controller with Secured {
           errors => {
             BadRequest(views.html.ticket.error(request))
           }, {
-            case unresolution: models.InitialComment => {
-              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.user.id.get, comment = Some(unresolution.comment))
+            case unresolution: models.Comment => {
+              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.user.id.get, comment = Some(unresolution.content))
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
@@ -203,7 +210,7 @@ object Ticket extends Controller with Secured {
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
-        val comm = TicketModel.addComment(ticketId, request.user.id.get, value.comment)
+        val comm = TicketModel.addComment(ticketId, request.user.id.get, value.content)
         SearchModel.indexComment(comm.get)
 
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")

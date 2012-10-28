@@ -122,7 +122,10 @@ trait Secured {
             case Some(projectId) => {
               val maybePerm = PermissionSchemeModel.hasPermission(projectId = projectId, perm = perm, userId = user.id.get)
               maybePerm match {
-                case Some(cause) => f(AuthenticatedRequest(user, request))
+                case Some(cause) => {
+                  Logger.debug("Granted via " + cause)
+                  f(AuthenticatedRequest(user, request))
+                }
                 case None => onUnauthorized(request)
               }
             }
