@@ -15,7 +15,7 @@ object ApplicationBuild extends Build {
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
     "org.pegdown"   % "pegdown"                 % "1.1.0",
     "javax.mail"    % "mail"                    % "1.4.1",
-    "commons-codec" % "commons-codec"      % "1.7",
+    "commons-codec" % "commons-codec"           % "1.7",
     "org.apache.commons" % "commons-email"      % "1.2"
   )
 
