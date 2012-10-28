@@ -1,6 +1,5 @@
 @(ticket: models.FullTicket,
   links: Map[String,List[models.FullLink]],
-  markdown: org.clapper.markwrap.MarkWrapParser,
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   assignForm: Form[models.Assignment],
@@ -17,7 +16,7 @@
 @import emp.util.Links
 @import views.html.util._
 
-@item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">
   <div class="navbar">
    <div class="navbar-inner">

@@ -1,6 +1,5 @@
 @(ticket: models.FullTicket,
   links: Map[String,List[models.FullLink]],
-  markdown: org.clapper.markwrap.MarkWrapParser,
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   assignForm: Form[models.Assignment],
@@ -11,6 +10,7 @@
   linkTypes: List[models.TicketLinkType]
 )(content: Html)(implicit request: AuthenticatedRequest)
 
+@import emp.text.Renderer
 @import helper.bootstrap._
 @import views.html.util._
 
@@ -85,7 +85,7 @@
 
    <div class="well well-small ticket-desc">
     @if(ticket.description.isDefined) {
-      @Html(markdown.parseToHTML(ticket.description.get))
+      @Html(Renderer.render(ticket.description))
     } else {
       @Messages("ticket.description.none")
     }

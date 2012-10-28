@@ -1,7 +1,6 @@
 package controllers.admin
 
 import anorm._
-import emp._
 import controllers._
 import java.util.Date
 import models.{PermissionSchemeModel,ProjectModel}

@@ -1,10 +1,10 @@
 package emp
 
 import anorm.Id
+import emp.text.Renderer
 import java.text.SimpleDateFormat
 import java.util.Date
 import models._
-import org.clapper.markwrap._
 import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
@@ -12,7 +12,6 @@ import play.api.libs.json._
 object JsonFormats {
 
   val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-  val markdown = MarkWrap.parserFor(MarkupType.Markdown)
 
   private def optionLongtoJsValue(maybeId: Option[Long]) = maybeId.map({ l => JsNumber(l) }).getOrElse(JsNull)
 
@@ -299,7 +298,7 @@ object JsonFormats {
           case x => x
         }),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
-        "description"     -> JsString(markdown.parseToHTML(ticket.description.getOrElse(""))),
+        "description"     -> JsString(Renderer.render(ticket.description)),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
       )
       toJson(tdoc)

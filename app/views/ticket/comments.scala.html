@@ -1,6 +1,5 @@
 @(ticket: models.FullTicket,
   links: Map[String,List[models.FullLink]],
-  markdown: org.clapper.markwrap.MarkWrapParser,
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
@@ -12,10 +11,11 @@
   linkTypes: List[models.TicketLinkType]
 )(implicit request: AuthenticatedRequest)
 
+@import emp.text.Renderer
 @import helper.bootstrap._
 @import views.html.util._
 
-@item(ticket = ticket, links = links, markdown = markdown, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">
  <div class="navbar">
   <div class="navbar-inner">
@@ -34,7 +34,7 @@
    <ul class="unstyled events">
     @comments.pager.items.map { comment =>
     <li>
-     <blockquote>@{ Html(markdown.parseToHTML(comment.content)) }</blockquote>
+     <blockquote>@{ Html(Renderer.render(Some(comment.content))) }</blockquote>
      <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@comment.realName</a> @Messages("ticket.comment.attribution.postfix", comment.dateCreated)</div>
     </li>
     }

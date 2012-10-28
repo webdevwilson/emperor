@@ -12,12 +12,10 @@ import play.api.i18n.Messages
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.json.Json._
-import emp._
 import emp.util.Search._
 import models._
 import models.DefaultAssignee._
 import models.TicketModel._
-import org.clapper.markwrap._
 import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
 import org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet
 import org.elasticsearch.search.sort._
@@ -25,8 +23,6 @@ import org.elasticsearch.search.sort._
 import com.codahale.jerkson.Json._
 
 object Ticket extends Controller with Secured {
-
-  val mdParser = MarkWrap.parserFor(MarkupType.Markdown)
 
   val statusChangeForm = Form(
     mapping(
@@ -339,7 +335,6 @@ object Ticket extends Controller with Secured {
             Ok(views.html.ticket.history(
               ticket = ticket,
               links = links,
-              markdown = mdParser,
               assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
@@ -372,7 +367,6 @@ object Ticket extends Controller with Secured {
             Ok(views.html.ticket.comments(
               ticket = ticket,
               links = links,
-              markdown = mdParser,
               assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
