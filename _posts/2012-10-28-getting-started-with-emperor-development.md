@@ -103,4 +103,5 @@ The default login is username **admin** and password **testing**.
 
 You have a running instance of Emperor and ready to start developing!  In the
 next post we'll cover how to make changes.  In the meantime feel free to read
-the [Play framework documentation](http://www.playframework.org/documentation/2.0.4/Home).
+the [Play framework documentation](http://www.playframework.org/documentation/2.0.4/Home)
+or [Emperor's documentation](https://emperorapp.atlassian.net/wiki/display/EMP/Emperor+Home).
