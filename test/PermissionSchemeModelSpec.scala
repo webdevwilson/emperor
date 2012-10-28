@@ -58,7 +58,7 @@ class PermissionSchemeModelSpec extends Specification {
 
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
 
-        val iu = models.InitialUser(
+        val iu = models.User(
           username = "testuser1",
           password = "1234",
           realName = "Test User",
@@ -141,7 +141,7 @@ class PermissionSchemeModelSpec extends Specification {
         val group = models.Group(id = NotAssigned, name = "Test Group!", dateCreated = new Date())
         val newGroup = GroupModel.create(group)
 
-        val iu = models.InitialUser(
+        val iu = models.User(
           username = "testuser1",
           password = "1234",
           realName = "Test User",

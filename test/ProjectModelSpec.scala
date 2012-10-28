@@ -38,9 +38,10 @@ class ProjectModelSpec extends Specification {
         proj must beSome
         proj.get must beAnInstanceOf[models.Project]
 
-        // // Change it
-        val cProj = models.EditProject(
+        // Change it
+        val cProj = models.Project(
           id = proj.get.id,
+          key = "TEST1",
           workflowId = proj.get.workflowId,
           name = "Test Project 1!",
           ownerId = proj.get.ownerId,
@@ -48,7 +49,8 @@ class ProjectModelSpec extends Specification {
           defaultPriorityId = proj.get.defaultPriorityId,
           defaultSeverityId = proj.get.defaultSeverityId,
           defaultTypeId = proj.get.defaultTypeId,
-          defaultAssignee = proj.get.defaultAssignee
+          defaultAssignee = proj.get.defaultAssignee,
+          dateCreated = new Date
         )
         val updateProj = ProjectModel.update(proj.get.id.get, cProj)
         updateProj must beSome

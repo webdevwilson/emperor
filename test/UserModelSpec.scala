@@ -16,7 +16,7 @@ class UserModelSpec extends Specification {
     "create, retrieve and delete" in {
       running(FakeApplication()) {
 
-        val iu = models.InitialUser(
+        val iu = models.User(
           username = "testuser1",
           password = "1234",
           realName = "Test User",
@@ -32,10 +32,12 @@ class UserModelSpec extends Specification {
         user.get must beAnInstanceOf[models.User]
 
         // // Change it
-        val cUser = models.EditUser(
+        val cUser = models.User(
           username = "testuser1",
+          password = "1234",
           realName = "Testy User",
-          email = "test@example.com"
+          email = "test@example.com",
+          dateCreated = new Date
         )
         val updatedUser = UserModel.update(newUser.id.get, cUser)
         updatedUser must beSome

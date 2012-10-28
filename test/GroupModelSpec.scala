@@ -46,7 +46,7 @@ class GroupModelSpec extends Specification {
         val newGroup = GroupModel.create(group)
         newGroup must beAnInstanceOf[models.Group]
 
-        val iu = models.InitialUser(
+        val iu = models.User(
           username = "testuser",
           password = "1234",
           realName = "Test User",
