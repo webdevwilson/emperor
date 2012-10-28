@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>emp.event</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="emp" class="extype" href="../package.html">emp</a></p>
+        <h1>event</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <span class="name">event</span>
+        
+        
+      </span>
+      </h4>
+      
+          <div class="fullcommenttop" id="comment"></div>
+        
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="emp.event.ChangeProjectEvent" data-isabs="false">
+      <a id="ChangeProjectEvent:ChangeProjectEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="ChangeProjectEvent.html"><span class="name">ChangeProjectEvent</span></a>
+        
+        <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a modification of a project.</p>
+    </li><li visbl="pub" name="emp.event.ChangeTicketEvent" data-isabs="false">
+      <a id="ChangeTicketEvent:ChangeTicketEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="ChangeTicketEvent.html"><span class="name">ChangeTicketEvent</span></a>
+        
+        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: Boolean</span>, <span name="unresolved">unresolved: Boolean</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a modification of a ticket.</p>
+    </li><li visbl="pub" name="emp.event.CommentTicketEvent" data-isabs="false">
+      <a id="CommentTicketEvent:CommentTicketEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="CommentTicketEvent.html"><span class="name">CommentTicketEvent</span></a>
+        
+        <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a comment added to a ticket.</p>
+    </li><li visbl="pub" name="emp.event.EmperorEvent" data-isabs="false">
+      <a id="EmperorEvent:EmperorEvent"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EmperorEvent.html"><span class="name">EmperorEvent</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base class for events.</p>
+    </li><li visbl="pub" name="emp.event.LinkTicketEvent" data-isabs="false">
+      <a id="LinkTicketEvent:LinkTicketEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="LinkTicketEvent.html"><span class="name">LinkTicketEvent</span></a>
+        
+        <span class="params">(<span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a link created between two tickets.</p>
+    </li><li visbl="pub" name="emp.event.LogInUserEvent" data-isabs="false">
+      <a id="LogInUserEvent:LogInUserEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="LogInUserEvent.html"><span class="name">LogInUserEvent</span></a>
+        
+        <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a user logging in.</p>
+    </li><li visbl="pub" name="emp.event.NewProjectEvent" data-isabs="false">
+      <a id="NewProjectEvent:NewProjectEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NewProjectEvent.html"><span class="name">NewProjectEvent</span></a>
+        
+        <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the creation of a project.</p>
+    </li><li visbl="pub" name="emp.event.NewTicketEvent" data-isabs="false">
+      <a id="NewTicketEvent:NewTicketEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NewTicketEvent.html"><span class="name">NewTicketEvent</span></a>
+        
+        <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the creation of a ticket.</p>
+    </li><li visbl="pub" name="emp.event.NewUserEvent" data-isabs="false">
+      <a id="NewUserEvent:NewUserEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NewUserEvent.html"><span class="name">NewUserEvent</span></a>
+        
+        <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the creation of a user.</p>
+    </li><li visbl="pub" name="emp.event.UnlinkTicketEvent" data-isabs="false">
+      <a id="UnlinkTicketEvent:UnlinkTicketEvent"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="UnlinkTicketEvent.html"><span class="name">UnlinkTicketEvent</span></a>
+        
+        <span class="params">(<span name="childId">childId: String</span>, <span name="parentId">parentId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents the removal of a link between two tickets.</p>
+    </li></ol>
+            </div>
+        
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="emp.event.EmperorEventBus" data-isabs="false">
+      <a id="EmperorEventBus:EmperorEventBus"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="EmperorEventBus$.html"><span class="name">EmperorEventBus</span></a>
+        
+        <span class="result"> extends ActorEventBus with LookupClassification</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Internal event bus used to notify interested plugins about activity within
+emperor.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>

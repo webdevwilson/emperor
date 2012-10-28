@@ -1,0 +1,620 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>models</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
+      <script type="text/javascript" src="../lib/jquery.js"></script>
+      <script type="text/javascript" src="../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../lib/template.js"></script>
+      <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../lib/package_big.png" />
+        
+        <h1>models</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <span class="name">models</span>
+        
+        
+      </span>
+      </h4>
+      
+          <div class="fullcommenttop" id="comment"></div>
+        
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="models.Assignment" data-isabs="false">
+      <a id="Assignment:Assignment"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Assignment.html"><span class="name">Assignment</span></a>
+        
+        <span class="params">(<span name="userId">userId: Option[Long]</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for assignment.</p>
+    </li><li visbl="pub" name="models.ColoredPositionedThing" data-isabs="false">
+      <a id="ColoredPositionedThing:ColoredPositionedThing"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="ColoredPositionedThing.html"><span class="name">ColoredPositionedThing</span></a>
+        
+        <span class="params">(<span name="id">id: Long</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A thing with an id, name, priority and a color.</p>
+    </li><li visbl="pub" name="models.ColoredThing" data-isabs="false">
+      <a id="ColoredThing:ColoredThing"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="ColoredThing.html"><span class="name">ColoredThing</span></a>
+        
+        <span class="params">(<span name="id">id: Long</span>, <span name="name">name: String</span>, <span name="color">color: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A thing with an id, name and a color.</p>
+    </li><li visbl="pub" name="models.Comment" data-isabs="false">
+      <a id="Comment:Comment"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Comment.html"><span class="name">Comment</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="ticketId">ticketId: String</span>, <span name="content">content: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a comment.</p>
+    </li><li visbl="pub" name="models.EditTicket" data-isabs="false">
+      <a id="EditTicket:EditTicket"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EditTicket.html"><span class="name">EditTicket</span></a>
+        
+        <span class="params">(<span name="ticketId">ticketId: Pk[String]</span>, <span name="reporterId">reporterId: Long</span>, <span name="assigneeId">assigneeId: Option[Long]</span>, <span name="attentionId">attentionId: Option[Long]</span>, <span name="projectId">projectId: Long</span>, <span name="priorityId">priorityId: Long</span>, <span name="resolutionId">resolutionId: Option[Long]</span>, <span name="proposedResolutionId">proposedResolutionId: Option[Long]</span>, <span name="severityId">severityId: Long</span>, <span name="typeId">typeId: Long</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for editing a ticket.</p>
+    </li><li visbl="pub" name="models.Event" data-isabs="false">
+      <a id="Event:Event"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Event.html"><span class="name">Event</span></a>
+        
+        <span class="params">(<span name="projectId">projectId: Long</span>, <span name="projectName">projectName: String</span>, <span name="userId">userId: Long</span>, <span name="userRealName">userRealName: String</span>, <span name="eKey">eKey: String</span>, <span name="eType">eType: String</span>, <span name="content">content: String</span>, <span name="url">url: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for events.</p>
+    </li><li visbl="pub" name="models.FullLink" data-isabs="false">
+      <a id="FullLink:FullLink"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="FullLink.html"><span class="name">FullLink</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="parentSummary">parentSummary: String</span>, <span name="parentResolutionId">parentResolutionId: Option[Long]</span>, <span name="childId">childId: String</span>, <span name="childSummary">childSummary: String</span>, <span name="childResolutionId">childResolutionId: Option[Long]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Case class for a link between tickets with more information culled from
+the tickets themselves.</p>
+    </li><li visbl="pub" name="models.FullTicket" data-isabs="false">
+      <a id="FullTicket:FullTicket"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="FullTicket.html"><span class="name">FullTicket</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="user">user: NamedThing</span>, <span name="reporter">reporter: NamedThing</span>, <span name="assignee">assignee: OptionalNamedThing</span>, <span name="attention">attention: OptionalNamedThing</span>, <span name="project">project: NamedThing</span>, <span name="priority">priority: ColoredPositionedThing</span>, <span name="resolution">resolution: OptionalNamedThing</span>, <span name="proposedResolution">proposedResolution: OptionalNamedThing</span>, <span name="severity">severity: ColoredPositionedThing</span>, <span name="workflowStatusId">workflowStatusId: Long</span>, <span name="status">status: NamedThing</span>, <span name="ttype">ttype: ColoredThing</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for getting all possible information out of a ticket.</p>
+    </li><li visbl="pub" name="models.Group" data-isabs="false">
+      <a id="Group:Group"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Group.html"><span class="name">Group</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for groups.</p>
+    </li><li visbl="pub" name="models.GroupUser" data-isabs="false">
+      <a id="GroupUser:GroupUser"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="GroupUser.html"><span class="name">GroupUser</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="groupId">groupId: Long</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for users in a group.</p>
+    </li><li visbl="pub" name="models.InitialTicket" data-isabs="false">
+      <a id="InitialTicket:InitialTicket"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="InitialTicket.html"><span class="name">InitialTicket</span></a>
+        
+        <span class="params">(<span name="reporterId">reporterId: Long</span>, <span name="assigneeId">assigneeId: Option[Long]</span>, <span name="projectId">projectId: Long</span>, <span name="priorityId">priorityId: Long</span>, <span name="severityId">severityId: Long</span>, <span name="typeId">typeId: Long</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for creating a ticket.</p>
+    </li><li visbl="pub" name="models.Link" data-isabs="false">
+      <a id="Link:Link"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Link.html"><span class="name">Link</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Case class for a link between tickets.</p>
+    </li><li visbl="pub" name="models.LoginUser" data-isabs="false">
+      <a id="LoginUser:LoginUser"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="LoginUser.html"><span class="name">LoginUser</span></a>
+        
+        <span class="params">(<span name="username">username: String</span>, <span name="password">password: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.NamedThing" data-isabs="false">
+      <a id="NamedThing:NamedThing"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NamedThing.html"><span class="name">NamedThing</span></a>
+        
+        <span class="params">(<span name="id">id: Long</span>, <span name="name">name: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A thing with a name and id.</p>
+    </li><li visbl="pub" name="models.NewPassword" data-isabs="false">
+      <a id="NewPassword:NewPassword"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NewPassword.html"><span class="name">NewPassword</span></a>
+        
+        <span class="params">(<span name="password">password: String</span>, <span name="password2">password2: String</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.OptionalNamedThing" data-isabs="false">
+      <a id="OptionalNamedThing:OptionalNamedThing"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="OptionalNamedThing.html"><span class="name">OptionalNamedThing</span></a>
+        
+        <span class="params">(<span name="id">id: Option[Long]</span>, <span name="name">name: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An optional thing with an id and name.</p>
+    </li><li visbl="pub" name="models.Permission" data-isabs="false">
+      <a id="Permission:Permission"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Permission.html"><span class="name">Permission</span></a>
+        
+        <span class="params">(<span name="name">name: String</span>, <span name="global">global: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a permission.</p>
+    </li><li visbl="pub" name="models.PermissionScheme" data-isabs="false">
+      <a id="PermissionScheme:PermissionScheme"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="PermissionScheme.html"><span class="name">PermissionScheme</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a permission scheme.</p>
+    </li><li visbl="pub" name="models.PermissionSchemeGroup" data-isabs="false">
+      <a id="PermissionSchemeGroup:PermissionSchemeGroup"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="PermissionSchemeGroup.html"><span class="name">PermissionSchemeGroup</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="groupId">groupId: Long</span>, <span name="groupName">groupName: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.PermissionSchemeUser" data-isabs="false">
+      <a id="PermissionSchemeUser:PermissionSchemeUser"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="PermissionSchemeUser.html"><span class="name">PermissionSchemeUser</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.Project" data-isabs="false">
+      <a id="Project:Project"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Project.html"><span class="name">Project</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="workflowId">workflowId: Long</span>, <span name="sequenceCurrent">sequenceCurrent: Long</span>, <span name="name">name: String</span>, <span name="key">key: String</span>, <span name="ownerId">ownerId: Option[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="defaultPriorityId">defaultPriorityId: Option[Long]</span>, <span name="defaultSeverityId">defaultSeverityId: Option[Long]</span>, <span name="defaultTypeId">defaultTypeId: Option[Long]</span>, <span name="defaultAssignee">defaultAssignee: Option[Int]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a project.</p>
+    </li><li visbl="pub" name="models.Resolution" data-isabs="false">
+      <a id="Resolution:Resolution"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Resolution.html"><span class="name">Resolution</span></a>
+        
+        <span class="params">(<span name="resolutionId">resolutionId: Long</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for resolution.</p>
+    </li><li visbl="pub" name="models.Role" data-isabs="false">
+      <a id="Role:Role"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Role.html"><span class="name">Role</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a role.</p>
+    </li><li visbl="pub" name="models.StatusChange" data-isabs="false">
+      <a id="StatusChange:StatusChange"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="StatusChange.html"><span class="name">StatusChange</span></a>
+        
+        <span class="params">(<span name="statusId">statusId: Long</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a status change.</p>
+    </li><li visbl="pub" name="models.Ticket" data-isabs="false">
+      <a id="Ticket:Ticket"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Ticket.html"><span class="name">Ticket</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="reporterId">reporterId: Long</span>, <span name="assigneeId">assigneeId: Long</span>, <span name="attentionId">attentionId: Long</span>, <span name="projectId">projectId: Long</span>, <span name="priorityId">priorityId: Long</span>, <span name="resolutionId">resolutionId: Option[Long]</span>, <span name="proposedResolutionId">proposedResolutionId: Option[Long]</span>, <span name="severityId">severityId: Long</span>, <span name="statusId">statusId: Long</span>, <span name="typeId">typeId: Long</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for getting a ticket.</p>
+    </li><li visbl="pub" name="models.TicketLinkType" data-isabs="false">
+      <a id="TicketLinkType:TicketLinkType"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketLinkType.html"><span class="name">TicketLinkType</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="invertable">invertable: Boolean</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for types of links.</p>
+    </li><li visbl="pub" name="models.TicketPriority" data-isabs="false">
+      <a id="TicketPriority:TicketPriority"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketPriority.html"><span class="name">TicketPriority</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketResolution" data-isabs="false">
+      <a id="TicketResolution:TicketResolution"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketResolution.html"><span class="name">TicketResolution</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketSeverity" data-isabs="false">
+      <a id="TicketSeverity:TicketSeverity"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketSeverity.html"><span class="name">TicketSeverity</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketStatus" data-isabs="false">
+      <a id="TicketStatus:TicketStatus"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketStatus.html"><span class="name">TicketStatus</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketType" data-isabs="false">
+      <a id="TicketType:TicketType"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="TicketType.html"><span class="name">TicketType</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.User" data-isabs="false">
+      <a id="User:User"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="User.html"><span class="name">User</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="email">email: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.Workflow" data-isabs="false">
+      <a id="Workflow:Workflow"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Workflow.html"><span class="name">Workflow</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.WorkflowStatus" data-isabs="false">
+      <a id="WorkflowStatus:WorkflowStatus"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="WorkflowStatus.html"><span class="name">WorkflowStatus</span></a>
+        
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="workflowId">workflowId: Long</span>, <span name="statusId">statusId: Long</span>, <span name="name">name: String</span>, <span name="position">position: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+        
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="models.DefaultAssignee" data-isabs="false">
+      <a id="DefaultAssignee:DefaultAssignee"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="DefaultAssignee$.html"><span class="name">DefaultAssignee</span></a>
+        
+        <span class="result"> extends Enumeration</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.EventModel" data-isabs="false">
+      <a id="EventModel:EventModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="EventModel$.html"><span class="name">EventModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.GroupModel" data-isabs="false">
+      <a id="GroupModel:GroupModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="GroupModel$.html"><span class="name">GroupModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.PermissionSchemeModel" data-isabs="false">
+      <a id="PermissionSchemeModel:PermissionSchemeModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="PermissionSchemeModel$.html"><span class="name">PermissionSchemeModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.ProjectModel" data-isabs="false">
+      <a id="ProjectModel:ProjectModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ProjectModel$.html"><span class="name">ProjectModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.RoleModel" data-isabs="false">
+      <a id="RoleModel:RoleModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="RoleModel$.html"><span class="name">RoleModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.SearchModel" data-isabs="false">
+      <a id="SearchModel:SearchModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="SearchModel$.html"><span class="name">SearchModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketLinkTypeModel" data-isabs="false">
+      <a id="TicketLinkTypeModel:TicketLinkTypeModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketLinkTypeModel$.html"><span class="name">TicketLinkTypeModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketModel" data-isabs="false">
+      <a id="TicketModel:TicketModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketModel$.html"><span class="name">TicketModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketPriorityModel" data-isabs="false">
+      <a id="TicketPriorityModel:TicketPriorityModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketPriorityModel$.html"><span class="name">TicketPriorityModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketResolutionModel" data-isabs="false">
+      <a id="TicketResolutionModel:TicketResolutionModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketResolutionModel$.html"><span class="name">TicketResolutionModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketSeverityModel" data-isabs="false">
+      <a id="TicketSeverityModel:TicketSeverityModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketSeverityModel$.html"><span class="name">TicketSeverityModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketStatusModel" data-isabs="false">
+      <a id="TicketStatusModel:TicketStatusModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketStatusModel$.html"><span class="name">TicketStatusModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.TicketTypeModel" data-isabs="false">
+      <a id="TicketTypeModel:TicketTypeModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="TicketTypeModel$.html"><span class="name">TicketTypeModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.UserModel" data-isabs="false">
+      <a id="UserModel:UserModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="UserModel$.html"><span class="name">UserModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.WorkflowModel" data-isabs="false">
+      <a id="WorkflowModel:WorkflowModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="WorkflowModel$.html"><span class="name">WorkflowModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
