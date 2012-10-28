@@ -293,10 +293,7 @@ object JsonFormats {
         "user_id"         -> JsNumber(ticket.user.id),
         "user_name"       -> JsString(ticket.user.name),
         "summary"         -> JsString(ticket.summary),
-        "short_summary"   -> JsString(ticket.summary match {
-          case x if x.length > 15 => x.take(15) + "&hellip;"
-          case x => x
-        }),
+        "short_summary"   -> JsString(ticket.abbreviatedSummary()),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(Renderer.render(ticket.description)),
         "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))

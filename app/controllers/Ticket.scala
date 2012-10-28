@@ -304,7 +304,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def item(tab: String = "comments", ticketId: String, page: Int, count: Int, query: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
+  def item(tab: String = "comments", ticketId: String, page: Int = 1, count: Int= 10, query: String = "*") = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
     val maybeTicket = TicketModel.getFullById(ticketId)
 

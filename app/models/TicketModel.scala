@@ -93,7 +93,12 @@ case class FullTicket(
   severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: Date
-)
+) {
+  def abbreviatedSummary(length: Int = 15) = summary match {
+    case x if x.length > length => x.take(length) + "&hellip;"
+    case x => x
+  }
+}
 
 /**
  * Class for getting a ticket.

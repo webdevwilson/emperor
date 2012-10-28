@@ -197,6 +197,7 @@ project.choose=Choose A Project
 project.permission_scheme=Permission Scheme
 project.summary.milestones=Milestones
 project.summary.owner=Project Owner
+project.summary.unowned=This project has no owner.
 project.with.id=Project {0}
 project.workflow=Workflow
 

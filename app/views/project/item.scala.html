@@ -9,11 +9,14 @@
 <div class="row-fluid">
  <div class="span3">
   <h2>@Messages("project.summary.milestones")</h2>
-  <ul>
+  <table class="table table-striped table-hover">
     @tickets.pager.items.map { ticket =>
-     <li>@ticket.ticketId @Messages(ticket.ttype.name)</li>
+    <tr>
+     <td><a href="@routes.Ticket.item("comments", ticket.ticketId)">@ticket.ticketId</a></td>
+     <td><a href="@routes.Ticket.item("comments", ticket.ticketId)">@Html(ticket.abbreviatedSummary(20))</a></td>
+    </tr>
     }
-  </ul>
+  </table>
  </div>
  <div class="span6">
   <h2>@Messages("general.timeline")</h2>
@@ -23,9 +26,9 @@
   <ul class="unstyled events">
    @timeline.pager.items.map { event =>
    <li>
-    <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", event.userRealName, Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+    <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
     <blockquote>@event.content</blockquote>
-    <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@event.userRealName</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
+    <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
    </li>
    }
   </ul>
@@ -33,8 +36,16 @@
  </div>
  <div class="span3">
   <h2>@Messages("project.summary.owner")</h2>
-  @owner.map { o =>
-    @o.realName
+  @if(owner.isDefined) {
+   @owner.map { o =>
+   <div class="profile">
+    @gravatar(o)
+    <div><i class="icon-user"></i> @o.realName</div>
+    <div><i class="icon-envelope"></i> <a href="mailto:@o.email">@o.email</a></div>
+   </div>
+   }
+  } else {
+    @Messages("project.summary.unowned")
   }
  </div>
 </div>
