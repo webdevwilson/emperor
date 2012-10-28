@@ -176,7 +176,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def add = IsAuthenticated(perm = "PERM_TICKET_CREATE") { implicit request =>
+  def add = IsAuthenticated() { implicit request =>
 
     initialTicketForm.bindFromRequest.fold(
       errors => {
@@ -191,14 +191,21 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.create(errors, assignees, assignees, finalProjects, ttypes, prios, sevs))
       },
       value => {
-        val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
-        ticket match {
-          case Some(t) => {
-            SearchModel.indexTicket(ticket.get)
-            Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
+        val maybeCan = PermissionSchemeModel.hasPermission(
+          projectId = value.projectId, perm = "PERM_TICKET_CREATE", userId = request.user.id.get
+        )
+        // Check the permission and only execute the create if it's defined,
+        // otherwise return a redurect and tell 'em no.
+        maybeCan.map({ perm =>
+          val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
+          ticket match {
+            case Some(t) => {
+              SearchModel.indexTicket(ticket.get)
+              Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
+            }
+            case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
           }
-          case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
-        }
+        }).getOrElse(Redirect(routes.Core.index).flashing("error" -> "auth.notauthorized"))
       }
     )
   }
@@ -223,7 +230,7 @@ object Ticket extends Controller with Secured {
    * If we received a projectId then we will default the form to the appropriate
    * settings for the provided project.
    */
-  def create(projectId: Option[Long]) = IsAuthenticated(perm = "PERM_TICKET_CREATE") { implicit request =>
+  def create(projectId: Option[Long]) = IsAuthenticated() { implicit request =>
 
     // Should be i18ned in the view
     val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
