@@ -73,7 +73,7 @@ object Test extends Controller with Secured {
     )
 
     val fakeUsers = users.map { user =>
-      UserModel.create(InitialUser(
+      UserModel.create(models.User(
         username = user._2, password = "test", realName = user._1, email = user._2 + "@example.com", dateCreated = new Date()
       ))
     }

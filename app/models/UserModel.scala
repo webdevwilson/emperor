@@ -14,10 +14,6 @@ case class User(id: Pk[Long] = NotAssigned, username: String, password: String, 
   def isAnonymous = username.equals("anonymous")
 }
 
-case class EditUser(username: String, realName: String, email: String)
-
-case class InitialUser(username: String, password: String, realName: String, email: String, dateCreated: Date)
-
 case class LoginUser(username: String, password: String)
 
 case class NewPassword(password: String, password2: String)
@@ -51,7 +47,7 @@ object UserModel {
   /**
    * Add a user.  Uses `InitialUser`.
    */
-  def create(user: InitialUser): User = {
+  def create(user: User): User = {
 
     DB.withConnection { implicit conn =>
       val id = insertQuery.on(
@@ -158,7 +154,7 @@ object UserModel {
       }
   }
 
-  def update(id: Long, user: EditUser): Option[User] = {
+  def update(id: Long, user: User): Option[User] = {
 
     DB.withConnection { implicit conn =>
       updateQuery.on(

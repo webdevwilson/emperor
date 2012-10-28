@@ -19,20 +19,24 @@ object User extends Controller with Secured {
 
   val newForm = Form(
     mapping(
+      "id"       -> ignored(NotAssigned:Pk[Long]),
       "username" -> nonEmptyText,
       "password" -> nonEmptyText,
       "realName" -> nonEmptyText,
       "email"    -> email,
-      "date_created" -> ignored(new Date())
-    )(models.InitialUser.apply)(models.InitialUser.unapply)
+      "date_created" -> ignored[Date](new Date())
+    )(models.User.apply)(models.User.unapply)
   )
 
   val editForm = Form(
     mapping(
+      "id"       -> ignored(NotAssigned:Pk[Long]),
       "username" -> nonEmptyText,
+      "password" -> ignored[String](""),
       "realName" -> nonEmptyText,
-      "email"    -> email
-    )(models.EditUser.apply)(models.EditUser.unapply)
+      "email"    -> email,
+      "date_created" -> ignored[Date](new Date())
+    )(models.User.apply)(models.User.unapply)
   )
 
   val passwordForm = Form(
@@ -100,12 +104,11 @@ object User extends Controller with Secured {
 
   def edit(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    val user = UserModel.getById(userId)
+    val maybeUser = UserModel.getById(userId)
 
-    user match {
-      case Some(value) => {
-        val editUser = new models.EditUser(value.username, value.realName, value.email)
-        Ok(views.html.admin.user.edit(userId, editForm.fill(editUser), passwordForm)(request))
+    maybeUser match {
+      case Some(user) => {
+        Ok(views.html.admin.user.edit(userId, editForm.fill(user), passwordForm)(request))
       }
       case None => NotFound
     }
@@ -129,27 +132,28 @@ object User extends Controller with Secured {
     editForm.bindFromRequest.fold(
       errors => BadRequest(views.html.admin.user.edit(userId, errors, passwordForm)),
       {
-        case user: models.EditUser =>
-        UserModel.update(userId, user)
-        Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.edit.success")
+        case user: models.User => {
+          UserModel.update(userId, user)
+          Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.edit.success")
+        }
       }
     )
   }
 
   def updatePassword(userId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    val user = UserModel.getById(userId)
+    val maybeUser = UserModel.getById(userId)
 
-    user match {
-      case Some(value) => {
+    maybeUser match {
+      case Some(user) => {
         passwordForm.bindFromRequest.fold(
           errors => {
-            val editUser = new models.EditUser(value.username, value.realName, value.email)
-            BadRequest(views.html.admin.user.edit(userId, editForm.fill(editUser), errors))
+            BadRequest(views.html.admin.user.edit(userId, editForm.fill(user), errors))
           }, {
-            case np: models.NewPassword =>
-            UserModel.updatePassword(userId, np)
-            Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.password.success")
+            case np: models.NewPassword => {
+              UserModel.updatePassword(userId, np)
+              Redirect(routes.User.item(userId)).flashing("success" -> "admin.user.password.success")
+            }
           }
         )
       }
