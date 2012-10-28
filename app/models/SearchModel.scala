@@ -854,7 +854,7 @@ object SearchModel {
       from = page match {
         case 0 => Some(0)
         case 1 => Some(0)
-        case _ => Some((page - 1)  * count)
+        case _ => Some((page - 1) * count)
       },
       sorting = Seq("date_created" -> SortOrder.DESC)
     )

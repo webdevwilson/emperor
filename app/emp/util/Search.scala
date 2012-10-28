@@ -119,7 +119,7 @@ object Search {
       from = query.page match {
         case 0 => Some(0)
         case 1 => Some(0)
-        case _ => Some((query.page * query.count) - 1)
+        case _ => Some((query.page - 1) * query.count)
       },
       sorting = Seq(
         // This is a bit messy… but it gets the job done.
