@@ -176,7 +176,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  def add = IsAuthenticated() { implicit request =>
+  def add = IsAuthenticated(perm = "PERM_TICKET_CREATE") { implicit request =>
 
     initialTicketForm.bindFromRequest.fold(
       errors => {
@@ -223,7 +223,7 @@ object Ticket extends Controller with Secured {
    * If we received a projectId then we will default the form to the appropriate
    * settings for the provided project.
    */
-  def create(projectId: Option[Long]) = IsAuthenticated() { implicit request =>
+  def create(projectId: Option[Long]) = IsAuthenticated(perm = "PERM_TICKET_CREATE") { implicit request =>
 
     // Should be i18ned in the view
     val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
