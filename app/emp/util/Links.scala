@@ -4,7 +4,7 @@ import collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 
 /**
- * Utilities for munging the Request's URL to emulate's [[http://search.cpan.org/dist/Catalyst-Runtime/lib/Catalyst/Request.pm#$req->uri_with(_{_key_=>_'value'_}_); Catalyst's uri_with]].
+ * Utilities for munging the Request's URL to emulate's [[http://search.cpan.org/dist/Catalyst-Runtime/lib/Catalyst/Request.pm Catalyst's uri_with]].
  * I suspect there there is a better way to do this, but I have yet to find it.
  */
 object Links {
