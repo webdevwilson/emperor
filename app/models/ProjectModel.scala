@@ -11,21 +11,6 @@ import play.api.Play.current
 /**
  * Class for a project.
  */
-case class EditProject(
-  id: Pk[Long] = NotAssigned,
-  workflowId: Long,
-  name: String,
-  ownerId: Option[Long],
-  permissionSchemeId: Long,
-  defaultPriorityId: Option[Long],
-  defaultSeverityId: Option[Long],
-  defaultTypeId: Option[Long],
-  defaultAssignee: Option[Int]
-)
-
-/**
- * Class for a project.
- */
 case class Project(
   id: Pk[Long] = NotAssigned,
   workflowId: Long,
@@ -197,7 +182,7 @@ object ProjectModel {
   /**
    * Update a project.
    */
-  def update(id: Long, project: EditProject): Option[Project] = {
+  def update(id: Long, project: Project): Option[Project] = {
 
     DB.withConnection { implicit conn =>
       updateQuery.on(

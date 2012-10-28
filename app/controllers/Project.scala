@@ -16,33 +16,36 @@ object Project extends Controller with Secured {
 
   val addProjectForm = Form(
     mapping(
-      "id"  -> ignored(NotAssigned:Pk[Long]),
-      "workflow_id" -> longNumber,
-      "sequence_current" -> ignored(0.toLong),
-      "name"-> nonEmptyText,
-      "key" -> text(minLength = 3, maxLength = 16),
-      "owner_id" -> optional(longNumber),
-      "permission_scheme_id" -> longNumber,
+      "id"                  -> ignored(NotAssigned:Pk[Long]),
+      "workflow_id"         -> longNumber,
+      "sequence_current"    -> ignored(0.toLong),
+      "name"                -> nonEmptyText,
+      "key"                 -> text(minLength = 3, maxLength = 16),
+      "owner_id"            -> optional(longNumber),
+      "permission_scheme_id"-> longNumber,
       "default_priority_id" -> optional(longNumber),
       "default_severity_id" -> optional(longNumber),
-      "default_type_id" -> optional(longNumber),
-      "default_assignee" -> optional(number),
-      "date_created" -> ignored(new Date())
+      "default_type_id"     -> optional(longNumber),
+      "default_assignee"    -> optional(number),
+      "date_created"        -> ignored(new Date())
     )(models.Project.apply)(models.Project.unapply)
   )
 
   val editProjectForm = Form(
     mapping(
-      "id"  -> ignored(NotAssigned:Pk[Long]),
-      "workflow_id" -> longNumber,
-      "name"-> nonEmptyText,
-      "owner_id" -> optional(longNumber),
-      "permission_scheme_id" -> longNumber,
+      "id"                  -> ignored(NotAssigned:Pk[Long]),
+      "workflow_id"         -> longNumber,
+      "sequence_current"    -> ignored[Long](0.toLong),
+      "name"                -> nonEmptyText,
+      "key"                 -> ignored[String](""),
+      "owner_id"            -> optional(longNumber),
+      "permission_scheme_id"-> longNumber,
       "default_priority_id" -> optional(longNumber),
       "default_severity_id" -> optional(longNumber),
-      "default_type_id" -> optional(longNumber),
-      "default_assignee" -> optional(number)
-    )(models.EditProject.apply)(models.EditProject.unapply)
+      "default_type_id"     -> optional(longNumber),
+      "default_assignee"    -> optional(number),
+      "date_created"        -> ignored(new Date())
+    )(models.Project.apply)(models.Project.unapply)
   )
 
   def add = IsAuthenticated(perm = "PERM_GLOBAL_PROJECT_CREATE") { implicit request =>
@@ -90,7 +93,7 @@ object Project extends Controller with Secured {
 
   def edit(projectId: Long) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_PROJECT_ADMIN") { implicit request =>
 
-    val project = ProjectModel.getById(projectId)
+    val maybeProject = ProjectModel.getById(projectId)
     val workflows = WorkflowModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
     val users = UserModel.getAll.map { x => (x.id.get.toString -> x.realName) }
@@ -100,20 +103,9 @@ object Project extends Controller with Secured {
     val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
     val perms = PermissionSchemeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
 
-    project match {
-      case Some(value) => {
-        val editProject = EditProject(
-          id = value.id,
-          workflowId = value.workflowId,
-          name = value.name,
-          ownerId = value.ownerId,
-          permissionSchemeId = value.permissionSchemeId,
-          defaultPriorityId = value.defaultPriorityId,
-          defaultSeverityId = value.defaultSeverityId,
-          defaultTypeId = value.defaultTypeId,
-          defaultAssignee = value.defaultAssignee
-        )
-        Ok(views.html.project.edit(projectId, editProjectForm.fill(editProject), workflows, users, asses.toList, ttypes, prios, sevs, perms)(request))
+    maybeProject match {
+      case Some(project) => {
+        Ok(views.html.project.edit(projectId, editProjectForm.fill(project), workflows, users, asses.toList, ttypes, prios, sevs, perms)(request))
       }
       case None => NotFound
     }
