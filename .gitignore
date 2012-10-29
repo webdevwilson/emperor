@@ -7,3 +7,4 @@ tmp
 dist
 conf/application-local.conf
 data
+_site
