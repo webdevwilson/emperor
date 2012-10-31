@@ -190,6 +190,7 @@ project.default.ttype=Default Ticket Type
 project.edit=Edit Project
 project.edit.success=Project Updated
 project.key=Key
+project.key.invalid=Invalid project key.
 project.list=Projects
 project.name=Name
 project.owner=Owner

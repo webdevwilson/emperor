@@ -1,13 +1,15 @@
 package emp.text
 
+import models.{TicketModel,UserModel}
 import org.pegdown.LinkRenderer
 import org.pegdown.ast.WikiLinkNode
 
 /**
  * Implements a customer LinkRenderer that interprets wiki-style links
  * &mdash; those surrounded with [[ ]] &mdash; and attempts to turn them into
- * something useful. Currently groks @ signs with usernames and things that
- * look like tickets.
+ * something useful. Currently groks @ usernames and things that look lik
+ * tickets.  Ticket or users that do not actually exist will show up with the
+ * `text-error` class.
  */
 class EmperorLinkRenderer extends LinkRenderer {
 
@@ -16,12 +18,26 @@ class EmperorLinkRenderer extends LinkRenderer {
    */
   override def render(node: WikiLinkNode): LinkRenderer.Rendering = {
 
-    if(node.getText.startsWith("@")) {
-      // This is a reference to a username. XXX Links to nothing and doesn't check for validity.
-      new LinkRenderer.Rendering("/user/" + node.getText().substring(1), node.getText())
+    if(TicketModel.isValidTicketId(node.getText)) {
+      // Doesn't mean that the ticket is valid, just that the form is correct.
+      val maybeTicket = TicketModel.getById(node.getText())
+      maybeTicket.map(ticket =>
+        new LinkRenderer.Rendering("/ticket/" + ticket.ticketId.get, ticket.ticketId.get)
+      ).getOrElse(
+        // Ticket doesn't exist, show a useless ticket link.
+        new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
+      )
+    } else if(node.getText.startsWith("@")) {
+      val maybeUser = UserModel.getByUsername(node.getText.substring(1))
+      maybeUser.map(user =>
+        new LinkRenderer.Rendering("mailto:" + user.email, user.realName)
+      ).getOrElse(
+        // User doesn't exist, show a useless link.
+        new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
+      )
     } else {
-      // Assume it's a ticket reference. XXX Need to define what that is.
-      new LinkRenderer.Rendering("/ticket/" + node.getText(), node.getText())
+      // Link to /, this does nothing.
+      new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
     }
 
   }

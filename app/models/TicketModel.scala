@@ -5,6 +5,7 @@ import anorm.SqlParser._
 import emp.util.Pagination.Page
 import emp.event._
 import java.util.Date
+import java.util.regex.Pattern
 import play.api.db.DB
 import play.api.Play.current
 import scala.collection.mutable.ListBuffer
@@ -334,6 +335,13 @@ object TicketModel {
       )
     }
   }
+
+  val idPattern = Pattern.compile("^\\p{L}{1}[\\p{Nd}|\\p{L}]*-\\d+")
+
+  /**
+   * Verifies that a string is a valid ticket id via regex.
+   */
+  def isValidTicketId(id: String): Boolean = idPattern.matcher(id).matches
 
   /**
    * Add a comment.
