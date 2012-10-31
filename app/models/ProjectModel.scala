@@ -5,6 +5,7 @@ import anorm.SqlParser._
 import emp.event._
 import emp.util.Pagination.Page
 import java.util.Date
+import java.util.regex.Pattern
 import play.api.db.DB
 import play.api.Play.current
 
@@ -69,6 +70,13 @@ object ProjectModel {
       )
     }
   }
+
+  val keyPattern = Pattern.compile("^\\p{L}{1}[\\p{Nd}|\\p{L}]*")
+
+  /**
+   * Verifies that a string is a valid project key via regex.
+   */
+  def isValidKey(key: String): Boolean = keyPattern.matcher(key).matches
 
   /**
    * Create a project.

@@ -20,7 +20,7 @@ object Project extends Controller with Secured {
       "workflow_id"         -> longNumber,
       "sequence_current"    -> ignored(0.toLong),
       "name"                -> nonEmptyText,
-      "key"                 -> text(minLength = 3, maxLength = 16),
+      "key"                 -> text(minLength = 3, maxLength = 16).verifying("project.key.invalid", ProjectModel.isValidKey(_)),
       "owner_id"            -> optional(longNumber),
       "permission_scheme_id"-> longNumber,
       "default_priority_id" -> optional(longNumber),
