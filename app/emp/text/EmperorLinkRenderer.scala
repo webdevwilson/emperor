@@ -39,6 +39,5 @@ class EmperorLinkRenderer extends LinkRenderer {
       // Link to /, this does nothing.
       new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
     }
-
   }
 }

@@ -1,5 +1,6 @@
 package emp
 
+import controllers.AuthenticatedRequest
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -8,13 +9,24 @@ import java.util.Date
  */
 object DateFormatter {
 
-  val longFormatter = new SimpleDateFormat("EEE, MMM d, yyyy")
+  val longDateFormatter = new SimpleDateFormat("EEE, MMM d, yyyy")
+  val longDateTimeFormatter = new SimpleDateFormat("HH:mm aa EEE, MMM d, yyyy")
+
+  // XXX We have the implicit request and can get the user's timezone here
 
   /**
-   * Format a date (in seconds) into "long" string in the form of `EEE, MMM d, yyyy`.
+   * Format a date into "long" date string in the form of `EEE, MMM d, yyyy`.
    * See also [[java.text.SimpleDateFormat]].
    */
-  def displayLongDate(timestamp: Long): String = {
-    longFormatter.format(new Date(timestamp * 1000))
+  def displayLongDate(date: Date)(implicit request: AuthenticatedRequest): String = {
+    longDateFormatter.format(date)
+  }
+
+  /**
+   * Format a date into "long" date string in the form of `EEE, MMM d, yyyy`.
+   * See also [[java.text.SimpleDateFormat]].
+   */
+  def displayLongDateTime(date: Date)(implicit request: AuthenticatedRequest): String = {
+    longDateTimeFormatter.format(date)
   }
 }

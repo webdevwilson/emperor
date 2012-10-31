@@ -1,6 +1,6 @@
 @(timeline: emp.util.Search.SearchResult[models.Event], projects: List[Project])(implicit request: AuthenticatedRequest)
 
-@import emp._
+@import emp.DateFormatter
 @import views.html.util._
 
 @main(Messages("general.home")) {
@@ -17,7 +17,7 @@
     <li>
       <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
       <blockquote>@event.content</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", event.dateCreated)</div>
+      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</div>
     </li>
    }
    </ul>

@@ -10,6 +10,7 @@
   linkTypes: List[models.TicketLinkType]
 )(content: Html)(implicit request: AuthenticatedRequest)
 
+@import emp.DateFormatter
 @import emp.text.Renderer
 @import helper.bootstrap._
 @import views.html.util._
@@ -33,7 +34,7 @@
    <label>@Messages("ticket.type")</label>
    <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
    <label>@Messages("ticket.date_created")</label>
-   <span class="label">@ticket.dateCreated</span>
+   <span class="label">@DateFormatter.displayLongDateTime(ticket.dateCreated)</span>
    <label>@Messages("ticket.reporter")</label>
    <span class="label">@ticket.reporter.name</span>
    <label>@Messages("ticket.assignee")</label>
