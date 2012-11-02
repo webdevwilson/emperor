@@ -144,16 +144,29 @@
               
         </dd></dl></div>
     </li><li visbl="pub" name="emp.DateFormatter#displayLongDate" data-isabs="false">
-      <a id="displayLongDate(Long):String"></a>
+      <a id="displayLongDate(Date)(AuthenticatedRequest):String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">displayLongDate</span>
         
-        <span class="params">(<span name="timestamp">timestamp: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: String</span>
+        <span class="params">(<span name="date">date: <span name="java.util.Date" class="extype">Date</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Format a date (in seconds) into &quot;long&quot; string in the form of <code>EEE, MMM d, yyyy</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Format a date (in seconds) into &quot;long&quot; string in the form of <code>EEE, MMM d, yyyy</code>.
+      <p class="shortcomment cmt">Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.
+See also java.text.SimpleDateFormat.
+</p></div></div>
+    </li><li visbl="pub" name="emp.DateFormatter#displayLongDateTime" data-isabs="false">
+      <a id="displayLongDateTime(Date)(AuthenticatedRequest):String"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">displayLongDateTime</span>
+        
+        <span class="params">(<span name="date">date: <span name="java.util.Date" class="extype">Date</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.
 See also java.text.SimpleDateFormat.
 </p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
@@ -225,12 +238,23 @@ See also java.text.SimpleDateFormat.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="emp.DateFormatter#longFormatter" data-isabs="false">
-      <a id="longFormatter:SimpleDateFormat"></a>
+    </li><li visbl="pub" name="emp.DateFormatter#longDateFormatter" data-isabs="false">
+      <a id="longDateFormatter:SimpleDateFormat"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
-        <span class="name">longFormatter</span>
+        <span class="name">longDateFormatter</span>
+        
+        <span class="result">: <span name="java.text.SimpleDateFormat" class="extype">SimpleDateFormat</span></span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="emp.DateFormatter#longDateTimeFormatter" data-isabs="false">
+      <a id="longDateTimeFormatter:SimpleDateFormat"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">longDateTimeFormatter</span>
         
         <span class="result">: <span name="java.text.SimpleDateFormat" class="extype">SimpleDateFormat</span></span>
       </span>
