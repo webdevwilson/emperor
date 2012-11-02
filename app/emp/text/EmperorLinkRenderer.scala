@@ -6,8 +6,8 @@ import org.pegdown.ast.WikiLinkNode
 
 /**
  * Implements a customer LinkRenderer that interprets wiki-style links
- * &mdash; those surrounded with [[ ]] &mdash; and attempts to turn them into
- * something useful. Currently groks @ usernames and things that look lik
+ * &mdash; those surrounded with double brackets &mdash; and attempts to turn them into
+ * something useful. Currently groks @ usernames and things that look like
  * tickets.  Ticket or users that do not actually exist will show up with the
  * `text-error` class.
  */
