@@ -32,7 +32,7 @@ object JsonFormats {
       name = (json \ "name").as[String],
       color = (json \ "color").as[String],
       position = (json \ "position").as[Int],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(obj: TicketPriority): JsValue = {
@@ -58,7 +58,7 @@ object JsonFormats {
       realName = (json \ "user_realname").as[String],
       ticketId = (json \ "ticket_id").as[String],
       content = (json \ "content").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(comment: Comment): JsValue = {
@@ -124,7 +124,7 @@ object JsonFormats {
       eType = (json \ "etype").as[String],
       content = (json \ "content").as[String],
       url = (json \ "url").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(event: Event): JsValue = {
@@ -158,7 +158,7 @@ object JsonFormats {
       childId     = (json \ "parent_id").as[String],
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(l: FullLink): JsValue = {
@@ -253,7 +253,7 @@ object JsonFormats {
       position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
       description = (json \ "description").as[Option[String]],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(ticket: FullTicket): JsValue = {
@@ -313,7 +313,7 @@ object JsonFormats {
     def reads(json: JsValue): Group = Group(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(obj: Group): JsValue = {
@@ -338,7 +338,7 @@ object JsonFormats {
       typeName    = (json \ "name").as[String],
       parentId    = (json \ "parent_id").as[String],
       childId     = (json \ "child_id").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(l: Link): JsValue = {
@@ -372,7 +372,7 @@ object JsonFormats {
       defaultSeverityId = (json \ "default_severity_id").as[Option[Long]],
       defaultTypeId = (json \ "default_type_id").as[Option[Long]],
       defaultAssignee = (json \ "default_assignee").as[Option[Int]],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(obj: Project): JsValue = {
@@ -431,7 +431,7 @@ object JsonFormats {
       password    = (json \ "password").as[String],
       realName    = (json \ "real_name").as[String],
       email       = (json \ "email").as[String],
-      dateCreated = new Date() // XXX
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
     def writes(obj: User): JsValue = {

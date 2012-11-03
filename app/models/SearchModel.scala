@@ -622,7 +622,7 @@ object SearchModel {
       eType         = "comment",
       content       = comment.content,
       url           = "",
-      dateCreated   = ft.dateCreated
+      dateCreated   = comment.dateCreated
     ))
 
     indexer.refresh()
