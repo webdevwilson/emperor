@@ -1,6 +1,7 @@
 package emp.plugin
 
 import akka.actor.Actor
+import emp.Plugin
 import emp.event._
 import java.net.URL
 import models.{TicketModel,UserModel}
@@ -33,6 +34,7 @@ class EmailNotifier(configuration: Configuration) extends Actor {
     case event: EmperorEvent => sendEmail(event)
   }
 
+  // XXX This definitely needs a refactor
   /**
    * Send an email after catching an event.
    */
@@ -93,8 +95,7 @@ class EmailNotifier(configuration: Configuration) extends Actor {
   }
 }
 
-// XXX This should be a trait!
-object EmailNotifier {
+object EmailNotifier extends Plugin {
 
   def relevantEvents = List("ticket/changed", "ticket/created")
 }

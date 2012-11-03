@@ -146,6 +146,7 @@ object TicketModel {
   val allQuery = SQL("SELECT * FROM tickets")
   val getByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
+  val getFullByActualIdQuery = SQL("SELECT * FROM full_all_tickets WHERE id={id}")
   val getFullByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
   val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t  WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
   val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets  WHERE ticket_id={ticket_id} ORDER BY date_created ASC")
@@ -162,18 +163,6 @@ object TicketModel {
   val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} GROUP BY ticket_links.id ORDER BY ticket_links.date_created")
   val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id WHERE ticket_links.id={id}")
   val deleteLinkQuery = SQL("DELETE FROM ticket_links WHERE id={id}")
-
-  val getByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id}")
-  val getCountByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id}")
-
-  val getOpenByProjectQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id} AND resolution_id IS NULL")
-  val getCountOpenByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND resolution_id IS NULL")
-
-  val getByProjectAndStatusQuery = SQL("SELECT * FROM tickets WHERE project_id={project_id} AND status_id={status_id}")
-  val getCountByProjectAndStatusQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND status_id={status_id}")
-
-  val getCountTodayByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND DATE(date_created) = DATE(NOW())")
-  val getCountThisWeekByProjectQuery = SQL("SELECT COUNT(*) FROM tickets WHERE project_id={project_id} AND DATE(date_created) + 7 > DATE(NOW()) ")
 
   // parser for retrieving a ticket
   val ticket = {
@@ -359,13 +348,16 @@ object TicketModel {
             'content    -> content
           ).executeInsert()
 
-          EmperorEventBus.publish(
-            CommentTicketEvent(
-              ticketId = ticketId
+          val comm = getCommentById(id.get)
+          comm.map { c =>
+            EmperorEventBus.publish(
+              CommentTicketEvent(
+                ticketId = ticketId,
+                commentId = c.id.get
+              )
             )
-          )
-
-          getCommentById(id.get)
+          }
+          comm
         }
       }
       case None => return None
@@ -389,7 +381,6 @@ object TicketModel {
 
     val assigned = tick.copy(assigneeId = assigneeId)
     val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
-    SearchModel.indexTicket(ticket = ft)
     ft
   }
 
@@ -400,7 +391,6 @@ object TicketModel {
     val tick = this.getById(ticketId).get
 
     val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
-    SearchModel.indexTicket(ticket = ft)
     ft
   }
 
@@ -411,7 +401,6 @@ object TicketModel {
       val tick = this.getById(ticketId).get
 
       val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
-      SearchModel.indexTicket(ticket = ft)
       ft
   }
 
@@ -468,19 +457,6 @@ object TicketModel {
           val nt = this.getFullById(ticketId)
 
           nt.map { t =>
-            SearchModel.indexTicket(ticket = t)
-
-            SearchModel.indexEvent(Event(
-              projectId     = t.project.id,
-              projectName   = t.project.name,
-              userId        = t.user.id,
-              userRealName  = t.user.name,
-              eKey          = t.ticketId,
-              eType         = "ticket_create",
-              content       = t.summary,
-              url           = "",
-              dateCreated   = t.dateCreated
-            ))
             // Get on the bus!
             EmperorEventBus.publish(
               NewTicketEvent(
@@ -527,6 +503,16 @@ object TicketModel {
   }
 
   /**
+   * Get a version of a ticket by id.  This version returns the `FullTicket`.
+   */
+  def getFullByActualId(id: Long) : Option[FullTicket] = {
+
+    DB.withConnection { implicit conn =>
+      getFullByActualIdQuery.on('id -> id).as(fullTicket.singleOpt)
+    }
+  }
+
+  /**
    * Get ticket by ticketId.  This version returns the `FullTicket`.
    */
   def getFullById(id: String) : Option[FullTicket] = {
@@ -567,41 +553,6 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
       getAllFullByIdCountQuery.on('ticket_id -> id).as(scalar[Long].single)
-    }
-  }
-
-  def getCountByProject(projectId: Pk[Long]): Long = {
-
-    DB.withConnection { implicit conn =>
-      getCountByProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
-    }
-  }
-
-  def getCountOpenByProject(projectId: Pk[Long]): Long = {
-
-    DB.withConnection { implicit conn =>
-      getCountOpenByProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
-    }
-  }
-
-  def getCountByProjectAndStatus(projectId: Pk[Long], statusId: Long): Long = {
-
-    DB.withConnection { implicit conn =>
-      getByProjectAndStatusQuery.on('project_id -> projectId, 'status_id -> statusId).as(scalar[Long].single)
-    }
-  }
-
-  def getCountTodayByProject(projectId: Pk[Long]): Long = {
-
-    DB.withConnection { implicit conn =>
-      getCountTodayByProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
-    }
-  }
-
-  def getCountThisWeekByProject(projectId: Pk[Long]): Long = {
-
-    DB.withConnection { implicit conn =>
-      getCountThisWeekByProjectQuery.on('project_id -> projectId).as(scalar[Long].single)
     }
   }
 
@@ -820,18 +771,7 @@ object TicketModel {
         // Add a comment, if we had one.
         comment.map { content =>
           val comm = addComment(ticketId = id, userId = userId, content = content)
-          SearchModel.indexComment(comm.get)
         }
-
-        // Get on the bus!
-        EmperorEventBus.publish(
-          ChangeTicketEvent(
-            ticketId = id,
-            // This logic should probably be tested… XXX
-            resolved = if(changed && (oldTicket.resolution.id != newResId)) true else false,
-            unresolved = if(clearResolution && !oldTicket.resolution.id.isEmpty) true else false
-          )
-        )
       }
 
       val newTicket = DB.withConnection { implicit conn =>
@@ -839,7 +779,17 @@ object TicketModel {
       }
 
       if(changed) {
-        SearchModel.indexHistory(newTick = newTicket, oldTick = oldTicket)
+        // Get on the bus!
+        EmperorEventBus.publish(
+          ChangeTicketEvent(
+            ticketId = id,
+            oldTicketId = oldTicket.id.get,
+            newTicketId = newTicket.id.get,
+            // This logic should probably be tested… XXX
+            resolved = if(changed && (oldTicket.resolution.id != newResId)) true else false,
+            unresolved = if(clearResolution && !oldTicket.resolution.id.isEmpty) true else false
+          )
+        )
       }
       newTicket
     } else {

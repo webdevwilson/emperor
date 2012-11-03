@@ -24,6 +24,13 @@ object Global extends GlobalSettings {
       Logger.debug("Subscribed Email Notifier to '" + ev + "'")
       EmperorEventBus.subscribe(emailNotifier, ev)
     }
+
+    val searchIndexer = system.actorOf(Props(new SearchIndexer(Play.configuration)))
+
+    SearchIndexer.relevantEvents.foreach { ev =>
+      Logger.debug("Subscribed Search Indexer to '" + ev + "'")
+      EmperorEventBus.subscribe(searchIndexer, ev)
+    }
   }
 
   override def onStop(app: Application) {

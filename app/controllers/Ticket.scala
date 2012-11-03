@@ -200,7 +200,6 @@ object Ticket extends Controller with Secured {
           val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
           ticket match {
             case Some(t) => {
-              SearchModel.indexTicket(ticket.get)
               Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
             }
             case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
@@ -218,7 +217,6 @@ object Ticket extends Controller with Secured {
       },
       value => {
         val comm = TicketModel.addComment(ticketId, request.user.id.get, value.content)
-        SearchModel.indexComment(comm.get)
 
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
       }
@@ -415,7 +413,6 @@ object Ticket extends Controller with Secured {
       value => {
         // XXX validate assignability
         TicketModel.update(request.user.id.get, ticketId, value)
-        SearchModel.indexTicket(TicketModel.getFullById(ticketId).get)
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
       }
     )
