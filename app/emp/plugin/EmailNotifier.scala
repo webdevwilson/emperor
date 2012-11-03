@@ -52,7 +52,7 @@ class EmailNotifier(configuration: Configuration) extends Actor {
           // watchers?
           ticket.assignee.id match {
             case Some(userId) => Some(EmailResult(
-              subject = Messages("email.subject", Messages("email.subject.ticket.new", ticket.ticketId)),
+              subject = Messages("email.subject", Messages("email.ticket.new.subject", ticket.ticketId)),
               recipient = UserModel.getById(userId).get,
               body = views.html.email.notifier.ticket.newticket(ticket = ticket).body
             ))

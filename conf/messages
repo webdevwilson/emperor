@@ -140,7 +140,11 @@ Def_Assign_Nobody=Nobody
 Def_Assign_Owner=Owner of Project
 
 email.subject=[EMPEROR] {0}
-email.subject.ticket.new=New Ticket {0}
+email.footer.blurb=This message sent to you by <a href="http://emperorapp.com">Emperor</a>.
+email.ticket.new.subject=New Ticket {0}
+email.ticket.new.teaser=A new ticket – {0} – has been created.
+email.ticket.new.problem=Is this email not displaying correctly?
+email.ticket.new.problem.view=View it in your browser.
 
 event.action={0} {1}
 event.action.icon.comment=icon-bullhorn
