@@ -203,6 +203,7 @@ object SearchModel {
   val eventIndex = "events"
   val eventType = "event"
   val eventFilterMap = Map(
+    "user_id" -> "user_id",
     "user" -> "user_realname",
     "project" -> "project_name"
   )
