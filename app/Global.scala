@@ -16,16 +16,16 @@ object Global extends GlobalSettings {
       SearchModel.checkIndices
     }
 
-    val system = ActorSystem("Emperor")
+    val actsystem = ActorSystem("Emperor")
 
-    val emailNotifier = system.actorOf(Props(new EmailNotifier(Play.configuration)))
+    val emailNotifier = actsystem.actorOf(Props(new EmailNotifier(Play.configuration)))
 
     EmailNotifier.relevantEvents.foreach { ev =>
       Logger.debug("Subscribed Email Notifier to '" + ev + "'")
       EmperorEventBus.subscribe(emailNotifier, ev)
     }
 
-    val searchIndexer = system.actorOf(Props(new SearchIndexer(Play.configuration)))
+    val searchIndexer = actsystem.actorOf(Props(new SearchIndexer(Play.configuration)))
 
     SearchIndexer.relevantEvents.foreach { ev =>
       Logger.debug("Subscribed Search Indexer to '" + ev + "'")
