@@ -16,6 +16,7 @@ case class User(
   username: String,
   password: String,
   realName: String,
+  timezone: String,
   email: String,
   organization: Option[String],
   location: Option[String],
@@ -40,9 +41,9 @@ object UserModel {
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
   val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
-  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, organization, location, title, url, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, timezone, organization, location, title, url, date_created) VALUES ({username}, {password}, {realname}, {email}, {timezone}, {organization}, {location}, {title}, {url}, UTC_TIMESTAMP())")
   val startsWithQuery = SQL("SELECT * FROM users WHERE username COLLATE utf8_unicode_ci LIKE {username}")
-  val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email}, organization={organization}, location={location}, title={title}, url={url} WHERE id={id}")
+  val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email}, timezone={timezone}, organization={organization}, location={location}, title={title}, url={url} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM users WHERE id={id}")
 
@@ -52,12 +53,13 @@ object UserModel {
     get[String]("password") ~
     get[String]("realName") ~
     get[String]("email") ~
+    get[String]("timezone") ~
     get[Option[String]]("organization") ~
     get[Option[String]]("location") ~
     get[Option[String]]("title") ~
     get[Option[String]]("url") ~
     get[Date]("date_created") map {
-      case id~username~password~realName~email~organization~location~title~url~dateCreated => User(id, username, password, realName, email, organization, location, title, url, dateCreated)
+      case id~username~password~realName~email~timezone~organization~location~title~url~dateCreated => User(id, username, password, realName, email, timezone, organization, location, title, url, dateCreated)
     }
   }
 
@@ -75,7 +77,8 @@ object UserModel {
         'location   -> user.location,
         'title      -> user.title,
         'url        -> user.url,
-        'email      -> user.email
+        'email      -> user.email,
+        'timezone   -> user.timezone
       ).executeInsert()
 
       id.map { uid =>
@@ -133,6 +136,7 @@ object UserModel {
       password = "",
       realName = Messages("ticket.unassigned"),
       email    = "",
+      timezone = "",
       organization = None,
       location = None,
       title    = None,
@@ -190,7 +194,8 @@ object UserModel {
         'location   -> user.location,
         'title      -> user.title,
         'url        -> user.url,
-        'email      -> user.email
+        'email      -> user.email,
+        'timezone   -> user.timezone
       ).execute
       getById(id)
     }
