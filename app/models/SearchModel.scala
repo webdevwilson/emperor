@@ -225,6 +225,10 @@ object SearchModel {
           "type": "long",
           "index": "not_analyzed"
         },
+        "user_email": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "user_realname": {
           "type": "string",
           "index": "not_analyzed"
@@ -612,6 +616,8 @@ object SearchModel {
     indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(comment).toString)
 
     val ft = TicketModel.getFullById(comment.ticketId).get
+
+    val user = UserModel.getById(ft.user.id)
 
     SearchModel.indexEvent(Event(
       projectId     = ft.project.id,

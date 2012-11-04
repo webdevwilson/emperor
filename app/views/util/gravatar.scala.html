@@ -1,5 +1,11 @@
 @**
  * Generate a gravatar img tag.
  *@
-@(user: models.User, size: Int = 64)(implicit request: Request[AnyContent])
-<img class="avatar" src="http://www.gravatar.com/avatar/@{ user.emailMD5 }?s=@size">
+@(userId: Long, size: Int = 64)(implicit request: Request[AnyContent])
+
+@import org.apache.commons.codec.digest.DigestUtils
+@import models.UserModel
+
+@UserModel.getById(userId).map { user =>
+<img class="avatar" src="http://www.gravatar.com/avatar/@{ DigestUtils.md5Hex(user.email.trim.toLowerCase) }?s=@size">
+}

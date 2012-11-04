@@ -130,6 +130,8 @@ ul.boxy {
   }
 }
 ul.events {
+  position: relative;
+
   blockquote {
     margin-bottom: 3px;
     padding-left: 6px;
@@ -139,9 +141,9 @@ ul.events {
       margin-bottom: 9px;
     }
   }
-  div.attr {
-    color: @main-subdued-color;
+  li {
     margin-bottom: 1em;
+    position: relative;
   }
   li.change {
 
@@ -155,6 +157,27 @@ ul.events {
       color: #333;
       text-shadow: none;
     }
+  }
+  img.avatar {
+    position: absolute;
+    top: 0;
+  }
+  .popover {
+    display: block;
+    margin-left: 50px;
+    margin-right: 1em;
+    position: relative;
+    width: auto;
+
+    .popover-title {
+      padding: 4px 6px;
+    }
+    .popover-content {
+      padding: 6px 8px;
+    }
+  }
+  .popover.right .arrow {
+    top: 20px;
   }
 }
 table {

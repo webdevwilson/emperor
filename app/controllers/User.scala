@@ -18,7 +18,7 @@ object User extends Controller with Secured {
 
     maybeUser match {
       case Some(user) => {
-        val efilters = Map("user_id" -> Seq(userId.toString))
+        val efilters = Map("user" -> Seq(user.username))
 
         val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters)
 

@@ -1,0 +1,25 @@
+@**
+ * Generate a timeline listing.
+ *@
+@(timeline: emp.util.Search.SearchResult[models.Event])(implicit request: AuthenticatedRequest)
+
+@import emp.DateFormatter
+
+@if(timeline.pager.items.isEmpty) {
+<p>@Messages("general.timeline.empty")</p>
+} else {
+<ul class="unstyled events">
+@timeline.pager.items.map { event =>
+<li>
+ <div class="popover right fade in">
+  <div class="arrow"></div>
+  <h3 class="popover-title"><i class="@Messages("event.action.icon." + event.eType)"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>  @Messages("event.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</h3>
+  <div class="popover-content">
+   <p>@event.content</p>
+  </div>
+ </div>
+ <a href="@routes.User.item(event.userId)">@gravatar(event.userId, 32)</a>
+</li>
+}
+</ul>
+}

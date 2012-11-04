@@ -1,4 +1,4 @@
-@(project: models.Project, owner: Option[models.User], tickets: emp.util.Search.SearchResult[models.FullTicket], timeline: emp.util.Search.SearchResult[models.Event])(implicit request: AuthenticatedRequest)
+@(project: models.Project, owner: Option[models.User], tickets: emp.util.Search.SearchResult[models.FullTicket], events: emp.util.Search.SearchResult[models.Event])(implicit request: AuthenticatedRequest)
 
 @import emp._
 @import views.html.util._
@@ -21,26 +21,14 @@
  </div>
  <div class="span6">
   <h2>@Messages("general.timeline")</h2>
-  @if(timeline.pager.items.isEmpty) {
-    @Messages("general.timeline.empty")
-  } else {
-  <ul class="unstyled events">
-   @timeline.pager.items.map { event =>
-   <li>
-    <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
-    <blockquote>@event.content</blockquote>
-    <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</div>
-   </li>
-   }
-  </ul>
-  }
+  @timeline(events)
  </div>
  <div class="span3">
   <h2>@Messages("project.summary.owner")</h2>
   @if(owner.isDefined) {
    @owner.map { o =>
    <div class="profile">
-    @gravatar(o)
+    @gravatar(o.id.get)
     <div><i class="icon-user"></i> @o.realName</div>
     <div><i class="icon-envelope"></i> <a href="mailto:@o.email">@o.email</a></div>
    </div>

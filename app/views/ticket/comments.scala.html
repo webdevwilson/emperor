@@ -35,8 +35,14 @@
    <ul class="unstyled events">
     @comments.pager.items.map { comment =>
     <li>
-     <blockquote>@{ Html(Renderer.render(Some(comment.content))) }</blockquote>
-     <div class="attr">@Messages("ticket.comment.attribution.prefix") <a href="XXX">@Messages(comment.realName)</a> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(comment.dateCreated))</div>
+     <div class="popover right fade in">
+      <div class="arrow"></div>
+      <h3 class="popover-title">@Messages("ticket.comment.attribution.prefix") <a href="@routes.User.item(comment.userId)">@Messages(comment.realName)</a> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(comment.dateCreated))</h3>
+      <div class="popover-content">
+       <p>@Html(Renderer.render(Some(comment.content)))</p>
+      </div>
+     </div>
+     <a href="@routes.User.item(comment.userId)">@gravatar(comment.userId, 32)</a>
     </li>
     }
    </ul>

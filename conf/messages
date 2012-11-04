@@ -146,13 +146,14 @@ email.ticket.new.teaser=A new ticket – {0} – has been created.
 email.ticket.new.problem=Is this email not displaying correctly?
 email.ticket.new.problem.view=View it in your browser.
 
-event.action={0} {1}
+event.action=<a href="/user/{0}">{1}</a> {2}
 event.action.icon.comment=icon-bullhorn
 event.action.icon.ticket_change=icon-pencil
 event.action.icon.ticket_create=icon-certificate
 event.action.comment=commented on
 event.action.ticket_change=modified
 event.action.ticket_create=created
+event.attribution.postfix=at {0}
 
 form.cancel=Cancel
 form.no=No, Nevermind
@@ -260,8 +261,6 @@ ticket.description.none=Ticket has no description.
 ticket.edit=Edit Ticket
 ticket.edit.success=Ticket Updated
 ticket.error.status=Error Changing Status
-ticket.history.attribution.postfix=on {0}
-ticket.history.attribution.prefix=by
 ticket.history.change.set=set to
 ticket.history.change.from=from
 ticket.history.change.to=to

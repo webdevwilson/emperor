@@ -1,4 +1,4 @@
-@(timeline: emp.util.Search.SearchResult[models.Event], projects: List[Project])(implicit request: AuthenticatedRequest)
+@(events: emp.util.Search.SearchResult[models.Event], projects: List[Project])(implicit request: AuthenticatedRequest)
 
 @import emp.DateFormatter
 @import views.html.util._
@@ -9,19 +9,7 @@
   <div class="page-header">
    <h1>@Messages("general.timeline")</h1>
   </div>
-   @if(timeline.pager.items.isEmpty) {
-   <p>@Messages("general.timeline.empty")</p>
-   } else {
-   <ul class="unstyled events">
-   @timeline.pager.items.map { event =>
-    <li>
-      <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
-      <blockquote>@event.content</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</div>
-    </li>
-   }
-   </ul>
-   }
+  @timeline(events)
  </div>
  <div class="span4">
   <div class="page-header">

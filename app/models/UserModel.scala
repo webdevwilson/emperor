@@ -24,8 +24,6 @@ case class User(
   dateCreated: Date
 ) {
 
-  lazy val emailMD5 = DigestUtils.md5Hex(email.trim.toLowerCase)
-
   def isAnonymous = username.equals("anonymous")
 }
 

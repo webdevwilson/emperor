@@ -16,7 +16,7 @@
 <div class="row">
  <div class="span3">
   <div class="bigprofile">
-   @gravatar(user, 80)
+   @gravatar(user.id.get, 80)
    <h2>@Messages(user.realName)</h2>
    <h4>@user.username</h4>
    @if(user.location.isDefined) {
