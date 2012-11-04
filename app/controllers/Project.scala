@@ -111,7 +111,7 @@ object Project extends Controller with Secured {
     }
   }
 
-  def item(projectId: Long) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
+  def item(projectId: Long, page: Int = 1, count: Int = 10) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
     val maybeProject = ProjectModel.getById(projectId)
 
@@ -119,7 +119,7 @@ object Project extends Controller with Secured {
       case Some(project) => {
         val efilters = Map("project_id" -> Seq(projectId.toString))
 
-        val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters)
+        val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters, page = page, count = count)
 
         val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
 

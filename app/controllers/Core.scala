@@ -12,7 +12,7 @@ import emp.util.Search._
 
 object Core extends Controller with Secured {
 
-  def index = IsAuthenticated() { implicit request =>
+  def index(page: Int = 1, count: Int = 10) = IsAuthenticated() { implicit request =>
 
     val userId = request.user.id.get
     val projects = models.ProjectModel.getAll(userId = userId)
@@ -28,7 +28,7 @@ object Core extends Controller with Secured {
       }
     }
 
-    val query = SearchQuery(userId = userId, filters = filters)
+    val query = SearchQuery(userId = userId, filters = filters, page = page, count = count)
 
     val response = SearchModel.searchEvent(query) // XX fixed page, count, query
 

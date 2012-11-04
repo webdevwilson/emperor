@@ -27,19 +27,7 @@
   <div class="page-header">
    <h1>@Messages("general.timeline")</h1>
   </div>
-   @if(result.pager.items.isEmpty) {
-   <p>@Messages("general.timeline.empty")</p>
-   } else {
-   <ul class="unstyled events">
-   @result.pager.items.map { event =>
-    <li>
-      <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
-      <blockquote>@event.content</blockquote>
-      <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</div>
-    </li>
-   }
-   </ul>
-   }
-  </div>
+  @timeline(result)
+ </div>
 </div>
 }

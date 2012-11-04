@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                               controllers.Core.index
+GET     /                               controllers.Core.index(page: Int ?= 1, count: Int ?= 10)
 
 GET     /admin                          controllers.Admin.index
 GET     /admin/reindex                  controllers.Admin.reindex
@@ -108,7 +108,7 @@ POST    /auth/login                     controllers.Auth.doLogin(redirectUrl: St
 GET     /project/create                 controllers.Project.create
 GET     /project/edit/:id               controllers.Project.edit(id: Long)
 GET     /project/list                   controllers.Project.list(page: Int ?= 1, count: Int ?= 10)
-GET     /project/:id                    controllers.Project.item(id: Long)
+GET     /project/:id                    controllers.Project.item(id: Long, page: Int ?= 1, count: Int ?= 10)
 POST    /project/:id                    controllers.Project.update(id: Long)
 GET     /project                        controllers.Project.index(page: Int ?= 1, count: Int ?= 10)
 POST    /project                        controllers.Project.add

@@ -5,7 +5,7 @@
 
 <div class="nav-collapse">
  <ul class="nav">
-  <li @if(request.path.equals("/")) { class="active" }><a href="@routes.Core.index">@Messages("general.home")</a></li>
+  <li @if(request.path.equals("/")) { class="active" }><a href="@routes.Core.index()">@Messages("general.home")</a></li>
   <li @if(request.path.startsWith("/search")) { class="active" }><a href="@controllers.routes.Search.index()">@Messages("general.ticket")</a></li>
   <li @if(request.path.startsWith("/timeline")) { class="active" }><a href="@controllers.routes.Timeline.index()">@Messages("general.timeline")</a></li>
   <li @if(request.path.startsWith("/project")) { class="active" }><a href="@controllers.routes.Project.index()">@Messages("general.projects")</a></li>
