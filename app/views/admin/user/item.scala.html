@@ -1,4 +1,7 @@
 @(user: models.User, allGroups: List[Group], userGroups: List[GroupUser])(implicit request: AuthenticatedRequest)
+
+@import views.html.util._
+
 @main(Messages("admin.user.with.id", user.username)) {
 <ul class="breadcrumb">
  <li>
@@ -10,24 +13,38 @@
  <li class="active">@user.username</li>
 </ul>
 <h1><a class="btn" href="@controllers.admin.routes.User.edit(user.id.get)"><i class="icon-edit"></i></a> @Messages("user.with.id", user.username)</h1>
-<div class="well well-small obj-info">
-  XXX more here
- <div class="row">
-  <div class="span4">
-   <div class="info"><label>@Messages("user.username")</label><span>@user.username</span></div>
-   <div class="info"><label>@Messages("user.realname")</label><span>@user.realName</span></div>
+<div class="row">
+ <div class="span3">
+  <div class="bigprofile">
+   @gravatar(user, 80)
+   <h2>@Messages(user.realName)</h2>
+   <h4>@user.username</h4>
+   @if(user.location.isDefined) {
+   <div><i class="icon-map-marker"></i> @user.location</div>
+   }
+   @if(user.organization.isDefined) {
+   <div><i class="icon-info-sign"></i> @user.organization</div>
+   }
+   @if(user.title.isDefined) {
+   <div><i class="icon-briefcase"></i> @user.title</div>
+   }
+   @if(user.url.isDefined) {
+   <div><i class="icon-globe"></i> <a href="@user.url">@user.url</a></div>
+   }
+   <div><i class="icon-envelope"></i> <a href="mailto:@user.email">@user.email</a></div>
   </div>
  </div>
+ <div class="span9">
+  <div class="page-header">
+   <h2>@Messages("admin.user.groups.list") <small>@Messages("admin.group.menu.list.help")</small></h2>
+  </div>
+  <ul id="userGroups" class="unstyled bordered">
+  @allGroups.map { group =>
+   <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.groupId == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>
+  }
+  </ul>
+ </div>
 </div>
-<div class="pager-header">
- <h2>@Messages("admin.user.groups.list") <small>@Messages("admin.group.menu.list.help")</small></h2>
-</div>
-<ul id="userGroups" class="unstyled bordered">
-@allGroups.map { group =>
-  <li><input type="checkbox" value="@group.id" @{userGroups.find(x => x.groupId == group.id.get) match { case Some(x) => """checked="checked""""; case None => ;}}> @group.name</li>
-}
-</ul>
-}
 <script type="text/javascript">
 YUI().use('emperor-models', 'node', function (Y) {
 
@@ -44,3 +61,4 @@ YUI().use('emperor-models', 'node', function (Y) {
   });
 });
 </script>
+}

@@ -139,7 +139,6 @@ object Project extends Controller with Secured {
       }
       case None => NotFound
     }
-
   }
 
   def list(page: Int, count: Int) = IsAuthenticated() { implicit request =>

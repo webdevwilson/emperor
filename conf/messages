@@ -331,9 +331,13 @@ ticket_type.name=Name
 
 user=User
 user.email=Email
+user.location=Location
+user.organization=Organization
 user.password=Password
 user.password.confirm=Confirm Password
 user.realname=Real Name
+user.title=Title
+user.url=URL
 user.with.id=User {0}
 user.username=Username
 

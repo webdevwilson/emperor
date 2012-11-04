@@ -431,6 +431,10 @@ object JsonFormats {
       password    = (json \ "password").as[String],
       realName    = (json \ "real_name").as[String],
       email       = (json \ "email").as[String],
+      organization = (json \ "organization").as[Option[String]],
+      location    = (json \ "location").as[Option[String]],
+      title       = (json \ "title").as[Option[String]],
+      url         = (json \ "url").as[Option[String]],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
     )
 
@@ -442,12 +446,15 @@ object JsonFormats {
         "password"        -> JsString(obj.password),
         "real_name"       -> JsString(obj.realName),
         "email"           -> JsString(obj.email),
+        "organization"    -> optionStringtoJsValue(obj.organization),
+        "location"        -> optionStringtoJsValue(obj.location),
+        "title"           -> optionStringtoJsValue(obj.title),
+        "url"             -> optionStringtoJsValue(obj.url),
         "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
       )
       toJson(doc)
     }
   }
-
 
   /**
    * JSON conversion for WorkflowStatus

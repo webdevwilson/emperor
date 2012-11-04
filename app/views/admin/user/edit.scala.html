@@ -20,8 +20,12 @@
    <fieldset>
     @helper.inputText(objForm("username"), '_label -> Messages("user.username"))
     @helper.inputText(objForm("realName"), '_label -> Messages("user.realname"))
+    @helper.inputText(objForm("location"), '_label -> Messages("user.location"))
+    @helper.inputText(objForm("url"), '_label -> Messages("user.url"))
+    @helper.inputText(objForm("organization"), '_label -> Messages("user.organization"))
+    @helper.inputText(objForm("title"), '_label -> Messages("user.title"))
     @helper.input(objForm("email"), '_label -> Messages("user.email")) { (id, name, value, args) =>
-        <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
+     <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
     }
     <div class="form-actions">
      <a href="@controllers.admin.routes.User.index()" class="btn">@Messages("form.cancel")</a>

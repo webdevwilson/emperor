@@ -12,8 +12,6 @@ import emp.util.Search._
 
 object Core extends Controller with Secured {
 
-  val logger = LoggerFactory.getLogger("application")
-
   def index = IsAuthenticated() { implicit request =>
 
     val userId = request.user.id.get

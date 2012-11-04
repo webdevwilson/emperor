@@ -1,0 +1,47 @@
+@(user: models.User, timeline: emp.util.Search.SearchResult[models.Event])(implicit request: AuthenticatedRequest)
+
+@import emp._
+@import views.html.util._
+
+@main(title = Messages("user.with.id", user.realName)) {
+<div class="row-fluid">
+ <div class="span3">
+  <div class="bigprofile">
+   @gravatar(user, 80)
+   <h2>@Messages(user.realName)</h2>
+   <h4>@user.username</h4>
+   @if(user.location.isDefined) {
+   <div><i class="icon-map-marker"></i> @user.location</div>
+   }
+   @if(user.organization.isDefined) {
+   <div><i class="icon-info-sign"></i> @user.organization</div>
+   }
+   @if(user.title.isDefined) {
+   <div><i class="icon-briefcase"></i> @user.title</div>
+   }
+   @if(user.url.isDefined) {
+   <div><i class="icon-globe"></i> <a href="@user.url">@user.url</a></div>
+   }
+   <div><i class="icon-envelope"></i> <a href="mailto:@user.email">@user.email</a></div>
+  </div>
+ </div>
+ <div class="span6">
+  <h2>@Messages("general.timeline")</h2>
+  @if(timeline.pager.items.isEmpty) {
+    @Messages("general.timeline.empty")
+  } else {
+  <ul class="unstyled events">
+   @timeline.pager.items.map { event =>
+   <li>
+    <i class="@Messages("event.action.icon." + event.eType)"></i> @Messages("event.action", Messages(event.userRealName), Messages("event.action." + event.eType)) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+    <blockquote>@event.content</blockquote>
+    <div class="attr">@Messages("ticket.comment.attribution.prefix") <b>@Messages(event.userRealName)</b> @Messages("ticket.comment.attribution.postfix", DateFormatter.displayLongDateTime(event.dateCreated))</div>
+   </li>
+   }
+  </ul>
+  }
+ </div>
+ <div class="span3">
+ </div>
+</div>
+}

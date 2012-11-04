@@ -1,7 +1,6 @@
 package controllers.admin
 
 import anorm._
-import emp._
 import controllers._
 import java.util.Date
 import models.GroupModel
@@ -24,6 +23,10 @@ object User extends Controller with Secured {
       "password" -> nonEmptyText,
       "realName" -> nonEmptyText,
       "email"    -> email,
+      "organization" -> optional(text),
+      "location" -> optional(text),
+      "title"    -> optional(text),
+      "url"      -> optional(text),
       "date_created" -> ignored[Date](new Date())
     )(models.User.apply)(models.User.unapply)
   )
@@ -35,6 +38,10 @@ object User extends Controller with Secured {
       "password" -> ignored[String](""),
       "realName" -> nonEmptyText,
       "email"    -> email,
+      "organization" -> optional(text),
+      "location" -> optional(text),
+      "title"    -> optional(text),
+      "url"      -> optional(text),
       "date_created" -> ignored[Date](new Date())
     )(models.User.apply)(models.User.unapply)
   )

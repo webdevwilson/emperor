@@ -11,7 +11,18 @@ import play.api.db.DB
 import play.api.i18n.Messages
 import play.api.Play.current
 
-case class User(id: Pk[Long] = NotAssigned, username: String, password: String, realName: String, email: String, dateCreated: Date) {
+case class User(
+  id: Pk[Long] = NotAssigned,
+  username: String,
+  password: String,
+  realName: String,
+  email: String,
+  organization: Option[String],
+  location: Option[String],
+  title: Option[String],
+  url: Option[String],
+  dateCreated: Date
+) {
 
   lazy val emailMD5 = DigestUtils.md5Hex(email.trim.toLowerCase)
 
@@ -31,9 +42,9 @@ object UserModel {
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
   val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
-  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, organization, location, title, url, date_created) VALUES ({username}, {password}, {realname}, {email}, UTC_TIMESTAMP())")
   val startsWithQuery = SQL("SELECT * FROM users WHERE username COLLATE utf8_unicode_ci LIKE {username}")
-  val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email} WHERE id={id}")
+  val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email}, organization={organization}, location={location}, title={title}, url={url} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM users WHERE id={id}")
 
@@ -43,8 +54,12 @@ object UserModel {
     get[String]("password") ~
     get[String]("realName") ~
     get[String]("email") ~
+    get[Option[String]]("organization") ~
+    get[Option[String]]("location") ~
+    get[Option[String]]("title") ~
+    get[Option[String]]("url") ~
     get[Date]("date_created") map {
-      case id~username~password~realName~email~dateCreated => User(id, username, password, realName, email, dateCreated)
+      case id~username~password~realName~email~organization~location~title~url~dateCreated => User(id, username, password, realName, email, organization, location, title, url, dateCreated)
     }
   }
 
@@ -58,6 +73,10 @@ object UserModel {
         'username   -> user.username,
         'password   -> BCrypt.hashpw(user.password, BCrypt.gensalt(12)),
         'realname   -> user.realName,
+        'organization -> user.organization,
+        'location   -> user.location,
+        'title      -> user.title,
+        'url        -> user.url,
         'email      -> user.email
       ).executeInsert()
 
@@ -116,6 +135,10 @@ object UserModel {
       password = "",
       realName = Messages("ticket.unassigned"),
       email    = "",
+      organization = None,
+      location = None,
+      title    = None,
+      url      = None,
       dateCreated = new Date()
     ) +: users
   }
@@ -165,6 +188,10 @@ object UserModel {
         'id         -> id,
         'username   -> user.username,
         'realname   -> user.realName,
+        'organization -> user.organization,
+        'location   -> user.location,
+        'title      -> user.title,
+        'url        -> user.url,
         'email      -> user.email
       ).execute
       getById(id)
