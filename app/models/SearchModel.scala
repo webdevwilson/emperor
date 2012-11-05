@@ -5,8 +5,6 @@ import emp.util.Search
 import emp.util.Search._
 import emp.JsonFormats._
 import com.traackr.scalastic.elasticsearch.Indexer
-import java.text.SimpleDateFormat
-import java.util.{Date,TimeZone}
 import play.api._
 import play.api.Play.current
 import play.api.libs.json.Json._
@@ -26,13 +24,15 @@ import org.elasticsearch.client._, transport._
 import org.elasticsearch.common.settings.ImmutableSettings._
 import org.elasticsearch.node._, NodeBuilder._
 
+import org.joda.time.format.DateTimeFormat
+
 import emp._
 import emp._
 import scala.collection.JavaConversions._
 
 object SearchModel {
 
-  val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+  val dateFormatter = DateTimeFormat.forPattern("yyyyMMdd'T'HHmmss'Z'").withZoneUTC()
 
   val config = Play.configuration.getConfig("emperor")
   // Embedded ES
@@ -768,7 +768,7 @@ object SearchModel {
       "description"       -> JsString(newTick.description.getOrElse("")),
       "old_description"   -> JsString(oldTick.description.getOrElse("")),
       "description_changed" -> JsBoolean(descChanged),
-      "date_created"      -> JsString(dateFormatter.format(newTick.dateCreated))
+      "date_created"      -> JsString(dateFormatter.print(newTick.dateCreated))
     )
     indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
 
