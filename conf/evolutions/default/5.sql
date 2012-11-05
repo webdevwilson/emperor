@@ -2,11 +2,11 @@
 
 ALTER TABLE users ADD organization VARCHAR(128);
 ALTER TABLE users ADD location VARCHAR(128);
-ALTER TABLE users ADD timezone VARCHAR(12) NOT NULL;
+ALTER TABLE users ADD timezone VARCHAR(64) NOT NULL;
 ALTER TABLE users ADD title VARCHAR(128);
 ALTER TABLE users ADD url VARCHAR(128);
 
-UPDATE users SET timezone='GMT-8:00';
+UPDATE users SET timezone='America/Los_Angeles';
 
 # --- !Downs
 

@@ -365,8 +365,8 @@ object Ticket extends Controller with Secured {
             val commFilters = Map("ticket_id" -> Seq(ticketId))
 
             val q = SearchQuery(
-              userId = request.user.id.get, page = page,
-              count = count, query = query, filters = commFilters,
+              userId = request.user.id.get, page = 1,
+              count = 99999, query = query, filters = commFilters,
               sortBy = Some("date_created"), sortOrder = Some("asc")
             )
             val commRes = SearchModel.searchComment(q)

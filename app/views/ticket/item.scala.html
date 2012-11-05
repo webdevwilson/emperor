@@ -126,6 +126,9 @@ YUI().use('pjax', function (Y) {
       container: '#tabarea',
       contentSelector: '.tabcontent'
     });
+    pjax.on('load', function(e) {
+      jQuery("time").timeago();
+    })
 });
 </script>
  </div>

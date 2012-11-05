@@ -335,6 +335,7 @@ user.organization=Organization
 user.password=Password
 user.password.confirm=Confirm Password
 user.realname=Real Name
+user.timezone=Timezone
 user.title=Title
 user.url=URL
 user.with.id=User {0}

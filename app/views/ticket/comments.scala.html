@@ -11,6 +11,7 @@
   linkTypes: List[models.TicketLinkType]
 )(implicit request: AuthenticatedRequest)
 
+@import emp.DateFormatter
 @import emp.text.Renderer
 @import helper.bootstrap._
 @import views.html.util._
@@ -36,7 +37,7 @@
     <li>
      <div class="popover right fade in">
       <div class="arrow"></div>
-      <h3 class="popover-title">@Messages("ticket.comment.attribution.prefix") <a href="@routes.User.item(comment.userId)">@Messages(comment.realName)</a> <time datetime="@comment.dateCreated">@comment.dateCreated</time></h3>
+      <h3 class="popover-title">@Messages("ticket.comment.attribution.prefix") <a href="@routes.User.item(comment.userId)">@Messages(comment.realName)</a> <time datetime="@DateFormatter.displayISO8601(comment.dateCreated)" title="@DateFormatter.displayISO8601(comment.dateCreated)">@DateFormatter.displayLongDateTime(comment.dateCreated)</time></h3>
       <div class="popover-content">
        <p>@Html(Renderer.render(Some(comment.content)))</p>
       </div>

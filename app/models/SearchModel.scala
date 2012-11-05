@@ -620,6 +620,8 @@ object SearchModel {
 
     val user = UserModel.getById(ft.user.id)
 
+    println("COMM DC " + comment.dateCreated)
+
     SearchModel.indexEvent(Event(
       projectId     = ft.project.id,
       projectName   = ft.project.name,

@@ -21,14 +21,14 @@
    <fieldset>
     @helper.inputText(objForm("username"), '_label -> Messages("user.username"))
     @helper.inputText(objForm("realName"), '_label -> Messages("user.realname"))
-    @helper.select(field = objForm("timezone"), options = DateFormatter.timeZoneList, '_label -> Messages("project.workflow"))
+    @helper.select(field = objForm("timezone"), options = DateFormatter.timeZoneList, '_label -> Messages("user.timezone"))
+    @helper.input(objForm("email"), '_label -> Messages("user.email")) { (id, name, value, args) =>
+     <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
+    }
     @helper.inputText(objForm("location"), '_label -> Messages("user.location"))
     @helper.inputText(objForm("url"), '_label -> Messages("user.url"))
     @helper.inputText(objForm("organization"), '_label -> Messages("user.organization"))
     @helper.inputText(objForm("title"), '_label -> Messages("user.title"))
-    @helper.input(objForm("email"), '_label -> Messages("user.email")) { (id, name, value, args) =>
-     <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
-    }
     <div class="form-actions">
      <a href="@controllers.admin.routes.User.index()" class="btn">@Messages("form.cancel")</a>
      <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
