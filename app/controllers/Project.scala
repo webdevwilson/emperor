@@ -2,7 +2,7 @@ package controllers
 
 import anorm._
 import emp.util.Search._
-import java.util.Date
+import org.joda.time.DateTime
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -27,7 +27,7 @@ object Project extends Controller with Secured {
       "default_severity_id" -> optional(longNumber),
       "default_type_id"     -> optional(longNumber),
       "default_assignee"    -> optional(number),
-      "date_created"        -> ignored(new Date())
+      "date_created"        -> ignored(new DateTime())
     )(models.Project.apply)(models.Project.unapply)
   )
 
@@ -44,7 +44,7 @@ object Project extends Controller with Secured {
       "default_severity_id" -> optional(longNumber),
       "default_type_id"     -> optional(longNumber),
       "default_assignee"    -> optional(number),
-      "date_created"        -> ignored(new Date())
+      "date_created"        -> ignored(new DateTime())
     )(models.Project.apply)(models.Project.unapply)
   )
 

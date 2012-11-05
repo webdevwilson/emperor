@@ -3,7 +3,7 @@ package controllers.admin
 import anorm._
 import emp._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.TicketLinkTypeModel
 import org.mindrot.jbcrypt.BCrypt
 import play.api._
@@ -20,7 +20,7 @@ object TicketLinkType extends Controller with Secured {
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
       "invertable" -> boolean,
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.TicketLinkType.apply)(models.TicketLinkType.unapply)
   )
 

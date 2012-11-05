@@ -2,7 +2,7 @@ package test
 
 import anorm._
 import anorm.NotAssigned
-import java.util.Date
+import org.joda.time.DateTime
 import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._

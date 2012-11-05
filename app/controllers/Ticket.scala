@@ -5,7 +5,7 @@ import emp.util.Pagination.Page
 import emp.util.Search._
 import emp.JsonFormats._
 import collection.JavaConversions._
-import java.util.Date
+import org.joda.time.DateTime
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -20,6 +20,7 @@ import models.TicketModel._
 import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
 import org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet
 import org.elasticsearch.search.sort._
+import org.joda.time.DateTime
 
 import com.codahale.jerkson.Json._
 
@@ -54,7 +55,7 @@ object Ticket extends Controller with Secured {
       "realname"-> ignored[String](""),
       "ticket_id" -> ignored[String](""),
       "content" -> nonEmptyText,
-      "date_created" -> ignored[Date](new Date())
+      "date_created" -> ignored[DateTime](new DateTime())
     )(models.Comment.apply)(models.Comment.unapply)
   )
 

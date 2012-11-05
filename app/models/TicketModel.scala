@@ -2,10 +2,12 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
 import emp.event._
-import java.util.Date
+import org.joda.time.DateTime
 import java.util.regex.Pattern
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 import scala.collection.mutable.ListBuffer
@@ -15,7 +17,7 @@ import scala.collection.mutable.ListBuffer
  */
 case class Comment(
   id: Pk[Long] = NotAssigned, userId: Long, username: String,
-  realName: String, ticketId: String, content: String, dateCreated: Date
+  realName: String, ticketId: String, content: String, dateCreated: DateTime
 )
 
 /**
@@ -45,7 +47,7 @@ case class Resolution(
 case class Link(
   id: Pk[Long] = NotAssigned, typeId: Long, typeName: String,
   parentId: String, childId: String,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 /**
@@ -56,7 +58,7 @@ case class FullLink(
   id: Pk[Long] = NotAssigned, typeId: Long, typeName: String,
   parentId: String, parentSummary: String, parentResolutionId: Option[Long],
   childId: String, childSummary: String, childResolutionId: Option[Long],
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 /**
@@ -93,7 +95,7 @@ case class FullTicket(
   proposedResolution: OptionalNamedThing,
   severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
-  summary: String, description: Option[String], dateCreated: Date
+  summary: String, description: Option[String], dateCreated: DateTime
 ) {
   def abbreviatedSummary(length: Int = 15) = summary match {
     case x if x.length > length => x.take(length) + "&hellip;"
@@ -109,7 +111,7 @@ case class Ticket(
   attentionId: Long, projectId: Long, priorityId: Long,
   resolutionId: Option[Long], proposedResolutionId: Option[Long],
   severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
-  summary: String, description: Option[String], dateCreated: Date
+  summary: String, description: Option[String], dateCreated: DateTime
 )
 
 /**
@@ -181,7 +183,7 @@ object TicketModel {
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~tickId~repId~assId~attId~projId~priId~resId~propResId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
         id = id,
         ticketId = tickId,
@@ -271,7 +273,7 @@ object TicketModel {
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~propResId~propResName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
@@ -304,7 +306,7 @@ object TicketModel {
     get[String]("realname") ~
     get[String]("ticket_id") ~
     get[String]("content") ~
-    get[Date]("ticket_comments.date_created") map {
+    get[DateTime]("ticket_comments.date_created") map {
       case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
     }
   }
@@ -316,7 +318,7 @@ object TicketModel {
     get[String]("ticket_link_types.name") ~
     get[String]("ticket_links.parent_ticket_id") ~
     get[String]("ticket_links.child_ticket_id") ~
-    get[Date]("ticket_links.date_created") map {
+    get[DateTime]("ticket_links.date_created") map {
       case id~linkId~linkName~parentId~childId~dateCreated => Link(
         id = id, typeId = linkId, typeName = linkName,
         parentId = parentId, childId = childId,

@@ -3,7 +3,7 @@ package controllers.admin
 import anorm._
 import emp._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.TicketPriorityModel
 import play.api._
 import play.api.data._
@@ -20,7 +20,7 @@ object TicketPriority extends Controller with Secured {
       "name" -> nonEmptyText,
       "color" -> nonEmptyText,
       "position" -> number,
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.TicketPriority.apply)(models.TicketPriority.unapply)
   )
 

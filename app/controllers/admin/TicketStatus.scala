@@ -3,7 +3,7 @@ package controllers.admin
 import anorm._
 import emp._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.TicketStatusModel
 import play.api._
 import play.api.data._
@@ -18,7 +18,7 @@ object TicketStatus extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.TicketStatus.apply)(models.TicketStatus.unapply)
   )
 

@@ -2,10 +2,10 @@ package controllers.admin
 
 import anorm._
 import controllers._
-import java.util.Date
 import models.GroupModel
 import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
+import org.joda.time.DateTime
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -28,7 +28,7 @@ object User extends Controller with Secured {
       "location" -> optional(text),
       "title"    -> optional(text),
       "url"      -> optional(text),
-      "date_created" -> ignored[Date](new Date())
+      "date_created" -> ignored[DateTime](new DateTime())
     )(models.User.apply)(models.User.unapply)
   )
 
@@ -44,7 +44,7 @@ object User extends Controller with Secured {
       "location" -> optional(text),
       "title"    -> optional(text),
       "url"      -> optional(text),
-      "date_created" -> ignored[Date](new Date())
+      "date_created" -> ignored[DateTime](new DateTime())
     )(models.User.apply)(models.User.unapply)
   )
 

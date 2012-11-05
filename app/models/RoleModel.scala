@@ -2,8 +2,9 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
@@ -11,7 +12,7 @@ import play.Logger
 /**
  * Class for a role.
  */
-case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String] = None, dateCreated: Date)
+case class Role(id: Pk[Long] = NotAssigned, name: String, description: Option[String] = None, dateCreated: DateTime)
 
 object RoleModel {
 
@@ -28,7 +29,7 @@ object RoleModel {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
     get[Option[String]]("description") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~description~dateCreated => Role(id, name, description, dateCreated)
     }
   }

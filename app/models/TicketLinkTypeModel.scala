@@ -2,15 +2,16 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 
 /**
  * Class for types of links.
  */
-case class TicketLinkType(id: Pk[Long] = NotAssigned, name: String, invertable: Boolean, dateCreated: Date)
+case class TicketLinkType(id: Pk[Long] = NotAssigned, name: String, invertable: Boolean, dateCreated: DateTime)
 
 object TicketLinkTypeModel {
 
@@ -27,7 +28,7 @@ object TicketLinkTypeModel {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
     get[Boolean]("invertable") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~invertable~dateCreated => TicketLinkType(id, name, invertable, dateCreated)
     }
   }

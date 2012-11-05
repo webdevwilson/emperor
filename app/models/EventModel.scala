@@ -1,7 +1,7 @@
 package models
 
 import emp._
-import java.util.Date
+import org.joda.time.DateTime
 import play.Logger
 
 /**
@@ -16,7 +16,7 @@ case class Event(
   eType: String,
   content: String,
   url: String,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 object EventModel {

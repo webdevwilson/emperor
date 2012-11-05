@@ -2,9 +2,10 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.event._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import org.apache.commons.codec.digest.DigestUtils
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.DB
@@ -22,7 +23,7 @@ case class User(
   location: Option[String],
   title: Option[String],
   url: Option[String],
-  dateCreated: Date
+  dateCreated: DateTime
 ) {
 
   def isAnonymous = username.equals("anonymous")
@@ -52,14 +53,14 @@ object UserModel {
     get[String]("username") ~
     get[String]("password") ~
     get[String]("realName") ~
-    get[String]("email") ~
     get[String]("timezone") ~
+    get[String]("email") ~
     get[Option[String]]("organization") ~
     get[Option[String]]("location") ~
     get[Option[String]]("title") ~
     get[Option[String]]("url") ~
-    get[Date]("date_created") map {
-      case id~username~password~realName~email~timezone~organization~location~title~url~dateCreated => User(id, username, password, realName, email, timezone, organization, location, title, url, dateCreated)
+    get[DateTime]("date_created") map {
+      case id~username~password~realName~timezone~email~organization~location~title~url~dateCreated => User(id, username, password, realName, timezone, email, organization, location, title, url, dateCreated)
     }
   }
 
@@ -141,7 +142,7 @@ object UserModel {
       location = None,
       title    = None,
       url      = None,
-      dateCreated = new Date()
+      dateCreated = new DateTime()
     ) +: users
   }
 

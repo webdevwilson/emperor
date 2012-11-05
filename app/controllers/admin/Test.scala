@@ -4,8 +4,9 @@ import anorm._
 import emp._
 import controllers._
 import de.svenjacobs.loremipsum.LoremIpsum
-import java.util.{Date,Random}
+import java.util.Random
 import models._
+import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
 import play.api._
 import play.api.data._
@@ -31,7 +32,7 @@ object Test extends Controller with Secured {
         workflowId = 1, sequenceCurrent = 0, name = project._1,
         ownerId = None, permissionSchemeId = 1, defaultPriorityId = None,
         defaultSeverityId = None, defaultTypeId = None, defaultAssignee = None,
-        key = project._2, dateCreated = new Date()
+        key = project._2, dateCreated = new DateTime()
       ))
     }
 
@@ -74,7 +75,7 @@ object Test extends Controller with Secured {
 
     val fakeUsers = users.map { user =>
       UserModel.create(models.User(
-        username = user._2, password = "test", realName = user._1, email = user._2 + "@example.com", organization = None, location = None, title = None, url = None, timezone = "GMT-6:00", dateCreated = new Date()
+        username = user._2, password = "test", realName = user._1, email = user._2 + "@example.com", organization = None, location = None, title = None, url = None, timezone = "GMT-6:00", dateCreated = new DateTime()
       ))
     }
 
@@ -83,7 +84,7 @@ object Test extends Controller with Secured {
     )
     val fakeGroups = groups.map { group =>
       GroupModel.create(models.Group(
-        name = group, dateCreated = new Date()
+        name = group, dateCreated = new DateTime()
       ))
     }
 

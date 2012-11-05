@@ -8,7 +8,7 @@ import play.api.data.format.Formats._
 import play.api.mvc._
 import play.db._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.TicketStatusModel
 import models.WorkflowModel
 
@@ -19,7 +19,7 @@ object Workflow extends Controller with Secured {
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.Workflow.apply)(models.Workflow.unapply)
   )
 

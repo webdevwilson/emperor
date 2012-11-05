@@ -2,9 +2,10 @@ package emp
 
 import anorm.Id
 import emp.text.Renderer
-import java.text.SimpleDateFormat
-import java.util.Date
 import models._
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.DateTime
 import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
@@ -14,7 +15,7 @@ import play.api.libs.json._
  */
 object JsonFormats {
 
-  val dateFormatter = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+  val dateFormatter = DateTimeFormat.forPattern("yyyyMMdd'T'HHmmss'Z'").withZoneUTC()
 
   private def optionLongtoJsValue(maybeId: Option[Long]) = maybeId.map({ l => JsNumber(l) }).getOrElse(JsNull)
 
@@ -32,7 +33,7 @@ object JsonFormats {
       name = (json \ "name").as[String],
       color = (json \ "color").as[String],
       position = (json \ "position").as[Int],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(obj: TicketPriority): JsValue = {
@@ -41,7 +42,7 @@ object JsonFormats {
         "name"          -> JsString(obj.name),
         "color"         -> JsString(obj.color),
         "position"      -> JsNumber(obj.position),
-        "date_created"  -> JsString(dateFormatter.format(obj.dateCreated))
+        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
@@ -58,7 +59,7 @@ object JsonFormats {
       realName = (json \ "user_realname").as[String],
       ticketId = (json \ "ticket_id").as[String],
       content = (json \ "content").as[String],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(comment: Comment): JsValue = {
@@ -69,7 +70,7 @@ object JsonFormats {
         "user_name"     -> JsString(comment.username),
         "user_realname" -> JsString(comment.realName),
         "content"       -> JsString(comment.content),
-        "date_created"  -> JsString(dateFormatter.format(comment.dateCreated))
+        "date_created"  -> JsString(dateFormatter.print(comment.dateCreated))
       )
       toJson(cdoc)
     }
@@ -124,7 +125,7 @@ object JsonFormats {
       eType = (json \ "etype").as[String],
       content = (json \ "content").as[String],
       url = (json \ "url").as[String],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(event: Event): JsValue = {
@@ -137,7 +138,7 @@ object JsonFormats {
         "etype"         -> JsString(event.eType),
         "content"       -> JsString(event.content),
         "url"           -> JsString(event.url),
-        "date_created"  -> JsString(dateFormatter.format(event.dateCreated))
+        "date_created"  -> JsString(dateFormatter.print(event.dateCreated))
       )
       toJson(edoc)
     }
@@ -158,7 +159,7 @@ object JsonFormats {
       childId     = (json \ "parent_id").as[String],
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(l: FullLink): JsValue = {
@@ -184,7 +185,7 @@ object JsonFormats {
         "child_id"        -> JsString(l.childId),
         "child_resolution_id" -> childRes,
         "child_summary"  -> JsString(l.childSummary),
-        "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)
     }
@@ -253,7 +254,7 @@ object JsonFormats {
       position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
       description = (json \ "description").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(ticket: FullTicket): JsValue = {
@@ -299,7 +300,7 @@ object JsonFormats {
         "short_summary"   -> JsString(ticket.abbreviatedSummary()),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(Renderer.render(ticket.description)),
-        "date_created"    -> JsString(dateFormatter.format(ticket.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated))
       )
       toJson(tdoc)
     }
@@ -313,7 +314,7 @@ object JsonFormats {
     def reads(json: JsValue): Group = Group(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(obj: Group): JsValue = {
@@ -321,7 +322,7 @@ object JsonFormats {
       val doc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(obj.id.get),
         "name"            -> JsString(obj.name),
-        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
@@ -338,7 +339,7 @@ object JsonFormats {
       typeName    = (json \ "name").as[String],
       parentId    = (json \ "parent_id").as[String],
       childId     = (json \ "child_id").as[String],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(l: Link): JsValue = {
@@ -350,7 +351,7 @@ object JsonFormats {
         "name_i18n"       -> JsString(Messages(l.typeName)),
         "parent_id"       -> JsString(l.parentId),
         "child_id"        -> JsString(l.childId),
-        "date_created"    -> JsString(dateFormatter.format(l.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)
     }
@@ -372,7 +373,7 @@ object JsonFormats {
       defaultSeverityId = (json \ "default_severity_id").as[Option[Long]],
       defaultTypeId = (json \ "default_type_id").as[Option[Long]],
       defaultAssignee = (json \ "default_assignee").as[Option[Int]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(obj: Project): JsValue = {
@@ -414,7 +415,7 @@ object JsonFormats {
         "default_severity_id" -> sev,
         "default_type_id" -> ttype,
         "default_assignee" -> defAssign,
-        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
@@ -436,7 +437,7 @@ object JsonFormats {
       location    = (json \ "location").as[Option[String]],
       title       = (json \ "title").as[Option[String]],
       url         = (json \ "url").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parse(d) }).getOrElse(new Date())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatter.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(obj: User): JsValue = {
@@ -452,7 +453,7 @@ object JsonFormats {
         "location"        -> optionStringtoJsValue(obj.location),
         "title"           -> optionStringtoJsValue(obj.title),
         "url"             -> optionStringtoJsValue(obj.url),
-        "date_created"    -> JsString(dateFormatter.format(obj.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }

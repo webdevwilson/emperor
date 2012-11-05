@@ -9,7 +9,7 @@ import play.api.mvc._
 import play.db._
 import emp._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.GroupModel
 import models.UserModel
 
@@ -19,7 +19,7 @@ object Group extends Controller with Secured {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.Group.apply)(models.Group.unapply)
   )
 

@@ -2,13 +2,14 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 
-case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: Date)
+case class Workflow(id: Pk[Long] = NotAssigned, name: String, description: Option[String], dateCreated: DateTime)
 
 case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: String, position: Int)
 
@@ -32,7 +33,7 @@ object WorkflowModel {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
     get[Option[String]]("description") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~description~dateCreated => Workflow(id, name, description, dateCreated)
     }
   }

@@ -2,7 +2,8 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import java.util.Date
+import emp.util.AnormExtension._
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Logger
 import play.api.Play.current
@@ -23,7 +24,7 @@ case class PermissionScheme(
   id: Pk[Long] = NotAssigned,
   name: String,
   description: Option[String],
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 case class PermissionSchemeGroup(
@@ -32,7 +33,7 @@ case class PermissionSchemeGroup(
   permissionId: String,
   groupId: Long,
   groupName: String,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 case class PermissionSchemeUser(
@@ -42,7 +43,7 @@ case class PermissionSchemeUser(
   userId: Long,
   username: String,
   realName: String,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 object PermissionSchemeModel {
@@ -79,7 +80,7 @@ object PermissionSchemeModel {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
     get[Option[String]]("description") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~description~dateCreated => PermissionScheme(
         id = id,
         name = name,
@@ -95,7 +96,7 @@ object PermissionSchemeModel {
     get[String]("permission_id") ~
     get[Long]("group_id") ~
     get[String]("name") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~permSchemeId~permId~groupId~name~dateCreated => PermissionSchemeGroup(
         id = id,
         permissionSchemeId = permSchemeId,
@@ -114,7 +115,7 @@ object PermissionSchemeModel {
     get[Long]("user_id") ~
     get[String]("username") ~
     get[String]("realname") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~permSchemeId~permId~userId~username~realName~dateCreated => PermissionSchemeUser(
         id = id,
         permissionSchemeId = permSchemeId,

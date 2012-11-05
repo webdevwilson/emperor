@@ -2,8 +2,9 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 
@@ -12,7 +13,7 @@ case class TicketPriority(
   name: String,
   color: String,
   position: Int,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 object TicketPriorityModel {
@@ -30,7 +31,7 @@ object TicketPriorityModel {
     get[String]("name") ~
     get[String]("color") ~
     get[Int]("position") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~color~position~dateCreated => TicketPriority(
         id = id,
         name = name,

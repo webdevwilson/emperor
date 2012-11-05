@@ -2,9 +2,10 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.event._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import java.util.regex.Pattern
 import play.api.db.DB
 import play.api.Play.current
@@ -24,7 +25,7 @@ case class Project(
   defaultSeverityId: Option[Long],
   defaultTypeId: Option[Long],
   defaultAssignee: Option[Int],
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 object DefaultAssignee extends Enumeration {
@@ -60,7 +61,7 @@ object ProjectModel {
     get[Option[Long]]("default_severity_id") ~
     get[Option[Long]]("default_ticket_type_id") ~
     get[Option[Int]]("default_assignee") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~workflowId~seqCurr~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
         id = id, workflowId = workflowId, name = name, key = pkey,
         sequenceCurrent = seqCurr, permissionSchemeId = permId, ownerId = ownerId,

@@ -2,7 +2,7 @@ package controllers.admin
 
 import anorm._
 import controllers._
-import java.util.Date
+import org.joda.time.DateTime
 import models.{PermissionSchemeModel,ProjectModel}
 import play.api._
 import play.api.data._
@@ -28,7 +28,7 @@ object PermissionScheme extends Controller with Secured {
       "id" -> ignored(NotAssigned:Pk[Long]),
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "date_created" -> ignored(new Date())
+      "date_created" -> ignored(new DateTime())
     )(models.PermissionScheme.apply)(models.PermissionScheme.unapply)
   )
 

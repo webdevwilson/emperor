@@ -2,7 +2,7 @@ package test
 
 import anorm._
 import anorm.NotAssigned
-import java.util.Date
+import org.joda.time.DateTime
 import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
@@ -138,7 +138,7 @@ class PermissionSchemeModelSpec extends Specification {
 
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
 
-        val group = models.Group(id = NotAssigned, name = "Test Group!", dateCreated = new Date())
+        val group = models.Group(id = NotAssigned, name = "Test Group!", dateCreated = new DateTime())
         val newGroup = GroupModel.create(group)
 
         val iu = models.User(

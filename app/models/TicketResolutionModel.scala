@@ -2,12 +2,13 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination._
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 
-case class TicketResolution(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
+case class TicketResolution(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime)
 
 object TicketResolutionModel {
 
@@ -22,7 +23,7 @@ object TicketResolutionModel {
   val ticket_resolution = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~dateCreated => TicketResolution(id, name, dateCreated)
     }
   }

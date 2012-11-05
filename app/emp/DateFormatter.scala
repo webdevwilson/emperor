@@ -1,21 +1,20 @@
 package emp
 
 import controllers.AuthenticatedRequest
-import java.text.SimpleDateFormat
-import java.util.Date
-
 import collection.JavaConversions._
-import java.util.TimeZone
 
+import org.joda.time.format.{DateTimeFormat,DateTimeFormatter,ISODateTimeFormat}
+import org.joda.time.{DateTime,DateTimeZone}
 
 /**
  * Utilities for formatting dates.
  */
 object DateFormatter {
 
-  val longDateFormatter = new SimpleDateFormat("EEE, MMM d, yyyy")
-  val longDateTimeFormatter = new SimpleDateFormat("HH:mm aa EEE, MMM d, yyyy")
-  val iso8601Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ")
+  val longDateFormatter = DateTimeFormat.forPattern("EEE, MMM d, yyyy")
+  val longDateTimeFormatter = DateTimeFormat.forPattern("HH:mm aa EEE, MMM d, yyyy")
+  val isoFormatter = ISODateTimeFormat.dateTime()
+
   val timeZoneList = Seq(
     ("GMT"       -> "Greenwich Mean Time (GMT)"),
     ("GMT"       -> "Universal Coordinated Time (UTC)"),
@@ -51,30 +50,9 @@ object DateFormatter {
     ("GMT-1:00"  -> "Central African Time (GMT-1)")
   )
 
-  // XXX We have the implicit request and can get the user's timezone here
-
-  def getTimeZones: Seq[(String,String)] = {
-    TimeZone.getAvailableIDs.map { tz => (tz, TimeZone.getTimeZone(tz).getDisplayName)
-    }
+  def displayLongDateTime(dt: DateTime): String = {
+    longDateTimeFormatter.print(dt.withZone(DateTimeZone.forID("America/Chicago")))
   }
 
-  /**
-   * Format a date into "long" date string in the form of `EEE, MMM d, yyyy`.
-   * See also [[java.text.SimpleDateFormat]].
-   */
-  def displayLongDate(date: Date)(implicit request: AuthenticatedRequest): String = {
-    longDateFormatter.format(date)
-  }
-
-  /**
-   * Format a date into "long" date string in the form of `EEE, MMM d, yyyy`.
-   * See also [[java.text.SimpleDateFormat]].
-   */
-  def displayLongDateTime(date: Date)(implicit request: AuthenticatedRequest): String = {
-    longDateTimeFormatter.format(date)
-  }
-
-  def displayISO8601(date: Date)(implicit request: AuthenticatedRequest): String = {
-    iso8601Formatter.format(date)
-  }
+  def displayISO8601(dt: DateTime): String = isoFormatter.print(dt.withZone(DateTimeZone.forID("America/Chicago")))
 }

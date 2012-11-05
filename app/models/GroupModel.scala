@@ -2,8 +2,9 @@ package models
 
 import anorm._
 import anorm.SqlParser._
+import emp.util.AnormExtension._
 import emp.util.Pagination.Page
-import java.util.Date
+import org.joda.time.DateTime
 import play.api.db.DB
 import play.api.Play.current
 import play.Logger
@@ -11,7 +12,7 @@ import play.Logger
 /**
  * Class for groups.
  */
-case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: Date)
+case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime)
 
 /**
  * Class for users in a group.
@@ -22,7 +23,7 @@ case class GroupUser(
   username: String,
   realName: String,
   groupId: Long,
-  dateCreated: Date
+  dateCreated: DateTime
 )
 
 object GroupModel {
@@ -45,7 +46,7 @@ object GroupModel {
   val group = {
     get[Pk[Long]]("id") ~
     get[String]("name") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~name~dateCreated => Group(id, name, dateCreated)
     }
   }
@@ -57,7 +58,7 @@ object GroupModel {
     get[Long]("user_id") ~
     get[String]("username") ~
     get[String]("realname") ~
-    get[Date]("date_created") map {
+    get[DateTime]("date_created") map {
       case id~group_id~user_id~username~realname~date_created => GroupUser(
         id = id,
         groupId = group_id,
