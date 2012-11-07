@@ -5,13 +5,14 @@ import controllers._
 import models.GroupModel
 import models.UserModel
 import org.mindrot.jbcrypt.BCrypt
-import org.joda.time.DateTime
+import org.joda.time.{DateTime,DateTimeZone}
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.libs.json.Json._
 import play.api.mvc._
+import play.api.Play.current
 import play.db._
 
 object User extends Controller with Secured {
@@ -101,7 +102,23 @@ object User extends Controller with Secured {
 
   def create = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    Ok(views.html.admin.user.create(newForm)(request))
+    // Create a default user for filling in the form with the
+    // timezone, which we will default to Joda's "default" time.
+    val defaultUser = models.User(
+      id = Id(1.toLong),
+      username = "",
+      password = "",
+      realName = "",
+      timezone = Play.configuration.getString("emperor.timezone").getOrElse(DateTimeZone.getDefault().getID),
+      email = "",
+      organization = None,
+      location = None,
+      title = None,
+      url = None,
+      dateCreated = new DateTime()
+    )
+
+    Ok(views.html.admin.user.create(newForm.fill(defaultUser))(request))
   }
 
   def index(page: Int, count: Int) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>

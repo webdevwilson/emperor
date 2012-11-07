@@ -1,5 +1,6 @@
 @(objForm: Form[(User)])(implicit request: AuthenticatedRequest)
 
+@import emp.DateFormatter
 @import helper._
 @import helper.bootstrap._
 
@@ -19,9 +20,14 @@
   @helper.inputText(objForm("username"), '_label -> Messages("user.username"))
   @helper.inputPassword(objForm("password"), '_label -> Messages("user.password"))
   @helper.inputText(objForm("realName"), '_label -> Messages("user.realname"))
+  @helper.select(field = objForm("timezone"), options = DateFormatter.timeZoneList, '_label -> Messages("user.timezone"))
   @helper.input(objForm("email"), '_label -> Messages("user.email")) { (id, name, value, args) =>
-      <input type="email" name="@name" id="@id" @toHtmlArgs(args)>
+   <input type="email" name="@name" value="@value" id="@id" @toHtmlArgs(args)>
   }
+  @helper.inputText(objForm("location"), '_label -> Messages("user.location"))
+  @helper.inputText(objForm("url"), '_label -> Messages("user.url"))
+  @helper.inputText(objForm("organization"), '_label -> Messages("user.organization"))
+  @helper.inputText(objForm("title"), '_label -> Messages("user.title"))
   <div class="form-actions">
    <a href="@routes.Admin.index" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
