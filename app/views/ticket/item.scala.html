@@ -20,16 +20,16 @@
 
  <div class="span2">
   <div id="ticket-info" class="well well-small" data-spy="affix" data-offset-top="0">
-   <div class="btn-group">
-    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-      @ticket.ticketId
-      <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
-     <li><a href="@routes.Ticket.edit(ticket.ticketId)"><i class="icon-edit"></i> @Messages("ticket.action.edit")</a></li>
-     <li><a data-toggle="modal" href="#assigner"><i class="icon-user"></i> @Messages("ticket.action.assign")</a></li>
-    </ul>
-   </div>
+    <div class="btn-group">
+     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+       <i class="icon-cog"></i> @Messages("ticket.action.more")
+       <span class="caret"></span>
+     </a>
+     <ul class="dropdown-menu">
+      <li><a href="@routes.Ticket.edit(ticket.ticketId)"><i class="icon-edit"></i> @Messages("ticket.action.edit")</a></li>
+      <li><a data-toggle="modal" href="#assigner"><i class="icon-user"></i> @Messages("ticket.action.assign")</a></li>
+     </ul>
+    </div>
    <span class="label label-prime">@if(ticket.resolution.id.isDefined) { @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")) } else { @Messages(ticket.status.name) }</span>
    <label>@Messages("ticket.type")</label>
    <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
@@ -48,41 +48,47 @@
 
 <div class="span10">
  <div id="ticket-head" data-ticket="@ticket.ticketId">
- <div class="row-fluid" id="ticket-header" data-ticket="@ticket.ticketId">
-  <h2>
-    @Messages("ticket.summary.with.id", ticket.ticketId, ticket.summary)
-  </h2>
-  <div class="btn-toolbar pull-right">
-   @if(ticket.resolution.id.isEmpty) {
-   <div class="btn-group">
-    @previousStatus match {
-     case Some(status) => {
-    <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+ <div class="row-fluid" data-ticket="@ticket.ticketId">
+  <div class="span6">
+   <h2>
+    @ticket.summary
+   </h2>
+   <h4>
+    <a href="@routes.Project.item(ticket.project.id)">@ticket.project.name</a>: @ticket.ticketId
+   </h4>
+  </div>
+  <div class="span6">
+   <div class="btn-toolbar pull-right">
+    @if(ticket.resolution.id.isEmpty) {
+    <div class="btn-group">
+     @previousStatus match {
+      case Some(status) => {
+     <a href="#status-revert" class="btn btn-warning" data-toggle="modal"><i class="icon-arrow-left icon-white"></i> @Messages("ticket.revert", Messages(status.name))</a>
+      }
+      case None => { }
+      }
+     <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
+     @nextStatus match {
+      case Some(status) => {
+     <a class="btn btn-primary" data-toggle="modal" id="btn-advance" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
+      }
+      case None => {
+     <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
+      }
      }
-     case None => { }
-     }
-    <a href="#" class="btn disabled">@Messages(ticket.status.name)</a>
-    @nextStatus match {
-     case Some(status) => {
-    <a class="btn btn-primary" data-toggle="modal" id="btn-advance" href="#status-advance">@Messages("ticket.advance", Messages(status.name)) <i class="icon-arrow-right icon-white"></i></a>
-     }
-     case None => {
-    <a href="#" class="btn disabled">@Messages("ticket.advance.end")</a>
-     }
+    </div>
     }
-   </div>
-   }
-   <div class="btn-group">
-    @if(ticket.resolution.id.isDefined) {
-    <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
-    } else {
-    <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-ok icon-white"></i> @Messages("ticket.resolve")</a>
-    }
+    <div class="btn-group">
+     @if(ticket.resolution.id.isDefined) {
+     <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+     } else {
+     <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-check icon-white"></i> @Messages("ticket.resolve")</a>
+     }
+    </div>
    </div>
   </div>
  </div>
 </div>
-
 
    <div class="well well-small ticket-desc">
     @if(ticket.description.isDefined) {

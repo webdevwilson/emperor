@@ -234,6 +234,7 @@ search.results=Search Results
 
 ticket.action.assign=Assign
 ticket.action.edit=Edit
+ticket.action.more=More Actions
 ticket.add=Add Ticket
 ticket.add.success=Ticket Added
 ticket.add.failure=Error Creating Ticket XXX
@@ -299,7 +300,6 @@ ticket.success.resolution=Ticket Resolved
 ticket.success.status=Ticket Status Changed
 ticket.success.unresolution=Ticket Unresolved
 ticket.summary=Summary
-ticket.summary.with.id={0}: {1}
 ticket.severity=Severity
 ticket.status=Status
 ticket.ticket=Ticket
