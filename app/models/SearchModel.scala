@@ -620,8 +620,6 @@ object SearchModel {
 
     val user = UserModel.getById(ft.user.id)
 
-    println("COMM DC " + comment.dateCreated)
-
     SearchModel.indexEvent(Event(
       projectId     = ft.project.id,
       projectName   = ft.project.name,
@@ -807,6 +805,20 @@ object SearchModel {
     // Reindex all tickets and their history
     TicketModel.getAllCurrentFull.foreach { ticket =>
       indexTicket(ticket)
+
+      indexEvent(Event(
+        projectId     = ticket.project.id,
+        projectName   = ticket.project.name,
+        userId        = ticket.user.id,
+        userRealName  = ticket.user.name,
+        eKey          = ticket.ticketId,
+        eType         = "ticket_create",
+        content       = ticket.summary,
+        url           = "",
+        dateCreated   = ticket.dateCreated
+      ))
+
+
       val count = TicketModel.getAllFullCountById(ticket.ticketId)
       if(count > 1) {
         TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {

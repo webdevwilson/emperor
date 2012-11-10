@@ -96,19 +96,37 @@ object Search {
    */
   def runQuery(indexer: Indexer, index: String, query: SearchQuery, filterMap: Map[String,String], sortMap: Map[String,String], facets: Map[String,String] = Map.empty, filterProjects: Boolean = true): SearchResponse = {
 
-    // Make a bool filter to collect all our filters together
-    val finalFilter: BoolFilterBuilder = boolFilter
+    val termFilters: Option[FilterBuilder] = if(query.filters.nonEmpty) {
 
-    val termFilters : Iterable[Seq[FilterBuilder]] = query.filters.filter { kv =>
-      kv._1 != "project_id" && filterMap.get(kv._1).isDefined
-    } map {
-      case (key, values) => values.map { v =>
-        termFilter(filterMap.get(key).getOrElse(key), v).asInstanceOf[FilterBuilder]
+      // Filter out filter keys of project_id or keys that do not have
+      // and entry in the filterMap, which is a list of user-facing keys to
+      // index fields.
+      val valid = query.filters.filter({ kv =>
+        kv._1 != "project_id" && filterMap.get(kv._1).isDefined
+      })
+      if(valid.nonEmpty) {
+        val afilt = andFilter()
+        valid.foreach({ kv =>
+          kv._2.foreach({ v =>
+            afilt.add(
+              // Create a term filter for each supplied filter (and value)
+              // Use the filter map to turn a passed in field name into an indexed
+              // field name.  We can use get because we verified in the filter that
+              // each key was present.
+              termFilter(filterMap.get(kv._1).get, v)
+            )
+          })
+        })
+        Some(afilt)
+      } else {
+        None
       }
+    } else {
+      None
     }
 
     // There are some rare cases where we don't want the project filter added.
-    if(filterProjects) {
+    val projFilters = if(filterProjects) {
       // Get the projects this user can see
       val pids = ProjectModel.getVisibleProjectIds(query.userId).map { p => p.toString }
 
@@ -119,17 +137,35 @@ object Search {
       }
 
       // Definitely going to have a project filter, everyone does
-      val projFilter = orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*)
-      // Add this to our bool filter
-      finalFilter.must(projFilter)
+      if(finalPids.nonEmpty) {
+        Some(orFilter(finalPids.map { pid => termFilter("project_id", pid).asInstanceOf[FilterBuilder] }:_*))
+      } else {
+        None
+      }
+    } else {
+      None
     }
 
-    // Might not have user filters
-    if(!termFilters.isEmpty) {
-      val userFilter = andFilter(termFilters.flatten.toSeq:_*)
-      finalFilter.must(userFilter)
+    val qq = queryString(if(query.query.isEmpty) "*" else query.query)
+
+    val actualQuery = if(termFilters.isDefined || projFilters.isDefined) {
+      val finalFilter: BoolFilterBuilder = boolFilter
+      if(termFilters.isDefined) finalFilter.must(termFilters.get)
+      if(projFilters.isDefined) finalFilter.must(projFilters.get)
+      filteredQuery(qq, finalFilter)
+    } else {
+      qq
     }
-    val actualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
+
+    // Make a bool filter to collect all our filters together
+    // val finalFilter: BoolFilterBuilder = boolFilter
+
+    // Might not have user filters
+    // if(!termFilters.isEmpty) {
+    //   val userFilter = andFilter(termFilters.flatten.toSeq:_*)
+    //   finalFilter.must(userFilter)
+    // }
+    // val actualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
 
     Logger.debug("Running ES query:")
     Logger.debug(actualQuery.toString)

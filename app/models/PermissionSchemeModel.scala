@@ -57,7 +57,7 @@ object PermissionSchemeModel {
   val getByNameQuery = SQL("SELECT * from permission_schemes WHERE name={name}")
   val getGroupsForPermissionQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
   val getGroupsQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id}")
-  val getPermForUserQuery = SQL("SELECT source FROM full_permissions WHERE (project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}) OR (project_id={project_id} AND permission_id='PERM_PROJECT_ADMIN' AND user_id={user_id}) OR (project_key='EMPCORE' AND permission_id='PERM_GLOBAL_ADMIN' AND user_id={user_id}) LIMIT 1")
+  val getPermForUserQuery = SQL("SELECT CAST(source as CHAR) AS source FROM full_permissions WHERE (project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}) OR (project_id={project_id} AND permission_id='PERM_PROJECT_ADMIN' AND user_id={user_id}) OR (project_key='EMPCORE' AND permission_id='PERM_GLOBAL_ADMIN' AND user_id={user_id}) LIMIT 1")
   val getUsersForPermissionQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
   val getUsersQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id}")
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
@@ -268,7 +268,7 @@ object PermissionSchemeModel {
       getPermForUserQuery.on(
         'project_id     -> projectId,
         'permission_id  -> perm,
-        'user_id         -> userId
+        'user_id        -> userId
       ).as(scalar[String].singleOpt)
     }
   }
