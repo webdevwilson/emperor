@@ -3,8 +3,10 @@ package controllers
 import emp._
 import emp.util.Search._
 import play.api._
+import play.api.libs.concurrent.Akka
 import play.api.mvc._
 import play.api.mvc.Security._
+import play.api.Play.current
 import play.db._
 import models.{ProjectModel,SearchModel}
 import org.slf4j.{Logger,LoggerFactory}
@@ -30,7 +32,7 @@ object Core extends Controller with Secured {
 
     val query = SearchQuery(userId = userId, filters = filters, page = page, count = count)
 
-    val response = SearchModel.searchEvent(query) // XX fixed page, count, query
+    val response = SearchModel.searchEvent(query)
 
     Ok(views.html.index(response, projects))
   }
