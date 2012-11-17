@@ -310,6 +310,8 @@ object Ticket extends Controller with Secured {
     maybeTicket match {
       case Some(ticket) => {
 
+        val wf = WorkflowModel.getForTicket(ticket.ticketId)
+        val wfs = WorkflowModel.getStatuses(wf.get.id.get)
         val prevStatus = WorkflowModel.getPreviousStatus(ticket.workflowStatusId)
         val nextStatus = WorkflowModel.getNextStatus(ticket.workflowStatusId)
 
@@ -355,6 +357,7 @@ object Ticket extends Controller with Secured {
               commentForm = commentForm,
               history = history,
               historyFacets = historyFacets,
+              statuses = wfs,
               previousStatus = prevStatus,
               nextStatus = nextStatus,
               linkTypes = ltypes
@@ -388,6 +391,7 @@ object Ticket extends Controller with Secured {
               commentForm = commentForm,
               comments = commRes,
               // commFacets = commFacets,
+              statuses = wfs,
               previousStatus = prevStatus,
               nextStatus = nextStatus,
               linkTypes = ltypes

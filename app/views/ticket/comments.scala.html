@@ -6,6 +6,7 @@
   assignForm: Form[models.Assignment],
   commentForm: Form[models.Comment],
   comments: emp.util.Search.SearchResult[models.Comment],
+  statuses: Seq[WorkflowStatus],
   previousStatus: Option[WorkflowStatus],
   nextStatus: Option[WorkflowStatus],
   linkTypes: List[models.TicketLinkType]
@@ -16,7 +17,7 @@
 @import helper.bootstrap._
 @import views.html.util._
 
-@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, statuses = statuses, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
 <div class="tabcontent">
  <div class="navbar">
   <div class="navbar-inner">

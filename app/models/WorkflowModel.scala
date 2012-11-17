@@ -16,8 +16,9 @@ case class WorkflowStatus(id: Pk[Long], workflowId: Long, statusId: Long, name: 
 object WorkflowModel {
 
   val allQuery = SQL("SELECT * FROM workflows")
-  val allStatuses = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.workflow_id={id}")
+  val allStatuses = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.workflow_id={id} ORDER BY position ASC")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
+  val getWorkflowForTicketQuery = SQL("SELECT wf.* FROM full_tickets ft JOIN projects p ON p.id = ft.project_id JOIN workflows wf ON wf.id = p.workflow_id WHERE ticket_id={ticket_id}")
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.id={id}")
   val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
@@ -81,6 +82,13 @@ object WorkflowModel {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(workflow.singleOpt)
+    }
+  }
+
+  def getForTicket(ticketId: String): Option[Workflow] = {
+
+    DB.withConnection { implicit conn =>
+      getWorkflowForTicketQuery.on('ticket_id -> ticketId).as(workflow.singleOpt)
     }
   }
 
