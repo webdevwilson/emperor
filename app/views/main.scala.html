@@ -20,9 +20,9 @@
     <script src="@routes.Assets.at("js/jquery-1.7.2.min.js")"></script>
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
     <script src="@routes.Assets.at("js/handlebars-1.0.0.beta.6.js")"></script>
-    <script src="http://yui.yahooapis.com/3.7.3/build/yui/yui-min.js"></script>
-    <script src="@routes.Assets.at("js/config.js")"></script>
     <script src="@routes.Assets.at("js/jquery.timeago.js")"></script>
+    <script src="@routes.Assets.at("js/knockout-2.2.0.js")"></script>
+    <script src="@routes.Assets.at("js/sammy.min.js")"></script>
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -82,60 +82,6 @@
      <div class="footer">
       @Html(Messages("app.footer.blurb", emp.BuildInfo.version))
      </div>
-
-   <script type="text/javascript">
-    YUI().use('emperor-models', 'base', 'view', 'node', 'io-base', function (Y) {
-      jQuery("time").timeago();
-      if(!Y.one("#ticket-head")) {
-        var linkTicket = new Y.LinkTicket({ id: 1 });
-        linkTicket.load();
-        Y.PartialLinkerView = Y.Base.create('partialLinkerView', Y.View, [], {
-          template: Y.one("#partial-linker-template").getHTML(),
-          initializer: function () {
-            var model = this.get('model');
-
-            model.after('change', this.render, this);
-            model.after('destroy', this.destroy, this);
-          },
-          render: function () {
-            var container = this.get('container');
-            var source   = this.template;
-            var template = Handlebars.compile(source);
-            var html = template(this.get('model').toJSON());
-
-            container.setHTML(html);
-
-            return this;
-          },
-        }, {
-          ATTRS: {
-            container: {
-              valueFn: function () {
-                return Y.one('#linker');
-              }
-            }
-          }
-        });
-
-        var partLinkView = new Y.PartialLinkerView({ model: linkTicket });
-        partLinkView.render();
-      }
-    });
-    </script>
-   <script id="partial-linker-template" type="text/x-handlebars-template">
-    <div class="link-item">
-    {{#if ticket_id}}
-     <a class="btn btn-primary disabled" data-toggle="dropdown" href="#">
-       @Messages("ticket.linker.label") <i></i>{{ticket_id}}
-     </a>
-    {{/if}}
-    </div>
-   </script>
-   <script id="alerter" type="text/x-handlebars-template">
-    <div class="alert {{alert_class}}">
-     <a class="close" data-dismiss="alert" href="#">&times;</a>
-     {{message}}
-    </div>
-   </script>
+    <script src="@routes.Assets.at("js/emp.js")"></script>
   </body>
 </html>

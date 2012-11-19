@@ -19,20 +19,20 @@ object Ticket extends Controller with Secured {
     ticket match {
       case Some(t) => {
 
-        val prevStatus = WorkflowModel.getPreviousStatus(t.workflowStatusId)
-        val nextStatus = WorkflowModel.getNextStatus(t.workflowStatusId)
+        // val prevStatus = WorkflowModel.getPreviousStatus(t.workflowStatusId)
+        // val nextStatus = WorkflowModel.getNextStatus(t.workflowStatusId)
 
-        val statuses: Map[String,Option[WorkflowStatus]] = Map(
-          "previous" -> prevStatus,
-          "next" -> nextStatus
-        )
+        // val statuses: Map[String,Option[WorkflowStatus]] = Map(
+        //   "previous" -> prevStatus,
+        //   "next" -> nextStatus
+        // )
 
-        val apiTick: Map[String,JsValue] = Map(
-          "ticket" -> Json.toJson(t),
-          "workflow" -> Json.toJson(statuses)
-        )
+        // val apiTick: Map[String,JsValue] = Map(
+        //   "ticket" -> Json.toJson(t),
+        //   "workflow" -> Json.toJson(statuses)
+        // )
 
-        val json = Json.toJson(apiTick)
+        val json = Json.toJson(t)
         callback match {
           case Some(callback) => Ok(Jsonp(callback, json))
           case None => Ok(json)

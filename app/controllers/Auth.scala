@@ -108,10 +108,14 @@ trait Secured {
           val maybeProjectId = if(projectId.isDefined) {
             projectId
           } else if(ticketId.isDefined) {
+            Logger.debug("TIIIIICKET")
             // Got a ticket id.  Fetch the ticket to get the project
             TicketModel.getById(ticketId.get) match {
               case Some(ticket) => Some(ticket.projectId)
-              case None => None
+              case None => {
+                Logger.debug("ADASDASD " + ticketId.get)
+                None
+              }
             }
           } else {
             // Worse case, get the core Emperor project
@@ -126,13 +130,22 @@ trait Secured {
                   Logger.debug("Granted via " + cause)
                   f(AuthenticatedRequest(user, request))
                 }
-                case None => onUnauthorized(request)
+                case None => {
+                  Logger.debug("Denied " + perm + " to user " + user.id.get)
+                  onUnauthorized(request)
+                }
               }
             }
-            case None => onUnauthorized(request)
+            case None => {
+              Logger.debug("Denied " + perm + " to user " + user.id.get + " due to missing project.");
+              onUnauthorized(request)
+            }
           }
         }
-        case None => onUnauthenticated(request)
+        case None => {
+          Logger.debug("Denied " + perm + " to unknown user");
+          onUnauthenticated(request)
+        }
       }
     }
   }

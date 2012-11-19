@@ -181,8 +181,8 @@ object JsonFormats {
       val ldoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(l.id.get),
         "type_id"         -> JsNumber(l.typeId),
-        "name"            -> JsString(l.typeName),
-        "name_i18n"       -> JsString(Messages(l.typeName)),
+        "type_name"            -> JsString(l.typeName),
+        "type_name_i18n"       -> JsString(Messages(l.typeName)),
         "parent_id"       -> JsString(l.parentId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),

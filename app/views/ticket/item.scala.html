@@ -49,9 +49,7 @@
 
  <div class="span10">
   <div id="ticket-head" data-ticket="@ticket.ticketId">
-   <h2>
-    @ticket.summary
-   </h2>
+   <h2 data-bind="text: ticket().summary"></h2>
    <h4>
     <a href="@routes.Project.item(ticket.project.id)">@ticket.project.name</a>: @ticket.ticketId
    </h4>
@@ -76,6 +74,11 @@
     @Messages("ticket.description.none")
    }
   </div>
+  <table class="table table-striped table-condensed ticket-links" data-bind="foreach: links">
+   <tr>
+    <td data-bind="text: id"></td>
+   </tr>
+  </table>
   <div id="link-body">
   @if(!links.isEmpty) {
    <h4><a class="accordion-toggle" data-toggle="collapse" data-parent="#link-body" href="#link-contents"><i class="icon-foo"></i>@Messages("ticket.links")</a></h4>
@@ -105,17 +108,6 @@
  <div id="tabarea">
   @content
  </div>
-<script>
-YUI().use('pjax', function (Y) {
-    var pjax = new Y.Pjax({
-      container: '#tabarea',
-      contentSelector: '.tabcontent'
-    });
-    pjax.on('load', function(e) {
-      jQuery("time").timeago();
-    })
-});
-</script>
  </div>
 </div>
 
@@ -215,143 +207,6 @@ YUI().use('pjax', function (Y) {
  </div>
  }
 </div>
-<script type="text/javascript">
-  YUI().use('emperor-models', 'base', 'view', 'node', 'pjax', 'io-base', function (Y) {
-
-    var refreshLinks = function (transactionid, response, arguments) {
-      var pjax = new Y.Pjax({
-        container: '#link-body',
-        contentSelector: '#link-body'
-      });
-      pjax.navigate('@controllers.routes.Ticket.item("comments", ticket.ticketId)');
-    }
-
-    var showAlert = function (transactionId, response, arguments) {
-      Y.ShowAlert('alert-error', response.responseText);
-    }
-
-    Y.LinkerView = Y.Base.create('linkerView', Y.View, [], {
-      events: {
-        '#btn-start': { click: 'start' },
-        '.remover': { click: 'stop' },
-        '.linker': { click: 'link' }
-      },
-      template: Y.one("#linker-template").getHTML(),
-      initializer: function () {
-        var model = this.get('model');
-
-        model.after('change', this.render, this);
-        model.after('destroy', this.render, this);
-      },
-      render: function () {
-        var container = this.get('container');
-        var source   = this.template;
-        var template = Handlebars.compile(source);
-        var html = template(this.get('model').toJSON());
-
-        container.setHTML(html);
-
-        return this;
-      },
-      start: function(e) {
-        var model = this.get('model');
-        model.set("ticket_id", '@ticket.ticketId').save();
-      },
-      stop: function(e) {
-        var model = this.get('model');
-        // Causes a PUT with an empty ticket id. Hackish
-        model.set("ticket_id", null).save();
-      },
-      link: function(e) {
-        var model = this.get('model');
-        var t = e.currentTarget;
-        var type = t.getAttribute('data-linktype');
-        var invert = t.getAttribute('data-inverse');
-
-        var ticketId = '@ticket.ticketId';
-        var childId = model.get("ticket_id");
-        if(invert == 'true') {
-          ticketId = model.get("ticket_id");
-          childId = '@ticket.ticketId';
-        }
-
-        var uri = '/api/ticket/link/' + ticketId
-
-        var link = {
-          link_type_id: parseInt(type),
-          child_ticket_id: childId
-        };
-
-        var cfg = {
-          method: 'PUT',
-          data: JSON.stringify(link),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          on: {
-            success: refreshLinks,
-            failure: showAlert
-          }
-        };
-
-        var request = Y.io(uri, cfg);
-      }
-    }, {
-      ATTRS: {
-        container: {
-          valueFn: function () {
-            return Y.one('#linker');
-          }
-        }
-      }
-    });
-
-    var linkTicket = new Y.LinkTicket({ id: '@ticket.ticketId' });
-    linkTicket.load();
-
-    var linkerView = new Y.LinkerView({ model: linkTicket });
-    linkerView.render();
-
-    Y.one("#link-body").delegate('click', function(e) {
-      var linkid = e.currentTarget.getAttribute('data-linkid');
-
-      var uri = '/api/ticket/link/@ticket.ticketId/' + linkid
-
-      var cfg = {
-        method: 'DELETE',
-        on: {
-          success: refreshLinks,
-          failure: showAlert
-        }
-      };
-
-      var request = Y.io(uri, cfg);
-    }, '.remover');
-  });
-</script>
-<script id="linker-template" type="text/x-handlebars-template">
-<div class="link-item">
-{{#if ticket_id}}
- <a class="btn btn-primary dropdown-toggle {{#if disabled}}disabled{{/if}}" data-toggle="dropdown" href="#">
-   @Messages("ticket.linker.label") <i></i>{{ticket_id}}: {{short_summary}}
-   <span class="caret"></span>
- </a>
- <ul id="link-menu" class="dropdown-menu">
-   @linkTypes.map { ltype =>
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId"><i class="icon-magnet"></i> @Messages("ticket.linker.link", ticket.ticketId, Messages(ltype.name)) <i></i>{{ticket_id}}</a></li>
-   @if(ltype.invertable) {
-   <li><a href="#" class="linker" data-linktype="@ltype.id.get" data-parent="@ticket.ticketId" data-inverse="true"><i class="icon-magnet"></i> @Messages("ticket.linker.link", ticket.ticketId, Messages(ltype.name + "_INVERT")) <i></i>{{ticket_id}}</a></li>
-   }
-   }
-   <li class="divider"></li>
-   <li><a href="/ticket/{{ticket_id}}"><i class="icon-eye-open"></i> @Messages("ticket.linker.view") <i></i>{{ticket_id}}</a></li>
-   <li><a href="#" class="remover"><i class="icon-eject"></i> @Messages("ticket.linker.remove") <i></i>{{ticket_id}}</a></li>
- </ul>
-{{else}}
-<a class="btn" id="btn-start">@Messages("ticket.linker.action")</a>
-{{/if}}
-</div>
-</script>
 }
 
 
