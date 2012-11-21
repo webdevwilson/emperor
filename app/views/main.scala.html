@@ -23,6 +23,7 @@
     <script src="@routes.Assets.at("js/jquery.timeago.js")"></script>
     <script src="@routes.Assets.at("js/knockout-2.2.0.js")"></script>
     <script src="@routes.Assets.at("js/sammy.min.js")"></script>
+    <script src="@routes.Assets.at("js/jquery.pjax.js")"></script>
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -83,5 +84,12 @@
       @Html(Messages("app.footer.blurb", emp.BuildInfo.version))
      </div>
     <script src="@routes.Assets.at("js/emp.js")"></script>
+    <!-- XXX This should go -->
+    <script id="alerter" type="text/x-handlebars-template">
+     <div class="alert {{alert_class}}">
+      <a class="close" data-dismiss="alert" href="#">&times;</a>
+      {{message}}
+     </div>
+    </script>
   </body>
 </html>

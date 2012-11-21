@@ -156,7 +156,7 @@ object JsonFormats {
     def reads(json: JsValue): FullLink = FullLink(
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
-      typeName    = (json \ "name").as[String],
+      typeName    = (json \ "type_name").as[String],
       parentId    = (json \ "parent_id").as[String],
       parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
       parentSummary = (json \ "parent_summary").as[String],
@@ -181,14 +181,14 @@ object JsonFormats {
       val ldoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(l.id.get),
         "type_id"         -> JsNumber(l.typeId),
-        "type_name"            -> JsString(l.typeName),
-        "type_name_i18n"       -> JsString(Messages(l.typeName)),
+        "type_name"       -> JsString(l.typeName),
+        "type_name_i18n"  -> JsString(Messages(l.typeName)),
         "parent_id"       -> JsString(l.parentId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),
         "child_id"        -> JsString(l.childId),
         "child_resolution_id" -> childRes,
-        "child_summary"  -> JsString(l.childSummary),
+        "child_summary"   -> JsString(l.childSummary),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)
