@@ -108,14 +108,10 @@ trait Secured {
           val maybeProjectId = if(projectId.isDefined) {
             projectId
           } else if(ticketId.isDefined) {
-            Logger.debug("TIIIIICKET")
             // Got a ticket id.  Fetch the ticket to get the project
             TicketModel.getById(ticketId.get) match {
               case Some(ticket) => Some(ticket.projectId)
-              case None => {
-                Logger.debug("ADASDASD " + ticketId.get)
-                None
-              }
+              case None => None
             }
           } else {
             // Worse case, get the core Emperor project

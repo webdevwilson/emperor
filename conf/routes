@@ -117,6 +117,7 @@ GET     /search                         controllers.Search.index(page: Int ?= 1,
 
 GET     /stack                          controllers.Stack.index
 
+GET     /ticket/change/:id              controllers.Ticket.change(id: String)
 GET     /ticket/create                  controllers.Ticket.create(project: Option[Long] ?= None)
 GET     /ticket/:id                     controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 GET     /ticket/comments/:id            controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")

@@ -210,6 +210,13 @@ object Ticket extends Controller with Secured {
     )
   }
 
+  // XXX This would be a good place for a different type of permission, since this isn't really
+  // editing.
+  def change(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
+
+    TicketModel.getFullById(ticketId).map({ ticket => Ok(views.html.ticket.change(ticket)) }).getOrElse(NotFound)
+  }
+
   def comment(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_COMMENT") { implicit request =>
 
     commentForm.bindFromRequest.fold(

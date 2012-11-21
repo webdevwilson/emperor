@@ -28,24 +28,25 @@ function TicketViewModel() {
   var self = this;
   self.ticket = ko.observable(new Ticket({}));
   self.links = ko.observableArray([]);
+  self.desiredStatus = ko.observable();
 
-  $.getJSON("http://127.0.0.1:9000/api/ticket/SCOUT-28?callback=?")
-  .done(function(allData) { self.ticket(new Ticket(allData)); console.log(self.ticket()) })
+  $.getJSON("http://127.0.0.1:9000/api/ticket/FO-5?callback=?")
+  .done(function(allData) { self.ticket(new Ticket(allData)) })
   .fail(function(err) { console.log(err); })
 
-  $.getJSON("/api/ticket/link/SCOUT-28", function(allData) {
+  $.getJSON("/api/ticket/link/FO-5?callback=?")
+  .done(function(allData) {
     var mappedLinks = $.map(allData, function(item) { return new TicketLink(item) });
     self.links(mappedLinks);
-  });
+  })
+  .fail(function(err) { console.log(err); })
+
+  self.changeState = function(statusId) {
+    console.log("asdasd: " + statusId)
+    self.desiredStatus({ "foo": "bar" })
+  }
+  self.cancelState = function() { self.desiredStatus(null) }
 }
 
-$.getJSON("/api/ticket/SCOUT-29");
+ko.applyBindings(new TicketViewModel());
 
-var foo = new TicketViewModel();
-
-ko.applyBindings(foo);
-
-foo.ticket.subscribe(function(newValue) {
-    console.log("NEW!");
-    console.log(newValue);
-});
