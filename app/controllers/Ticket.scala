@@ -331,7 +331,7 @@ object Ticket extends Controller with Secured {
 
         val assignees = UserModel.getAssignable(projectId = Some(ticket.project.id)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
 
-        tab match {
+        val ret = tab match {
           case "history"  => {
 
             val changeFilters = Map("ticket_id" -> Seq(ticketId))
@@ -371,13 +371,6 @@ object Ticket extends Controller with Secured {
               sortBy = Some("date_created"), sortOrder = Some("asc")
             )
             val commRes = SearchModel.searchComment(q)
-            // val comments = Page(commRes.hits.hits, page, count, commRes.hits.totalHits)
-
-            // val commFacets = commRes.facets.facets.map { facet =>
-            //   facet match {
-            //     case t: InternalLongTermsFacet => t
-            //   }
-            // } filter { f => f.entries.size > 1 }
 
             Ok(views.html.ticket.comments(
               ticket = ticket,
@@ -387,11 +380,23 @@ object Ticket extends Controller with Secured {
               assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
               commentForm = commentForm,
               comments = commRes,
-              // commFacets = commFacets,
               statuses = wfs
             )(request))
           }
         }
+        // Populate an in-session list of recently viewed tickets
+        val recents: String = session.get("recent_tickets").map({ rt =>
+          val rs = rt.split(",").toSeq
+          if(rs.contains(ticketId)) {
+            // If it's already in there, don't add it again
+            rt
+          } else {
+            // It's not there so append it after reducing the Seq to 9 + 1 items,
+            // as we don't want it to grow indefinitely.
+            rs.take(9) ++ Seq(ticketId) mkString(",")
+          }
+        }).getOrElse(ticketId)
+        ret.withSession(session + ("recent_tickets" -> recents))
       }
       case None => NotFound
     }
