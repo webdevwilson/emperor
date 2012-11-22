@@ -160,15 +160,19 @@ object Ticket extends Controller with Secured {
 
     ticket match {
       case Some(value) => {
+        val wf = WorkflowModel.getForTicket(ticketId).get;
+
         statusChangeForm.bindFromRequest.fold(
           errors => {
-            val prevStatus = WorkflowModel.getPreviousStatus(value.workflowStatusId)
-            val nextStatus = WorkflowModel.getNextStatus(value.workflowStatusId)
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
           }, {
             case statusChange: models.StatusChange => {
-              TicketModel.changeStatus(ticketId, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
-              Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
+              if(WorkflowModel.verifyStatusInWorkflow(wf.id.get, statusChange.statusId)) {
+                TicketModel.changeStatus(ticketId, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
+                Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
+              } else {
+                Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status.invalid")
+              }
             }
           }
         )
@@ -212,9 +216,12 @@ object Ticket extends Controller with Secured {
 
   // XXX This would be a good place for a different type of permission, since this isn't really
   // editing.
-  def change(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
+  def change(ticketId: String, statusId: Long) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    TicketModel.getFullById(ticketId).map({ ticket => Ok(views.html.ticket.change(ticket)) }).getOrElse(NotFound)
+    // XXX This will blow up!
+    val status = TicketStatusModel.getById(statusId).get
+
+    TicketModel.getFullById(ticketId).map({ ticket => Ok(views.html.ticket.change(ticket, status, commentForm)) }).getOrElse(NotFound)
   }
 
   def comment(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_COMMENT") { implicit request =>
@@ -319,22 +326,10 @@ object Ticket extends Controller with Secured {
 
         val wf = WorkflowModel.getForTicket(ticket.ticketId)
         val wfs = WorkflowModel.getStatuses(wf.get.id.get)
-        val prevStatus = WorkflowModel.getPreviousStatus(ticket.workflowStatusId)
-        val nextStatus = WorkflowModel.getNextStatus(ticket.workflowStatusId)
-
-        val links = TicketModel.getLinks(ticketId).groupBy( l =>
-          if(l.childId == ticketId) {
-            l.typeName + "_INVERT"
-          } else {
-            l.typeName
-          }
-        )
 
         val resolutions = TicketResolutionModel.getAll.map { reso => (reso.id.get.toString -> Messages(reso.name)) }
 
         val assignees = UserModel.getAssignable(projectId = Some(ticket.project.id)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
-
-        val ltypes = TicketLinkTypeModel.getAll
 
         tab match {
           case "history"  => {
@@ -356,7 +351,6 @@ object Ticket extends Controller with Secured {
 
             Ok(views.html.ticket.history(
               ticket = ticket,
-              links = links,
               assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
@@ -364,10 +358,7 @@ object Ticket extends Controller with Secured {
               commentForm = commentForm,
               history = history,
               historyFacets = historyFacets,
-              statuses = wfs,
-              previousStatus = prevStatus,
-              nextStatus = nextStatus,
-              linkTypes = ltypes
+              statuses = wfs
             )(request))
           }
           case _ => {
@@ -390,7 +381,6 @@ object Ticket extends Controller with Secured {
 
             Ok(views.html.ticket.comments(
               ticket = ticket,
-              links = links,
               assignees = assignees,
               resolutions = resolutions,
               resolveForm = resolveForm,
@@ -398,10 +388,7 @@ object Ticket extends Controller with Secured {
               commentForm = commentForm,
               comments = commRes,
               // commFacets = commFacets,
-              statuses = wfs,
-              previousStatus = prevStatus,
-              nextStatus = nextStatus,
-              linkTypes = ltypes
+              statuses = wfs
             )(request))
           }
         }

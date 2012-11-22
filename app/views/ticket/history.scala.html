@@ -1,5 +1,4 @@
 @(ticket: models.FullTicket,
-  links: Map[String,List[models.FullLink]],
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   assignForm: Form[models.Assignment],
@@ -7,17 +6,14 @@
   resolveForm: Form[models.Resolution],
   history: emp.util.Pagination.Page[org.elasticsearch.search.SearchHit],
   historyFacets: Seq[org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet],
-  statuses: Seq[WorkflowStatus],
-  previousStatus: Option[WorkflowStatus],
-  nextStatus: Option[WorkflowStatus],
-  linkTypes: List[models.TicketLinkType]
+  statuses: Seq[WorkflowStatus]
 )(implicit request: AuthenticatedRequest)
 
 @import helper.bootstrap._
 @import emp.util.Links
 @import views.html.util._
 
-@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, statuses = statuses, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, assignees = assignees, resolutions = resolutions, assignForm = assignForm, commentForm = commentForm, resolveForm = resolveForm, statuses = statuses) {
 <div class="tabcontent">
   <div class="navbar">
    <div class="navbar-inner">

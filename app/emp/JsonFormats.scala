@@ -64,9 +64,6 @@ object JsonFormats {
     )
 
     def writes(comment: Comment): JsValue = {
-      println("COMMENT")
-      println(dateFormatter.print(comment.dateCreated))
-
       val cdoc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(comment.id.get),
         "ticket_id"     -> JsString(comment.ticketId),
@@ -183,6 +180,7 @@ object JsonFormats {
         "type_id"         -> JsNumber(l.typeId),
         "type_name"       -> JsString(l.typeName),
         "type_name_i18n"  -> JsString(Messages(l.typeName)),
+        "type_name_i18n_inverted" -> JsString(Messages(l.typeName + "_INVERT")),
         "parent_id"       -> JsString(l.parentId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),

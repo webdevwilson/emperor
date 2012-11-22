@@ -42,6 +42,7 @@ function TicketLink(ticketId, data) {
   this.typeId       = ko.observable(data.type_id);
   this.typeName     = ko.observable(data.type_name);
   this.typeNameI18N = ko.observable(data.type_name_i18n);
+  this.typeNameI18NInverted = ko.observable(data.type_name_i18n_inverted);
   this.parentId     = ko.observable(data.parent_id);
   this.parentResolutionId = ko.observable(data.parent_resolution_id);
   this.parentSummary= ko.observable(data.parent_summary);
@@ -72,6 +73,13 @@ function TicketLink(ticketId, data) {
       return this.childSummary()
     }
   }, this);
+  this.visibleType = ko.computed(function() {
+    if(this.ticketId() === this.childId()) {
+      return this.typeNameI18NInverted()
+    } else {
+      return this.typeNameI18N()
+    }
+  }, this);
   this.visibleURL = ko.computed(function() {
     return "/ticket/" + this.visibleTicketId()
   }, this);
@@ -91,8 +99,14 @@ function TicketViewModel(ticketId) {
     .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve links!") })
   }
 
-  self.changeState = function(statusId) {
-    console.log("asdasd: " + statusId)
+  self.changeState = function(ticketId, statusId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    setTimeout(function(){
+      $modal.load("/ticket/change/" + ticketId + "/" + statusId, '', function(){
+        $modal.modal();
+      });
+    }, 1000);
   }
 
   self.removeLink = function(data) {

@@ -1,15 +1,11 @@
 @(ticket: models.FullTicket,
-  links: Map[String,List[models.FullLink]],
   assignees: List[(String,String)],
   resolutions: List[(String,String)],
   resolveForm: Form[models.Resolution],
   assignForm: Form[models.Assignment],
   commentForm: Form[models.Comment],
   comments: emp.util.Search.SearchResult[models.Comment],
-  statuses: Seq[WorkflowStatus],
-  previousStatus: Option[WorkflowStatus],
-  nextStatus: Option[WorkflowStatus],
-  linkTypes: List[models.TicketLinkType]
+  statuses: Seq[WorkflowStatus]
 )(implicit request: AuthenticatedRequest)
 
 @import emp.DateFormatter
@@ -17,7 +13,7 @@
 @import helper.bootstrap._
 @import views.html.util._
 
-@item(ticket = ticket, links = links, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, statuses = statuses, previousStatus = previousStatus, nextStatus = nextStatus, linkTypes = linkTypes) {
+@item(ticket = ticket, assignees = assignees, resolutions = resolutions, commentForm = commentForm, resolveForm = resolveForm, assignForm = assignForm, statuses = statuses) {
 <div class="tabcontent">
  <div class="navbar">
   <div class="navbar-inner">
