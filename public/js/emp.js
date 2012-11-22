@@ -72,6 +72,9 @@ function TicketLink(ticketId, data) {
       return this.childSummary()
     }
   }, this);
+  this.visibleURL = ko.computed(function() {
+    return "/ticket/" + this.visibleTicketId()
+  }, this);
 }
 
 function TicketViewModel(ticketId) {

@@ -82,7 +82,7 @@
       <tbody data-bind="foreach: links()">
        <tr>
         <td class="type" data-bind="text: typeNameI18N"></td>
-        <td class="link"><a data-bind="text: visibleTicketId(), css: { strike: visibleResolved() }"></a></td>
+        <td class="link"><a data-bind="attr: { href: visibleURL() }, text: visibleTicketId(), css: { strike: visibleResolved() }"></a></td>
         <td class="link" data-bind="text: visibleTicketSummary()"></td>
         <td class="actions"><a data-bind="click: removeLink"><i class="remover icon-remove"></a></td>
        </tr>
