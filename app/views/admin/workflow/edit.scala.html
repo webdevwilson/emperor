@@ -19,7 +19,6 @@
   @helper.inputText(objForm("name"), '_label -> Messages("workflow.name"))
   @helper.inputText(objForm("description"), '_label -> Messages("workflow.description"))
   <div class="form-actions">
-   <a href="@controllers.admin.routes.Workflow.index()" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
   </div>
  </fieldset>
