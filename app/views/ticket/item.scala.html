@@ -25,6 +25,7 @@
      <ul class="dropdown-menu">
       <li><a href="@routes.Ticket.edit(ticket.ticketId)"><i class="icon-edit"></i> @Messages("ticket.action.edit")</a></li>
       <li><a data-toggle="modal" href="#assigner"><i class="icon-user"></i> @Messages("ticket.action.assign")</a></li>
+      <li><a data-bind="click: makeLink.bind($data, '@ticket.ticketId')"><i class="icon-resize-small"></i> @Messages("ticket.action.link")</a></li>
      </ul>
     </div>
    <span class="label label-prime">@if(ticket.resolution.id.isDefined) { @Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")) } else { @Messages(ticket.status.name) }</span>

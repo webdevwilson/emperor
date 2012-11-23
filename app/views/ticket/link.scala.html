@@ -1,0 +1,22 @@
+@(ticket: models.FullTicket, linkTypes: List[(String,String)], linkForm: Form[models.MakeLink])(implicit request: Request[AnyContent])
+
+@import helper._
+@import helper.bootstrap._
+
+@helper.form(action = routes.Ticket.doLink(ticket.ticketId), args = 'method -> "POST") {
+<div class="modal-header">
+ <button type="button" class="close" data-dismiss="modal">×</button>
+ <h3>@Messages("ticket.linker.action")</h3>
+</div>
+<div class="modal-body">
+ <fieldset>
+  @helper.select(field = linkForm("link_type_id"), options = linkTypes, args = '_label -> Messages("ticket.linker.link", ticket.ticketId))
+  @helper.inputText(field = linkForm("other_ticket_id"), args = '_label -> Messages("ticket.linker.otherticket"))
+  @helper.textarea(field = linkForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+ </fieldset>
+</div>
+<div class="modal-footer">
+ <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+ <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("ticket.linker.confirm")</button>
+</div>
+}

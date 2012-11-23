@@ -102,11 +102,17 @@ function TicketViewModel(ticketId) {
   self.changeState = function(ticketId, statusId) {
     var $modal = $("#ajax-modal");
     $('body').modalmanager('loading');
-    setTimeout(function(){
-      $modal.load("/ticket/change/" + ticketId + "/" + statusId, '', function(){
-        $modal.modal();
-      });
-    }, 1000);
+    $modal.load("/ticket/change/" + ticketId + "/" + statusId, '', function(){
+      $modal.modal();
+    });
+  }
+
+  self.makeLink = function(ticketId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    $modal.load("/ticket/link/" + ticketId, '', function(){
+      $modal.modal();
+    });
   }
 
   self.removeLink = function(data) {

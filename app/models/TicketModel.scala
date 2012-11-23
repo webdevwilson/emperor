@@ -21,6 +21,15 @@ case class Comment(
 )
 
 /**
+ * Class for a making a link. Used with link form.
+ */
+case class MakeLink(
+  linkTypeId: Long,
+  otherTicketId: String,
+  comment: Option[String]
+)
+
+/**
  * Class for a status change.  Used with status change form.
  */
 case class StatusChange(

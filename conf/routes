@@ -128,6 +128,8 @@ GET     /ticket/edit/:id                controllers.Ticket.edit(id: String)
 POST    /ticket                         controllers.Ticket.add
 POST    /ticket/assign/:id              controllers.Ticket.doAssign(id: String)
 POST    /ticket/comment/:id             controllers.Ticket.comment(id: String)
+GET     /ticket/link/:id                controllers.Ticket.link(id: String)
+POST    /ticket/link/:id                controllers.Ticket.doLink(id: String)
 POST    /ticket/resolve/:id             controllers.Ticket.doResolve(id: String)
 POST    /ticket/status/:id              controllers.Ticket.status(id: String)
 POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: String)

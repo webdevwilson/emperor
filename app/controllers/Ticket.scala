@@ -26,6 +26,14 @@ import com.codahale.jerkson.Json._
 
 object Ticket extends Controller with Secured {
 
+  val linkForm = Form(
+    mapping(
+      "link_type_id"-> longNumber,
+      "other_ticket_id" -> nonEmptyText,
+      "comment"     -> optional(text)
+    )(models.MakeLink.apply)(models.MakeLink.unapply)
+  )
+
   val statusChangeForm = Form(
     mapping(
       "status_id" -> longNumber,
@@ -151,33 +159,6 @@ object Ticket extends Controller with Secured {
         )
       }
       case None => BadRequest(views.html.ticket.error(request))
-    }
-  }
-
-  def status(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
-
-    val ticket = TicketModel.getFullById(ticketId)
-
-    ticket match {
-      case Some(value) => {
-        val wf = WorkflowModel.getForTicket(ticketId).get;
-
-        statusChangeForm.bindFromRequest.fold(
-          errors => {
-            Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
-          }, {
-            case statusChange: models.StatusChange => {
-              if(WorkflowModel.verifyStatusInWorkflow(wf.id.get, statusChange.statusId)) {
-                TicketModel.changeStatus(ticketId, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
-                Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
-              } else {
-                Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status.invalid")
-              }
-            }
-          }
-        )
-      }
-      case None => NotFound
     }
   }
 
@@ -397,6 +378,86 @@ object Ticket extends Controller with Secured {
           }
         }).getOrElse(ticketId)
         ret.withSession(session + ("recent_tickets" -> recents))
+      }
+      case None => NotFound
+    }
+  }
+
+  // XXX Different permissions
+  def link(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
+
+    TicketModel.getFullById(ticketId).map({ ticket =>
+      val linkTypes = TicketLinkTypeModel.getAll.flatMap(ltype => {
+        if(ltype.invertable) {
+          // Include the INVERT version with a negative ID so we can pick it up on submission. SO CLEVER.
+          List((ltype.id.get.toString -> Messages(ltype.name)), ("-" + ltype.id.get.toString -> Messages(ltype.name + "_INVERT")))
+        } else {
+          List((ltype.id.get.toString -> Messages(ltype.name)))
+        }
+      })
+      Ok(views.html.ticket.link(ticket, linkTypes, linkForm))
+    }).getOrElse(NotFound)
+  }
+
+  def doLink(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
+
+    TicketModel.getById(ticketId).map({ ticket =>
+      linkForm.bindFromRequest.fold(
+        errors => {
+          Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.linker.failure")
+        }, {
+          case value: models.MakeLink => {
+            value.comment.map({ comm =>
+              TicketModel.addComment(ticketId, request.user.id.get, comm)
+            })
+
+            // Set the parent & child using type.  Negative means to invert.
+            // SO CLEVER.
+            val ltype = value.linkTypeId
+            val parentId = if(ltype < 0) {
+              value.otherTicketId
+            } else {
+              ticketId
+            }
+            val childId = if(ltype < 0) {
+              ticketId
+            } else {
+              value.otherTicketId
+            }
+
+            TicketModel.link(
+              linkTypeId = Math.abs(ltype), parentId = parentId, childId = childId
+            )
+
+            Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.linker.success")
+          }
+        }
+      )
+    }).getOrElse(NotFound)
+  }
+
+  def status(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
+
+    val ticket = TicketModel.getFullById(ticketId)
+
+    ticket match {
+      case Some(value) => {
+        val wf = WorkflowModel.getForTicket(ticketId).get;
+
+        statusChangeForm.bindFromRequest.fold(
+          errors => {
+            Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status")
+          }, {
+            case statusChange: models.StatusChange => {
+              if(WorkflowModel.verifyStatusInWorkflow(wf.id.get, statusChange.statusId)) {
+                TicketModel.changeStatus(ticketId, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
+                Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
+              } else {
+                Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status.invalid")
+              }
+            }
+          }
+        )
       }
       case None => NotFound
     }
