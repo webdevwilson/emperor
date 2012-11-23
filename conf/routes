@@ -90,15 +90,21 @@ POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long
 GET     /api/group/startswith           controllers.api.Group.startsWith(q: Option[String], callback: Option[String])
 PUT     /api/group/:id/:userId          controllers.api.Group.addUser(id: Long, userId: Long, callback: Option[String])
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long, callback: Option[String])
+
 DELETE  /api/permission_scheme/:id/:perm/group/:groupId controller.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
 DELETE  /api/permission_scheme/:id/:perm/user/:userId controller.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
+
 GET     /api/project/:id                controllers.api.Project.item(id: Long, callback: Option[String])
+
 GET     /api/ticket/link/:ticketId      controllers.api.Ticket.links(ticketId: String, callback: Option[String])
 PUT     /api/ticket/link/:ticketId      controllers.api.Ticket.link(ticketId: String, callback: Option[String])
 DELETE  /api/ticket/link/:ticketId/:id  controllers.api.Ticket.deleteLink(ticketId: String, id: Long, callback: Option[String])
+GET     /api/ticket/startswith          controllers.api.Ticket.startsWith(q: Option[String], callback: Option[String])
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String, callback: Option[String])
+
 GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String, callback: Option[String])
 PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String, callback: Option[String])
+
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String], callback: Option[String])
 
 GET     /auth/login                     controllers.Auth.login(redirectUrl: String ?= "/")

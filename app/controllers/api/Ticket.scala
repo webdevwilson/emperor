@@ -99,4 +99,25 @@ object Ticket extends Controller with Secured {
       case None => Ok(json)
     }
   }
+
+    def startsWith(q: Option[String], callback: Option[String]) = IsAuthenticated() { implicit request =>
+
+    q match {
+      case Some(query) => {
+
+        val sq = emp.util.Search.SearchQuery(
+          userId = request.user.id.get, page = 1, count = 10, query = "ticket_id: " + query + "*"
+        )
+        val res = SearchModel.searchTicket(sq)
+
+        val tickets = res.pager.items.map({ ticket => ticket.ticketId }).toSeq;
+
+        callback match {
+          case Some(callback) => Ok(Jsonp(callback, Json.toJson(tickets)))
+          case None => Ok(Json.toJson(tickets))
+        }
+      }
+      case None => NotFound
+    }
+  }
 }

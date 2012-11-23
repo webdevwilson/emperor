@@ -31,7 +31,6 @@ object Group extends Controller with Secured {
    * Add a user to the specified group.
    */
   def addUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
-    println("WHAT THE FUCK")
     GroupModel.addUser(userId, id) // XXX This should return something…
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {
@@ -44,7 +43,7 @@ object Group extends Controller with Secured {
    * Remove a user from the specified group.
    */
   def removeUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
-    GroupModel.removeUser(userId, id);
+    GroupModel.removeUser(userId, id) // XXX This should return something…
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
