@@ -100,7 +100,7 @@ object Ticket extends Controller with Secured {
     }
   }
 
-    def startsWith(q: Option[String], callback: Option[String]) = IsAuthenticated() { implicit request =>
+  def startsWith(q: Option[String], callback: Option[String]) = IsAuthenticated() { implicit request =>
 
     q match {
       case Some(query) => {
