@@ -102,19 +102,9 @@ object PermissionScheme extends Controller with Secured {
 
   def item(pmId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    PermissionSchemeModel.getById(pmId) match {
-      case Some(value) => {
-
-        val perms = PermissionSchemeModel.getAllPermissions
-
-        val pgg = PermissionSchemeModel.getGroups(pmId).groupBy( pg => pg.permissionId )
-        val pgu = PermissionSchemeModel.getUsers(pmId).groupBy(pu => pu.permissionId )
-
-        Ok(views.html.admin.permission_scheme.item(value, perms, pgg, pgu)(request))
-      }
-      case None => NotFound
-    }
-
+    PermissionSchemeModel.getById(pmId).map({
+      value => Ok(views.html.admin.permission_scheme.item(value))
+    }).getOrElse(NotFound)
   }
 
   def update(pmId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>

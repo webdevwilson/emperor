@@ -10,6 +10,8 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
+// XXX All thse reads IDs should be NotAssigned…
+
 /**
  * Code for converting Emperor entities into JSON.
  */
@@ -356,6 +358,109 @@ object JsonFormats {
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)
+    }
+  }
+
+  /**
+   * JSON conversion for Permission
+   */
+  implicit object PermissionFormat extends Format[Permission] {
+
+    // This should be a boolean (global)
+    def reads(json: JsValue): Permission = Permission(
+      name  = (json \ "name").as[String],
+      global = (json \ "global").as[Int]
+    )
+
+    def writes(obj: Permission): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "id"          -> JsString(obj.name),
+        "name"        -> JsString(obj.name),
+        "nameI18N"    -> JsString(Messages(obj.name)),
+        "description" -> JsString(obj.name + "_DESC"),
+        "descriptionI18N" -> JsString(Messages(obj.name + "_DESC")),
+        "global"      -> JsNumber(obj.global)
+      )
+      toJson(doc)
+    }
+  }
+
+ /**
+   * JSON conversion for PermissionSchemeGroup
+   */
+  implicit object PermissionSchemeGroupFormat extends Format[PermissionSchemeGroup] {
+
+    // This should be a boolean (global)
+    def reads(json: JsValue): PermissionSchemeGroup = PermissionSchemeGroup(
+      id                = Id((json \ "id").as[Long]),
+      permissionSchemeId= (json \ "permissionSchemeId").as[Long],
+      permissionId      = (json \ "permissionId").as[String],
+      groupId           = (json \ "groupId").as[Long],
+      groupName         = (json \ "groupName").as[String],
+      dateCreated       = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: PermissionSchemeGroup): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "id"                -> JsNumber(obj.id.get),
+        "permissionSchemeId"-> JsNumber(obj.permissionSchemeId),
+        "permissionId"      -> JsString(obj.permissionId),
+        "groupId"           -> JsNumber(obj.groupId),
+        "groupName"         -> JsString(obj.groupName),
+        "dateCreated"       -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for PermissionSchemeUser
+   */
+  implicit object PermissionSchemeUserFormat extends Format[PermissionSchemeUser] {
+
+    // This should be a boolean (global)
+    def reads(json: JsValue): PermissionSchemeUser = PermissionSchemeUser(
+      id                = Id((json \ "id").as[Long]),
+      permissionSchemeId= (json \ "permissionSchemeId").as[Long],
+      permissionId      = (json \ "permissionId").as[String],
+      userId            = (json \ "userId").as[Long],
+      username          = (json \ "userName").as[String],
+      realName          = (json \ "realName").as[String],
+      dateCreated       = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: PermissionSchemeUser): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "id"                -> JsNumber(obj.id.get),
+        "permissionSchemeId"-> JsNumber(obj.permissionSchemeId),
+        "permissionId"      -> JsString(obj.permissionId),
+        "userId"            -> JsNumber(obj.userId),
+        "username"          -> JsString(obj.username),
+        "realName"          -> JsString(obj.realName),
+        "dateCreated"       -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  implicit object PermissionSchemeFormat extends Format[PermissionScheme] {
+
+    def reads(json: JsValue): PermissionScheme = PermissionScheme(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      description = (json \ "description").as[Option[String]],
+      dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: PermissionScheme): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "id"          -> JsNumber(obj.id.get),
+        "name"        -> JsString(obj.name),
+        "nameI18N"    -> JsString(Messages(obj.name + "_DESC")),
+        "description" -> optionStringtoJsValue(obj.description),
+        "dateCreated" -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
     }
   }
 

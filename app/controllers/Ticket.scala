@@ -21,6 +21,7 @@ import org.elasticsearch.search.facet.terms.longs.InternalLongTermsFacet
 import org.elasticsearch.search.facet.terms.strings.InternalStringTermsFacet
 import org.elasticsearch.search.sort._
 import org.joda.time.DateTime
+import scala.math._
 
 import com.codahale.jerkson.Json._
 
@@ -426,7 +427,7 @@ object Ticket extends Controller with Secured {
             }
 
             TicketModel.link(
-              linkTypeId = Math.abs(ltype), parentId = parentId, childId = childId
+              linkTypeId = abs(ltype), parentId = parentId, childId = childId
             )
 
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.linker.success")

@@ -91,6 +91,10 @@ GET     /api/group/startswith           controllers.api.Group.startsWith(q: Opti
 PUT     /api/group/:id/:userId          controllers.api.Group.addUser(id: Long, userId: Long, callback: Option[String])
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long, callback: Option[String])
 
+GET     /api/permission                 controllers.api.Permission.index(callback: Option[String])
+
+GET     /api/permission_scheme/:id/users/:permissionId controller.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
+GET     /api/permission_scheme/:id/groups/:permissionId controller.api.PermissionScheme.permissionGroups(id: Long, permissionId: String, callback: Option[String])
 DELETE  /api/permission_scheme/:id/:perm/group/:groupId controller.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
 DELETE  /api/permission_scheme/:id/:perm/user/:userId controller.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
 

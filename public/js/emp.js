@@ -25,6 +25,13 @@ function ShowAlert(aclass, message) {
   }
 }
 
+function Permission(data, users, groups) {
+  this.nameI18N       = ko.observable(data.nameI18N);
+  this.descriptionI18N= ko.observable(data.descriptionI18N);
+  this.users          = ko.observableArray(users);
+  this.groups         = ko.observableArray(groups);
+}
+
 function Ticket(data) {
   this.id           = ko.observable(data.id);
   this.ticketId     = ko.observable(data.ticket_id);
@@ -125,4 +132,24 @@ function TicketViewModel(ticketId) {
   }
 
   showLinks();
+}
+
+function AdminPermissionSchemeViewModel(permissionSchemeId) {
+  var self = this
+  self.permissions = ko.observableArray([]);
+
+  $.getJSON("/api/permission")
+  .done(function(data) {
+    var mappedPerms = $.map(data, function(item) {
+
+      var perm = new Permission(item, [], []);
+
+      var users = $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/users/" + item.name)
+        .done(function(data) { perm.users(data) });
+      var groups= $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/groups/" + item.name)
+        .done(function(data) { perm.groups(data) });
+      return perm;
+    });
+    self.permissions(mappedPerms);
+  })
 }

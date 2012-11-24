@@ -1,5 +1,5 @@
-@(ps: models.PermissionScheme, perms: List[models.Permission], permGroups: Map[String,List[PermissionSchemeGroup]], permUsers: Map[String,List[PermissionSchemeUser]])(implicit request: AuthenticatedRequest)
-@main(Messages("admin.permission_scheme.with.id", ps.name)) {
+@(ps: models.PermissionScheme)(implicit request: AuthenticatedRequest)
+@main(Messages("admin.permission_scheme.with.id", Messages(ps.name))) {
 <ul class="breadcrumb">
  <li>
   <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
@@ -17,176 +17,31 @@
    <th>@Messages("admin.permission_scheme.users")</th>
   </tr>
  </thead>
- <tbody>
-  @perms.map { perm =>
+ <tbody data-bind="foreach: permissions()">
   <tr>
-   <td><strong>@Messages(perm.name)</strong><p><small>@Messages(perm.name + "_DESC")</small></p></td>
+   <td><strong data-bind="text: nameI18N"></strong><p><small data-bind="text: descriptionI18N"></small></p></td>
    <td>
-    <ul class="clearfix grid gridded-list">
-    @permGroups.get(perm.name).map { groups =>
-      @groups.map { group =>
-       <li><i data-permission-id="@perm.name" data-group-id="@group.id.get" class="group-remover remover icon-remove"></i> <a href="@controllers.admin.routes.Group.item(group.groupId)">@group.groupName</a></li>
-      }
-    }
+    <ul class="clearfix grid gridded-list" data-bind="foreach: groups()">
+     <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: groupName"></a></li>
     </ul>
-    <a class="btn btn-mini clearfix group-adder" data-permission-id="@perm.name" data-permission-name="@Messages(perm.name)">@Messages("admin.permission_scheme.group.add")</a>
+    <a class="btn btn-mini clearfix">@Messages("admin.permission_scheme.group.add")</a>
    </td>
    <td>
-    <ul class="clearfix grid gridded-list">
-    @permUsers.get(perm.name).map { users =>
-      @users.map { user =>
-       <li><i data-permission-id="@perm.name" data-user-id="@user.id.get" class="user-remover remover icon-remove"></i> <a href="@controllers.admin.routes.User.item(user.userId)">@user.username</a></li>
-      }
-    }
+    <ul class="clearfix grid gridded-list" data-bind="foreach: users()">
+     <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: username"></a></li>
     </ul>
-    <a class="btn btn-mini clearfix user-adder" data-permission-id="@perm.name" data-permission-name="@Messages(perm.name)">@Messages("admin.permission_scheme.user.add")</a>
-   </td>
-  </tr>
-  }
+    <a class="btn btn-mini clearfix">@Messages("admin.permission_scheme.user.add")</a>
+  </td>
+  <tr>
  </tbody>
 </table>
 <script>
-YUI().use('emperor-models', 'autocomplete', 'autocomplete-highlighters', 'panel', function (Y) {
-
-  var showAlert = function (transactionId, response, arguments) {
-    Y.ShowAlert('alert-error', response.responseText);
-  }
-
-  Y.one("#perm-table").delegate('click', function(e) {
-
-    var target = e.target;
-    var template = Handlebars.compile(Y.one("#group-modal").getHTML());
-    var html = template({
-      permission_id: target.getAttribute('data-permission-id'),
-      permission_name: target.getAttribute('data-permission-name')
-    });
-
-    var nestedPanel = new Y.Panel({
-      headerContent: '@Messages("admin.permission_scheme.group.add.title")',
-      bodyContent: html,
-      zIndex     : 1031,
-      centered   : true,
-      modal      : true,
-      render     : '#nestedPanel',
-      buttons: [
-        {
-          value  : '@Messages("form.cancel")',
-          section: Y.WidgetStdMod.FOOTER,
-          classNames: 'btn',
-          action : function (e) {
-            e.preventDefault();
-            nestedPanel.destroy(true);
-          }
-        },
-        {
-          value  : '@Messages("form.submit")',
-          section: Y.WidgetStdMod.FOOTER,
-          classNames: ['btn','btn-primary'],
-          action : function (e) {
-            Y.one("#add-group-form").submit();
-          }
-        }
-      ]
-    });
-    var acNode = Y.one('#ac-input-group');
-    acNode.plug(Y.Plugin.AutoComplete, {
-      resultHighlighter: 'startsWith',
-      resultTextLocator: function (result) {
-        return result.name;
-      },
-      source: '/api/group/startswith?q={query}&callback={callback}'
-    });
-    acNode.ac.on('select', function (e) {
-      Y.one('#group_id').set('value', e.result.raw.id)
-    });
-  }, 'a.group-adder');
-
- Y.one("#perm-table").delegate('click', function(e) {
-
-    var target = e.target;
-    var template = Handlebars.compile(Y.one("#user-modal").getHTML());
-    var html = template({
-      permission_id: target.getAttribute('data-permission-id'),
-      permission_name: target.getAttribute('data-permission-name')
-    });
-
-    var nestedPanel = new Y.Panel({
-      headerContent: '@Messages("admin.permission_scheme.user.add.title")',
-      bodyContent: html,
-      zIndex     : 1031,
-      centered   : true,
-      modal      : true,
-      render     : '#nestedPanel',
-      buttons: [
-        {
-          value  : '@Messages("form.cancel")',
-          section: Y.WidgetStdMod.FOOTER,
-          classNames: 'btn',
-          action : function (e) {
-            e.preventDefault();
-            nestedPanel.destroy(true);
-          }
-        },
-        {
-          value  : '@Messages("form.submit")',
-          section: Y.WidgetStdMod.FOOTER,
-          classNames: ['btn','btn-primary'],
-          action : function (e) {
-            Y.one("#add-user-form").submit();
-          }
-        }
-      ]
-    });
-    var acNode = Y.one('#ac-input-user');
-    acNode.plug(Y.Plugin.AutoComplete, {
-      resultHighlighter: 'startsWith',
-      resultTextLocator: function (result) {
-        return result.username + ' (' + result.real_name  + ')';
-      },
-      source: '/api/user/startswith?q={query}&callback={callback}'
-    });
-    acNode.ac.on('select', function (e) {
-      Y.one('#user_id').set('value', e.result.raw.id)
-    });
-  }, 'a.user-adder');
-
-  Y.one("#perm-table").delegate('click', function(e) {
-    var groupid = e.currentTarget.getAttribute('data-group-id');
-    var perm = e.currentTarget.getAttribute('data-permission-id');
-    var uri = '/api/permission_scheme/@ps.id.get/' + perm + '/group/' + groupid;
-    var cfg = {
-      method: 'DELETE',
-      on: {
-        success: function() {
-          e.currentTarget.get('parentNode').remove();
-          Y.ShowAlert('alert-success', '@Messages("admin.permission_scheme.group.remove.success")');
-        },
-        failure: showAlert
-      }
-    };
-    var request = Y.io(uri, cfg);
-    e.preventDefault();
-  }, '.group-remover');
-
-  Y.one("#perm-table").delegate('click', function(e) {
-    var userid = e.currentTarget.getAttribute('data-user-id');
-    var perm = e.currentTarget.getAttribute('data-permission-id');
-    var uri = '/api/permission_scheme/@ps.id.get/' + perm + '/user/' + userid;
-    var cfg = {
-      method: 'DELETE',
-      on: {
-        success: function() {
-          e.currentTarget.get('parentNode').remove();
-          Y.ShowAlert('alert-success', '@Messages("admin.permission_scheme.user.remove.success")');
-        },
-        failure: showAlert
-      }
-    };
-    var request = Y.io(uri, cfg);
-    e.preventDefault();
-  }, '.user-remover');
+$(function(){
+  var view = AdminPermissionSchemeViewModel(@ps.id.get);
+  ko.applyBindings(view);
 });
 </script>
+
 <script id="group-modal" type="text/x-handlebars-template">
 @Messages("admin.permission_scheme.group.add.help")
 {{permission_name}}<br><br>
