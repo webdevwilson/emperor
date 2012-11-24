@@ -90,7 +90,8 @@ POST    /admin/workflow                 controllers.admin.Workflow.add
 POST    /admin/workflow/save/:id        controllers.admin.Workflow.save(id: Long)
 
 GET     /api/group/startswith           controllers.api.Group.startsWith(q: Option[String], callback: Option[String])
-PUT     /api/group/:id/:userId          controllers.api.Group.addUser(id: Long, userId: Long, callback: Option[String])
+GET     /api/group/:id/users            controllers.api.Group.users(id: Long, callback: Option[String])
+PUT     /api/group/:id/:username        controllers.api.Group.addUser(id: Long, username: String, callback: Option[String])
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long, callback: Option[String])
 
 GET     /api/permission                 controllers.api.Permission.index(callback: Option[String])

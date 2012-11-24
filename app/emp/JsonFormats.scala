@@ -324,13 +324,44 @@ object JsonFormats {
     def writes(obj: Group): JsValue = {
 
       val doc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(obj.id.get),
-        "name"            -> JsString(obj.name),
-        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+        "id"          -> JsNumber(obj.id.get),
+        "name"        -> JsString(obj.name),
+        "nameI18N"    -> JsString(Messages(obj.name)),
+        "dateCreated" -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
   }
+
+  /**
+   * JSON conversion for GroupUser
+   */
+  implicit object GroupUserFormat extends Format[GroupUser] {
+
+    def reads(json: JsValue): GroupUser = GroupUser(
+      id          = Id((json \ "id").as[Long]),
+      groupId     = (json \ "groupId").as[Long],
+      userId      = (json \ "userId").as[Long],
+      username    = (json \ "username").as[String],
+      realName    = (json \ "realName").as[String],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: GroupUser): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"          -> JsNumber(obj.id.get),
+        "groupId"     -> JsNumber(obj.groupId),
+        "userId"      -> JsNumber(obj.userId),
+        "username"    -> JsString(obj.username),
+        "realName"    -> JsString(obj.realName),
+        "realNameI18N"-> JsString(Messages(obj.realName)),
+        "dateCreated" -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
 
   /**
    * JSON conversion for Link

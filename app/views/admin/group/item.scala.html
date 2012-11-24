@@ -1,4 +1,4 @@
-@(group: models.Group, userGroups: List[GroupUser])(implicit request: AuthenticatedRequest)
+@(group: models.Group)(implicit request: AuthenticatedRequest)
 @main(Messages("admin.group.with.id", group.name)) {
 <ul class="breadcrumb">
  <li>
@@ -9,71 +9,34 @@
  </li>
  <li class="active">@group.name</li>
 </ul>
-<form id="add-user">
+<form data-bind="submit: addUser">
  <div class="control-group">
   <label class="control-label" for="ac-input">@Messages("admin.group.add.user")</label>
   <div class="controls">
-   <input type="text" id="ac-input"></label>
+   <input id="userInput" type="text" class="typeahead"></label>
   </div>
  </div>
 </form>
 <h2>@Messages("admin.group.members")</h2>
-<div id="user-list">
- <ul class="grid gridded-list" id="group-users">
- @userGroups.map { userGroup =>
-  <li style="min-width: 12em;"><a href="#"><i data-userid="@userGroup.userId" class="remover icon-remove"></i></a> @userGroup.username (@Messages(userGroup.realName))</li>
- }
+<div>
+ <ul class="grid gridded-list" data-bind="foreach: users()">
+  <li style="min-width: 12em;"><i class="remover icon-remove" data-bind="click: removeUser"></i> <span data-bind="text: username()"></span> (<span data-bind="text: realNameI18N"></span>)</li>
+ </ul>
 </div>
-</ul>
-<script type="text/javascript">
+<script>
+$(function(){
+  var view = GroupViewModel(@group.id.get);
+  ko.applyBindings(view);
 
-YUI().use('emperor-models', 'pjax', 'io-base', 'autocomplete', 'autocomplete-highlighters', function (Y) {
-
-  var refreshUsers = function (transactionid, response, arguments) {
-    var pjax = new Y.Pjax({
-      container: '#user-list',
-      contentSelector: '#user-list'
-    });
-    pjax.navigate('@controllers.admin.routes.Group.item(group.id.get)');
-  }
-
-  var showAlert = function (transactionId, response, arguments) {
-    Y.ShowAlert('alert-error', response.responseText);
-  }
-
-  var acNode = Y.one('#ac-input');
-  acNode.plug(Y.Plugin.AutoComplete, {
-    resultHighlighter: 'startsWith',
-    resultTextLocator: function (result) {
-      return result.username // + ' (' + result.real_name + ')';
-    },
-    source: '/api/user/startswith?q={query}&callback={callback}'
+  $('.typeahead').typeahead({ source:
+    function(query, process) {
+      $.getJSON("/api/user/startswith?q=" + query)
+      .done(function(data) {
+        var users = $.map(data, function(u) { return u.username })
+        return process(users);
+      });
+    }
   });
-  acNode.ac.on('select', function (e) {
-    var model = new Y.UserGroup({ id: @group.id, user_id: e.result.raw.id });
-    model.save();
-    Y.ShowAlert('alert-success', '@Messages("admin.group.add.user.success")');
-    acNode.set('value', '');
-    refreshUsers();
-  });
-
-  Y.one("#group-users").get('parentNode').delegate('click', function(e) {
-    var linkid = e.currentTarget.getAttribute('data-userid');
-    var uri = '/api/group/@group.id.get/' + linkid
-    var cfg = {
-      method: 'DELETE',
-      on: {
-        success: function() {
-          Y.ShowAlert('alert-success', '@Messages("admin.group.remove.user.success")');
-          refreshUsers();
-        },
-        failure: showAlert
-      }
-    };
-
-    var request = Y.io(uri, cfg);
-    e.preventDefault();
-  }, '.remover');
 });
 </script>
 }

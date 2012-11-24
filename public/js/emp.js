@@ -25,6 +25,16 @@ function ShowAlert(aclass, message) {
   }
 }
 
+function GroupUser(data) {
+  this.id       = ko.observable(data.id);
+  this.userId   = ko.observable(data.userId);
+  this.groupId  = ko.observable(data.groupId);
+  this.username = ko.observable(data.username);
+  this.realName = ko.observable(data.realName);
+  this.realNameI18N = ko.observable(data.realNameI18N);
+  this.dateCreated = ko.observable(data.dateCreated);
+}
+
 function Permission(data, users, groups) {
   this.name           = ko.observable(data.name);
   this.nameI18N       = ko.observable(data.nameI18N);
@@ -93,48 +103,6 @@ function TicketLink(ticketId, data) {
   }, this);
 }
 
-function TicketViewModel(ticketId) {
-  // Data
-  var self = this;
-  self.links = ko.observableArray([]);
-
-  function showLinks(){
-    $.getJSON("/api/ticket/link/" + ticketId + "?callback=?")
-    .done(function(allData) {
-      var mappedLinks = $.map(allData, function(item) { return new TicketLink(ticketId, item) });
-      self.links(mappedLinks);
-    })
-    .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve links!") })
-  }
-
-  self.changeState = function(ticketId, statusId) {
-    var $modal = $("#ajax-modal");
-    $('body').modalmanager('loading');
-    $modal.load("/ticket/change/" + ticketId + "/" + statusId, '', function(){
-      $modal.modal();
-    });
-  }
-
-  self.makeLink = function(ticketId) {
-    var $modal = $("#ajax-modal");
-    $('body').modalmanager('loading');
-    $modal.load("/ticket/link/" + ticketId, '', function(){
-      $modal.modal();
-    });
-  }
-
-  self.removeLink = function(parent, data) {
-    $.ajax({
-      type: "DELETE",
-      url: "/api/ticket/link/" + ticketId + "/" + data.id()
-    })
-    .done(parent.users.remove(data))
-    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
-  }
-
-  showLinks();
-}
-
 function AdminPermissionSchemeViewModel(permissionSchemeId) {
   var self = this
   self.permissions = ko.observableArray([]);
@@ -187,4 +155,82 @@ function AdminPermissionSchemeViewModel(permissionSchemeId) {
     });
     self.permissions(mappedPerms);
   })
+}
+
+function GroupViewModel(groupId) {
+  var self = this;
+  self.users = ko.observableArray([]);
+
+  self.addUser = function() {
+    var username = $("#userInput").val();
+    $.ajax({
+      type: "PUT",
+      url: "/api/group/" + groupId + "/" + username
+    })
+      .done(function(data) {
+        self.users.push(new GroupUser(data));
+        $("#userInput").val("");
+      })
+      .fail(function() { ShowAlert("alert-error", "XXX Failed to add user!") });
+  }
+
+  self.removeUser = function(data) {
+    $.ajax({
+      type: "DELETE",
+      url: "/api/group/" + groupId + "/" + data.id()
+    })
+      .done(function() {
+        self.users.remove(data)
+      })
+      .fail(function() { ShowALert("alert-error", "XXX Failed to remove user!") });
+  }
+
+  $.getJSON("/api/group/" + groupId + "/users")
+    .done(function(data) {
+      var mappedGUs = $.map(data, function(item) { return new GroupUser(item) });
+      self.users(mappedGUs);
+    })
+    .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve group users!") });
+}
+
+function TicketViewModel(ticketId) {
+  // Data
+  var self = this;
+  self.links = ko.observableArray([]);
+
+  function showLinks(){
+    $.getJSON("/api/ticket/link/" + ticketId + "?callback=?")
+      .done(function(data) {
+        var mappedLinks = $.map(data, function(item) { return new TicketLink(ticketId, item) });
+        self.links(mappedLinks);
+      })
+      .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve links!") });
+  }
+
+  self.changeState = function(ticketId, statusId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    $modal.load("/ticket/change/" + ticketId + "/" + statusId, '', function(){
+      $modal.modal();
+    });
+  }
+
+  self.makeLink = function(ticketId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    $modal.load("/ticket/link/" + ticketId, '', function(){
+      $modal.modal();
+    });
+  }
+
+  self.removeLink = function(parent, data) {
+    $.ajax({
+      type: "DELETE",
+      url: "/api/ticket/link/" + ticketId + "/" + data.id()
+    })
+    .done(parent.users.remove(data))
+    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
+  }
+
+  showLinks();
 }

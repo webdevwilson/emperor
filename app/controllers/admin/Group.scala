@@ -58,13 +58,9 @@ object Group extends Controller with Secured {
 
   def item(groupId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    val group = GroupModel.getById(groupId)
-    val userGroups = GroupModel.getGroupUsersForGroup(groupId)
-
-    group match {
-      case Some(value) => Ok(views.html.admin.group.item(value, userGroups)(request))
-      case None => NotFound
-    }
+    GroupModel.getById(groupId).map({ group =>
+      Ok(views.html.admin.group.item(group)(request))
+    }).getOrElse(NotFound)
   }
 
   def update(groupId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>

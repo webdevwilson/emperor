@@ -3,7 +3,7 @@ package controllers.api
 import emp.JsonFormats._
 import com.codahale.jerkson.Json._
 import controllers._
-import models.GroupModel
+import models.{GroupModel,UserModel}
 import play.api._
 import play.api.mvc._
 import play.api.libs.Jsonp
@@ -30,8 +30,29 @@ object Group extends Controller with Secured {
   /**
    * Add a user to the specified group.
    */
-  def addUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
-    GroupModel.addUser(userId, id) // XXX This should return something…
+  def addUser(id: Long, username: String, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    val maybeUser = UserModel.getByUsername(username)
+
+    maybeUser match {
+      case Some(user) => {
+        val gu = GroupModel.addUser(user.id.get, id)
+        val json = Json.toJson(gu.get) // This might be none XXX
+        callback match {
+          case Some(callback) => Ok(Jsonp(callback, json))
+          case None => Ok(json)
+        }
+      }
+      case None => NotFound
+    }
+  }
+
+  /**
+   * Remove a user from the specified group.
+   */
+  def removeUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    GroupModel.removeUser(userId, id) // XXX This should return something…
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
@@ -40,11 +61,11 @@ object Group extends Controller with Secured {
   }
 
   /**
-   * Remove a user from the specified group.
+   * Get the users in a group
    */
-  def removeUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
-    GroupModel.removeUser(userId, id) // XXX This should return something…
-    val json = Json.toJson(Map("ok" -> "ok"))
+  def users(id: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+    val users = GroupModel.getGroupUsersForGroup(id)
+    val json = Json.toJson(users)
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
       case None => Ok(json)
