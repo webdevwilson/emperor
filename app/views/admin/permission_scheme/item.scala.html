@@ -24,17 +24,18 @@
     <ul class="clearfix grid gridded-list" data-bind="foreach: groups()">
      <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: groupName"></a></li>
     </ul>
-    <a class="btn btn-mini clearfix">@Messages("admin.permission_scheme.group.add")</a>
+    <a class="btn btn-mini clearfix" data-bind="click: addGroup">@Messages("admin.permission_scheme.group.add")</a>
    </td>
    <td>
     <ul class="clearfix grid gridded-list" data-bind="foreach: users()">
      <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: username"></a></li>
     </ul>
-    <a class="btn btn-mini clearfix">@Messages("admin.permission_scheme.user.add")</a>
+    <a class="btn btn-mini clearfix" data-bind="click: addUser">@Messages("admin.permission_scheme.user.add")</a>
   </td>
   <tr>
  </tbody>
 </table>
+<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
 <script>
 $(function(){
   var view = AdminPermissionSchemeViewModel(@ps.id.get);

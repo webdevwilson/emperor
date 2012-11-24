@@ -1,0 +1,30 @@
+@(ps: models.PermissionScheme, groupForm: Form[controllers.admin.AddedPermissionSchemeGroup])(implicit request: AuthenticatedRequest)
+
+@import helper._
+@import helper.bootstrap._
+
+@helper.form(action = controllers.admin.routes.PermissionScheme.addGroup(ps.id.get), 'id -> "add-group-form") {
+<div class="modal-header">
+ <button type="button" class="close" data-dismiss="modal">×</button>
+ <h3>@Messages("ticket.linker.action")</h3>
+</div>
+<div class="modal-body">
+ @Messages("admin.permission_scheme.group.add.help")
+ <fieldset>
+  @helper.inputText(field = groupForm("group_id"), args = '_label -> Messages("ticket.linker.otherticket"), 'class -> "typeahead")
+ </fieldset>
+</div>
+<div class="modal-footer">
+ <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+ <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("ticket.linker.confirm")</button>
+</div>
+<script>
+$('.typeahead').typeahead({ source:
+  function(query, process) {
+    $.getJSON("/api/group/startswith?q=" + query)
+    .done(function(data) { return process(data) });
+  }
+});
+
+</script>
+}

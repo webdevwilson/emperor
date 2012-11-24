@@ -138,6 +138,22 @@ function AdminPermissionSchemeViewModel(permissionSchemeId) {
   var self = this
   self.permissions = ko.observableArray([]);
 
+  self.addGroup = function(ticketId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    $modal.load("/admin/permission_scheme/group/" + permissionSchemeId, '', function(){
+      $modal.modal();
+    });
+  }
+
+  self.addUser = function(ticketId) {
+    var $modal = $("#ajax-modal");
+    $('body').modalmanager('loading');
+    $modal.load("/admin/permission_scheme/user/" + permissionSchemeId, '', function(){
+      $modal.modal();
+    });
+  }
+
   $.getJSON("/api/permission")
   .done(function(data) {
     var mappedPerms = $.map(data, function(item) {

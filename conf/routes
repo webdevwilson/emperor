@@ -16,7 +16,9 @@ GET     /admin/group/edit/:id           controllers.admin.Group.edit(id: Long)
 POST    /admin/group                    controllers.admin.Group.add
 
 GET     /admin/permission_scheme          controllers.admin.PermissionScheme.index(page: Int ?= 1, count: Int ?= 10)
+GET     /admin/permission_scheme/group/:id controllers.admin.PermissionScheme.group(id: Long)
 POST    /admin/permission_scheme/group/:id controllers.admin.PermissionScheme.addGroup(id: Long)
+GET     /admin/permission_scheme/user/:id controllers.admin.PermissionScheme.user(id: Long)
 POST    /admin/permission_scheme/user/:id controllers.admin.PermissionScheme.addUser(id: Long)
 GET     /admin/permission_scheme/create   controllers.admin.PermissionScheme.create
 GET     /admin/permission_scheme/:id      controllers.admin.PermissionScheme.item(id: Long)

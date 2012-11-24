@@ -57,6 +57,14 @@ object PermissionScheme extends Controller with Secured {
     )
   }
 
+  def group(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    PermissionSchemeModel.getById(id) match {
+      case Some(value) =>     Ok(views.html.admin.permission_scheme.addgroup(value, groupForm)(request))
+      case None => NotFound
+    }
+  }
+
   def addGroup(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     groupForm.bindFromRequest.fold(
@@ -66,6 +74,14 @@ object PermissionScheme extends Controller with Secured {
         Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
       }
     )
+  }
+
+  def user(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    PermissionSchemeModel.getById(id) match {
+      case Some(value) =>     Ok(views.html.admin.permission_scheme.adduser(value, userForm)(request))
+      case None => NotFound
+    }
   }
 
   def addUser(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
