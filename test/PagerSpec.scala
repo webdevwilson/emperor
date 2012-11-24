@@ -19,8 +19,8 @@ class PagerSpec extends Specification {
       )
 
       pager.offset mustEqual 0
-      pager.firstPage mustEqual 1
-      pager.lastPage mustEqual 5
+      pager.range.start mustEqual 1
+      pager.range.end mustEqual 5
       pager.prev must beNone
       pager.next must beSome
       pager.next.get mustEqual 2

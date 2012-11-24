@@ -16,7 +16,7 @@
     }.getOrElse {
     <li class="disabled"><a href="#">&larr; @Messages("pager.prev")</a></li>
     }
-    @page.firstPage.until(page.lastPage + 1).map { pageNum =>
+    @page.range.map { pageNum =>
     <li @if(pageNum == page.page) { class="active" }>
       <a href="@Links.pagerLink(params = request.queryString, path = request.path, page = pageNum, count = page.count)">@{ pageNum }</a>
     </li>
