@@ -42,23 +42,4 @@ $(function(){
   ko.applyBindings(view);
 });
 </script>
-
-<script id="group-modal" type="text/x-handlebars-template">
-@Messages("admin.permission_scheme.group.add.help")
-{{permission_name}}<br><br>
-@helper.form(action = controllers.admin.routes.PermissionScheme.addGroup(ps.id.get), 'id -> "add-group-form") {
- <input type="hidden" name="permission_id" value="{{permission_id}}">
- <input type="hidden" id="group_id" name="group_id" value="">
- <input type="text" id="ac-input-group">
-}
-</script>
-<script id="user-modal" type="text/x-handlebars-template">
-@Messages("admin.permission_scheme.user.add.help")
-{{permission_name}}<br><br>
-@helper.form(action = controllers.admin.routes.PermissionScheme.addUser(ps.id.get), 'id -> "add-user-form") {
- <input type="hidden" name="permission_id" value="{{permission_id}}">
- <input type="hidden" id="user_id" name="user_id" value="">
- <input type="text" id="ac-input-user">
-}
-</script>
 }

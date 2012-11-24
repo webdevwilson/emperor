@@ -1,4 +1,4 @@
-@(ps: models.PermissionScheme, groupForm: Form[controllers.admin.AddedPermissionSchemeGroup])(implicit request: AuthenticatedRequest)
+@(ps: models.PermissionScheme, perm: models.Permission, groupForm: Form[controllers.admin.AddedPermissionSchemeGroup])(implicit request: AuthenticatedRequest)
 
 @import helper._
 @import helper.bootstrap._
@@ -6,12 +6,13 @@
 @helper.form(action = controllers.admin.routes.PermissionScheme.addGroup(ps.id.get), 'id -> "add-group-form") {
 <div class="modal-header">
  <button type="button" class="close" data-dismiss="modal">×</button>
- <h3>@Messages("ticket.linker.action")</h3>
+ <h3>@Messages("admin.permission_scheme.group.add")</h3>
 </div>
 <div class="modal-body">
- @Messages("admin.permission_scheme.group.add.help")
+ <h4>@Messages("admin.permission_scheme.group.add.help")</h4>
  <fieldset>
-  @helper.inputText(field = groupForm("group_id"), args = '_label -> Messages("ticket.linker.otherticket"), 'class -> "typeahead")
+  <input type="hidden" name="permission_id" vale="@perm.name"/>
+  @helper.inputText(field = groupForm("group_id"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
  </fieldset>
 </div>
 <div class="modal-footer">
@@ -22,9 +23,11 @@
 $('.typeahead').typeahead({ source:
   function(query, process) {
     $.getJSON("/api/group/startswith?q=" + query)
-    .done(function(data) { return process(data) });
+    .done(function(data) {
+      var groups = $.map(data, function(g) { return g.id })
+      return process(groups);
+    });
   }
 });
-
 </script>
 }

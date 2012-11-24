@@ -53,6 +53,7 @@ object PermissionSchemeModel {
   val deleteQuery = SQL("DELETE FROM permission_schemes WHERE id={id}")
   val deleteGroupPermQuery = SQL("DELETE FROM permission_scheme_groups WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND group_id={group_id}")
   val deleteUserPermQuery = SQL("DELETE FROM permission_scheme_users WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id} AND user_id={user_id}")
+  val getPermissionByIdQuery = SQL("SELECT * FROM permissions WHERE name={name}")
   val getByIdQuery = SQL("SELECT * from permission_schemes WHERE id={id}")
   val getByNameQuery = SQL("SELECT * from permission_schemes WHERE name={name}")
   val getGroupsForPermissionQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
@@ -235,6 +236,15 @@ object PermissionSchemeModel {
         'permission_scheme_id -> id,
         'permission_id -> permissionId
       ).as(permissionSchemeGroup *)
+    }
+  }
+
+  def getPermissionById(name: String): Option[Permission] = {
+
+    DB.withConnection { implicit conn =>
+      getPermissionByIdQuery.on(
+        'name -> name
+      ).as(permission.singleOpt)
     }
   }
 

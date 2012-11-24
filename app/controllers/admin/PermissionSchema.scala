@@ -57,10 +57,12 @@ object PermissionScheme extends Controller with Secured {
     )
   }
 
-  def group(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def group(id: Long, permissionId: String) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    val perm = PermissionSchemeModel.getPermissionById(permissionId).get
 
     PermissionSchemeModel.getById(id) match {
-      case Some(value) =>     Ok(views.html.admin.permission_scheme.addgroup(value, groupForm)(request))
+      case Some(value) =>     Ok(views.html.admin.permission_scheme.addgroup(value, perm, groupForm)(request))
       case None => NotFound
     }
   }
@@ -76,10 +78,12 @@ object PermissionScheme extends Controller with Secured {
     )
   }
 
-  def user(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+  def user(id: Long, permissionId: String) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+
+    val perm = PermissionSchemeModel.getPermissionById(permissionId).get
 
     PermissionSchemeModel.getById(id) match {
-      case Some(value) =>     Ok(views.html.admin.permission_scheme.adduser(value, userForm)(request))
+      case Some(value) => Ok(views.html.admin.permission_scheme.adduser(value, perm, userForm)(request))
       case None => NotFound
     }
   }

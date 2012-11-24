@@ -26,6 +26,7 @@ function ShowAlert(aclass, message) {
 }
 
 function Permission(data, users, groups) {
+  this.name           = ko.observable(data.name);
   this.nameI18N       = ko.observable(data.nameI18N);
   this.descriptionI18N= ko.observable(data.descriptionI18N);
   this.users          = ko.observableArray(users);
@@ -138,18 +139,18 @@ function AdminPermissionSchemeViewModel(permissionSchemeId) {
   var self = this
   self.permissions = ko.observableArray([]);
 
-  self.addGroup = function(ticketId) {
+  self.addGroup = function(perm) {
     var $modal = $("#ajax-modal");
     $('body').modalmanager('loading');
-    $modal.load("/admin/permission_scheme/group/" + permissionSchemeId, '', function(){
+    $modal.load("/admin/permission_scheme/group/" + permissionSchemeId + "/" + perm.name(), '', function(){
       $modal.modal();
     });
   }
 
-  self.addUser = function(ticketId) {
+  self.addUser = function(perm) {
     var $modal = $("#ajax-modal");
     $('body').modalmanager('loading');
-    $modal.load("/admin/permission_scheme/user/" + permissionSchemeId, '', function(){
+    $modal.load("/admin/permission_scheme/user/" + permissionSchemeId + "/" + perm.name(), '', function(){
       $modal.modal();
     });
   }
@@ -160,9 +161,9 @@ function AdminPermissionSchemeViewModel(permissionSchemeId) {
 
       var perm = new Permission(item, [], []);
 
-      var users = $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/users/" + item.name)
+      var users = $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/users/"  + perm.name())
         .done(function(data) { perm.users(data) });
-      var groups= $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/groups/" + item.name)
+      var groups= $.getJSON("/api/permission_scheme/" + permissionSchemeId + "/groups/" + perm.name())
         .done(function(data) { perm.groups(data) });
       return perm;
     });
