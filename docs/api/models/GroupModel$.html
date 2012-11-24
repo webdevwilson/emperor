@@ -118,13 +118,13 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li visbl="pub" name="models.GroupModel#addUser" data-isabs="false">
-      <a id="addUser(Long,Long):Unit"></a>
+      <a id="addUser(Long,Long):Option[GroupUser]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">addUser</span>
         
-        <span class="params">(<span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="groupId">groupId: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="groupId">groupId: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.GroupUser" class="extype" href="GroupUser.html">GroupUser</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Add user to group.</p>
@@ -310,6 +310,28 @@
       </span>
       </h4>
       
+    </li><li visbl="pub" name="models.GroupModel#getByName" data-isabs="false">
+      <a id="getByName(String):Option[Group]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getByName</span>
+        
+        <span class="params">(<span name="name">name: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.Group" class="extype" href="Group.html">Group</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Retrieve a group by name.</p>
+    </li><li visbl="pub" name="models.GroupModel#getByNameQuery" data-isabs="false">
+      <a id="getByNameQuery:SqlQuery"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">getByNameQuery</span>
+        
+        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -332,6 +354,17 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Get the groups that this user is in.</p>
+    </li><li visbl="pub" name="models.GroupModel#getGoupUserByIdQuery" data-isabs="false">
+      <a id="getGoupUserByIdQuery:SqlQuery"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">getGoupUserByIdQuery</span>
+        
+        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.GroupModel#getGroupUsersForGroup" data-isabs="false">
       <a id="getGroupUsersForGroup(Long):List[GroupUser]"></a>
       <h4 class="signature">

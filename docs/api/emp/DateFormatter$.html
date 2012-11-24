@@ -143,32 +143,30 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="emp.DateFormatter#displayLongDate" data-isabs="false">
-      <a id="displayLongDate(Date)(AuthenticatedRequest):String"></a>
+    </li><li visbl="pub" name="emp.DateFormatter#displayISO8601" data-isabs="false">
+      <a id="displayISO8601(DateTime):String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
-        <span class="name">displayLongDate</span>
+        <span class="name">displayISO8601</span>
         
-        <span class="params">(<span name="date">date: <span name="java.util.Date" class="extype">Date</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: String</span>
+        <span class="params">(<span name="dt">dt: <span name="org.joda.time.DateTime" class="extype">DateTime</span></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.
-See also java.text.SimpleDateFormat.
-</p></div></div>
+      <p class="shortcomment cmt">Formats a DateTime into an ISO8601 string (in UTC)
+</p>
     </li><li visbl="pub" name="emp.DateFormatter#displayLongDateTime" data-isabs="false">
-      <a id="displayLongDateTime(Date)(AuthenticatedRequest):String"></a>
+      <a id="displayLongDateTime(DateTime)(AuthenticatedRequest):String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">displayLongDateTime</span>
         
-        <span class="params">(<span name="date">date: <span name="java.util.Date" class="extype">Date</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: String</span>
+        <span class="params">(<span name="dt">dt: <span name="org.joda.time.DateTime" class="extype">DateTime</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Format a date into &quot;long&quot; date string in the form of <code>EEE, MMM d, yyyy</code>.
-See also java.text.SimpleDateFormat.
-</p></div></div>
+      <p class="shortcomment cmt">Formats a DateTime into a &quot;long&quot; string (&quot;h:mm aa EEE, MMM d, yyyy&quot;) in
+the user's Time Zone.</p>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -238,25 +236,25 @@ See also java.text.SimpleDateFormat.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="emp.DateFormatter#longDateFormatter" data-isabs="false">
-      <a id="longDateFormatter:SimpleDateFormat"></a>
+    </li><li visbl="pub" name="emp.DateFormatter#isoFormatter" data-isabs="false">
+      <a id="isoFormatter:DateTimeFormatter"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
-        <span class="name">longDateFormatter</span>
+        <span class="name">isoFormatter</span>
         
-        <span class="result">: <span name="java.text.SimpleDateFormat" class="extype">SimpleDateFormat</span></span>
+        <span class="result">: <span name="org.joda.time.format.DateTimeFormatter" class="extype">DateTimeFormatter</span></span>
       </span>
       </h4>
       
     </li><li visbl="pub" name="emp.DateFormatter#longDateTimeFormatter" data-isabs="false">
-      <a id="longDateTimeFormatter:SimpleDateFormat"></a>
+      <a id="longDateTimeFormatter:DateTimeFormatter"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
         <span class="name">longDateTimeFormatter</span>
         
-        <span class="result">: <span name="java.text.SimpleDateFormat" class="extype">SimpleDateFormat</span></span>
+        <span class="result">: <span name="org.joda.time.format.DateTimeFormatter" class="extype">DateTimeFormatter</span></span>
       </span>
       </h4>
       
@@ -304,6 +302,17 @@ See also java.text.SimpleDateFormat.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="emp.DateFormatter#timeZoneList" data-isabs="false">
+      <a id="timeZoneList:Seq[(String, String)]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">timeZoneList</span>
+        
+        <span class="result">: Seq[(String, String)]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -315,6 +324,17 @@ See also java.text.SimpleDateFormat.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="emp.DateFormatter#tzs" data-isabs="false">
+      <a id="tzs:Seq[String]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">tzs</span>
+        
+        <span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[<span name="java.lang.String" class="extype">String</span>]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">

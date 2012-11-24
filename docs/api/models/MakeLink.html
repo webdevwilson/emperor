@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>emp.NeedSetup</title>
+          <title>models.MakeLink</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
@@ -15,22 +15,23 @@
         <body class="type">
       <div id="definition">
         <img src="../lib/class_big.png" />
-        <p id="owner"><a name="emp" class="extype" href="package.html">emp</a></p>
-        <h1>NeedSetup</h1>
+        <p id="owner"><a name="models" class="extype" href="package.html">models</a></p>
+        <h1>MakeLink</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">case class</span>
       <span class="symbol"> 
-        <span class="name">NeedSetup</span>
+        <span class="name">MakeLink</span>
         
-        <span class="params">()</span><span class="result"> extends <span name="play.api.PlayException" class="extype">PlayException</span> with <span name="play.api.PlayException.ExceptionAttachment" class="extype">ExceptionAttachment</span> with <span name="play.api.PlayException.RichDescription" class="extype">RichDescription</span> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="params">(<span name="linkTypeId">linkTypeId: <span name="scala.Long" class="extype">Long</span></span>, <span name="otherTicketId">otherTicketId: String</span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String]</span>)</span><span class="result"> extends <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Class for a making a link. Used with link form.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <span name="play.api.PlayException.RichDescription" class="extype">RichDescription</span>, <span name="play.api.PlayException.ExceptionAttachment" class="extype">ExceptionAttachment</span>, <span name="play.api.PlayException" class="extype">PlayException</span>, <span name="play.api.PlayException.UsefulException" class="extype">UsefulException</span>, <span name="java.lang.RuntimeException" class="extype">RuntimeException</span>, <span name="java.lang.Exception" class="extype">Exception</span>, <span name="java.lang.Throwable" class="extype">Throwable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -46,7 +47,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="emp.NeedSetup" class="in"><span>NeedSetup</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="play.api.PlayException.RichDescription" class="in"><span>RichDescription</span></li><li name="play.api.PlayException.ExceptionAttachment" class="in"><span>ExceptionAttachment</span></li><li name="play.api.PlayException" class="in"><span>PlayException</span></li><li name="play.api.PlayException.UsefulException" class="in"><span>UsefulException</span></li><li name="java.lang.RuntimeException" class="in"><span>RuntimeException</span></li><li name="java.lang.Exception" class="in"><span>Exception</span></li><li name="java.lang.Throwable" class="in"><span>Throwable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="models.MakeLink" class="in"><span>MakeLink</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -56,14 +57,14 @@
 
         <div class="members" id="constructors">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="emp.NeedSetup#this" data-isabs="false">
-      <a id="this:NeedSetup"></a>
+              <ol><li visbl="pub" name="models.MakeLink#this" data-isabs="false">
+      <a id="this:MakeLink"></a>
       <h4 class="signature">
       <span class="kind">new</span>
       <span class="symbol"> 
-        <span class="name">NeedSetup</span>
+        <span class="name">MakeLink</span>
         
-        <span class="params">()</span>
+        <span class="params">(<span name="linkTypeId">linkTypeId: <span name="scala.Long" class="extype">Long</span></span>, <span name="otherTicketId">otherTicketId: String</span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String]</span>)</span>
       </span>
       </h4>
       
@@ -131,17 +132,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#addSuppressed" data-isabs="false">
-      <a id="addSuppressed(Throwable):Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">addSuppressed</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="java.lang.Throwable" class="extype">Throwable</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -153,7 +143,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#canEqual" data-isabs="false">
+    </li><li visbl="pub" name="models.MakeLink#canEqual" data-isabs="false">
       <a id="canEqual(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -163,18 +153,7 @@
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → Equals</dd></dl></div>
-    </li><li visbl="pub" name="play.api.PlayException#cause" data-isabs="false">
-      <a id="cause:Option[Throwable]"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">cause</span>
-        
-        <span class="result">: <span name="scala.Option" class="extype">Option</span>[Throwable]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PlayException → UsefulException</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → Equals</dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -189,28 +168,17 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#content" data-isabs="false">
-      <a id="content:String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">content</span>
-        
-        <span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → ExceptionAttachment</dd></dl></div>
-    </li><li visbl="pub" name="play.api.PlayException#description" data-isabs="false">
-      <a id="description:String"></a>
+    </li><li visbl="pub" name="models.MakeLink#comment" data-isabs="false">
+      <a id="comment:Option[String]"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
-        <span class="name">description</span>
+        <span class="name">comment</span>
         
-        <span class="result">: String</span>
+        <span class="result">: <span name="scala.Option" class="extype">Option</span>[String]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PlayException → UsefulException</dd></dl></div>
+      
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -222,7 +190,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#equals" data-isabs="false">
+    </li><li visbl="pub" name="models.MakeLink#equals" data-isabs="false">
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -232,18 +200,7 @@
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → Equals → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#fillInStackTrace" data-isabs="false">
-      <a id="fillInStackTrace():Throwable"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">fillInStackTrace</span>
-        
-        <span class="params">()</span><span class="result">: <span name="java.lang.Throwable" class="extype">Throwable</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → Equals → AnyRef → Any</dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
       <a id="finalize():Unit"></a>
       <h4 class="signature">
@@ -258,17 +215,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#getCause" data-isabs="false">
-      <a id="getCause():Throwable"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCause</span>
-        
-        <span class="params">()</span><span class="result">: <span name="java.lang.Throwable" class="extype">Throwable</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -280,51 +226,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#getLocalizedMessage" data-isabs="false">
-      <a id="getLocalizedMessage():String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getLocalizedMessage</span>
-        
-        <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#getMessage" data-isabs="false">
-      <a id="getMessage():String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getMessage</span>
-        
-        <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#getStackTrace" data-isabs="false">
-      <a id="getStackTrace():Array[StackTraceElement]"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getStackTrace</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Array" class="extype">Array</span>[<span name="java.lang.StackTraceElement" class="extype">StackTraceElement</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#getSuppressed" data-isabs="false">
-      <a id="getSuppressed():Array[Throwable]"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getSuppressed</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Array" class="extype">Array</span>[<span name="java.lang.Throwable" class="extype">Throwable</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#hashCode" data-isabs="false">
+    </li><li visbl="pub" name="models.MakeLink#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -334,40 +236,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#htmlDescription" data-isabs="false">
-      <a id="htmlDescription:String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">htmlDescription</span>
-        
-        <span class="result">: String</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → RichDescription</dd></dl></div>
-    </li><li visbl="pub" name="play.api.PlayException#id" data-isabs="false">
-      <a id="id:String"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">id</span>
-        
-        <span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PlayException → UsefulException</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#initCause" data-isabs="false">
-      <a id="initCause(Throwable):Throwable"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">initCause</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="java.lang.Throwable" class="extype">Throwable</span></span>)</span><span class="result">: <span name="java.lang.Throwable" class="extype">Throwable</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -379,6 +248,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="models.MakeLink#linkTypeId" data-isabs="false">
+      <a id="linkTypeId:Long"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">linkTypeId</span>
+        
+        <span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -412,40 +292,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#printStackTrace" data-isabs="false">
-      <a id="printStackTrace(PrintWriter):Unit"></a>
+    </li><li visbl="pub" name="models.MakeLink#otherTicketId" data-isabs="false">
+      <a id="otherTicketId:String"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
+      <span class="kind">val</span>
       <span class="symbol"> 
-        <span class="name">printStackTrace</span>
+        <span class="name">otherTicketId</span>
         
-        <span class="params">(<span name="arg0">arg0: <span name="java.io.PrintWriter" class="extype">PrintWriter</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#printStackTrace" data-isabs="false">
-      <a id="printStackTrace(PrintStream):Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">printStackTrace</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="java.io.PrintStream" class="extype">PrintStream</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#printStackTrace" data-isabs="false">
-      <a id="printStackTrace():Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">printStackTrace</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#productArity" data-isabs="false">
+      
+    </li><li visbl="pub" name="models.MakeLink#productArity" data-isabs="false">
       <a id="productArity:Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -455,8 +313,8 @@
         <span class="result">: <span name="scala.Int" class="extype">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → Product</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#productElement" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → Product</dd></dl></div>
+    </li><li visbl="pub" name="models.MakeLink#productElement" data-isabs="false">
       <a id="productElement(Int):Any"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -466,7 +324,7 @@
         <span class="params">(<span name="arg0">arg0: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Any" class="extype">Any</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → Product</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → Product</dd></dl></div>
     </li><li visbl="pub" name="scala.Product#productIterator" data-isabs="false">
       <a id="productIterator:Iterator[Any]"></a>
       <h4 class="signature">
@@ -478,7 +336,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Product</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#productPrefix" data-isabs="false">
+    </li><li visbl="pub" name="models.MakeLink#productPrefix" data-isabs="false">
       <a id="productPrefix:String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -488,29 +346,7 @@
         <span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → Product</dd></dl></div>
-    </li><li visbl="pub" name="java.lang.Throwable#setStackTrace" data-isabs="false">
-      <a id="setStackTrace(Array[StackTraceElement]):Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">setStackTrace</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Array" class="extype">Array</span>[<span name="java.lang.StackTraceElement" class="extype">StackTraceElement</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Throwable</dd></dl></div>
-    </li><li visbl="pub" name="emp.NeedSetup#subTitle" data-isabs="false">
-      <a id="subTitle:String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">subTitle</span>
-        
-        <span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.NeedSetup" class="extype" href="">NeedSetup</a> → ExceptionAttachment</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → Product</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -522,28 +358,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="play.api.PlayException#title" data-isabs="false">
-      <a id="title:String"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">title</span>
-        
-        <span class="result">: String</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PlayException → UsefulException</dd></dl></div>
-    </li><li visbl="pub" name="play.api.PlayException#toString" data-isabs="false">
+    </li><li visbl="pub" name="models.MakeLink#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">toString</span>
         
-        <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+        <span class="params">()</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PlayException → Throwable → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.MakeLink" class="extype" href="">MakeLink</a> → AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">
@@ -610,26 +435,12 @@
 
         <div name="scala.Serializable" class="parent">
               <h3>Inherited from <span name="scala.Serializable" class="extype">Serializable</span></h3>
+            </div><div name="java.io.Serializable" class="parent">
+              <h3>Inherited from <span name="java.io.Serializable" class="extype">Serializable</span></h3>
             </div><div name="scala.Product" class="parent">
               <h3>Inherited from <span name="scala.Product" class="extype">Product</span></h3>
             </div><div name="scala.Equals" class="parent">
               <h3>Inherited from <span name="scala.Equals" class="extype">Equals</span></h3>
-            </div><div name="play.api.PlayException.RichDescription" class="parent">
-              <h3>Inherited from <span name="play.api.PlayException.RichDescription" class="extype">RichDescription</span></h3>
-            </div><div name="play.api.PlayException.ExceptionAttachment" class="parent">
-              <h3>Inherited from <span name="play.api.PlayException.ExceptionAttachment" class="extype">ExceptionAttachment</span></h3>
-            </div><div name="play.api.PlayException" class="parent">
-              <h3>Inherited from <span name="play.api.PlayException" class="extype">PlayException</span></h3>
-            </div><div name="play.api.PlayException.UsefulException" class="parent">
-              <h3>Inherited from <span name="play.api.PlayException.UsefulException" class="extype">UsefulException</span></h3>
-            </div><div name="java.lang.RuntimeException" class="parent">
-              <h3>Inherited from <span name="java.lang.RuntimeException" class="extype">RuntimeException</span></h3>
-            </div><div name="java.lang.Exception" class="parent">
-              <h3>Inherited from <span name="java.lang.Exception" class="extype">Exception</span></h3>
-            </div><div name="java.lang.Throwable" class="parent">
-              <h3>Inherited from <span name="java.lang.Throwable" class="extype">Throwable</span></h3>
-            </div><div name="java.io.Serializable" class="parent">
-              <h3>Inherited from <span name="java.io.Serializable" class="extype">Serializable</span></h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

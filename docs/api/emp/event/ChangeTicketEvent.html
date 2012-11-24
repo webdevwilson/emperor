@@ -24,11 +24,11 @@
       <span class="symbol"> 
         <span class="name">ChangeTicketEvent</span>
         
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: <span name="scala.Boolean" class="extype">Boolean</span></span>, <span name="unresolved">unresolved: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result"> extends <a name="emp.event.EmperorEvent" class="extype" href="EmperorEvent.html">EmperorEvent</a> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: <span name="scala.Boolean" class="extype">Boolean</span></span>, <span name="newTicketId">newTicketId: <span name="scala.Long" class="extype">Long</span></span>, <span name="oldTicketId">oldTicketId: <span name="scala.Long" class="extype">Long</span></span>, <span name="unresolved">unresolved: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result"> extends <a name="emp.event.EmperorEvent" class="extype" href="EmperorEvent.html">EmperorEvent</a> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Represents a modification of a ticket.
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p><code>ticket/changed</code>: Represents a modification of a ticket.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <a name="emp.event.EmperorEvent" class="extype" href="EmperorEvent.html">EmperorEvent</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
@@ -64,7 +64,7 @@
       <span class="symbol"> 
         <span class="name">ChangeTicketEvent</span>
         
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: <span name="scala.Boolean" class="extype">Boolean</span></span>, <span name="unresolved">unresolved: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
+        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: <span name="scala.Boolean" class="extype">Boolean</span></span>, <span name="newTicketId">newTicketId: <span name="scala.Long" class="extype">Long</span></span>, <span name="oldTicketId">oldTicketId: <span name="scala.Long" class="extype">Long</span></span>, <span name="unresolved">unresolved: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
       </span>
       </h4>
       
@@ -259,6 +259,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="emp.event.ChangeTicketEvent#newTicketId" data-isabs="false">
+      <a id="newTicketId:Long"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">newTicketId</span>
+        
+        <span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
       <a id="notify():Unit"></a>
       <h4 class="signature">
@@ -281,6 +292,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="emp.event.ChangeTicketEvent#oldTicketId" data-isabs="false">
+      <a id="oldTicketId:Long"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">oldTicketId</span>
+        
+        <span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="emp.event.ChangeTicketEvent#productArity" data-isabs="false">
       <a id="productArity:Int"></a>
       <h4 class="signature">

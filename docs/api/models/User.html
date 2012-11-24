@@ -24,7 +24,7 @@
       <span class="symbol"> 
         <span class="name">User</span>
         
-        <span class="params">(<span name="id">id: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="email">email: String</span>, <span name="dateCreated">dateCreated: <span name="java.util.Date" class="extype">Date</span></span>)</span><span class="result"> extends <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="params">(<span name="id">id: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="timezone">timezone: String</span>, <span name="email">email: String</span>, <span name="organization">organization: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="location">location: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="title">title: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="url">url: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="dateCreated">dateCreated: <span name="org.joda.time.DateTime" class="extype">DateTime</span></span>)</span><span class="result"> extends <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
@@ -63,7 +63,7 @@
       <span class="symbol"> 
         <span class="name">User</span>
         
-        <span class="params">(<span name="id">id: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="email">email: String</span>, <span name="dateCreated">dateCreated: <span name="java.util.Date" class="extype">Date</span></span>)</span>
+        <span class="params">(<span name="id">id: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="timezone">timezone: String</span>, <span name="email">email: String</span>, <span name="organization">organization: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="location">location: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="title">title: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="url">url: <span name="scala.Option" class="extype">Option</span>[String]</span>, <span name="dateCreated">dateCreated: <span name="org.joda.time.DateTime" class="extype">DateTime</span></span>)</span>
       </span>
       </h4>
       
@@ -168,13 +168,13 @@
               
         </dd></dl></div>
     </li><li visbl="pub" name="models.User#dateCreated" data-isabs="false">
-      <a id="dateCreated:Date"></a>
+      <a id="dateCreated:DateTime"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
         <span class="name">dateCreated</span>
         
-        <span class="result">: <span name="java.util.Date" class="extype">Date</span></span>
+        <span class="result">: <span name="org.joda.time.DateTime" class="extype">DateTime</span></span>
       </span>
       </h4>
       
@@ -186,17 +186,6 @@
         <span class="name">email</span>
         
         <span class="result">: String</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.User#emailMD5" data-isabs="false">
-      <a id="emailMD5:String"></a>
-      <h4 class="signature">
-      <span class="kind">lazy val</span>
-      <span class="symbol"> 
-        <span class="name">emailMD5</span>
-        
-        <span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
       
@@ -291,6 +280,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="models.User#location" data-isabs="false">
+      <a id="location:Option[String]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">location</span>
+        
+        <span class="result">: <span name="scala.Option" class="extype">Option</span>[String]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -324,6 +324,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="models.User#organization" data-isabs="false">
+      <a id="organization:Option[String]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">organization</span>
+        
+        <span class="result">: <span name="scala.Option" class="extype">Option</span>[String]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.User#password" data-isabs="false">
       <a id="password:String"></a>
       <h4 class="signature">
@@ -401,6 +412,28 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="models.User#timezone" data-isabs="false">
+      <a id="timezone:String"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">timezone</span>
+        
+        <span class="result">: String</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.User#title" data-isabs="false">
+      <a id="title:Option[String]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">title</span>
+        
+        <span class="result">: <span name="scala.Option" class="extype">Option</span>[String]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.User#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -412,6 +445,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="models.User" class="extype" href="">User</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="models.User#url" data-isabs="false">
+      <a id="url:Option[String]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">url</span>
+        
+        <span class="result">: <span name="scala.Option" class="extype">Option</span>[String]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.User#username" data-isabs="false">
       <a id="username:String"></a>
       <h4 class="signature">

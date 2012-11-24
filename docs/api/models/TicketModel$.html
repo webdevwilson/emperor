@@ -443,28 +443,6 @@
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getByProjectAndStatusQuery" data-isabs="false">
-      <a id="getByProjectAndStatusQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getByProjectAndStatusQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getByProjectQuery" data-isabs="false">
-      <a id="getByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getByProjectQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -498,111 +476,24 @@
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getCountByProject" data-isabs="false">
-      <a id="getCountByProject(Pk[Long]):Long"></a>
+    </li><li visbl="pub" name="models.TicketModel#getFullByActualId" data-isabs="false">
+      <a id="getFullByActualId(Long):Option[FullTicket]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
-        <span class="name">getCountByProject</span>
+        <span class="name">getFullByActualId</span>
         
-        <span class="params">(<span name="projectId">projectId: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
       </span>
       </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountByProjectAndStatus" data-isabs="false">
-      <a id="getCountByProjectAndStatus(Pk[Long],Long):Long"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCountByProjectAndStatus</span>
-        
-        <span class="params">(<span name="projectId">projectId: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="statusId">statusId: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountByProjectAndStatusQuery" data-isabs="false">
-      <a id="getCountByProjectAndStatusQuery:SqlQuery"></a>
+      <p class="shortcomment cmt">Get a version of a ticket by id.</p><div class="fullcomment"><div class="comment cmt"><p>Get a version of a ticket by id.  This version returns the <code>FullTicket</code>.
+</p></div></div>
+    </li><li visbl="pub" name="models.TicketModel#getFullByActualIdQuery" data-isabs="false">
+      <a id="getFullByActualIdQuery:SqlQuery"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol"> 
-        <span class="name">getCountByProjectAndStatusQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountByProjectQuery" data-isabs="false">
-      <a id="getCountByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getCountByProjectQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountOpenByProject" data-isabs="false">
-      <a id="getCountOpenByProject(Pk[Long]):Long"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCountOpenByProject</span>
-        
-        <span class="params">(<span name="projectId">projectId: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountOpenByProjectQuery" data-isabs="false">
-      <a id="getCountOpenByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getCountOpenByProjectQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountThisWeekByProject" data-isabs="false">
-      <a id="getCountThisWeekByProject(Pk[Long]):Long"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCountThisWeekByProject</span>
-        
-        <span class="params">(<span name="projectId">projectId: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountThisWeekByProjectQuery" data-isabs="false">
-      <a id="getCountThisWeekByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getCountThisWeekByProjectQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountTodayByProject" data-isabs="false">
-      <a id="getCountTodayByProject(Pk[Long]):Long"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCountTodayByProject</span>
-        
-        <span class="params">(<span name="projectId">projectId: <span name="anorm.Pk" class="extype">Pk</span>[<span name="scala.Long" class="extype">Long</span>]</span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getCountTodayByProjectQuery" data-isabs="false">
-      <a id="getCountTodayByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getCountTodayByProjectQuery</span>
+        <span class="name">getFullByActualIdQuery</span>
         
         <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
       </span>
@@ -681,17 +572,6 @@
       <span class="kind">val</span>
       <span class="symbol"> 
         <span class="name">getLinksQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="models.TicketModel#getOpenByProjectQuery" data-isabs="false">
-      <a id="getOpenByProjectQuery:SqlQuery"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getOpenByProjectQuery</span>
         
         <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
       </span>

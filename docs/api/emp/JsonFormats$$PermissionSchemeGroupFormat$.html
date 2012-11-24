@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>emp.EmperorPlugin</title>
+          <title>emp.JsonFormats.PermissionSchemeGroupFormat</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
@@ -12,25 +12,26 @@
       <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../lib/class_big.png" />
-        <p id="owner"><a name="emp" class="extype" href="package.html">emp</a></p>
-        <h1>EmperorPlugin</h1>
+        <img src="../lib/object_big.png" />
+        <p id="owner"><a name="emp" class="extype" href="package.html">emp</a>.<a name="emp.JsonFormats" class="extype" href="JsonFormats$.html">JsonFormats</a></p>
+        <h1>PermissionSchemeGroupFormat</h1>
       </div>
 
       <h4 class="signature" id="signature">
-      <span class="kind">class</span>
+      <span class="kind">object</span>
       <span class="symbol"> 
-        <span class="name">EmperorPlugin</span>
+        <span class="name">PermissionSchemeGroupFormat</span>
         
-        <span class="result"> extends <span name="play.api.Plugin" class="extype">Plugin</span></span>
+        <span class="result"> extends <span name="play.api.libs.json.Format" class="extype">Format</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>]</span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>JSON conversion for PermissionSchemeGroup
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="play.api.Plugin" class="extype">Plugin</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span name="play.api.libs.json.Format" class="extype">Format</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>], <span name="play.api.libs.json.Reads" class="extype">Reads</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>], <span name="play.api.libs.json.Writes" class="extype">Writes</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -46,7 +47,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="emp.EmperorPlugin" class="in"><span>EmperorPlugin</span></li><li name="play.api.Plugin" class="in"><span>Plugin</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="emp.JsonFormats.PermissionSchemeGroupFormat" class="in"><span>PermissionSchemeGroupFormat</span></li><li name="play.api.libs.json.Format" class="in"><span>Format</span></li><li name="play.api.libs.json.Reads" class="in"><span>Reads</span></li><li name="play.api.libs.json.Writes" class="in"><span>Writes</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -54,21 +55,7 @@
             </div>
         </div>
 
-        <div class="members" id="constructors">
-              <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="emp.EmperorPlugin#this" data-isabs="false">
-      <a id="this:EmperorPlugin"></a>
-      <h4 class="signature">
-      <span class="kind">new</span>
-      <span class="symbol"> 
-        <span class="name">EmperorPlugin</span>
         
-        <span class="params">(<span name="app">app: <span name="play.api.Application" class="extype">Application</span></span>)</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
 
         
         
@@ -156,17 +143,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="play.api.Plugin#enabled" data-isabs="false">
-      <a id="enabled:Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">enabled</span>
-        
-        <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Plugin</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -269,28 +245,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="emp.EmperorPlugin#onStart" data-isabs="false">
-      <a id="onStart():Unit"></a>
+    </li><li visbl="pub" name="emp.JsonFormats.PermissionSchemeGroupFormat#reads" data-isabs="false">
+      <a id="reads(JsValue):PermissionSchemeGroup"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
-        <span class="name">onStart</span>
+        <span class="name">reads</span>
         
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="json">json: <span name="play.api.libs.json.JsValue" class="extype">JsValue</span></span>)</span><span class="result">: <a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.EmperorPlugin" class="extype" href="">EmperorPlugin</a> → Plugin</dd></dl></div>
-    </li><li visbl="pub" name="play.api.Plugin#onStop" data-isabs="false">
-      <a id="onStop():Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">onStop</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Plugin</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.JsonFormats.PermissionSchemeGroupFormat" class="extype" href="">PermissionSchemeGroupFormat</a> → Reads</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -355,13 +320,28 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="emp.JsonFormats.PermissionSchemeGroupFormat#writes" data-isabs="false">
+      <a id="writes(PermissionSchemeGroup):JsValue"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">writes</span>
+        
+        <span class="params">(<span name="obj">obj: <a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a></span>)</span><span class="result">: <span name="play.api.libs.json.JsValue" class="extype">JsValue</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.JsonFormats.PermissionSchemeGroupFormat" class="extype" href="">PermissionSchemeGroupFormat</a> → Writes</dd></dl></div>
     </li></ol>
             </div>
 
         
 
-        <div name="play.api.Plugin" class="parent">
-              <h3>Inherited from <span name="play.api.Plugin" class="extype">Plugin</span></h3>
+        <div name="play.api.libs.json.Format" class="parent">
+              <h3>Inherited from <span name="play.api.libs.json.Format" class="extype">Format</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>]</h3>
+            </div><div name="play.api.libs.json.Reads" class="parent">
+              <h3>Inherited from <span name="play.api.libs.json.Reads" class="extype">Reads</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>]</h3>
+            </div><div name="play.api.libs.json.Writes" class="parent">
+              <h3>Inherited from <span name="play.api.libs.json.Writes" class="extype">Writes</span>[<a name="models.PermissionSchemeGroup" class="extype" href="../models/PermissionSchemeGroup.html">PermissionSchemeGroup</a>]</h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

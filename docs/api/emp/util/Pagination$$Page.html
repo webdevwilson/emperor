@@ -217,18 +217,6 @@ outside the bounds of the set.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="emp.util.Pagination.Page#firstPage" data-isabs="false">
-      <a id="firstPage:Int"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">firstPage</span>
-        
-        <span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The first page.</p><div class="fullcomment"><div class="comment cmt"><p>The first page. Always 1!
-</p></div></div>
     </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -240,6 +228,17 @@ outside the bounds of the set.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="emp.util.Pagination.Page#getWindow" data-isabs="false">
+      <a id="getWindow(Int):Range"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getWindow</span>
+        
+        <span class="params">(<span name="size">size: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: Range</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="emp.util.Pagination.Page#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
@@ -273,17 +272,6 @@ outside the bounds of the set.
       </span>
       </h4>
       
-    </li><li visbl="pub" name="emp.util.Pagination.Page#lastPage" data-isabs="false">
-      <a id="lastPage:Int"></a>
-      <h4 class="signature">
-      <span class="kind">lazy val</span>
-      <span class="symbol"> 
-        <span class="name">lastPage</span>
-        
-        <span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The last page of the set.</p>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -406,6 +394,17 @@ is suitable for use with an SQL or search backend.</p>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="emp.util.Pagination.Page" class="extype" href="">Page</a> → Product</dd></dl></div>
+    </li><li visbl="pub" name="emp.util.Pagination.Page#range" data-isabs="false">
+      <a id="range:Range"></a>
+      <h4 class="signature">
+      <span class="kind">lazy val</span>
+      <span class="symbol"> 
+        <span class="name">range</span>
+        
+        <span class="result">: <span name="scala.collection.immutable.Range" class="extype">Range</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The range of pages.</p>
     </li><li visbl="pub" name="emp.util.Pagination.Page#requestedPage" data-isabs="false">
       <a id="requestedPage:Int"></a>
       <h4 class="signature">

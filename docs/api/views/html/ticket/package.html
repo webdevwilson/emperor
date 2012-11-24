@@ -51,14 +51,25 @@
 
         <div class="values members" id="values">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="views.html.ticket.comments" data-isabs="false">
+              <ol><li visbl="pub" name="views.html.ticket.change" data-isabs="false">
+      <a id="change:change"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="change$.html"><span class="name">change</span></a>
+        
+        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template4[FullTicket, TicketStatus, Form[Comment], Request[AnyContent], Html]</span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li visbl="pub" name="views.html.ticket.comments" data-isabs="false">
       <a id="comments:comments"></a>
       <h4 class="signature">
       <span class="kind">object</span>
       <span class="symbol"> 
         <a href="comments$.html"><span class="name">comments</span></a>
         
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template12[FullTicket, Map[String, List[FullLink]], List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], Option[WorkflowStatus], Option[WorkflowStatus], List[TicketLinkType], AuthenticatedRequest, Html]</span>
+        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template9[FullTicket, List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], Seq[WorkflowStatus], AuthenticatedRequest, Html]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
@@ -102,7 +113,7 @@
       <span class="symbol"> 
         <a href="history$.html"><span class="name">history</span></a>
         
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template13[FullTicket, Map[String, List[FullLink]], List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], Page[SearchHit], Seq[InternalStringTermsFacet], Option[WorkflowStatus], Option[WorkflowStatus], List[TicketLinkType], AuthenticatedRequest, Html]</span>
+        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template10[FullTicket, List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], Page[SearchHit], Seq[InternalStringTermsFacet], Seq[WorkflowStatus], AuthenticatedRequest, Html]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
@@ -113,7 +124,18 @@
       <span class="symbol"> 
         <a href="item$.html"><span class="name">item</span></a>
         
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template12[FullTicket, Map[String, List[FullLink]], List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], Option[WorkflowStatus], Option[WorkflowStatus], List[TicketLinkType], Html, AuthenticatedRequest, Html]</span>
+        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template9[FullTicket, List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], Seq[WorkflowStatus], Html, AuthenticatedRequest, Html]</span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li visbl="pub" name="views.html.ticket.link" data-isabs="false">
+      <a id="link:link"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="link$.html"><span class="name">link</span></a>
+        
+        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template4[FullTicket, List[(String, String)], Form[MakeLink], Request[AnyContent], Html]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>

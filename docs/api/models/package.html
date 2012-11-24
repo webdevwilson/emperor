@@ -87,7 +87,7 @@
       <span class="symbol"> 
         <a href="Comment.html"><span class="name">Comment</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="ticketId">ticketId: String</span>, <span name="content">content: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="ticketId">ticketId: String</span>, <span name="content">content: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a comment.</p>
@@ -109,7 +109,7 @@
       <span class="symbol"> 
         <a href="Event.html"><span class="name">Event</span></a>
         
-        <span class="params">(<span name="projectId">projectId: Long</span>, <span name="projectName">projectName: String</span>, <span name="userId">userId: Long</span>, <span name="userRealName">userRealName: String</span>, <span name="eKey">eKey: String</span>, <span name="eType">eType: String</span>, <span name="content">content: String</span>, <span name="url">url: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="projectId">projectId: Long</span>, <span name="projectName">projectName: String</span>, <span name="userId">userId: Long</span>, <span name="userRealName">userRealName: String</span>, <span name="eKey">eKey: String</span>, <span name="eType">eType: String</span>, <span name="content">content: String</span>, <span name="url">url: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for events.</p>
@@ -120,7 +120,7 @@
       <span class="symbol"> 
         <a href="FullLink.html"><span class="name">FullLink</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="parentSummary">parentSummary: String</span>, <span name="parentResolutionId">parentResolutionId: Option[Long]</span>, <span name="childId">childId: String</span>, <span name="childSummary">childSummary: String</span>, <span name="childResolutionId">childResolutionId: Option[Long]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="parentSummary">parentSummary: String</span>, <span name="parentResolutionId">parentResolutionId: Option[Long]</span>, <span name="childId">childId: String</span>, <span name="childSummary">childSummary: String</span>, <span name="childResolutionId">childResolutionId: Option[Long]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Case class for a link between tickets with more information culled from
@@ -132,7 +132,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="FullTicket.html"><span class="name">FullTicket</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="user">user: NamedThing</span>, <span name="reporter">reporter: NamedThing</span>, <span name="assignee">assignee: OptionalNamedThing</span>, <span name="attention">attention: OptionalNamedThing</span>, <span name="project">project: NamedThing</span>, <span name="priority">priority: ColoredPositionedThing</span>, <span name="resolution">resolution: OptionalNamedThing</span>, <span name="proposedResolution">proposedResolution: OptionalNamedThing</span>, <span name="severity">severity: ColoredPositionedThing</span>, <span name="workflowStatusId">workflowStatusId: Long</span>, <span name="status">status: NamedThing</span>, <span name="ttype">ttype: ColoredThing</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="user">user: NamedThing</span>, <span name="reporter">reporter: NamedThing</span>, <span name="assignee">assignee: OptionalNamedThing</span>, <span name="attention">attention: OptionalNamedThing</span>, <span name="project">project: NamedThing</span>, <span name="priority">priority: ColoredPositionedThing</span>, <span name="resolution">resolution: OptionalNamedThing</span>, <span name="proposedResolution">proposedResolution: OptionalNamedThing</span>, <span name="severity">severity: ColoredPositionedThing</span>, <span name="workflowStatusId">workflowStatusId: Long</span>, <span name="status">status: NamedThing</span>, <span name="ttype">ttype: ColoredThing</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for getting all possible information out of a ticket.</p>
@@ -143,7 +143,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Group.html"><span class="name">Group</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for groups.</p>
@@ -154,7 +154,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="GroupUser.html"><span class="name">GroupUser</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="groupId">groupId: Long</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="groupId">groupId: Long</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for users in a group.</p>
@@ -176,7 +176,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Link.html"><span class="name">Link</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="typeId">typeId: Long</span>, <span name="typeName">typeName: String</span>, <span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Case class for a link between tickets.</p>
@@ -191,6 +191,17 @@ the tickets themselves.</p>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="models.MakeLink" data-isabs="false">
+      <a id="MakeLink:MakeLink"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="MakeLink.html"><span class="name">MakeLink</span></a>
+        
+        <span class="params">(<span name="linkTypeId">linkTypeId: Long</span>, <span name="otherTicketId">otherTicketId: String</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Class for a making a link.</p>
     </li><li visbl="pub" name="models.NamedThing" data-isabs="false">
       <a id="NamedThing:NamedThing"></a>
       <h4 class="signature">
@@ -242,7 +253,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="PermissionScheme.html"><span class="name">PermissionScheme</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a permission scheme.</p>
@@ -253,7 +264,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="PermissionSchemeGroup.html"><span class="name">PermissionSchemeGroup</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="groupId">groupId: Long</span>, <span name="groupName">groupName: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="groupId">groupId: Long</span>, <span name="groupName">groupName: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -264,7 +275,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="PermissionSchemeUser.html"><span class="name">PermissionSchemeUser</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="permissionId">permissionId: String</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -275,7 +286,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Project.html"><span class="name">Project</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="workflowId">workflowId: Long</span>, <span name="sequenceCurrent">sequenceCurrent: Long</span>, <span name="name">name: String</span>, <span name="key">key: String</span>, <span name="ownerId">ownerId: Option[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="defaultPriorityId">defaultPriorityId: Option[Long]</span>, <span name="defaultSeverityId">defaultSeverityId: Option[Long]</span>, <span name="defaultTypeId">defaultTypeId: Option[Long]</span>, <span name="defaultAssignee">defaultAssignee: Option[Int]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="workflowId">workflowId: Long</span>, <span name="sequenceCurrent">sequenceCurrent: Long</span>, <span name="name">name: String</span>, <span name="key">key: String</span>, <span name="ownerId">ownerId: Option[Long]</span>, <span name="permissionSchemeId">permissionSchemeId: Long</span>, <span name="defaultPriorityId">defaultPriorityId: Option[Long]</span>, <span name="defaultSeverityId">defaultSeverityId: Option[Long]</span>, <span name="defaultTypeId">defaultTypeId: Option[Long]</span>, <span name="defaultAssignee">defaultAssignee: Option[Int]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a project.</p>
@@ -297,7 +308,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Role.html"><span class="name">Role</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a role.</p>
@@ -319,7 +330,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Ticket.html"><span class="name">Ticket</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="reporterId">reporterId: Long</span>, <span name="assigneeId">assigneeId: Long</span>, <span name="attentionId">attentionId: Long</span>, <span name="projectId">projectId: Long</span>, <span name="priorityId">priorityId: Long</span>, <span name="resolutionId">resolutionId: Option[Long]</span>, <span name="proposedResolutionId">proposedResolutionId: Option[Long]</span>, <span name="severityId">severityId: Long</span>, <span name="statusId">statusId: Long</span>, <span name="typeId">typeId: Long</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ticketId">ticketId: String</span>, <span name="reporterId">reporterId: Long</span>, <span name="assigneeId">assigneeId: Long</span>, <span name="attentionId">attentionId: Long</span>, <span name="projectId">projectId: Long</span>, <span name="priorityId">priorityId: Long</span>, <span name="resolutionId">resolutionId: Option[Long]</span>, <span name="proposedResolutionId">proposedResolutionId: Option[Long]</span>, <span name="severityId">severityId: Long</span>, <span name="statusId">statusId: Long</span>, <span name="typeId">typeId: Long</span>, <span name="position">position: Option[Long]</span>, <span name="summary">summary: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for getting a ticket.</p>
@@ -330,7 +341,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketLinkType.html"><span class="name">TicketLinkType</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="invertable">invertable: Boolean</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="invertable">invertable: Boolean</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for types of links.</p>
@@ -341,7 +352,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketPriority.html"><span class="name">TicketPriority</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -352,7 +363,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketResolution.html"><span class="name">TicketResolution</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -363,7 +374,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketSeverity.html"><span class="name">TicketSeverity</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="position">position: Int</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -374,7 +385,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketStatus.html"><span class="name">TicketStatus</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -385,7 +396,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="TicketType.html"><span class="name">TicketType</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="color">color: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -396,7 +407,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="User.html"><span class="name">User</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="email">email: String</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="username">username: String</span>, <span name="password">password: String</span>, <span name="realName">realName: String</span>, <span name="timezone">timezone: String</span>, <span name="email">email: String</span>, <span name="organization">organization: Option[String]</span>, <span name="location">location: Option[String]</span>, <span name="title">title: Option[String]</span>, <span name="url">url: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       
@@ -407,7 +418,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="Workflow.html"><span class="name">Workflow</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: Date</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="name">name: String</span>, <span name="description">description: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       

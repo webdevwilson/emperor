@@ -57,7 +57,7 @@
         <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents a modification of a project.</p>
+      <p class="comment cmt"><code>project/changed</code>: Represents a modification of a project.</p>
     </li><li visbl="pub" name="emp.event.ChangeTicketEvent" data-isabs="false">
       <a id="ChangeTicketEvent:ChangeTicketEvent"></a>
       <h4 class="signature">
@@ -65,10 +65,10 @@
       <span class="symbol"> 
         <a href="ChangeTicketEvent.html"><span class="name">ChangeTicketEvent</span></a>
         
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: Boolean</span>, <span name="unresolved">unresolved: Boolean</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: Boolean</span>, <span name="newTicketId">newTicketId: Long</span>, <span name="oldTicketId">oldTicketId: Long</span>, <span name="unresolved">unresolved: Boolean</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents a modification of a ticket.</p>
+      <p class="comment cmt"><code>ticket/changed</code>: Represents a modification of a ticket.</p>
     </li><li visbl="pub" name="emp.event.CommentTicketEvent" data-isabs="false">
       <a id="CommentTicketEvent:CommentTicketEvent"></a>
       <h4 class="signature">
@@ -76,10 +76,10 @@
       <span class="symbol"> 
         <a href="CommentTicketEvent.html"><span class="name">CommentTicketEvent</span></a>
         
-        <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="commentId">commentId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents a comment added to a ticket.</p>
+      <p class="comment cmt"><code>ticket/commentedon</code>: Represents a comment added to a ticket.</p>
     </li><li visbl="pub" name="emp.event.EmperorEvent" data-isabs="false">
       <a id="EmperorEvent:EmperorEvent"></a>
       <h4 class="signature">
@@ -101,7 +101,7 @@
         <span class="params">(<span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents a link created between two tickets.</p>
+      <p class="comment cmt"><code>ticket/linked</code>: Represents a link created between two tickets.</p>
     </li><li visbl="pub" name="emp.event.LogInUserEvent" data-isabs="false">
       <a id="LogInUserEvent:LogInUserEvent"></a>
       <h4 class="signature">
@@ -112,7 +112,7 @@
         <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents a user logging in.</p>
+      <p class="comment cmt"><code>user/loggedin</code>: Represents a user logging in.</p>
     </li><li visbl="pub" name="emp.event.NewProjectEvent" data-isabs="false">
       <a id="NewProjectEvent:NewProjectEvent"></a>
       <h4 class="signature">
@@ -123,7 +123,7 @@
         <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents the creation of a project.</p>
+      <p class="comment cmt"><code>project/created</code>: Represents the creation of a project.</p>
     </li><li visbl="pub" name="emp.event.NewTicketEvent" data-isabs="false">
       <a id="NewTicketEvent:NewTicketEvent"></a>
       <h4 class="signature">
@@ -134,7 +134,7 @@
         <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents the creation of a ticket.</p>
+      <p class="comment cmt"><code>ticket/created</code>: Represents the creation of a ticket.</p>
     </li><li visbl="pub" name="emp.event.NewUserEvent" data-isabs="false">
       <a id="NewUserEvent:NewUserEvent"></a>
       <h4 class="signature">
@@ -145,7 +145,7 @@
         <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents the creation of a user.</p>
+      <p class="comment cmt"><code>user/created</code>: Represents the creation of a user.</p>
     </li><li visbl="pub" name="emp.event.UnlinkTicketEvent" data-isabs="false">
       <a id="UnlinkTicketEvent:UnlinkTicketEvent"></a>
       <h4 class="signature">
@@ -156,7 +156,7 @@
         <span class="params">(<span name="childId">childId: String</span>, <span name="parentId">parentId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Represents the removal of a link between two tickets.</p>
+      <p class="comment cmt"><code>ticket/unlinked</code>: Represents the removal of a link between two tickets.</p>
     </li></ol>
             </div>
         
