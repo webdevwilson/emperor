@@ -3,7 +3,7 @@ package controllers.admin
 import anorm._
 import controllers._
 import org.joda.time.DateTime
-import models.{PermissionSchemeModel,ProjectModel}
+import models.{GroupModel,PermissionSchemeModel,ProjectModel,UserModel}
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
@@ -13,12 +13,12 @@ import play.db._
 
 case class AddedPermissionSchemeGroup (
   permissionId: String,
-  groupId: Long
+  groupName: String
 )
 
 case class AddedPermissionSchemeUser (
   permissionId: String,
-  userId: Long
+  username: String
 )
 
 object PermissionScheme extends Controller with Secured {
@@ -35,14 +35,14 @@ object PermissionScheme extends Controller with Secured {
   val groupForm = Form(
     mapping(
       "permission_id" -> nonEmptyText,
-      "group_id" -> longNumber
+      "group_name" -> nonEmptyText
     )(AddedPermissionSchemeGroup.apply)(AddedPermissionSchemeGroup.unapply)
   )
 
   val userForm = Form(
     mapping(
       "permission_id" -> nonEmptyText,
-      "user_id" -> longNumber
+      "username" -> nonEmptyText
     )(AddedPermissionSchemeUser.apply)(AddedPermissionSchemeUser.unapply)
   )
 
@@ -70,9 +70,13 @@ object PermissionScheme extends Controller with Secured {
   def addGroup(id: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     groupForm.bindFromRequest.fold(
-      errors => Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.group.add.error"),
+      errors => {
+        println(errors)
+        Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.group.add.error")
+      },
       value => {
-        PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = value.groupId)
+        val group = GroupModel.getByName(value.groupName).get // XXX could be none!
+        PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = group.id.get)
         Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
       }
     )
@@ -93,7 +97,9 @@ object PermissionScheme extends Controller with Secured {
     userForm.bindFromRequest.fold(
       errors => Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.user.add.error"),
       value => {
-        PermissionSchemeModel.addUserToScheme(permissionSchemeId = id, perm = value.permissionId, userId = value.userId)
+        val user = UserModel.getByUsername(value.username).get // XXX could be none!
+
+        PermissionSchemeModel.addUserToScheme(permissionSchemeId = id, perm = value.permissionId, userId = user.id.get)
         Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.user.add.success")
       }
     )

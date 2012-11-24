@@ -258,7 +258,7 @@ object PermissionSchemeModel {
   def getUsersForPermission(id: Long, permissionId: String): List[PermissionSchemeUser] = {
 
     DB.withConnection { implicit conn =>
-      getUsersQuery.on(
+      getUsersForPermissionQuery.on(
         'permission_scheme_id -> id,
         'permission_id -> permissionId
       ).as(permissionSchemeUser *)

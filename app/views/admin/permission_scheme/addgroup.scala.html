@@ -11,8 +11,8 @@
 <div class="modal-body">
  <h4>@Messages("admin.permission_scheme.group.add.help")</h4>
  <fieldset>
-  <input type="hidden" name="permission_id" vale="@perm.name"/>
-  @helper.inputText(field = groupForm("group_id"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
+  <input type="hidden" name="permission_id" value="@perm.name"/>
+  @helper.inputText(field = groupForm("group_name"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
  </fieldset>
 </div>
 <div class="modal-footer">
@@ -24,7 +24,7 @@ $('.typeahead').typeahead({ source:
   function(query, process) {
     $.getJSON("/api/group/startswith?q=" + query)
     .done(function(data) {
-      var groups = $.map(data, function(g) { return g.id })
+      var groups = $.map(data, function(g) { return g.name })
       return process(groups);
     });
   }

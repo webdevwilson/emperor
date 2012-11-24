@@ -123,12 +123,12 @@ function TicketViewModel(ticketId) {
     });
   }
 
-  self.removeLink = function(data) {
+  self.removeLink = function(parent, data) {
     $.ajax({
       type: "DELETE",
       url: "/api/ticket/link/" + ticketId + "/" + data.id()
     })
-    .done(showLinks())
+    .done(parent.users.remove(data))
     .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
   }
 
@@ -147,12 +147,30 @@ function AdminPermissionSchemeViewModel(permissionSchemeId) {
     });
   }
 
+  self.removeGroup = function(parent, data) {
+    $.ajax({
+      type: "DELETE",
+      url: "/api/permission_scheme/" + permissionSchemeId + "/" + data.permissionId + "/group/" + data.id
+    })
+    .done(parent.groups.remove(data))
+    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
+  }
+
   self.addUser = function(perm) {
     var $modal = $("#ajax-modal");
     $('body').modalmanager('loading');
     $modal.load("/admin/permission_scheme/user/" + permissionSchemeId + "/" + perm.name(), '', function(){
       $modal.modal();
     });
+  }
+
+  self.removeUser = function(parent, data) {
+    $.ajax({
+      type: "DELETE",
+      url: "/api/permission_scheme/" + permissionSchemeId + "/" + data.permissionId + "/user/" + data.id
+    })
+    .done(parent.users.remove(data))
+    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
   }
 
   $.getJSON("/api/permission")

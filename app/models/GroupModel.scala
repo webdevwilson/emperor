@@ -36,6 +36,7 @@ object GroupModel {
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.group_id WHERE gu.user_id={userId}")
   val startsWithQuery = SQL("SELECT * FROM groups WHERE name COLLATE utf8_unicode_ci LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
+  val getByNameQuery = SQL("SELECT * FROM groups WHERE name={name}")
   val listQuery = SQL("SELECT * FROM groups ORDER BY name LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
   val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
@@ -114,6 +115,16 @@ object GroupModel {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(group.singleOpt)
+    }
+  }
+
+  /**
+   * Retrieve a group by name.
+   */
+  def getByName(name: String) : Option[Group] = {
+
+    DB.withConnection { implicit conn =>
+      getByNameQuery.on('name -> name).as(group.singleOpt)
     }
   }
 

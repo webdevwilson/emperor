@@ -22,13 +22,13 @@
    <td><strong data-bind="text: nameI18N"></strong><p><small data-bind="text: descriptionI18N"></small></p></td>
    <td>
     <ul class="clearfix grid gridded-list" data-bind="foreach: groups()">
-     <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: groupName"></a></li>
+     <li><i class="user-remover remover icon-remove" data-bind="click: removeGroup.bind($data, $parent)"></i> <a href="#" data-bind="text: groupName"></a></li>
     </ul>
     <a class="btn btn-mini clearfix" data-bind="click: addGroup">@Messages("admin.permission_scheme.group.add")</a>
    </td>
    <td>
     <ul class="clearfix grid gridded-list" data-bind="foreach: users()">
-     <li><i class="user-remover remover icon-remove"></i> <a href="#" data-bind="text: username"></a></li>
+     <li><i class="user-remover remover icon-remove" data-bind="click: removeUser.bind($data, $parent)"></i> <a href="#" data-bind="text: username"></a></li>
     </ul>
     <a class="btn btn-mini clearfix" data-bind="click: addUser">@Messages("admin.permission_scheme.user.add")</a>
   </td>

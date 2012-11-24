@@ -11,8 +11,8 @@
 <div class="modal-body">
  @Messages("admin.permission_scheme.user.add.help")
  <fieldset>
-  <input type="hidden" name="permission_id" vale="@perm.name"/>
-  @helper.inputText(field = userForm("user_id"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
+  <input type="hidden" name="permission_id" value="@perm.name"/>
+  @helper.inputText(field = userForm("username"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
  </fieldset>
 </div>
 <div class="modal-footer">
@@ -24,7 +24,7 @@ $('.typeahead').typeahead({ source:
   function(query, process) {
     $.getJSON("/api/user/startswith?q=" + query)
     .done(function(data) {
-      var users = $.map(data, function(u) { return u.id })
+      var users = $.map(data, function(u) { return u.username })
       return process(users);
     });
   }
