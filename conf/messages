@@ -304,12 +304,11 @@ ticket.summary=Summary
 ticket.severity=Severity
 ticket.status=Status
 ticket.ticket=Ticket
+ticket.page.title=Ticket {0}: {1}
 ticket.type=Type
 ticket.unassigned=Nobody
 ticket.unresolve=Unresolve Ticket
 ticket.unresolve.summary=You are unresolving ticket {0}.
-ticket.with.id=Ticket {0}
-ticket.with.summary={0}: {1}
 
 ticket_link_type.name=Name
 

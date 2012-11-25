@@ -12,7 +12,7 @@
 @import helper.bootstrap._
 @import views.html.util._
 
-@main(title = Messages("ticket.with.id", ticket.ticketId), currentProject = Some(ticket.project.id)) {
+@main(title = Messages("ticket.page.title", ticket.ticketId, ticket.summary), currentProject = Some(ticket.project.id)) {
 <div class="row-fluid">
 
  <div class="span2">
@@ -50,17 +50,19 @@
    <h4>
     <a href="@routes.Project.item(ticket.project.id)">@ticket.project.name</a>: @ticket.ticketId
    </h4>
-   <div class="btn-group">
-   @statuses.map { status =>
-    <a class="btn @if(status.id.get == ticket.status.id) { btn-success }" data-bind="click: changeState.bind($data, '@ticket.ticketId', @status.id.get)">@if(status.id.get == ticket.status.id) {<i class="icon-map-marker icon-white"></i>} @Messages(status.name)</a>
-   }
-   </div>
-   <div class="btn-group">
-    @if(ticket.resolution.id.isDefined) {
-    <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
-    } else {
-    <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-check icon-white"></i> @Messages("ticket.resolve")</a>
+   <div style="margin-bottom: .75em">
+    <div class="btn-group">
+    @statuses.map { status =>
+     <a class="btn @if(status.id.get == ticket.status.id) { btn-success }" data-bind="click: changeState.bind($data, '@ticket.ticketId', @status.id.get)">@if(status.id.get == ticket.status.id) {<i class="icon-map-marker icon-white"></i>} @Messages(status.name)</a>
     }
+    </div>
+    <div class="btn-group">
+     @if(ticket.resolution.id.isDefined) {
+     <a class="btn btn-danger" data-toggle="modal" href="#unresolver"><i class="icon-repeat icon-white"></i> @Messages("ticket.unresolve")</a>
+     } else {
+     <a class="btn btn-success" data-toggle="modal" href="#resolver"><i class="icon-check icon-white"></i> @Messages("ticket.resolve")</a>
+     }
+    </div>
    </div>
   </div>
 
