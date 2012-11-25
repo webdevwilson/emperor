@@ -223,12 +223,12 @@ function TicketViewModel(ticketId) {
     });
   }
 
-  self.removeLink = function(parent, data) {
+  self.removeLink = function(data) {
     $.ajax({
       type: "DELETE",
       url: "/api/ticket/link/" + ticketId + "/" + data.id()
     })
-    .done(parent.users.remove(data))
+    .done(self.links.remove(data))
     .fail(function() { ShowAlert("alert-error", "XXX Failed to delete link!") })
   }
 
