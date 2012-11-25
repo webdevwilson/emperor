@@ -11,7 +11,7 @@
 <div class="modal-body">
  <fieldset>
   @helper.select(field = linkForm("link_type_id"), options = linkTypes, args = '_label -> Messages("ticket.linker.link", ticket.ticketId))
-  @helper.inputText(field = linkForm("other_ticket_id"), args = '_label -> Messages("ticket.linker.otherticket"), 'class -> "typeahead")
+  @helper.inputText(field = linkForm("other_ticket_id"), args = '_label -> Messages("ticket.linker.otherticket"), 'class -> "typeahead", 'autocomplete -> "off")
   @helper.textarea(field = linkForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
  </fieldset>
 </div>

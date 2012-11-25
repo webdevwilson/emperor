@@ -12,7 +12,7 @@
  @Messages("admin.permission_scheme.user.add.help")
  <fieldset>
   <input type="hidden" name="permission_id" value="@perm.name"/>
-  @helper.inputText(field = userForm("username"), args = '_label -> Messages(perm.name), 'class -> "typeahead")
+  @helper.inputText(field = userForm("username"), args = '_label -> Messages(perm.name), 'class -> "typeahead", 'autocomplete -> "off")
  </fieldset>
 </div>
 <div class="modal-footer">
