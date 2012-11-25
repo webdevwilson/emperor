@@ -1,5 +1,6 @@
 package models
 
+import emp.text.Renderer
 import emp.util.Pagination.Page
 import emp.util.Search
 import emp.util.Search._
@@ -627,7 +628,7 @@ object SearchModel {
       userRealName  = ft.user.name,
       eKey          = comment.ticketId,
       eType         = "comment",
-      content       = comment.content,
+      content       = Renderer.render(Some(comment.content)),
       url           = "",
       dateCreated   = comment.dateCreated
     ))

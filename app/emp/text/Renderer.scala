@@ -9,7 +9,6 @@ import org.pegdown.{LinkRenderer,PegDownProcessor}
  */
 object Renderer {
 
-
   val renderer = new PegDownProcessor(Extensions.ALL)
 
   /**
