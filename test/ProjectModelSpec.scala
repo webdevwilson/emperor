@@ -28,7 +28,7 @@ class ProjectModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
         newProject must beAnInstanceOf[models.Project]
@@ -50,7 +50,7 @@ class ProjectModelSpec extends Specification {
           defaultSeverityId = proj.get.defaultSeverityId,
           defaultTypeId = proj.get.defaultTypeId,
           defaultAssignee = proj.get.defaultAssignee,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val updateProj = ProjectModel.update(proj.get.id.get, cProj)
         updateProj must beSome
@@ -78,7 +78,7 @@ class ProjectModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
         newProject.sequenceCurrent mustEqual(0)

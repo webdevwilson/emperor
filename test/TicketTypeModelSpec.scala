@@ -19,7 +19,7 @@ class TicketTypeModelSpec extends Specification {
         val t = models.TicketType(
           name = "Test Type 1",
           color = "ffffff",
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newType = TicketTypeModel.create(t)
         newType must beAnInstanceOf[models.TicketType]

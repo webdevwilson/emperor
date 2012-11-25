@@ -19,7 +19,7 @@ class PermissionSchemeModelSpec extends Specification {
         val psObj = models.PermissionScheme(
           name = "Test Permission Schema",
           description = Some("Testing!"),
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newPs = PermissionSchemeModel.create(psObj)
         newPs must beAnInstanceOf[models.PermissionScheme]
@@ -63,14 +63,19 @@ class PermissionSchemeModelSpec extends Specification {
           password = "1234",
           realName = "Test User",
           email    = "test@example.com",
-          dateCreated = new Date
+          timezone = "America/Chicago",
+          organization = None,
+          location = None,
+          title    = None,
+          url      = None,
+          dateCreated = new DateTime
         )
         val newUser = UserModel.create(iu)
 
         val psObj = models.PermissionScheme(
           name = "Test Permission Schema",
           description = Some("Testing!"),
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newPs = PermissionSchemeModel.create(psObj)
 
@@ -84,7 +89,7 @@ class PermissionSchemeModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
 
@@ -146,7 +151,12 @@ class PermissionSchemeModelSpec extends Specification {
           password = "1234",
           realName = "Test User",
           email    = "test@example.com",
-          dateCreated = new Date
+          timezone = "America/Chicago",
+          organization = None,
+          location = None,
+          title    = None,
+          url      = None,
+          dateCreated = new DateTime
         )
         val newUser = UserModel.create(iu)
 
@@ -156,7 +166,7 @@ class PermissionSchemeModelSpec extends Specification {
         val psObj = models.PermissionScheme(
           name = "Test Permission Schema",
           description = Some("Testing!"),
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newPs = PermissionSchemeModel.create(psObj)
 
@@ -170,7 +180,7 @@ class PermissionSchemeModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
 

@@ -27,9 +27,12 @@ object Global extends GlobalSettings {
 
     val searchIndexer = actsystem.actorOf(Props(new SearchIndexer(Play.configuration)))
 
-    SearchIndexer.relevantEvents.foreach { ev =>
-      Logger.debug("Subscribed Search Indexer to '" + ev + "'")
-      EmperorEventBus.subscribe(searchIndexer, ev)
+    // Search indexer does not like running without ES
+    if(!Play.isTest) {
+      SearchIndexer.relevantEvents.foreach { ev =>
+        Logger.debug("Subscribed Search Indexer to '" + ev + "'")
+        EmperorEventBus.subscribe(searchIndexer, ev)
+      }
     }
   }
 

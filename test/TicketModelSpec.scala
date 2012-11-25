@@ -28,7 +28,7 @@ class TicketModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
 
@@ -76,7 +76,7 @@ class TicketModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
 
@@ -172,7 +172,7 @@ class TicketModelSpec extends Specification {
           defaultSeverityId = None,
           defaultTypeId = None,
           defaultAssignee = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newProject = ProjectModel.create(p)
 

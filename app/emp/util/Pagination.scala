@@ -22,8 +22,8 @@ object Pagination {
      * The current page.
      */
     lazy val page = requestedPage match {
-        case p if p < range.start => range.end
-        case p if p > range.end => range.end
+        case p if p < range.start => range.start
+        case p if p >= range.end => range.end - 1
         case _ => requestedPage
     }
     /**

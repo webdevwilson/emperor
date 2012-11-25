@@ -20,7 +20,7 @@ class TicketSeverityModelSpec extends Specification {
           name = "Test Severity 1",
           color = "ffffff",
           position = 50,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newSev = TicketSeverityModel.create(p)
         newSev must beAnInstanceOf[models.TicketSeverity]

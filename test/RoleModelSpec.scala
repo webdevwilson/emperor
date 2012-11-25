@@ -18,7 +18,7 @@ class RoleModelSpec extends Specification {
 
         val r = models.Role(
           name = "Test Project 1",
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newRole = RoleModel.create(r)
         newRole must beAnInstanceOf[models.Role]

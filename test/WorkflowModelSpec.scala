@@ -19,7 +19,7 @@ class WorkflowModelSpec extends Specification {
         val w = models.Workflow(
           name = "Test Workflow 1",
           description = None,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newWork = WorkflowModel.create(w)
         newWork must beAnInstanceOf[models.Workflow]

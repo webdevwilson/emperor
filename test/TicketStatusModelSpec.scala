@@ -18,7 +18,7 @@ class TicketStatusModelSpec extends Specification {
 
         val s = models.TicketStatus(
           name = "Ticket Status 1",
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newStatus = TicketStatusModel.create(s)
         newStatus must beAnInstanceOf[models.TicketStatus]

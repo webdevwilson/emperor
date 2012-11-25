@@ -18,7 +18,7 @@ class TicketResolutionModelSpec extends Specification {
 
         val p = models.TicketResolution(
           name = "Test Resolution 1",
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newPrio = TicketResolutionModel.create(p)
         newPrio must beAnInstanceOf[models.TicketResolution]

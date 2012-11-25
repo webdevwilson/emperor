@@ -21,7 +21,12 @@ class UserModelSpec extends Specification {
           password = "1234",
           realName = "Test User",
           email    = "test@example.com",
-          dateCreated = new Date
+          timezone = "America/Chicago",
+          organization = None,
+          location = None,
+          title    = None,
+          url      = None,
+          dateCreated = new DateTime
         )
         val newUser = UserModel.create(iu)
         newUser must beAnInstanceOf[models.User]
@@ -36,8 +41,13 @@ class UserModelSpec extends Specification {
           username = "testuser1",
           password = "1234",
           realName = "Testy User",
-          email = "test@example.com",
-          dateCreated = new Date
+          email    = "test@example.com",
+          timezone = "America/Chicago",
+          organization = None,
+          location = None,
+          title    = None,
+          url      = None,
+          dateCreated = new DateTime
         )
         val updatedUser = UserModel.update(newUser.id.get, cUser)
         updatedUser must beSome

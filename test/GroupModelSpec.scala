@@ -23,7 +23,7 @@ class GroupModelSpec extends Specification {
         val retGroup = GroupModel.getById(newGroup.id.get)
         retGroup must beSome
         retGroup.get.name mustEqual group.name
-        retGroup.get.dateCreated must beAnInstanceOf[Date]
+        retGroup.get.dateCreated must beAnInstanceOf[DateTime]
 
         val cGroup = retGroup.get.copy(name = "Test Group 2!")
         val updatedGroup = GroupModel.update(cGroup.id.get, cGroup)
@@ -51,7 +51,12 @@ class GroupModelSpec extends Specification {
           password = "1234",
           realName = "Test User",
           email    = "test@example.com",
-          dateCreated = new Date
+          timezone = "America/Chicago",
+          organization = None,
+          location = None,
+          title    = None,
+          url      = None,
+          dateCreated = new DateTime
         )
         val newUser = UserModel.create(iu)
 

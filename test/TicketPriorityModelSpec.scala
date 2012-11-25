@@ -20,7 +20,7 @@ class TicketPriorityModelSpec extends Specification {
           name = "Test Priority 1",
           color = "ffffff",
           position = 50,
-          dateCreated = new Date
+          dateCreated = new DateTime
         )
         val newPrio = TicketPriorityModel.create(p)
         newPrio must beAnInstanceOf[models.TicketPriority]
