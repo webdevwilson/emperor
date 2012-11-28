@@ -15,8 +15,7 @@
     @helper.inputText(objForm("username"), '_label -> Messages("general.username"))
     @helper.inputPassword(objForm("password"), '_label -> Messages("general.password"))
     <div class="form-actions">
-     <a href="@routes.Admin.index" class="btn"><i class="icon-remove"></i> @Messages("form.cancel")</a>
-     <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+     <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("auth.login")</button>
     </div>
    </fieldset>
   }
