@@ -17,7 +17,7 @@ object Pagination {
     /**
      * The range of pages.
      */
-     lazy val range = Range(start = 1, end = 1.to(total.toInt).by(count).size + 1)
+    lazy val range = Range(start = 1, end = 1.to(total.toInt).by(count).size + 1)
     /**
      * The current page.
      */
