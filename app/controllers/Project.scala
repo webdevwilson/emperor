@@ -121,7 +121,7 @@ object Project extends Controller with Secured {
 
         val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters, page = page, count = count)
 
-        val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
+        val events = SearchModel.searchEvent(eventQuery)
 
         val tfilters = Map(
           "project_id"  -> Seq(projectId.toString),
@@ -131,7 +131,7 @@ object Project extends Controller with Secured {
 
         val ticketQuery = SearchQuery(userId = request.user.id.get, filters = tfilters)
 
-        val tickets = SearchModel.searchTicket(ticketQuery) // XXX Fixed page, count, query
+        val tickets = SearchModel.searchTicket(ticketQuery)
 
         val owner = project.ownerId.map({ userId => UserModel.getById(userId) }).getOrElse(None)
 
