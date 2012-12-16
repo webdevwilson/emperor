@@ -6,7 +6,7 @@ import sbtbuildinfo.Plugin._
 object ApplicationBuild extends Build {
 
   val appName         = "emperor"
-  val appVersion      = "0.0.17"
+  val appVersion      = "0.0.20"
 
   val appDependencies = Seq(
     "org.scala-lang" % "scala-compiler"         % "2.9.1",
