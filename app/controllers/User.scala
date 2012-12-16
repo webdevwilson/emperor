@@ -12,7 +12,7 @@ import emp.util.Search._
 
 object User extends Controller with Secured {
 
-  def item(userId: Long) = IsAuthenticated() { implicit request =>
+  def item(userId: Long, page: Int = 1, count: Int = 10) = IsAuthenticated() { implicit request =>
 
     val maybeUser = UserModel.getById(userId)
 
@@ -20,7 +20,7 @@ object User extends Controller with Secured {
       case Some(user) => {
         val efilters = Map("user_id" -> Seq(userId.toString))
 
-        val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters)
+        val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters, page = page, count = count)
 
         val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
 
