@@ -22,7 +22,7 @@ object User extends Controller with Secured {
 
         val eventQuery = SearchQuery(userId = request.user.id.get, filters = efilters, page = page, count = count)
 
-        val events = SearchModel.searchEvent(eventQuery) // XXX fixed page, count, query
+        val events = SearchModel.searchEvent(eventQuery)
 
         Ok(views.html.user.item(user, events)(request))
       }
