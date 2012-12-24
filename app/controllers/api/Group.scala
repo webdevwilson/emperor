@@ -38,10 +38,9 @@ object Group extends Controller with Secured {
       case Some(user) => {
         val gu = GroupModel.addUser(user.id.get, id)
         val json = Json.toJson(gu.get) // This might be none XXX
-        callback match {
-          case Some(callback) => Ok(Jsonp(callback, json))
-          case None => Ok(json)
-        }
+        callback.map({ cb =>
+          Ok(Jsonp(cb, json))
+        }).getOrElse(Ok(json))
       }
       case None => NotFound
     }
@@ -52,7 +51,7 @@ object Group extends Controller with Secured {
    */
   def removeUser(id: Long, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    GroupModel.removeUser(userId, id) // XXX This should return something…
+    GroupModel.removeUser(userId, id)
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))

@@ -196,8 +196,6 @@ object Ticket extends Controller with Secured {
     )
   }
 
-  // XXX This would be a good place for a different type of permission, since this isn't really
-  // editing.
   def change(ticketId: String, statusId: Long) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
     TicketStatusModel.getById(statusId).map({ status =>
@@ -385,7 +383,6 @@ object Ticket extends Controller with Secured {
     }
   }
 
-  // XXX Different permissions
   def link(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
     TicketModel.getFullById(ticketId).map({ ticket =>
@@ -479,7 +476,6 @@ object Ticket extends Controller with Secured {
         BadRequest(views.html.ticket.edit(ticketId, errors, assignees, assignees, assignees, projs, ttypes, prios, sevs))
       },
       value => {
-        // XXX validate assignability
         TicketModel.update(request.user.id.get, ticketId, value)
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
       }

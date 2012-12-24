@@ -7,7 +7,6 @@
 <h1>@Messages("ticket.edit")</h1>
 @helper.form(action = routes.Ticket.update(id)) {
  <fieldset>
-  @helper.select(field = objForm("project_id"), options = projs, args = '_label -> Messages("XXX ticket.project"))
   @helper.inputText(field = objForm("summary"), args = 'class -> "span8", '_label -> Messages("ticket.summary"))
   @helper.textarea(field = objForm("description"), args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
   @helper.select(field = objForm("reporter_id"), options = users, args = '_label -> Messages("ticket.reporter"))
