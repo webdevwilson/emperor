@@ -92,7 +92,6 @@ object Workflow extends Controller with Secured {
 
   def save(workflowId: Long) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    // XXX Do me!
     Redirect(routes.Workflow.item(workflowId)).flashing("success" -> "admin.workflow.edit.success")
   }
 }

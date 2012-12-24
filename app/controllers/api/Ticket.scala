@@ -43,7 +43,6 @@ object Ticket extends Controller with Secured {
 
   def deleteLink(ticketId: String, id: Long, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_LINK") { implicit request =>
     TicketModel.removeLink(id)
-    // XXX This should verify that the ticket is one of the parent or child!!
     val json = Json.toJson(Map("ok" -> "ok"))
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
