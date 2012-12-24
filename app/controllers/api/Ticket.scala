@@ -42,11 +42,25 @@ object Ticket extends Controller with Secured {
   }
 
   def deleteLink(ticketId: String, id: Long, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_LINK") { implicit request =>
-    TicketModel.removeLink(id)
-    val json = Json.toJson(Map("ok" -> "ok"))
-    callback match {
-      case Some(callback) => Ok(Jsonp(callback, json))
-      case None => Ok(json)
+
+    val maybeLink = TicketModel.getLinkById(id).map({ link =>
+      if(link.parentId == ticketId || link.childId == ticketId) {
+        link
+      } else {
+        None
+      }
+    })
+
+    maybeLink match {
+      case Some(link) => {
+        TicketModel.removeLink(id)
+        val json = Json.toJson(Map("ok" -> "ok"))
+        callback match {
+          case Some(callback) => Ok(Jsonp(callback, json))
+          case None => Ok(json)
+        }
+      }
+      case None => NotFound
     }
   }
 
