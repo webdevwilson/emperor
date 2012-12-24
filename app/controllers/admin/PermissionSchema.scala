@@ -75,9 +75,10 @@ object PermissionScheme extends Controller with Secured {
         Redirect(routes.PermissionScheme.item(id)).flashing("error" -> "admin.permission_scheme.group.add.error")
       },
       value => {
-        val group = GroupModel.getByName(value.groupName).get // XXX could be none!
-        PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = group.id.get)
-        Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
+        GroupModel.getByName(value.groupName).map({ group =>
+          PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = value.permissionId, groupId = group.id.get)
+          Redirect(routes.PermissionScheme.item(id)).flashing("success" -> "admin.permission_scheme.group.add.success")
+        }).getOrElse(NotFound)
       }
     )
   }

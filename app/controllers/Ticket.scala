@@ -200,10 +200,11 @@ object Ticket extends Controller with Secured {
   // editing.
   def change(ticketId: String, statusId: Long) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    // XXX This will blow up!
-    val status = TicketStatusModel.getById(statusId).get
-
-    TicketModel.getFullById(ticketId).map({ ticket => Ok(views.html.ticket.change(ticket, status, commentForm)) }).getOrElse(NotFound)
+    TicketStatusModel.getById(statusId).map({ status =>
+      TicketModel.getFullById(ticketId).map({ ticket =>
+        Ok(views.html.ticket.change(ticket, status, commentForm))
+      }).getOrElse(NotFound)
+    }).getOrElse(NotFound)
   }
 
   def comment(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_COMMENT") { implicit request =>

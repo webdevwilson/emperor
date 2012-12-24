@@ -10,8 +10,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json._
 import play.api.libs.json._
 
-// XXX All thse reads IDs should be NotAssigned…
-
 /**
  * Code for converting Emperor entities into JSON.
  */
@@ -24,8 +22,6 @@ object JsonFormats {
 
   private def optionI18nStringtoJsValue(maybeId: Option[String]) = maybeId.map({ s => JsString(Messages(s)) }).getOrElse(JsNull)
   private def optionStringtoJsValue(maybeId: Option[String]) = maybeId.map({ s => JsString(s) }).getOrElse(JsNull)
-
-  // XXX UNIT TESTS FOR THE LOVE OF GOD
 
   /**
    * JSON conversion for TicketPriority
