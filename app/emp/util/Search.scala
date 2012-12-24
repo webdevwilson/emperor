@@ -2,7 +2,8 @@ package emp.util
 
 import models.{ProjectModel,SearchModel}
 import collection.JavaConversions._
-import com.traackr.scalastic.elasticsearch.Indexer
+// import scalastic.elasticsearch.Indexer
+import scalastic.elasticsearch._, SearchParameterTypes._
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.FilterBuilders._
@@ -187,9 +188,9 @@ object Search {
         case 1 => Some(0)
         case _ => Some((query.page - 1) * query.count)
       },
-      sorting = Seq(
+      sortings = Seq(
         // This is a bit messy… but it gets the job done.
-        sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created") -> sortOrder
+        FieldSort(field = sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created"), order = sortOrder)
       )
     )
   }

@@ -5,7 +5,7 @@ import emp.util.Pagination.Page
 import emp.util.Search
 import emp.util.Search._
 import emp.JsonFormats._
-import com.traackr.scalastic.elasticsearch.Indexer
+import scalastic.elasticsearch._, SearchParameterTypes._
 import play.api._
 import play.api.Play.current
 import play.api.libs.json.Json._
@@ -578,22 +578,22 @@ object SearchModel {
    */
   def checkIndices = {
 
-    if(!indexer.exists(eventIndex)) {
+    if(!indexer.exists(eventIndex).exists) {
       indexer.createIndex(eventIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(eventIndex, eventType, eventMapping)
     }
-    if(!indexer.exists(ticketIndex)) {
+    if(!indexer.exists(ticketIndex).exists) {
       indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(ticketIndex, ticketType, ticketMapping)
     }
-    if(!indexer.exists(ticketCommentIndex)) {
+    if(!indexer.exists(ticketCommentIndex).exists) {
       indexer.createIndex(ticketCommentIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(ticketCommentIndex, ticketCommentType, ticketCommentMapping)
     }
-    if(!indexer.exists(ticketHistoryIndex)) {
+    if(!indexer.exists(ticketHistoryIndex).exists) {
       indexer.createIndex(ticketHistoryIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
@@ -797,10 +797,7 @@ object SearchModel {
    */
   def reIndex {
 
-    indexer.deleteIndex(eventIndex)
-    indexer.deleteIndex(ticketIndex)
-    indexer.deleteIndex(ticketHistoryIndex)
-    indexer.deleteIndex(ticketCommentIndex)
+    indexer.deleteIndex(Seq(eventIndex, ticketIndex, ticketHistoryIndex, ticketCommentIndex))
     checkIndices
 
     // Reindex all tickets and their history
@@ -878,7 +875,7 @@ object SearchModel {
         case 1 => Some(0)
         case _ => Some((page - 1) * count)
       },
-      sorting = Seq("date_created" -> SortOrder.DESC)
+      sortings = Seq(FieldSort(field = "date_created", order = SortOrder.DESC))
     )
   }
 

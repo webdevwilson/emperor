@@ -17,7 +17,11 @@ object ApplicationBuild extends Build {
     "javax.mail"    % "mail"                    % "1.4.1",
     "commons-codec" % "commons-codec"           % "1.7",
     "org.apache.commons" % "commons-email"      % "1.2",
-    "joda-time"     % "joda-time"               % "2.1"
+    "joda-time"     % "joda-time"               % "2.1",
+    // ES thingies
+    "org.elasticsearch" % "elasticsearch"       % "0.20.1",
+    "com.spatial4j" % "spatial4j"               % "0.3",
+    "org.clapper"   %% "grizzled-slf4j"         % "0.6.10"
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
