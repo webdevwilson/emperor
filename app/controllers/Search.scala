@@ -10,7 +10,6 @@ object Search extends Controller with Secured {
 
   def index(page: Int, count: Int, query: String, sort: Option[String] = None, order: Option[String] = None) = IsAuthenticated() { implicit request =>
 
-    // XXX This can go if we use the responses filter's in the templates
     val filters = request.queryString filterKeys { key =>
       SearchModel.ticketFilterMap.get(key).isDefined
     }
