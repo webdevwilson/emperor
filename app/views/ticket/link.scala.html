@@ -11,7 +11,28 @@
 <div class="modal-body">
  <fieldset>
   @helper.select(field = linkForm("link_type_id"), options = linkTypes, args = '_label -> Messages("ticket.linker.link", ticket.ticketId))
-  @helper.inputText(field = linkForm("other_ticket_id"), args = '_label -> Messages("ticket.linker.otherticket"), 'class -> "typeahead", 'autocomplete -> "off")
+  <div class="control-group" data-bind="visible: selectedTickets().length > 0">
+   <label class="control-label" for="other_ticket_id">@Messages("ticket.linker.selectedtickets")</label>
+   <div class="controls">
+    <ul class="unstyled labels" data-bind="foreach: selectedTickets()">
+     <li><input type="hidden" name="selected" data-bind="value: ticketId, attr: { name: 'ticket[' + $index() + ']'}"><span class="label label-info"><span data-bind="text: ticketId"></span><button type="button" class="close" data-bind="click: removeTicket">&times;</button></span></li>
+    </ul>
+   </div>
+  </div>
+  <div class="control-group" style="clear: both">
+    <label class="control-label" for="other_ticket_id">@Messages("ticket.linker.otherticket")</label>
+    <div class="controls">
+     <div>
+      <input type="text" id="other_ticket_id" name="other_ticket_id" data-bind="value: query, valueUpdate: 'afterkeydown'" value="" autocomplete="off">
+      <div data-bind="visible: tickets().length > 0" style="position: absolute;">
+       <ul class="typeahead dropdown-menu" data-bind="foreach: tickets()">
+        <li><a href="#" data-bind="click: selectTicket"><span data-bind="text: ticketId"></span></a></li>
+       </ul>
+      </div>
+     </div>
+     <span class="help-block"></span>
+    </div>
+  </div>
   @helper.textarea(field = linkForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
  </fieldset>
 </div>
@@ -20,12 +41,9 @@
  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("ticket.linker.confirm")</button>
 </div>
 <script>
-$('.typeahead').typeahead({ source:
-  function(query, process) {
-    $.getJSON("/api/ticket/startswith?q=" + query)
-    .done(function(data) { return process(data) });
-  }
+$(function(){
+  var view = TicketLinkViewModel();
+  ko.applyBindings(view);
 });
-
 </script>
 }

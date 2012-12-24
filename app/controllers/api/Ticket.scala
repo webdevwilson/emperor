@@ -123,7 +123,7 @@ object Ticket extends Controller with Secured {
         )
         val res = SearchModel.searchTicket(sq)
 
-        val tickets = res.pager.items.map({ ticket => ticket.ticketId }).toSeq;
+        val tickets = res.pager.items.map({ ticket => ticket }).toSeq;
 
         callback match {
           case Some(callback) => Ok(Jsonp(callback, Json.toJson(tickets)))

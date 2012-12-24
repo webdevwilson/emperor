@@ -30,7 +30,7 @@ object Ticket extends Controller with Secured {
   val linkForm = Form(
     mapping(
       "link_type_id"-> longNumber,
-      "other_ticket_id" -> nonEmptyText,
+      "ticket" -> play.api.data.Forms.list(nonEmptyText),
       "comment"     -> optional(text)
     )(models.MakeLink.apply)(models.MakeLink.unapply)
   )
@@ -410,23 +410,25 @@ object Ticket extends Controller with Secured {
               TicketModel.addComment(ticketId, request.user.id.get, comm)
             })
 
-            // Set the parent & child using type.  Negative means to invert.
-            // SO CLEVER.
-            val ltype = value.linkTypeId
-            val parentId = if(ltype < 0) {
-              value.otherTicketId
-            } else {
-              ticketId
-            }
-            val childId = if(ltype < 0) {
-              ticketId
-            } else {
-              value.otherTicketId
-            }
+            value.tickets.foreach({ otherTicketId =>
+              // Set the parent & child using type.  Negative means to invert.
+              // SO CLEVER.
+              val ltype = value.linkTypeId
+              val parentId = if(ltype < 0) {
+                otherTicketId
+              } else {
+                ticketId
+              }
+              val childId = if(ltype < 0) {
+                ticketId
+              } else {
+                otherTicketId
+              }
 
-            TicketModel.link(
-              linkTypeId = abs(ltype), parentId = parentId, childId = childId
-            )
+              TicketModel.link(
+                linkTypeId = abs(ltype), parentId = parentId, childId = childId
+              )
+            });
 
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.linker.success")
           }

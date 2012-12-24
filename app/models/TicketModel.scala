@@ -25,7 +25,7 @@ case class Comment(
  */
 case class MakeLink(
   linkTypeId: Long,
-  otherTicketId: String,
+  tickets: List[String],
   comment: Option[String]
 )
 

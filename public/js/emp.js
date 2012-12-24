@@ -193,6 +193,41 @@ function GroupViewModel(groupId) {
     .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve group users!") });
 }
 
+function TicketLinkViewModel() {
+  var self = this;
+  self.query = ko.observable("");
+  self.tickets = ko.observableArray([]);
+  self.selectedTickets = ko.observableArray([]);
+
+  var subscription = this.query.subscribe(function(newValue) {
+    // Don't search unless we get at least 2 characters
+    if(newValue.length > 1) {
+      self.searchTickets(newValue);
+    }
+  });
+
+  self.searchTickets = function(q) {
+    $.getJSON("/api/ticket/startswith?q=" + q + "&callback=?")
+      .done(function(data) {
+        var mappedTickets = $.map(data, function(item) { return new Ticket(item) });
+        self.tickets(mappedTickets);
+      })
+      .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to search tickets!") });
+  }
+
+  self.selectTicket = function(data) {
+    // Add to the selected ones
+    self.selectedTickets.push(data);
+    // Clear the inputs
+    self.query("");
+    self.tickets([])
+  }
+
+  self.removeTicket = function(data) {
+    self.selectedTickets.remove(data);
+  }
+}
+
 function TicketViewModel(ticketId) {
   // Data
   var self = this;

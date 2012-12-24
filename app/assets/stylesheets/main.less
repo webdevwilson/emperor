@@ -278,12 +278,12 @@ table.ticket-links {
     color: #777;
     margin-top: 1em;
   }
-}
-.label {
-  background-color: #f5f5f5;
-  border: 1px solid rgba(0,0,0,.1);
-  color: rgba(0,0,0,.75);
-  text-shadow: none
+ .label {
+   background-color: #f5f5f5;
+   border: 1px solid rgba(0,0,0,.1);
+   color: rgba(0,0,0,.75);
+   text-shadow: none
+ }
 }
 .modal-body .input-xxlarge {
   width: 515px;
@@ -513,6 +513,34 @@ img.avatar {
     border-top: 1px solid #d4d4d4;
   }
 }
-.dropdown-menu {
+.typeahead.dropdown-menu {
   z-index: 9999;
+  display: block;
+}
+.labels {
+  margin-bottom: 1em;
+
+  li {
+    display: inline-block;
+    margin-right: 5px;
+    position: relative;
+  }
+ .label {
+    padding: 3px 5px;
+
+   .close {
+     color: #fff;
+     float: none;
+     line-height: 12px;
+     font-size: 15px;
+     padding: 0;
+     margin-left: 5px;
+     margin-bottom: 2px;
+     opacity: .5;
+     vertical-align: baseline;
+   }
+   .close:hover {
+    opacity: 1;
+   }
+ }
 }
