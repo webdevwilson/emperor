@@ -198,6 +198,7 @@ function TicketLinkViewModel() {
   self.query = ko.observable("");
   self.tickets = ko.observableArray([]);
   self.selectedTickets = ko.observableArray([]);
+  self.maybeTicket = ko.observable(-1);
 
   var subscription = this.query.subscribe(function(newValue) {
     // Don't search unless we get at least 2 characters
@@ -213,6 +214,35 @@ function TicketLinkViewModel() {
         self.tickets(mappedTickets);
       })
       .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to search tickets!") });
+  }
+
+  self.moveTicket = function(data, event) {
+    if(event.keyCode == 40 || event.keyCode == 38 || event.keyCode == 13) {
+      var tsize = self.tickets().length - 1 // 0 based
+      if(tsize > 0) {
+        switch(event.keyCode) {
+          case 38: // up
+            // Decrement, unless we go below 0
+            self.maybeTicket(Math.max(0, self.maybeTicket() - 1))
+          break
+
+          case 40: // down
+            // Increment, unless we go above the number of tickets
+            self.maybeTicket(Math.min(tsize, self.maybeTicket() + 1))
+          break
+
+          case 13: // enter
+            // Select the selected ticket
+            if(self.maybeTicket != -1) {
+              self.selectTicket(self.tickets()[self.maybeTicket()]);
+            }
+          break
+        }
+      }
+      return false;
+    } else {
+      return true;
+    }
   }
 
   self.selectTicket = function(data) {

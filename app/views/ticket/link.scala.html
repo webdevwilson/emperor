@@ -23,10 +23,10 @@
     <label class="control-label" for="other_ticket_id">@Messages("ticket.linker.otherticket")</label>
     <div class="controls">
      <div>
-      <input type="text" id="other_ticket_id" name="other_ticket_id" data-bind="value: query, valueUpdate: 'afterkeydown'" value="" autocomplete="off">
+      <input type="text" id="other_ticket_id" name="other_ticket_id" data-bind="value: query, valueUpdate: 'afterkeydown', event: { keydown: moveTicket }" value="" autocomplete="off">
       <div data-bind="visible: tickets().length > 0" style="position: absolute;">
        <ul class="typeahead dropdown-menu" data-bind="foreach: tickets()">
-        <li><a href="#" data-bind="click: selectTicket"><span data-bind="text: ticketId"></span></a></li>
+        <li data-bind="css: { active: maybeTicket() == $index() }"><a href="#" data-bind="click: selectTicket"><span data-bind="text: ticketId"></span></a></li>
        </ul>
       </div>
      </div>
