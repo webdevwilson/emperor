@@ -153,8 +153,8 @@ object Search {
     // searches go to shit.  The latter doesn't support ranges and boolean
     // stuff.
     val qq = query.parser match {
-      case "query" => queryString(if(query.query.isEmpty) "*" else query.query)
-      case _ => matchPhrasePrefixQuery("_all", query.query)
+      case "match" => matchPhrasePrefixQuery("_all", query.query)
+      case _ => queryString(if(query.query.isEmpty) "*" else query.query)
     }
 
     val actualQuery = if(termFilters.isDefined || projFilters.isDefined) {

@@ -124,7 +124,7 @@ object Ticket extends Controller with Secured {
     val order = request.queryString.get("order").map({ vals => Some(vals.head) }).getOrElse(None);
     val q = emp.util.Search.SearchQuery(
       userId = userId, page = page, count = count, query = query,
-      filters = filters, sortBy = sort, sortOrder = order
+      filters = filters, sortBy = sort, sortOrder = order, parser = "match"
     )
     val res = SearchModel.searchTicket(q)
 
