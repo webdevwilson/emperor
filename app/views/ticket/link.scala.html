@@ -1,4 +1,4 @@
-@(ticket: models.FullTicket, linkTypes: List[(String,String)], linkForm: Form[models.MakeLink])(implicit request: Request[AnyContent])
+@(ticket: models.FullTicket, linkTypes: List[(String,String)], linkForm: Form[models.MakeLink], recents: Seq[FullTicket])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.bootstrap._
@@ -26,7 +26,7 @@
       <input type="text" id="other_ticket_id" name="other_ticket_id" data-bind="value: query, valueUpdate: 'afterkeydown', event: { keydown: moveTicket }" value="" autocomplete="off">
       <div data-bind="visible: tickets().length > 0" style="position: absolute;">
        <ul class="typeahead dropdown-menu" data-bind="foreach: tickets()">
-        <li data-bind="css: { active: maybeTicket() == $index() }"><a href="#" data-bind="click: selectTicket"><span data-bind="text: ticketId"></span></a></li>
+        <li data-bind="css: { active: maybeTicket() == $index() }"><a href="#" data-bind="click: selectTicket"><span data-bind="text: ticketId"></span>: <span data-bind="html: shortSummary"></span></a></li>
        </ul>
       </div>
      </div>
@@ -34,6 +34,14 @@
     </div>
   </div>
   @helper.textarea(field = linkForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
+  <div class="control-group">
+   <label class="control-label">@Messages("ticket.linker.recent")</label>
+   <ul>
+    @recents.map { recent =>
+     <li><a href="#" data-bind="click: function(data, event) { searchTickets('@{ recent.ticketId }') }">@{ recent.ticketId }</a>: @Html(recent.abbreviatedSummary(30))</li>
+    }
+   </ul>
+  </div>
  </fieldset>
 </div>
 <div class="modal-footer">

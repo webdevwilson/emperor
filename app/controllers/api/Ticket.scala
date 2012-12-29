@@ -113,6 +113,29 @@ object Ticket extends Controller with Secured {
     }
   }
 
+  def search(page: Int, count: Int, query: String, sort: Option[String] = None, order: Option[String] = None, callback: Option[String]) = IsAuthenticated() { implicit request =>
+
+    val filters = request.queryString filterKeys { key =>
+      SearchModel.ticketFilterMap.get(key).isDefined
+    }
+
+    val userId = request.user.id.get
+    val sort = request.queryString.get("sort").map({ vals => Some(vals.head) }).getOrElse(None);
+    val order = request.queryString.get("order").map({ vals => Some(vals.head) }).getOrElse(None);
+    val q = emp.util.Search.SearchQuery(
+      userId = userId, page = page, count = count, query = query,
+      filters = filters, sortBy = sort, sortOrder = order
+    )
+    val res = SearchModel.searchTicket(q)
+
+    val tickets = res.pager.items.map({ ticket => ticket }).toSeq;
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, Json.toJson(tickets)))
+      case None => Ok(Json.toJson(tickets))
+    }
+  }
+
   def startsWith(q: Option[String], callback: Option[String]) = IsAuthenticated() { implicit request =>
 
     q match {

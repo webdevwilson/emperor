@@ -52,6 +52,7 @@ function Ticket(data) {
   this.priorityName = ko.observable(data.priority_name);
   this.priorityNameI18N = ko.observable(data.priority_name_i18n);
   this.summary      = ko.observable(data.summary);
+  this.shortSummary = ko.observable(data.short_summary);
 }
 
 function TicketLink(ticketId, data) {
@@ -204,11 +205,13 @@ function TicketLinkViewModel() {
     // Don't search unless we get at least 2 characters
     if(newValue.length > 1) {
       self.searchTickets(newValue);
+    } else if(newValue.length == 0) {
+      self.tickets([]);
     }
   });
 
   self.searchTickets = function(q) {
-    $.getJSON("/api/ticket/startswith?q=" + q + "&callback=?")
+    $.getJSON("/api/ticket/search?query=" + q + "&callback=?")
       .done(function(data) {
         var mappedTickets = $.map(data, function(item) { return new Ticket(item) });
         self.tickets(mappedTickets);
@@ -217,10 +220,19 @@ function TicketLinkViewModel() {
   }
 
   self.moveTicket = function(data, event) {
-    if(event.keyCode == 40 || event.keyCode == 38 || event.keyCode == 13) {
+    if(event.keyCode == 13 || event.keyCode == 40 || event.keyCode == 38) {
       var tsize = self.tickets().length - 1 // 0 based
-      if(tsize > 0) {
+      if(tsize >= 0) {
+        console.log(event.keyCode);
         switch(event.keyCode) {
+
+          case 13: // enter
+            // Select the selected ticket
+            if(self.maybeTicket != -1) {
+              self.selectTicket(self.tickets()[self.maybeTicket()]);
+            }
+          break
+
           case 38: // up
             // Decrement, unless we go below 0
             self.maybeTicket(Math.max(0, self.maybeTicket() - 1))
@@ -229,13 +241,6 @@ function TicketLinkViewModel() {
           case 40: // down
             // Increment, unless we go above the number of tickets
             self.maybeTicket(Math.min(tsize, self.maybeTicket() + 1))
-          break
-
-          case 13: // enter
-            // Select the selected ticket
-            if(self.maybeTicket != -1) {
-              self.selectTicket(self.tickets()[self.maybeTicket()]);
-            }
           break
         }
       }

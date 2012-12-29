@@ -282,6 +282,7 @@ ticket.id=Id
 ticket.linker.action=Link Tickets
 ticket.linker.confirm=Link
 ticket.linker.link={0} is
+ticket.linker.recent=Recent Tickets
 ticket.linker.selectedtickets=Selected Tickets
 ticket.linker.success=Link created.
 ticket.linker.failure=Link creation failed.

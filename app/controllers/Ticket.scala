@@ -394,7 +394,13 @@ object Ticket extends Controller with Secured {
           List((ltype.id.get.toString -> Messages(ltype.name)))
         }
       })
-      Ok(views.html.ticket.link(ticket, linkTypes, linkForm))
+
+      val recents: Seq[FullTicket] = session.get("recent_tickets").map({ rt =>
+        rt.split(",").toSeq.map({ rtid =>
+          TicketModel.getFullById(rtid).get
+        })
+      }).getOrElse(Seq());
+      Ok(views.html.ticket.link(ticket, linkTypes, linkForm, recents))
     }).getOrElse(NotFound)
   }
 

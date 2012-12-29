@@ -33,6 +33,7 @@ object Search {
      * Map of filters.  Key is the name.
      */
     filters: Map[String, Seq[String]] = Map.empty,
+    parser: String = "text",
     sortBy: Option[String] = Some("date_created"),
     sortOrder: Option[String] = None
   )
@@ -147,7 +148,14 @@ object Search {
       None
     }
 
-    val qq = queryString(if(query.query.isEmpty) "*" else query.query)
+    // Allow the user to choose between the query_string parser and the
+    // match_phase_prefix parser.  The former despises hyphens, making ID
+    // searches go to shit.  The latter doesn't support ranges and boolean
+    // stuff.
+    val qq = query.parser match {
+      case "query" => queryString(if(query.query.isEmpty) "*" else query.query)
+      case _ => matchPhrasePrefixQuery("_all", query.query)
+    }
 
     val actualQuery = if(termFilters.isDefined || projFilters.isDefined) {
       val finalFilter: BoolFilterBuilder = boolFilter
