@@ -19,7 +19,7 @@ object ApplicationBuild extends Build {
     "org.apache.commons" % "commons-email"      % "1.2",
     "joda-time"     % "joda-time"               % "2.1",
     // ES thingies
-    "org.elasticsearch" % "elasticsearch"       % "0.20.1",
+    "org.elasticsearch" % "elasticsearch"       % "0.20.2",
     "com.spatial4j" % "spatial4j"               % "0.3",
     "org.clapper"   %% "grizzled-slf4j"         % "0.6.10"
   )
