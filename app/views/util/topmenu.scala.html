@@ -24,6 +24,7 @@
      <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
+    <li><a href="@controllers.routes.User.edit(request.user.id.get)"><i class="icon-user"></i> @Messages("user.account")</a></li>
     <li><a href="@routes.Auth.logout"><i class="icon-eject"></i> @Messages("auth.logout")</a></li>
    </ul>
   }

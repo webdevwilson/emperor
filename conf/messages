@@ -104,14 +104,9 @@ admin.ticket_type.with.id=Ticket Type {0}
 
 admin.user.add=Add User
 admin.user.add.success=User Added
-admin.user.changepassword=Change Password
-admin.user.edit=Edit User
 admin.user.groups.list=Group Membership
 admin.user.list=Users
 admin.user.menu.list=Users
-admin.user.edit.success=User Updated
-admin.user.password.match=Passwords must match
-admin.user.password.success=Password Saved
 admin.user.with.id=User {0}
 
 admin.workflow.add=Add Workflow
@@ -331,11 +326,17 @@ ticket_type.color=Color
 ticket_type.name=Name
 
 user=User
+user.account=Your Account
+user.changepassword=Change Password
+user.edit=Edit User
+user.edit.success=User Updated
 user.email=Email
 user.location=Location
 user.organization=Organization
 user.password=Password
 user.password.confirm=Confirm Password
+user.password.match=Passwords must match
+user.password.success=Password Saved
 user.realname=Real Name
 user.timezone=Timezone
 user.title=Title

@@ -4,20 +4,11 @@
 @import helper._
 @import helper.bootstrap._
 
-@main(Messages("admin.user.edit")) {
-<ul class="breadcrumb">
- <li>
-  <a href="@routes.Admin.index">@Messages("general.admin")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
- </li>
- <li>
-  <a href="@controllers.admin.routes.User.index()">@Messages("admin.user.list")</a> <span class="divider">@Messages("breadcrumb.divider")</span>
- </li>
- <li class="active">@Messages("admin.user.with.id", objForm("username").value.get)</li>
-</ul>
+@main(Messages("user.edit")) {
 <div class="row-fluid">
  <div class="span6">
-  <h1>@Messages("admin.user.edit")</h1>
-  @helper.form(action = controllers.admin.routes.User.update(id)) {
+  <h1>@Messages("user.edit")</h1>
+  @helper.form(action = controllers.routes.User.update(id)) {
    <fieldset>
     @helper.inputText(objForm("username"), '_label -> Messages("user.username"))
     @helper.inputText(objForm("realName"), '_label -> Messages("user.realname"))
@@ -30,18 +21,17 @@
     @helper.inputText(objForm("organization"), '_label -> Messages("user.organization"))
     @helper.inputText(objForm("title"), '_label -> Messages("user.title"))
     <div class="form-actions">
-     <a href="@controllers.admin.routes.User.index()" class="btn">@Messages("form.cancel")</a>
      <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
     </div>
    </fieldset>
   }
  </div>
  <div class="span6">
-  <h1>@Messages("admin.user.changepassword")</h1>
+  <h1>@Messages("user.changepassword")</h1>
   @passForm.globalError.map { error =>
     <div class="alert alert-error">@Messages(error.message)</div>
   }
-  @helper.form(action = controllers.admin.routes.User.updatePassword(id)) {
+  @helper.form(action = controllers.routes.User.updatePassword(id)) {
    <fieldset>
     @helper.inputPassword(passForm("password"), '_label -> Messages("user.password"))
     @helper.inputPassword(passForm("password2"), '_label -> Messages("user.password.confirm"))
