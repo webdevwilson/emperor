@@ -47,3 +47,4 @@ Emperor is written in [Scala](http://www.scala-lang.org/) and uses the
 [Play framework](http://www.playframework.org/).  It is written to work with
 MySQL and uses an embedded [ElasticSearch](http://www.elasticsearch.org/)
 instance.
+
