@@ -103,6 +103,8 @@ DELETE  /api/permission_scheme/:id/:perm/user/:userId controller.api.PermissionS
 
 GET     /api/project/:id                controllers.api.Project.item(id: Long, callback: Option[String])
 
+POST    /api/third/github/commit        controllers.api.third.GitHub.commit
+
 GET     /api/ticket/link/:ticketId      controllers.api.Ticket.links(ticketId: String, callback: Option[String])
 PUT     /api/ticket/link/:ticketId      controllers.api.Ticket.link(ticketId: String, callback: Option[String])
 DELETE  /api/ticket/link/:ticketId/:id  controllers.api.Ticket.deleteLink(ticketId: String, id: Long, callback: Option[String])

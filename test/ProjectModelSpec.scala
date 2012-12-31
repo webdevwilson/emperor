@@ -13,6 +13,14 @@ class ProjectModelSpec extends Specification {
 
   "Project model" should {
 
+    "recognize valid keys" in {
+      ProjectModel.isValidKey("FOO") must beTrue // ASCII
+      ProjectModel.isValidKey("ÎR") must beTrue // Unicode
+      ProjectModel.isValidKey("1OO") must beFalse // Can't start with numbers
+      ProjectModel.isValidKey("") must beFalse // Can't be empty
+      ProjectModel.isValidKey("1234") must beFalse // Can't be all digits
+    }
+
     "create, retrieve and delete" in {
       running(FakeApplication()) {
 

@@ -72,6 +72,7 @@ object ProjectModel {
     }
   }
 
+  // Starts with a letter and is followed by numbers or letters
   val keyPattern = Pattern.compile("^\\p{L}{1}[\\p{Nd}|\\p{L}]*")
 
   /**
