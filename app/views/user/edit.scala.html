@@ -1,4 +1,4 @@
-@(id: Long, objForm: Form[(User)], passForm: Form[(NewPassword)])(implicit request: AuthenticatedRequest)
+@(id: Long, objForm: Form[(User)], tokens: emp.util.Pagination.Page[UserToken], tokenForm: Form[models.UserToken], passForm: Form[(NewPassword)])(implicit request: AuthenticatedRequest)
 
 @import emp.DateFormatter
 @import helper._
@@ -27,6 +27,32 @@
   }
  </div>
  <div class="span6">
+  <h1>@Messages("user.token.list")</h1>
+  <div class="btn-group btn-group-above-table pull-right">
+   <a class="btn" data-toggle="modal" href="#token"><i class="icon-plus"></i> @Messages("user.token.add")</a>
+  </div>
+  @if(tokens.items.size <= 0) {
+    <p>@Messages("user.token.none")</p>
+  } else {
+  <table class="table table-bordered table-striped">
+   <thead>
+    <tr>
+     <th>@Messages("user.token.token")</th>
+     <th>@Messages("user.token.comment")</th>
+     <th>@Messages("user.token.date_created")</th>
+    </tr>
+   </thead>
+   <tbody>
+    @tokens.items.map { token =>
+    <tr>
+     <td>@token.token</td>
+     <td>@token.comment</td>
+     <td>@token.dateCreated</td>
+    </tr>
+    }
+   </tbody>
+  </table>
+  }
   <h1>@Messages("user.changepassword")</h1>
   @passForm.globalError.map { error =>
     <div class="alert alert-error">@Messages(error.message)</div>
@@ -41,4 +67,23 @@
    </div>
   }
  </div>
+ <div class="modal hide" id="token">
+ @helper.form(action = routes.User.generateToken(id), args = 'method -> "POST") {
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>@Messages("user.token.add")</h3>
+ </div>
+ <div class="modal-body">
+   <p>@Html(Messages("user.token.summary"))</p>
+   <fieldset>
+     @helper.inputText(field = tokenForm("comment"), args = 'class -> "span4", '_label -> Messages("user.token.comment"))
+   </fieldset>
+ </div>
+ <div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
+  <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
+ </div>
+ }
+</div>
+
 }

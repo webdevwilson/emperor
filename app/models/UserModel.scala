@@ -65,7 +65,7 @@ object UserModel {
   }
 
   /**
-   * Add a user.  Uses `InitialUser`.
+   * Add a user.
    */
   def create(user: User): User = {
 

@@ -9,7 +9,7 @@ import play.api.data.Forms._
 import play.api.mvc._
 import play.api.mvc.Security._
 import play.db._
-import models.{PermissionSchemeModel,ProjectModel,SearchModel,UserModel}
+import models.{PermissionSchemeModel,ProjectModel,SearchModel,UserModel,UserTokenModel}
 import org.slf4j.{Logger,LoggerFactory}
 import emp.util.Search._
 
@@ -39,6 +39,15 @@ object User extends Controller with Secured {
     verifying("user.password.match", np => { np.password.equals(np.password2) })
   )
 
+  val tokenForm = Form(
+    mapping(
+      "token"   -> ignored(NotAssigned:Pk[String]),
+      "userId"  -> ignored[Long](1),
+      "comment" -> optional(text),
+      "dateCreated" -> ignored[DateTime](new DateTime())
+    )(models.UserToken.apply)(models.UserToken.unapply)
+  )
+
   def edit(userId: Long) = IsAuthenticated() { implicit request =>
 
     // A lot of stupid code just to verify that this is either an admin or a
@@ -55,13 +64,30 @@ object User extends Controller with Secured {
 
       maybeUser match {
         case Some(user) => {
-          Ok(views.html.user.edit(userId, editForm.fill(user), passwordForm)(request))
+          val tokens = UserTokenModel.getByUser(userId)
+
+          Ok(views.html.user.edit(userId, editForm.fill(user), tokens, tokenForm, passwordForm)(request))
         }
         case None => NotFound
       }
     } else {
       Results.Redirect(routes.Core.index()).flashing("error" -> "auth.notauthorized")
     }
+  }
+
+  def generateToken(userId: Long) = IsAuthenticated() { implicit request =>
+    UserModel.getById(userId).map({ user =>
+      tokenForm.bindFromRequest.fold(
+        errors => {
+          Results.Redirect(routes.Core.index()).flashing("error" -> "user.token.failure")
+        }, {
+          case token: models.UserToken => {
+            UserTokenModel.create(userId, token.comment)
+            Results.Redirect(routes.User.edit(userId)).flashing("success" -> "user.token.success")
+          }
+        }
+      )
+    }).getOrElse(NotFound)
   }
 
   def item(userId: Long, page: Int = 1, count: Int = 10) = IsAuthenticated() { implicit request =>
@@ -96,7 +122,10 @@ object User extends Controller with Secured {
     if(canEdit) {
 
       editForm.bindFromRequest.fold(
-        errors => BadRequest(views.html.user.edit(userId, errors, passwordForm)),
+        errors => {
+          val tokens = UserTokenModel.getByUser(userId)
+          BadRequest(views.html.user.edit(userId, errors, tokens, tokenForm, passwordForm))
+        },
         {
           case user: models.User => {
             UserModel.update(userId, user)
@@ -127,7 +156,8 @@ object User extends Controller with Secured {
         case Some(user) => {
           passwordForm.bindFromRequest.fold(
             errors => {
-              BadRequest(views.html.user.edit(userId, editForm.fill(user), errors))
+              val tokens = UserTokenModel.getByUser(userId)
+              BadRequest(views.html.user.edit(userId, editForm.fill(user), tokens, tokenForm, errors))
             }, {
               case np: models.NewPassword => {
                 UserModel.updatePassword(userId, np)

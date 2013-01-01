@@ -150,6 +150,7 @@ POST    /ticket/unresolve/:id           controllers.Ticket.doUnResolve(id: Strin
 GET     /timeline                       controllers.Timeline.index(page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 GET     /user/edit/:id                  controllers.User.edit(id: Long)
+POST    /user/token/:userId             controllers.User.generateToken(userId: Long)
 POST    /user/:id/password              controllers.User.updatePassword(id: Long)
 POST    /user/:id                       controllers.User.update(id: Long)
 GET     /user/:id                       controllers.User.item(id: Long, page: Int ?= 1, count: Int ?= 10)
