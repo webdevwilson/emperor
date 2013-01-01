@@ -64,9 +64,7 @@ object User extends Controller with Secured {
 
       maybeUser match {
         case Some(user) => {
-          val tokens = UserTokenModel.getByUser(userId)
-
-          Ok(views.html.user.edit(userId, editForm.fill(user), tokens, tokenForm, passwordForm)(request))
+          Ok(views.html.user.edit(userId, editForm.fill(user), tokenForm, passwordForm)(request))
         }
         case None => NotFound
       }
@@ -123,8 +121,7 @@ object User extends Controller with Secured {
 
       editForm.bindFromRequest.fold(
         errors => {
-          val tokens = UserTokenModel.getByUser(userId)
-          BadRequest(views.html.user.edit(userId, errors, tokens, tokenForm, passwordForm))
+          BadRequest(views.html.user.edit(userId, errors, tokenForm, passwordForm))
         },
         {
           case user: models.User => {
@@ -156,8 +153,7 @@ object User extends Controller with Secured {
         case Some(user) => {
           passwordForm.bindFromRequest.fold(
             errors => {
-              val tokens = UserTokenModel.getByUser(userId)
-              BadRequest(views.html.user.edit(userId, editForm.fill(user), tokens, tokenForm, errors))
+              BadRequest(views.html.user.edit(userId, editForm.fill(user), tokenForm, errors))
             }, {
               case np: models.NewPassword => {
                 UserModel.updatePassword(userId, np)

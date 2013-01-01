@@ -1,4 +1,4 @@
-@(id: Long, objForm: Form[(User)], tokens: emp.util.Pagination.Page[UserToken], tokenForm: Form[models.UserToken], passForm: Form[(NewPassword)])(implicit request: AuthenticatedRequest)
+@(id: Long, objForm: Form[(User)], tokenForm: Form[models.UserToken], passForm: Form[(NewPassword)])(implicit request: AuthenticatedRequest)
 
 @import emp.DateFormatter
 @import helper._
@@ -27,32 +27,29 @@
   }
  </div>
  <div class="span6">
-  <h1>@Messages("user.token.list")</h1>
   <div class="btn-group btn-group-above-table pull-right">
    <a class="btn" data-toggle="modal" href="#token"><i class="icon-plus"></i> @Messages("user.token.add")</a>
   </div>
-  @if(tokens.items.size <= 0) {
-    <p>@Messages("user.token.none")</p>
-  } else {
-  <table class="table table-bordered table-striped">
+  <h1>@Messages("user.token.list")</h1>
+  <p data-bind="visible: tokens().length < 1">@Messages("user.token.none")</p>
+  <table data-bind="visible: tokens().length >= 1" class="table table-bordered table-striped">
    <thead>
     <tr>
      <th>@Messages("user.token.token")</th>
      <th>@Messages("user.token.comment")</th>
      <th>@Messages("user.token.date_created")</th>
+     <th>@Messages("general.actions")</th>
     </tr>
    </thead>
-   <tbody>
-    @tokens.items.map { token =>
+   <tbody data-bind="foreach: tokens()">
     <tr>
-     <td>@token.token</td>
-     <td>@token.comment</td>
-     <td>@token.dateCreated</td>
+     <td data-bind="text: token"></td>
+     <td data-bind="text: comment"></td>
+     <td data-bind="text: dateCreated"></td>
+     <td class="actions"><a data-bind="click: removeToken"><i class="remover icon-remove"></a></td>
     </tr>
-    }
    </tbody>
   </table>
-  }
   <h1>@Messages("user.changepassword")</h1>
   @passForm.globalError.map { error =>
     <div class="alert alert-error">@Messages(error.message)</div>
@@ -67,7 +64,8 @@
    </div>
   }
  </div>
- <div class="modal hide" id="token">
+<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
+<div class="modal hide" id="token">
  @helper.form(action = routes.User.generateToken(id), args = 'method -> "POST") {
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
@@ -85,5 +83,10 @@
  </div>
  }
 </div>
-
+<script>
+$(function(){
+  var view = UserEditViewModel(@id);
+  ko.applyBindings(view);
+});
+</script>
 }

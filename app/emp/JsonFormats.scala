@@ -412,7 +412,7 @@ object JsonFormats {
     }
   }
 
- /**
+  /**
    * JSON conversion for PermissionSchemeGroup
    */
   implicit object PermissionSchemeGroupFormat extends Format[PermissionSchemeGroup] {
@@ -588,6 +588,29 @@ object JsonFormats {
         "title"           -> optionStringtoJsValue(obj.title),
         "url"             -> optionStringtoJsValue(obj.url),
         "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for UserToken
+   */
+  implicit object UserTokenFormat extends Format[UserToken] {
+
+    def reads(json: JsValue): UserToken = UserToken(
+      token   = Id((json \ "name").as[String]),
+      userId  = (json \ "userId").as[Long],
+      comment = (json \ "comment").as[Option[String]],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: UserToken): JsValue = {
+      val doc: Map[String,JsValue] = Map(
+        "token"         -> JsString(obj.token.get),
+        "userId"        -> JsNumber(obj.userId),
+        "comment"       -> optionStringtoJsValue(obj.comment),
+        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
