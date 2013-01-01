@@ -398,7 +398,7 @@ object Ticket extends Controller with Secured {
       val recents: Seq[FullTicket] = session.get("recent_tickets").map({ rt =>
         rt.split(",").toSeq.map({ rtid =>
           TicketModel.getFullById(rtid).get
-        })
+        }).reverse
       }).getOrElse(Seq());
       Ok(views.html.ticket.link(ticket, linkTypes, linkForm, recents))
     }).getOrElse(NotFound)
