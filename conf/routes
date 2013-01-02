@@ -113,6 +113,7 @@ GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: Stri
 PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String, callback: Option[String])
 
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String], callback: Option[String])
+DELETE  /api/user/token/:token          controllers.api.User.deleteToken(token: String, callback: Option[String])
 GET     /api/user/tokens/:userId        controllers.api.User.tokens(userId: Long, callback: Option[String])
 
 GET     /auth/login                     controllers.Auth.login(redirectUrl: String ?= "/")

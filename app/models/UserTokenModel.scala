@@ -20,12 +20,13 @@ object UserTokenModel {
 
   val allQuery = SQL("SELECT * FROM user_tokens")
   val getByIdQuery = SQL("SELECT * FROM user_tokens WHERE token={token}")
+  val getByIdAndUserQuery = SQL("SELECT * FROM user_tokens WHERE token={token} AND user_id={user_id")
   val getByUserIdQuery = SQL("SELECT * FROM user_tokens WHERE user_id={user_id}")
   val listQuery = SQL("SELECT * FROM user_tokens ORDER BY date_created LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM user_tokens")
   val listUserCountQuery = SQL("SELECT count(*) FROM user_tokens WHERE user_id={user_id}")
   val insertQuery = SQL("INSERT INTO user_tokens (token, user_id, comment, date_created) VALUES ({token}, {user_id}, {comment}, UTC_TIMESTAMP())")
-  val deleteQuery = SQL("DELETE FROM user_tokens WHERE token={token}")
+  val deleteQuery = SQL("DELETE FROM user_tokens WHERE user_id={user_id} AND token={token}")
 
   val userToken = {
     get[Pk[String]]("token") ~
@@ -55,13 +56,18 @@ object UserTokenModel {
   }
 
   /**
-   * Delete a user token.
+   * Delete a user token. Returns the deleted token, if found
    */
-  def delete(token: String) {
+  def delete(userId: Long, token: String): Option[UserToken] = {
     DB.withConnection { implicit conn =>
-      deleteQuery.on(
-        'token -> token
-      ).execute
+      val maybeT = this.getByIdAndUser(userId, token)
+      maybeT.map({ t =>
+        deleteQuery.on(
+          'user_id  -> t.userId,
+          'token    -> t.token
+        ).execute
+      })
+      maybeT
     }
   }
 
@@ -74,6 +80,20 @@ object UserTokenModel {
       getByIdQuery.on('token -> token).as(userToken.singleOpt)
     }
   }
+
+  /**
+   * Retrieve a user token by token and userId.
+   */
+  def getByIdAndUser(userId: Long, token: String) : Option[UserToken] = {
+
+    DB.withConnection { implicit conn =>
+      getByIdQuery.on(
+        'user_id  -> userId,
+        'token    -> token
+      ).as(userToken.singleOpt)
+    }
+  }
+
 
   def getAll: List[UserToken] = {
 

@@ -20,10 +20,25 @@ object User extends Controller with Secured {
 
         callback match {
           case Some(callback) => Ok(Jsonp(callback, json))
-          case None => Ok(json)
+          case _ => Ok(json)
         }
       }
       case None => NotFound
+    }
+  }
+
+  def deleteToken(token: String, callback: Option[String]) = IsAuthenticated() { implicit request =>
+
+    val goneToken = UserTokenModel.delete(request.user.id.get, token)
+    goneToken match {
+      case Some(t) => {
+        val json = Json.toJson(t)
+        callback match {
+          case Some(callback) => Ok(Jsonp(callback, json))
+          case _ => Ok(json)
+        }
+      }
+      case _ => NotFound
     }
   }
 
@@ -35,7 +50,7 @@ object User extends Controller with Secured {
         val json = Json.toJson(tokens.items.toSeq)
         callback match {
           case Some(callback) => Ok(Jsonp(callback, json))
-          case None => Ok(json)
+          case _ => Ok(json)
         }
       }
       case _ => NotFound
