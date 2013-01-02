@@ -602,7 +602,7 @@ object JsonFormats {
       token   = Id((json \ "name").as[String]),
       userId  = (json \ "userId").as[Long],
       comment = (json \ "comment").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(obj: UserToken): JsValue = {
@@ -610,7 +610,7 @@ object JsonFormats {
         "token"         -> JsString(obj.token.get),
         "userId"        -> JsNumber(obj.userId),
         "comment"       -> optionStringtoJsValue(obj.comment),
-        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
+        "dateCreated"  -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }

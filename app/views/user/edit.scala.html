@@ -46,7 +46,10 @@
      <td data-bind="text: token"></td>
      <td data-bind="text: comment"></td>
      <td data-bind="text: dateCreated"></td>
-     <td class="actions"><a data-bind="click: removeToken"><i class="remover icon-remove"></a></td>
+     <td class="actions">
+      <div class="btn-group">
+       <button data-bind="click: removeToken" class="btn btn-danger btn-mini">@Messages("general.delete")</button>
+      </div>
     </tr>
    </tbody>
   </table>
