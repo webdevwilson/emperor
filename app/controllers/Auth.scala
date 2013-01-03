@@ -85,20 +85,9 @@ trait Secured {
   def IsAuthenticated(projectId: Option[Long] = None, ticketId: Option[String] = None, perm: String = "PERM_GLOBAL_LOGIN")(f: AuthenticatedRequest => Result) = {
     Action { request =>
 
-      // First grab the user_id from the session, maybe
-      val maybeUserId = request.session.get("user_id")
-
-      // Try and fetch the user with the specified name. If we find it, great.
-      // If we don't then check to see if we allow login by the anonymous
-      // user.
-      val maybeUser: Option[User] = maybeUserId.map(userId => UserModel.getById(userId.toLong)).getOrElse({
-        val proj = ProjectModel.getByKey("EMPCORE").get
-        val anon = UserModel.getByUsername("anonymous")
-        val anonLogin = PermissionSchemeModel.hasPermission(proj.id.get, "PERM_GLOBAL_LOGIN", anon.get.id.get)
-        anonLogin match {
-          case Some(cause) => anon
-          case None => None
-        }
+      // Try and find a user
+      val maybeUser = getUserIdFromRequest(request).flatMap({ uid =>
+        UserModel.getById(uid)
       })
 
       maybeUser match {
@@ -140,6 +129,35 @@ trait Secured {
           Logger.debug("Denied " + perm + " to unknown user");
           onUnauthenticated(request)
         }
+      }
+    }
+  }
+
+  /**
+   * Try and find a user via header token
+   */
+  def getUserIdFromRequest(request: RequestHeader): Option[Long] = {
+
+    if(request.session.get("user_id").isDefined){
+      // It's in the session, use that!  This is most common, so it's first
+      Some(request.session.get("user_id").get.toLong)
+    } else if(request.headers.get("Authorization").isDefined && request.headers.get("Authorization").get.startsWith("Token token=")) {
+      // Token is present, use that!
+      // XXX Look up token!
+      Some(1.toLong)
+    } else {
+      // Try anonymous
+      val proj = ProjectModel.getByKey("EMPCORE").get
+      val anon = UserModel.getIdByUsername("anonymous")
+
+      if(anon.isDefined) {
+        val anonLogin = PermissionSchemeModel.hasPermission(proj.id.get, "PERM_GLOBAL_LOGIN", anon.get)
+        anonLogin match {
+          case Some(cause) => Some(anon.get)
+          case None => None
+        }
+      } else {
+        None
       }
     }
   }

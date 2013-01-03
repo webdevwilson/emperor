@@ -40,6 +40,7 @@ object UserModel {
   val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
   val getByGroupIdQuery = SQL("SELECT * FROM users")
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
+  val getIdByUsernameQuery = SQL("SELECT id FROM users WHERE username={username}")
   val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
   val insertQuery = SQL("INSERT INTO users (username, password, realname, email, timezone, organization, location, title, url, date_created) VALUES ({username}, {password}, {realname}, {email}, {timezone}, {organization}, {location}, {title}, {url}, UTC_TIMESTAMP())")
@@ -150,6 +151,13 @@ object UserModel {
 
     DB.withConnection { implicit conn =>
       getByUsernameQuery.on('username -> username).as(UserModel.user.singleOpt)
+    }
+  }
+
+  def getIdByUsername(username: String) : Option[Long] = {
+
+    DB.withConnection { implicit conn =>
+      getIdByUsernameQuery.on('username -> username).as(scalar[Long].singleOpt)
     }
   }
 
