@@ -142,9 +142,13 @@ trait Secured {
       // It's in the session, use that!  This is most common, so it's first
       Some(request.session.get("user_id").get.toLong)
     } else if(request.headers.get("Authorization").isDefined && request.headers.get("Authorization").get.startsWith("Token token=")) {
-      // Token is present, use that!
-      // XXX Look up token!
-      Some(1.toLong)
+      val token = request.headers.get("Authorization").get.substring(12).trim()
+      // Token is present, use that!  Use map, as we might not get one back
+      // if the token is invalid.
+      UserTokenModel.getById(token).map({ ut =>
+        // Give back the user id for the token
+        Some(ut.userId)
+      }).getOrElse(None)
     } else {
       // Try anonymous
       val proj = ProjectModel.getByKey("EMPCORE").get
