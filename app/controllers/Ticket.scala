@@ -501,21 +501,23 @@ object Ticket extends Controller with Secured {
 
   def update(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    ticketForm.bindFromRequest.fold(
-      errors => {
-        val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
-        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val projId = errors("project_id").value.get.toLong
-        val assignees = UserModel.getAssignable(projectId = Some(projId)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
+    TicketModel.getById(ticketId).map({ ticket =>
 
-        BadRequest(views.html.ticket.edit(ticketId, errors, assignees, assignees, assignees, projs, ttypes, prios, sevs))
-      },
-      value => {
-        TicketModel.update(request.user.id.get, ticketId, value)
-        Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
-      }
-    )
+      ticketForm.bindFromRequest.fold(
+        errors => {
+          val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
+          val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+          val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+          val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+          val assignees = UserModel.getAssignable(projectId = Some(ticket.projectId)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
+
+          BadRequest(views.html.ticket.edit(ticketId, errors, assignees, assignees, assignees, projs, ttypes, prios, sevs))
+        },
+        value => {
+          TicketModel.update(request.user.id.get, ticketId, value)
+          Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
+        }
+      )
+    }).getOrElse(NotFound)
   }
 }

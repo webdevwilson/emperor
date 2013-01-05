@@ -326,12 +326,15 @@ function UserEditViewModel(userId) {
   }
 
   self.removeToken = function(data) {
-    $.ajax({
-      type: "DELETE",
-      url: "/api/user/token/" + data.token()
-    })
-    .done(self.tokens.remove(data))
-    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete token!") })
+    var sure = confirm("Are you sure you want to remove this token?");
+    if(sure == true) {
+      $.ajax({
+        type: "DELETE",
+        url: "/api/user/token/" + data.token()
+      })
+      .done(self.tokens.remove(data))
+      .fail(function() { ShowAlert("alert-error", "XXX Failed to delete token!") })
+    }
   }
 
   showTokens();
