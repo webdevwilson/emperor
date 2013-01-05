@@ -123,7 +123,7 @@ object UserModel {
   def getByEmail(email: String) : List[User] = {
 
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('email -> email).as(user *)
+      getByEmailQuery.on('email -> email).as(user *)
     }
   }
 
