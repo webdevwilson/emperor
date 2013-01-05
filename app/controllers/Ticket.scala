@@ -89,7 +89,7 @@ object Ticket extends Controller with Secured {
       "reporter_id"   -> longNumber,
       "assignee_id"   -> optional(longNumber),
       "attention_id"  -> optional(longNumber),
-      "project_id"    -> longNumber,
+      "project_id"    -> ignored[Long](0.toLong),
       "priority_id"   -> longNumber,
       "resolution_id" -> optional(longNumber),
       "proposed_resolution_id" -> optional(longNumber),
