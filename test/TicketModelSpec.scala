@@ -96,7 +96,7 @@ class TicketModelSpec extends Specification {
         )
         val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
 
-        val comm = TicketModel.addComment(ticketId = newTicket.get.ticketId, userId = user.id.get, content = "Comment!")
+        val comm = TicketModel.addComment(ticketId = newTicket.get.ticketId, ctype = "comment" userId = user.id.get, content = "Comment!")
         comm must beSome
         comm.get must beAnInstanceOf[models.Comment]
 

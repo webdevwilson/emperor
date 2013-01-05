@@ -136,6 +136,7 @@ GET     /ticket/change/:id/:statusId    controllers.Ticket.change(id: String, st
 GET     /ticket/create                  controllers.Ticket.create(project: Option[Long] ?= None)
 GET     /ticket/:id                     controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 GET     /ticket/comments/:id            controllers.Ticket.item(tab ?= "comments", id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
+GET     /ticket/commits/:id             controllers.Ticket.item(tab ?= "commits",  id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 GET     /ticket/history/:id             controllers.Ticket.item(tab ?= "history",  id: String, page: Int ?= 1, count: Int ?= 10, query: String ?= "*")
 
 POST    /ticket/:id                     controllers.Ticket.update(id: String)

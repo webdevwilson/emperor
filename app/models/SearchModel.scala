@@ -264,7 +264,8 @@ object SearchModel {
   val ticketCommentIndex = "ticket_comments"
   val ticketCommentType = "ticket_comment"
   val ticketCommentFilterMap = Map(
-    "ticket_id" -> "ticket_id"
+    "ticket_id" -> "ticket_id",
+    "type"      -> "type"
   )
   val ticketCommentSortMap = Map(
     "date_created"-> "date_created"
@@ -273,6 +274,10 @@ object SearchModel {
   {
     "ticket": {
       "properties": {
+        "type": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "project_id": {
           "type": "long",
           "index": "not_analyzed"

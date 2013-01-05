@@ -59,6 +59,7 @@ object Ticket extends Controller with Secured {
   val commentForm = Form(
     mapping(
       "id"      -> ignored(NotAssigned:Pk[Long]),
+      "ctype"   -> ignored[String]("comment"),
       "user_id" -> ignored[Long](0.toLong),
       "username"-> ignored[String](""),
       "realname"-> ignored[String](""),
@@ -212,7 +213,7 @@ object Ticket extends Controller with Secured {
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
       },
       value => {
-        val comm = TicketModel.addComment(ticketId, request.user.id.get, value.content)
+        val comm = TicketModel.addComment(ticketId, value.ctype, request.user.id.get, value.content)
 
         Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
       }
@@ -342,9 +343,37 @@ object Ticket extends Controller with Secured {
               statuses = wfs
             )(request))
           }
+          case "commits" => {
+
+            val commFilters = Map(
+              "ticket_id" -> Seq(ticketId),
+              "type"      -> Seq("commit")
+            )
+
+            val q = SearchQuery(
+              userId = request.user.id.get, page = 1,
+              count = 99999, query = query, filters = commFilters,
+              sortBy = Some("date_created"), sortOrder = Some("asc")
+            )
+            val commRes = SearchModel.searchComment(q)
+
+            Ok(views.html.ticket.commits(
+              ticket = ticket,
+              assignees = assignees,
+              resolutions = resolutions,
+              resolveForm = resolveForm,
+              assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
+              commentForm = commentForm,
+              comments = commRes,
+              statuses = wfs
+            )(request))
+          }
           case _ => {
 
-            val commFilters = Map("ticket_id" -> Seq(ticketId))
+            val commFilters = Map(
+              "ticket_id" -> Seq(ticketId),
+              "type"      -> Seq("comment")
+            )
 
             val q = SearchQuery(
               userId = request.user.id.get, page = 1,
@@ -413,7 +442,7 @@ object Ticket extends Controller with Secured {
         }, {
           case value: models.MakeLink => {
             value.comment.map({ comm =>
-              TicketModel.addComment(ticketId, request.user.id.get, comm)
+              TicketModel.addComment(ticketId, "comment", request.user.id.get, comm)
             })
 
             value.tickets.foreach({ otherTicketId =>

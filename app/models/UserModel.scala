@@ -38,6 +38,7 @@ object UserModel {
   val allQuery = SQL("SELECT * FROM users")
   val getAllAssignableQuery = SQL("SELECT u.* FROM full_permissions AS fp JOIN users u on u.id = fp.user_id WHERE permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_id={project_id}")
   val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
+  val getByEmailQuery = SQL("SELECT * from users WHERE email={email}")
   val getByGroupIdQuery = SQL("SELECT * FROM users")
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
   val getIdByUsernameQuery = SQL("SELECT id FROM users WHERE username={username}")
@@ -112,7 +113,17 @@ object UserModel {
   def getById(id: Long) : Option[User] = {
 
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('id -> id).as(UserModel.user.singleOpt)
+      getByIdQuery.on('id -> id).as(user.singleOpt)
+    }
+  }
+
+  /**
+   * Retrieve a user by email.
+   */
+  def getByEmail(email: String) : List[User] = {
+
+    DB.withConnection { implicit conn =>
+      getByIdQuery.on('email -> email).as(user *)
     }
   }
 

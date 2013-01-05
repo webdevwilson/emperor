@@ -20,13 +20,14 @@ class EmperorLinkRenderer extends LinkRenderer {
 
     if(TicketModel.isValidTicketId(node.getText)) {
       // Doesn't mean that the ticket is valid, just that the form is correct.
-      val maybeTicket = TicketModel.getById(node.getText())
-      maybeTicket.map(ticket =>
-        new LinkRenderer.Rendering("/ticket/" + ticket.ticketId.get, ticket.ticketId.get)
-      ).getOrElse(
-        // Ticket doesn't exist, show a useless ticket link.
-        new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
-      )
+      // val maybeTicket = TicketModel.getById(node.getText())
+      // maybeTicket.map(ticket =>
+        // new LinkRenderer.Rendering("/ticket/" + ticket.ticketId.get, ticket.ticketId.get)
+        new LinkRenderer.Rendering("/ticket/" + node.getText, node.getText)
+      // ).getOrElse(
+      //   // Ticket doesn't exist, show a useless ticket link.
+      //   new LinkRenderer.Rendering("/", node.getText()).withAttribute("class", "text-error")
+      // )
     } else if(node.getText.startsWith("@")) {
       val maybeUser = UserModel.getByUsername(node.getText.substring(1))
       maybeUser.map(user =>

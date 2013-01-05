@@ -53,6 +53,7 @@ object JsonFormats {
   implicit object CommentFormat extends Format[Comment] {
     def reads(json: JsValue): Comment = Comment(
       id = Id((json \ "id").as[Long]),
+      ctype = (json \ "type").as[String],
       userId = (json \ "user_id").as[Long],
       username = (json \ "user_name").as[String],
       realName = (json \ "user_realname").as[String],
@@ -64,6 +65,7 @@ object JsonFormats {
     def writes(comment: Comment): JsValue = {
       val cdoc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(comment.id.get),
+        "type"          -> JsString(comment.ctype),
         "ticket_id"     -> JsString(comment.ticketId),
         "user_id"       -> JsNumber(comment.userId),
         "user_name"     -> JsString(comment.username),

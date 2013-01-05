@@ -16,7 +16,7 @@ import scala.collection.mutable.ListBuffer
  * Class for a comment.
  */
 case class Comment(
-  id: Pk[Long] = NotAssigned, userId: Long, username: String,
+  id: Pk[Long] = NotAssigned, ctype: String, userId: Long, username: String,
   realName: String, ticketId: String, content: String, dateCreated: DateTime
 )
 
@@ -166,7 +166,7 @@ object TicketModel {
   val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, project_id, reporter_id, assignee_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {project_id}, {reporter_id}, {assignee_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
-  val insertCommentQuery = SQL("INSERT INTO ticket_comments (user_id, ticket_id, content, date_created) VALUES ({user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
+  val insertCommentQuery = SQL("INSERT INTO ticket_comments (type, user_id, ticket_id, content, date_created) VALUES ({type}, {user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM tickets WHERE ticket_id={ticket_id}")
 
@@ -310,13 +310,14 @@ object TicketModel {
   // Parser for retrieving a comment
   val comment = {
     get[Pk[Long]]("ticket_comments.id") ~
+    get[String]("type") ~
     get[Long]("user_id") ~
     get[String]("username") ~
     get[String]("realname") ~
     get[String]("ticket_id") ~
     get[String]("content") ~
     get[DateTime]("ticket_comments.date_created") map {
-      case id~userId~username~realName~ticketId~content~dateCreated => Comment(id, userId, username, realName, ticketId, content, dateCreated)
+      case id~ctype~userId~username~realName~ticketId~content~dateCreated => Comment(id, ctype, userId, username, realName, ticketId, content, dateCreated)
     }
   }
 
@@ -346,7 +347,7 @@ object TicketModel {
   /**
    * Add a comment.
    */
-  def addComment(ticketId: String, userId: Long, content: String) : Option[Comment] = {
+  def addComment(ticketId: String, ctype: String, userId: Long, content: String) : Option[Comment] = {
 
     val ticket = this.getById(ticketId)
 
@@ -354,6 +355,7 @@ object TicketModel {
       case Some(ticket) => {
         DB.withConnection { implicit conn =>
           val id = insertCommentQuery.on(
+            'type       -> ctype,
             'user_id    -> userId,
             'ticket_id  -> ticketId,
             'content    -> content
@@ -781,7 +783,7 @@ object TicketModel {
 
         // Add a comment, if we had one.
         comment.map { content =>
-          val comm = addComment(ticketId = id, userId = userId, content = content)
+          val comm = addComment(ticketId = id, ctype = "comment", userId = userId, content = content)
         }
       }
 

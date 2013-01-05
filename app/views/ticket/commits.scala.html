@@ -19,9 +19,9 @@
   <div class="navbar-inner">
    <div class="container">
     <ul class="nav">
-     <li class="active"><a href="@routes.Ticket.item("comments", id = ticket.ticketId)">@Messages("ticket.comment.list")</a></li>
-     <li><a href="@routes.Ticket.item("commits", id = ticket.ticketId)">@Messages("ticket.commit.list")</a></li>
-     <li><a href="@routes.Ticket.item("history", id = ticket.ticketId)">@Messages("ticket.history.list")</a></li>
+     <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
+     <li class="active"><a href="@routes.Ticket.item("commits", id = ticket.ticketId)">@Messages("ticket.commit.list")</a></li>
+     <li><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
     </ul>
     @helper.form(action = routes.Ticket.item(tab = "comments", id = ticket.ticketId), 'class -> "navbar-search") {
      <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">
@@ -47,15 +47,6 @@
    @if(comments.pager.total > comments.pager.items.size) {
    @pager(comments.pager)
    }
-   <h4>@Messages("ticket.comment.add")</h4>
-   @helper.form(action = routes.Ticket.comment(ticket.ticketId)) {
-    <fieldset>
-     @helper.textarea(field = commentForm("content"), args = '_label -> Messages("ticket.comment"), 'class -> "span6", 'rows -> 6)
-     <div class="form-actions">
-      <button type="submit" class="btn btn-primary"<i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
-     </div>
-    </fieldset>
-   }
-    </div>
-   </div>
-  }
+ </div>
+</div>
+}
