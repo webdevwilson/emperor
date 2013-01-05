@@ -104,6 +104,13 @@ function TicketLink(ticketId, data) {
   }, this);
 }
 
+function UserToken(data) {
+  this.token = ko.observable(data.token);
+  this.userId = ko.observable(data.userId);
+  this.comment = ko.observable(data.comment);
+  this.dateCreated = ko.observable(data.dateCreated);
+}
+
 function AdminPermissionSchemeViewModel(permissionSchemeId) {
   var self = this
   self.permissions = ko.observableArray([]);
@@ -303,4 +310,29 @@ function TicketViewModel(ticketId) {
   }
 
   showLinks();
+}
+
+function UserEditViewModel(userId) {
+  var self = this
+  self.tokens = ko.observableArray([])
+
+  function showTokens() {
+    $.getJSON("/api/user/tokens/" + userId + "?callback=?")
+      .done(function(data) {
+        var mappedTokens = $.map(data, function(item) { return new UserToken(item) });
+        self.tokens(mappedTokens);
+      })
+      .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve tokens!") });
+  }
+
+  self.removeToken = function(data) {
+    $.ajax({
+      type: "DELETE",
+      url: "/api/user/token/" + data.token()
+    })
+    .done(self.tokens.remove(data))
+    .fail(function() { ShowAlert("alert-error", "XXX Failed to delete token!") })
+  }
+
+  showTokens();
 }
