@@ -8,9 +8,11 @@ import play.api.mvc._
 import play.api.libs.Jsonp
 import play.api.libs.json.Json
 import play.api.libs.json._
+import play.api.Play.current
 
 object GitHub extends Controller with Secured {
 
+  val realipHeader = Play.configuration.getConfig("emperor").get.getString("ip-header")
   val ticketFinder = "\\b(\\p{L}{1}[\\p{Nd}|\\p{L}]*-\\d+)\\b".r
   val githubAddresses = Seq("207.97.227.253", "50.57.128.197", "108.171.174.178")
 
@@ -21,7 +23,8 @@ object GitHub extends Controller with Secured {
 
     // Make sure this request came from github. This is a temporary hack
     // until it's worth asking GitHub to add support for Emperor's tokens.
-    if(githubAddresses.contains(request.remoteAddress)) {
+    val ip = realipHeader.flatMap({ headerName => request.headers.get(headerName) }).getOrElse(request.remoteAddress)
+    if(githubAddresses.contains(ip)) {
       request.body.asFormUrlEncoded.map { data =>
         data.get("payload").map { payload =>
           val ghcommits = Json.parse(payload.head)
