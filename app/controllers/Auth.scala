@@ -150,7 +150,7 @@ trait Secured {
         Some(ut.userId)
       }).getOrElse(None)
     } else if(request.queryString.contains("authtoken") && request.queryString.get("authtoken").isDefined) {
-      val token = request.queryString.get("authtoken").get.first
+      val token = request.queryString.get("authtoken").get.head
       // Token is present, use that!  Use map, as we might not get one back
       // if the token is invalid.
       UserTokenModel.getById(token).map({ ut =>
