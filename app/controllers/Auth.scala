@@ -120,13 +120,13 @@ trait Secured {
               }
             }
             case None => {
-              Logger.debug("Denied " + perm + " to user " + user.id.get + " due to missing project.");
+              Logger.debug("Denied " + perm + " to user " + user.id.get + " due to missing project.")
               onUnauthorized(request)
             }
           }
         }
         case None => {
-          Logger.debug("Denied " + perm + " to unknown user");
+          Logger.debug("Denied " + perm + " to unknown user")
           onUnauthenticated(request)
         }
       }
@@ -143,6 +143,14 @@ trait Secured {
       Some(request.session.get("user_id").get.toLong)
     } else if(request.headers.get("Authorization").isDefined && request.headers.get("Authorization").get.startsWith("Token token=")) {
       val token = request.headers.get("Authorization").get.substring(12).trim()
+      // Token is present, use that!  Use map, as we might not get one back
+      // if the token is invalid.
+      UserTokenModel.getById(token).map({ ut =>
+        // Give back the user id for the token
+        Some(ut.userId)
+      }).getOrElse(None)
+    } else if(request.queryString.contains("authtoken") && request.queryString.get("authtoken").isDefined) {
+      val token = request.queryString.get("authtoken").get.first
       // Token is present, use that!  Use map, as we might not get one back
       // if the token is invalid.
       UserTokenModel.getById(token).map({ ut =>
