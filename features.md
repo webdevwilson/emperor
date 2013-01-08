@@ -32,8 +32,11 @@
 ## Features in Progress
 * No-nonsense UI with great user experience
 
+## Integrations
+* GitHub
+
 ## Planned Features
-* Integration with GitHub
+
 * Saved Searches
 * Plugins
 * Email notification
