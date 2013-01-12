@@ -608,19 +608,24 @@ object SearchModel {
 
   /**
    * Index an event.
+   *
+   * @param event The event to index
+   * @param block Boolean determining if this method should block and refresh the index before returning.
    */
-  def indexEvent(event: Event) {
+  def indexEvent(event: Event, block: Boolean = false) {
 
-    indexer.index(eventIndex, eventType, null, toJson(event).toString)
-    indexer.refresh()
+    indexer.index(index = eventIndex, `type` = eventType, id = null, source = toJson(event).toString, refresh = Some(block))
   }
 
   /**
    * Index a comment.
+   *
+   * @param comment The comment to index
+   * @param block Boolean determining if this method should block and refresh the index before returning
    */
-  def indexComment(comment: Comment) {
+  def indexComment(comment: Comment, block: Boolean = false) {
 
-    indexer.index(ticketCommentIndex, ticketCommentType, comment.id.get.toString, toJson(comment).toString)
+    indexer.index(index = ticketCommentIndex, `type` = ticketCommentType, id = comment.id.get.toString, source = toJson(comment).toString, refresh = Some(block))
 
     val ft = TicketModel.getFullById(comment.ticketId).get
 
@@ -637,24 +642,27 @@ object SearchModel {
       url           = "",
       dateCreated   = comment.dateCreated
     ))
-
-    indexer.refresh()
   }
 
   /**
    * Index a ticket.
+
+   * @param ticket The ticket to index
+   * @param block Boolean determining if this method should block and refresh the index before returning
    */
-  def indexTicket(ticket: FullTicket) {
+  def indexTicket(ticket: FullTicket, block: Boolean = false) {
 
-    indexer.index(ticketIndex, ticketType, ticket.ticketId, toJson(ticket).toString)
-
-    indexer.refresh()
+    indexer.index(index = ticketIndex, `type` = ticketType, id = ticket.ticketId, source = toJson(ticket).toString, refresh = Some(block))
   }
 
   /**
    * Index a history item by comparing a new and old ticket.
+   *
+   * @param oldTick The old ticket, before changes
+   * @param newTick The new ticket, after changes
+   * @param block Boolean determining if this method should block and refresh the index before returning
    */
-  def indexHistory(oldTick: FullTicket, newTick: FullTicket) {
+  def indexHistory(oldTick: FullTicket, newTick: FullTicket, block: Boolean = false) {
 
     val projChanged = newTick.project.id != oldTick.project.id
     val prioChanged = newTick.priority.id != oldTick.priority.id
@@ -776,7 +784,11 @@ object SearchModel {
       "description_changed" -> JsBoolean(descChanged),
       "date_created"      -> JsString(dateFormatter.print(newTick.dateCreated))
     )
-    indexer.index(ticketHistoryIndex, ticketHistoryType, newTick.id.toString, toJson(hdoc).toString)
+    indexer.index(
+      index = ticketHistoryIndex, `type` = ticketHistoryType,
+      id = newTick.id.toString, source = toJson(hdoc).toString,
+      refresh = Some(block)
+    )
 
     // XXX Do something special for resolution changes, they are ticked_resolved
     // and status changes.
@@ -791,8 +803,6 @@ object SearchModel {
       url           = "",
       dateCreated   = newTick.dateCreated
     ))
-
-    indexer.refresh()
   }
 
   /**
@@ -820,7 +830,6 @@ object SearchModel {
         url           = "",
         dateCreated   = ticket.dateCreated
       ))
-
 
       val count = TicketModel.getAllFullCountById(ticket.ticketId)
       if(count > 1) {

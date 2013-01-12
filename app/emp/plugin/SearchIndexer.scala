@@ -31,13 +31,13 @@ class SearchIndexer(configuration: Configuration) extends Actor {
           val newTicket = TicketModel.getFullByActualId(cte.newTicketId)
           val oldTicket = TicketModel.getFullByActualId(cte.oldTicketId)
 
-          SearchModel.indexHistory(newTick = newTicket.get, oldTick = oldTicket.get)
+          SearchModel.indexHistory(newTick = newTicket.get, oldTick = oldTicket.get, block = true)
         })
       }
       // Handle a ticket comment
       case tcomm: CommentTicketEvent => {
         TicketModel.getCommentById(tcomm.commentId).map({ c =>
-          SearchModel.indexComment(c)
+          SearchModel.indexComment(c, true)
         })
       }
       // Handle a new ticket
@@ -56,7 +56,7 @@ class SearchIndexer(configuration: Configuration) extends Actor {
             content       = ft.summary,
             url           = "",
             dateCreated   = ft.dateCreated
-          ))
+          ), true)
         })
       }
       // Unknown event, just do nothing
