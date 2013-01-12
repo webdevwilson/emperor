@@ -23,9 +23,7 @@ object Renderer {
    */
   def render(markdown: Option[String]): String = {
     markdown.map({ m =>
-
       renderer.markdownToHtml(m, new EmperorLinkRenderer())
-
     }).getOrElse("")
   }
 }
