@@ -142,10 +142,8 @@ email.ticket.new.problem=Is this email not displaying correctly?
 email.ticket.new.problem.view=View it in your browser.
 
 event.action=<a href="/user/{0}">{1}</a> {2}
-event.action.icon.comment=icon-bullhorn
-event.action.icon.ticket_change=icon-pencil
-event.action.icon.ticket_create=icon-certificate
 event.action.comment=commented on
+event.action.commit=committed on
 event.action.ticket_change=modified
 event.action.ticket_create=created
 event.attribution.postfix=at {0}

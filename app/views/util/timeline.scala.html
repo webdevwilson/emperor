@@ -13,7 +13,26 @@
 <li>
  <div class="popover right fade in">
   <div class="arrow"></div>
-  <h3 class="popover-title"><i class="@Messages("event.action.icon." + event.eType)"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>  <time datetime="@DateFormatter.displayISO8601(event.dateCreated)" title="@DateFormatter.displayLongDateTime(event.dateCreated)">@DateFormatter.displayLongDateTime(event.dateCreated)</time></h3>
+  <h3 class="popover-title">
+   @defining(event.eType) { etype =>
+    @etype match {
+     case "commit" => {
+      <i class="icon-wrench"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("commits", event.eKey)">@event.eKey</a>
+     }
+     case "comment" => {
+      <i class="icon-bullhorn"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+     }
+     case "ticket_change" => {
+      <i class="icon-pencil"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+     }
+     case "ticket_create" => {
+      <i class="icon-certificate"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+     }
+     case _ => { @etype }
+    }
+   }
+   <time datetime="@DateFormatter.displayISO8601(event.dateCreated)" title="@DateFormatter.displayLongDateTime(event.dateCreated)">@DateFormatter.displayLongDateTime(event.dateCreated)</time>
+  </h3>
   <div class="popover-content">
    @Html(event.content)
   </div>

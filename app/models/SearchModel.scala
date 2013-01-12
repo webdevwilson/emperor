@@ -637,7 +637,7 @@ object SearchModel {
       userId        = user.id.get,
       userRealName  = user.realName,
       eKey          = comment.ticketId,
-      eType         = "comment",
+      eType         = comment.ctype,
       content       = Renderer.render(Some(comment.content)),
       url           = "",
       dateCreated   = comment.dateCreated
