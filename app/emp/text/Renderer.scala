@@ -18,6 +18,8 @@ object Renderer {
    * Uses [[https://github.com/sirthias/pegdown Pegdown]] for rendering with
    * all the extensions turned on and a customer link renderer via
    * [[emp.text.EmperorLinkRenderer]].
+   *
+   * @param markdown The text to render.
    */
   def render(markdown: Option[String]): String = {
     markdown.map({ m =>
