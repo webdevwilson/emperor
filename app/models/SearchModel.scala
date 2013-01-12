@@ -629,13 +629,13 @@ object SearchModel {
 
     val ft = TicketModel.getFullById(comment.ticketId).get
 
-    val user = UserModel.getById(ft.user.id)
+    val user = UserModel.getById(comment.userId).get
 
     SearchModel.indexEvent(Event(
       projectId     = ft.project.id,
       projectName   = ft.project.name,
-      userId        = ft.user.id,
-      userRealName  = ft.user.name,
+      userId        = user.id.get,
+      userRealName  = user.realName,
       eKey          = comment.ticketId,
       eType         = "comment",
       content       = Renderer.render(Some(comment.content)),
