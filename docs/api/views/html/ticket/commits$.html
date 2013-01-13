@@ -2,35 +2,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>views.html.admin.user.edit</title>
+          <title>views.html.ticket.commits</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
     
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../../lib/object_big.png" />
-        <p id="owner"><a name="views" class="extype" href="../../../package.html">views</a>.<a name="views.html" class="extype" href="../../package.html">html</a>.<a name="views.html.admin" class="extype" href="../package.html">admin</a>.<a name="views.html.admin.user" class="extype" href="package.html">user</a></p>
-        <h1>edit</h1>
+        <img src="../../../lib/object_big.png" />
+        <p id="owner"><a name="views" class="extype" href="../../package.html">views</a>.<a name="views.html" class="extype" href="../package.html">html</a>.<a name="views.html.ticket" class="extype" href="package.html">ticket</a></p>
+        <h1>commits</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">object</span>
       <span class="symbol"> 
-        <span class="name">edit</span>
+        <span class="name">commits</span>
         
-        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template4" class="extype">Template4</span>[<span name="scala.Long" class="extype">Long</span>, <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
+        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template9" class="extype">Template9</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
       </span>
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="play.api.templates.Template4" class="extype">Template4</span>[<span name="scala.Long" class="extype">Long</span>, <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span name="play.api.templates.Template9" class="extype">Template9</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -46,7 +46,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="views.html.admin.user.edit" class="in"><span>edit</span></li><li name="play.api.templates.Template4" class="in"><span>Template4</span></li><li name="play.templates.BaseScalaTemplate" class="in"><span>BaseScalaTemplate</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="views.html.ticket.commits" class="in"><span>commits</span></li><li name="play.api.templates.Template9" class="in"><span>Template9</span></li><li name="play.templates.BaseScalaTemplate" class="in"><span>BaseScalaTemplate</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -128,14 +128,14 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate</dd></dl></div>
-    </li><li visbl="pub" name="views.html.admin.user.edit#apply" data-isabs="false">
-      <a id="apply(Long,Form[User],Form[NewPassword])(AuthenticatedRequest):Html"></a>
+    </li><li visbl="pub" name="views.html.ticket.commits#apply" data-isabs="false">
+      <a id="apply(FullTicket,List[(String, String)],List[(String, String)],Form[Resolution],Form[Assignment],Form[Comment],SearchResult[Comment],Seq[WorkflowStatus])(AuthenticatedRequest):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">apply</span>
         
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>, <span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>]</span>, <span name="passForm">passForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a></span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="resolutions">resolutions: List[(String, String)]</span>, <span name="resolveForm">resolveForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>]</span>, <span name="assignForm">assignForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>]</span>, <span name="commentForm">commentForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="comments">comments: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="statuses">statuses: Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -171,7 +171,7 @@
         <span class="params">()</span><span class="result">: AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -197,14 +197,14 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate → Equals → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="views.html.admin.user.edit#f" data-isabs="false">
-      <a id="f:(Long, Form[User], Form[NewPassword]) ⇒ (AuthenticatedRequest) ⇒ Html"></a>
+    </li><li visbl="pub" name="views.html.ticket.commits#f" data-isabs="false">
+      <a id="f:(FullTicket, List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], Seq[WorkflowStatus]) ⇒ (AuthenticatedRequest) ⇒ Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">f</span>
         
-        <span class="result">: (<span name="scala.Long" class="extype">Long</span>, <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>]) ⇒ (<a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="result">: (<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]) ⇒ (<a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       
@@ -218,7 +218,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -343,7 +343,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate → Product</dd></dl></div>
-    </li><li visbl="prt" name="views.html.admin.user.edit#readResolve" data-isabs="false">
+    </li><li visbl="prt" name="views.html.ticket.commits#readResolve" data-isabs="false">
       <a id="readResolve():AnyRef"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -354,28 +354,28 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
-    </li><li visbl="pub" name="views.html.admin.user.edit#ref" data-isabs="false">
-      <a id="ref:views.html.admin.user.edit.type"></a>
+    </li><li visbl="pub" name="views.html.ticket.commits#ref" data-isabs="false">
+      <a id="ref:views.html.ticket.commits.type"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">ref</span>
         
-        <span class="result">: views.html.admin.user.edit.type</span>
+        <span class="result">: views.html.ticket.commits.type</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="views.html.admin.user.edit#render" data-isabs="false">
-      <a id="render(Long,Form[User],Form[NewPassword],AuthenticatedRequest):Html"></a>
+    </li><li visbl="pub" name="views.html.ticket.commits#render" data-isabs="false">
+      <a id="render(FullTicket,List[(String, String)],List[(String, String)],Form[Resolution],Form[Assignment],Form[Comment],SearchResult[Comment],Seq[WorkflowStatus],AuthenticatedRequest):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">render</span>
         
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>, <span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>]</span>, <span name="passForm">passForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>]</span>, <span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a></span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="resolutions">resolutions: List[(String, String)]</span>, <span name="resolveForm">resolveForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>]</span>, <span name="assignForm">assignForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>]</span>, <span name="commentForm">commentForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="comments">comments: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="statuses">statuses: Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]</span>, <span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="views.html.admin.user.edit" class="extype" href="">edit</a> → Template4</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="views.html.ticket.commits" class="extype" href="">commits</a> → Template9</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -462,8 +462,8 @@
     </li></ol>
             </div>
 
-        <div name="play.api.templates.Template4" class="parent">
-              <h3>Inherited from <span name="play.api.templates.Template4" class="extype">Template4</span>[<span name="scala.Long" class="extype">Long</span>, <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.User" class="extype" href="../../../../models/User.html">User</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.NewPassword" class="extype" href="../../../../models/NewPassword.html">NewPassword</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
+        <div name="play.api.templates.Template9" class="parent">
+              <h3>Inherited from <span name="play.api.templates.Template9" class="extype">Template9</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
             </div><div name="play.templates.BaseScalaTemplate" class="parent">
               <h3>Inherited from <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]]</h3>
             </div><div name="scala.Serializable" class="parent">

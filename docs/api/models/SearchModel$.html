@@ -301,49 +301,57 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="models.SearchModel#indexComment" data-isabs="false">
-      <a id="indexComment(Comment):Unit"></a>
+      <a id="indexComment(Comment,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">indexComment</span>
         
-        <span class="params">(<span name="comment">comment: <a name="models.Comment" class="extype" href="Comment.html">Comment</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="comment">comment: <a name="models.Comment" class="extype" href="Comment.html">Comment</a></span>, <span name="block">block: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Index a comment.</p>
+      <p class="shortcomment cmt">Index a comment.</p><div class="fullcomment"><div class="comment cmt"><p>Index a comment.
+</p></div><dl class="paramcmts block"><dt class="param">comment</dt><dd class="cmt"><p>The comment to index</p></dd><dt class="param">block</dt><dd class="cmt"><p>Boolean determining if this method should block and refresh the index before returning
+</p></dd></dl></div>
     </li><li visbl="pub" name="models.SearchModel#indexEvent" data-isabs="false">
-      <a id="indexEvent(Event):Unit"></a>
+      <a id="indexEvent(Event,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">indexEvent</span>
         
-        <span class="params">(<span name="event">event: <a name="models.Event" class="extype" href="Event.html">Event</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="event">event: <a name="models.Event" class="extype" href="Event.html">Event</a></span>, <span name="block">block: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Index an event.</p>
+      <p class="shortcomment cmt">Index an event.</p><div class="fullcomment"><div class="comment cmt"><p>Index an event.
+</p></div><dl class="paramcmts block"><dt class="param">event</dt><dd class="cmt"><p>The event to index</p></dd><dt class="param">block</dt><dd class="cmt"><p>Boolean determining if this method should block and refresh the index before returning.
+</p></dd></dl></div>
     </li><li visbl="pub" name="models.SearchModel#indexHistory" data-isabs="false">
-      <a id="indexHistory(FullTicket,FullTicket):Unit"></a>
+      <a id="indexHistory(FullTicket,FullTicket,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">indexHistory</span>
         
-        <span class="params">(<span name="oldTick">oldTick: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>, <span name="newTick">newTick: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="oldTick">oldTick: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>, <span name="newTick">newTick: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>, <span name="block">block: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Index a history item by comparing a new and old ticket.</p>
+      <p class="shortcomment cmt">Index a history item by comparing a new and old ticket.</p><div class="fullcomment"><div class="comment cmt"><p>Index a history item by comparing a new and old ticket.
+</p></div><dl class="paramcmts block"><dt class="param">oldTick</dt><dd class="cmt"><p>The old ticket, before changes</p></dd><dt class="param">newTick</dt><dd class="cmt"><p>The new ticket, after changes</p></dd><dt class="param">block</dt><dd class="cmt"><p>Boolean determining if this method should block and refresh the index before returning
+</p></dd></dl></div>
     </li><li visbl="pub" name="models.SearchModel#indexTicket" data-isabs="false">
-      <a id="indexTicket(FullTicket):Unit"></a>
+      <a id="indexTicket(FullTicket,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">indexTicket</span>
         
-        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>, <span name="block">block: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Index a ticket.</p>
+      <p class="shortcomment cmt">Index a ticket.</p><div class="fullcomment"><div class="comment cmt"><p>Index a ticket.
+</p></div><dl class="paramcmts block"><dt class="param">ticket</dt><dd class="cmt"><p>The ticket to index</p></dd><dt class="param">block</dt><dd class="cmt"><p>Boolean determining if this method should block and refresh the index before returning
+</p></dd></dl></div>
     </li><li visbl="pub" name="models.SearchModel#indexer" data-isabs="false">
       <a id="indexer:Indexer"></a>
       <h4 class="signature">
@@ -351,7 +359,7 @@
       <span class="symbol"> 
         <span class="name">indexer</span>
         
-        <span class="result">: <span name="com.traackr.scalastic.elasticsearch.Indexer" class="extype">Indexer</span></span>
+        <span class="result">: <span name="scalastic.elasticsearch.Indexer" class="extype">Indexer</span></span>
       </span>
       </h4>
       

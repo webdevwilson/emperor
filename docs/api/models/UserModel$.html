@@ -163,8 +163,7 @@
         <span class="params">(<span name="user">user: <a name="models.User" class="extype" href="User.html">User</a></span>)</span><span class="result">: <a name="models.User" class="extype" href="User.html">User</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Add a user.</p><div class="fullcomment"><div class="comment cmt"><p>Add a user.  Uses <code>InitialUser</code>.
-</p></div></div>
+      <p class="shortcomment cmt">Add a user.</p>
     </li><li visbl="pub" name="models.UserModel#delete" data-isabs="false">
       <a id="delete(Long):Unit"></a>
       <h4 class="signature">
@@ -256,6 +255,28 @@
       </span>
       </h4>
       
+    </li><li visbl="pub" name="models.UserModel#getByEmail" data-isabs="false">
+      <a id="getByEmail(String):List[User]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getByEmail</span>
+        
+        <span class="params">(<span name="email">email: String</span>)</span><span class="result">: List[<a name="models.User" class="extype" href="User.html">User</a>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Retrieve a user by email.</p>
+    </li><li visbl="pub" name="models.UserModel#getByEmailQuery" data-isabs="false">
+      <a id="getByEmailQuery:SqlQuery"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">getByEmailQuery</span>
+        
+        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.UserModel#getByGroupIdQuery" data-isabs="false">
       <a id="getByGroupIdQuery:SqlQuery"></a>
       <h4 class="signature">
@@ -322,6 +343,28 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="models.UserModel#getIdByUsername" data-isabs="false">
+      <a id="getIdByUsername(String):Option[Long]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getIdByUsername</span>
+        
+        <span class="params">(<span name="username">username: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Long" class="extype">Long</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.UserModel#getIdByUsernameQuery" data-isabs="false">
+      <a id="getIdByUsernameQuery:SqlQuery"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">getIdByUsernameQuery</span>
+        
+        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.UserModel#getStartsWith" data-isabs="false">
       <a id="getStartsWith(String):Seq[User]"></a>
       <h4 class="signature">

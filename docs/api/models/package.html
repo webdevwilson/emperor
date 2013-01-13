@@ -87,7 +87,7 @@
       <span class="symbol"> 
         <a href="Comment.html"><span class="name">Comment</span></a>
         
-        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="ticketId">ticketId: String</span>, <span name="content">content: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="id">id: Pk[Long]</span>, <span name="ctype">ctype: String</span>, <span name="userId">userId: Long</span>, <span name="username">username: String</span>, <span name="realName">realName: String</span>, <span name="ticketId">ticketId: String</span>, <span name="content">content: String</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a comment.</p>
@@ -198,7 +198,7 @@ the tickets themselves.</p>
       <span class="symbol"> 
         <a href="MakeLink.html"><span class="name">MakeLink</span></a>
         
-        <span class="params">(<span name="linkTypeId">linkTypeId: Long</span>, <span name="otherTicketId">otherTicketId: String</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="linkTypeId">linkTypeId: Long</span>, <span name="tickets">tickets: List[String]</span>, <span name="comment">comment: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for a making a link.</p>
@@ -411,6 +411,17 @@ the tickets themselves.</p>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="models.UserToken" data-isabs="false">
+      <a id="UserToken:UserToken"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="UserToken.html"><span class="name">UserToken</span></a>
+        
+        <span class="params">(<span name="token">token: Pk[String]</span>, <span name="userId">userId: Long</span>, <span name="comment">comment: Option[String]</span>, <span name="dateCreated">dateCreated: DateTime</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="models.Workflow" data-isabs="false">
       <a id="Workflow:Workflow"></a>
       <h4 class="signature">
@@ -600,6 +611,17 @@ the tickets themselves.</p>
       <span class="kind">object</span>
       <span class="symbol"> 
         <a href="UserModel$.html"><span class="name">UserModel</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="models.UserTokenModel" data-isabs="false">
+      <a id="UserTokenModel:UserTokenModel"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="UserTokenModel$.html"><span class="name">UserTokenModel</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>

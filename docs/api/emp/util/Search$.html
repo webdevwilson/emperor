@@ -88,7 +88,7 @@
       <span class="symbol"> 
         <a href="Search$$SearchQuery.html"><span class="name">SearchQuery</span></a>
         
-        <span class="params">(<span name="userId">userId: Long</span>, <span name="page">page: Int</span>, <span name="count">count: Int</span>, <span name="query">query: String</span>, <span name="filters">filters: Map[String, Seq[String]]</span>, <span name="sortBy">sortBy: Option[String]</span>, <span name="sortOrder">sortOrder: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
+        <span class="params">(<span name="userId">userId: Long</span>, <span name="page">page: Int</span>, <span name="count">count: Int</span>, <span name="query">query: String</span>, <span name="filters">filters: Map[String, Seq[String]]</span>, <span name="parser">parser: String</span>, <span name="sortBy">sortBy: Option[String]</span>, <span name="sortOrder">sortOrder: Option[String]</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">Class for search queries
@@ -313,7 +313,7 @@ logic for converting ES' crazy Facet classes into something sane.
       <span class="symbol"> 
         <span class="name">runQuery</span>
         
-        <span class="params">(<span name="indexer">indexer: <span name="com.traackr.scalastic.elasticsearch.Indexer" class="extype">Indexer</span></span>, <span name="index">index: String</span>, <span name="query">query: <a name="emp.util.Search.SearchQuery" class="extype" href="Search$$SearchQuery.html">SearchQuery</a></span>, <span name="filterMap">filterMap: Map[String, String]</span>, <span name="sortMap">sortMap: Map[String, String]</span>, <span name="facets">facets: Map[String, String] = <span class="symbol">Map.empty</span></span>, <span name="filterProjects">filterProjects: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span name="org.elasticsearch.action.search.SearchResponse" class="extype">SearchResponse</span></span>
+        <span class="params">(<span name="indexer">indexer: <span name="scalastic.elasticsearch.Indexer" class="extype">Indexer</span></span>, <span name="index">index: String</span>, <span name="query">query: <a name="emp.util.Search.SearchQuery" class="extype" href="Search$$SearchQuery.html">SearchQuery</a></span>, <span name="filterMap">filterMap: Map[String, String]</span>, <span name="sortMap">sortMap: Map[String, String]</span>, <span name="facets">facets: Map[String, String] = <span class="symbol">Map.empty</span></span>, <span name="filterProjects">filterProjects: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span name="org.elasticsearch.action.search.SearchResponse" class="extype">SearchResponse</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Run a query against ElasticSearch.</p><div class="fullcomment"><div class="comment cmt"><p>Run a query against ElasticSearch. Creates a boolean filter query that
