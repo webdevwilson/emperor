@@ -1,6 +1,7 @@
 ---
 layout: post
 title: GitHub Integration and User Token Documentation
+description: documentation github commit linking
 ---
 
 There is now documentation for setting up

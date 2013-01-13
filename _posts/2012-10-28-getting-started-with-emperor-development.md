@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Getting Started With Emperor Development
+description: emperor getting started
 ---
 
 ## Scala?
