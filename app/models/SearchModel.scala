@@ -639,7 +639,7 @@ object SearchModel {
       eKey          = comment.ticketId,
       eType         = comment.ctype,
       content       = Renderer.render(Some(comment.content)),
-      url           = "",
+      url           = controllers.routes.Ticket.item("commits", ft.ticketId).url + "#comment-" + comment.id.get,
       dateCreated   = comment.dateCreated
     ))
   }
@@ -790,7 +790,7 @@ object SearchModel {
       refresh = Some(block)
     )
 
-    // XXX Do something special for resolution changes, they are ticked_resolved
+    // XXX Do something special for resolution changes, they are ticket_resolved
     // and status changes.
     indexEvent(Event(
       projectId     = newTick.project.id,
@@ -800,7 +800,7 @@ object SearchModel {
       eKey          = newTick.ticketId,
       eType         = "ticket_change",
       content       = newTick.summary,
-      url           = "",
+      url           = controllers.routes.Ticket.item("comments", newTick.ticketId).url, // This should really link to the history tab's specific entry
       dateCreated   = newTick.dateCreated
     ))
   }
@@ -827,7 +827,7 @@ object SearchModel {
         eKey          = ticket.ticketId,
         eType         = "ticket_create",
         content       = ticket.summary,
-        url           = "",
+        url           = controllers.routes.Ticket.item("comments", ticket.ticketId).url,
         dateCreated   = ticket.dateCreated
       ))
 

@@ -54,7 +54,7 @@ class SearchIndexer(configuration: Configuration) extends Actor {
             eKey          = ft.ticketId,
             eType         = "ticket_create",
             content       = ft.summary,
-            url           = "",
+            url           = controllers.routes.Ticket.item("comments", ft.ticketId).url,
             dateCreated   = ft.dateCreated
           ), true)
         })

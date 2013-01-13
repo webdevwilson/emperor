@@ -158,6 +158,11 @@
 $(function(){
   var view = TicketViewModel("@ticket.ticketId");
   ko.applyBindings(view);
+
+  var hash = location.hash;
+  if(!(typeof hash === 'undefined')) {
+    $(hash).addClass("hash-selected");
+  }
 });
 </script>
 }

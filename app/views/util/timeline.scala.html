@@ -17,21 +17,21 @@
    @defining(event.eType) { etype =>
     @etype match {
      case "commit" => {
-      <i class="icon-wrench"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("commits", event.eKey)">@event.eKey</a>
+      <a href="@event.url"><i class="icon-wrench"></i></a> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("commits", event.eKey)">@event.eKey</a>
      }
      case "comment" => {
-      <i class="icon-bullhorn"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+      <a href="@event.url"><i class="icon-bullhorn"></i></a> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
      }
      case "ticket_change" => {
-      <i class="icon-pencil"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+      <a href="@event.url"><i class="icon-pencil"></i></a> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
      }
      case "ticket_create" => {
-      <i class="icon-certificate"></i> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
+      <a href="@event.url"><i class="icon-certificate"></i></a> @Html(Messages("event.action", event.userId, Messages(event.userRealName), Messages("event.action." + event.eType))) <a href="@controllers.routes.Ticket.item("comments", event.eKey)">@event.eKey</a>
      }
      case _ => { @etype }
     }
    }
-   <time datetime="@DateFormatter.displayISO8601(event.dateCreated)" title="@DateFormatter.displayLongDateTime(event.dateCreated)">@DateFormatter.displayLongDateTime(event.dateCreated)</time>
+   @Messages("event.attribution.postfix") <time datetime="@DateFormatter.displayISO8601(event.dateCreated)" title="@DateFormatter.displayLongDateTime(event.dateCreated)">@DateFormatter.displayLongDateTime(event.dateCreated)</time>
   </h3>
   <div class="popover-content">
    @Html(event.content)

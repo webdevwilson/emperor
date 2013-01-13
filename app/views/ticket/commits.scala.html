@@ -33,9 +33,9 @@
    <ul class="unstyled events">
     @comments.pager.items.map { comment =>
     <li>
-     <div class="popover right fade in">
+     <div class="popover right fade in" id="comment-@comment.id.get">
       <div class="arrow"></div>
-      <h3 class="popover-title"><a name="comment-@comment.id.get"></a>@Messages("ticket.comment.attribution.prefix") <a href="@routes.User.item(comment.userId)">@Messages(comment.realName)</a> <time datetime="@DateFormatter.displayISO8601(comment.dateCreated)" title="@DateFormatter.displayISO8601(comment.dateCreated)">@DateFormatter.displayLongDateTime(comment.dateCreated)</time></h3>
+      <h3 class="popover-title"><a name="comment-@comment.id.get"></a>@Messages("ticket.comment.attribution.prefix") <a href="@routes.User.item(comment.userId)">@Messages(comment.realName)</a> @Messages("ticket.comment.postfix") <time datetime="@DateFormatter.displayISO8601(comment.dateCreated)" title="@DateFormatter.displayISO8601(comment.dateCreated)">@DateFormatter.displayLongDateTime(comment.dateCreated)</time></h3>
       <div class="popover-content">
        @Html(Renderer.render(Some(comment.content)))
       </div>
