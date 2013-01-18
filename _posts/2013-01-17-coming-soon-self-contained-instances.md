@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Coming Soon: Self-Containted Demo Instances
+title: Coming Soon - Self-Containted Demo Instances
 description: emperor self contained demo instance
 ---
 
