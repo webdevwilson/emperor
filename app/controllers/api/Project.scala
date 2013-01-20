@@ -12,7 +12,7 @@ import play.api.mvc._
 object Project extends Controller with Secured {
 
   def index(callback: Option[String]) = IsAuthenticated() { implicit request =>
-    val json = Json.toJson(ProjectModel.getVisibleProjects(request.user.id.get))
+    val json = Json.toJson(ProjectModel.getAll(request.user.id.get))
 
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))

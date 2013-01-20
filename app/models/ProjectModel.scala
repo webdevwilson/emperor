@@ -159,12 +159,6 @@ object ProjectModel {
     }
   }
 
-  def getVisibleProjects(userId: Long): List[Project] = {
-    DB.withConnection { implicit conn =>
-      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(project *)
-    }
-  }
-
   def getVisibleProjectIds(userId: Long): List[Long] = {
     DB.withConnection { implicit conn =>
       getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id") *)
