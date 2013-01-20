@@ -84,7 +84,7 @@
     @Messages("ticket.description.none")
    }
   </div>
-  <div id="link-body">
+  <div id="link-body" data-bind="visible: links().length > 0">
    <h4><a class="accordion-toggle" data-toggle="collapse" data-parent="#link-body" href="#link-contents"><i class="icon-foo"></i>@Messages("ticket.links")</a></h4>
    <div id="link-contents" class="accordion-body collapse in">
     <div class="accordion-inner">
