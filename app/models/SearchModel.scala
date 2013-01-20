@@ -38,7 +38,7 @@ object SearchModel {
   val config = Play.configuration.getConfig("emperor")
   // Embedded ES
   val settings = Map(
-    "path.data" -> config.get.getString("directory").getOrElse("")
+    "path.data" -> config.get.getString("es_directory").getOrElse("data")
   )
   val indexer = Indexer.at(
     nodeBuilder.local(true).data(true).settings(
