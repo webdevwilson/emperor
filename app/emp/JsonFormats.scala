@@ -256,7 +256,8 @@ object JsonFormats {
       position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
       description = (json \ "description").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime()),
+      originalDateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
     def writes(ticket: FullTicket): JsValue = {
@@ -302,7 +303,8 @@ object JsonFormats {
         "short_summary"   -> JsString(ticket.abbreviatedSummary()),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(Renderer.render(ticket.description)),
-        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated))
+        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated)),
+        "original_date_created" -> JsString(dateFormatter.print(ticket.originalDateCreated))
       )
       toJson(tdoc)
     }

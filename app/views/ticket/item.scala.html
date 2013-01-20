@@ -32,7 +32,7 @@
    <label>@Messages("ticket.type")</label>
    <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
    <label>@Messages("ticket.date_created")</label>
-   <span class="label">@DateFormatter.displayLongDateTime(ticket.dateCreated)</span>
+   <span class="label">@DateFormatter.displayLongDateTime(ticket.originalDateCreated)</span>
    <label>@Messages("ticket.reporter")</label>
    <span class="label"><a href="@routes.User.item(ticket.reporter.id)">@Messages(ticket.reporter.name)</a></span>
    <label>@Messages("ticket.assignee")</label>
@@ -41,6 +41,17 @@
    <span class="label" style="background-color: #@ticket.priority.color">@Messages(ticket.priority.name)</span>
    <label>@Messages("ticket.severity")</label>
    <span class="label" style="background-color: #@ticket.severity.color">@Messages(ticket.severity.name)</span>
+   <hr>
+   <ul class="unstyled stats">
+    <li>
+     <span>@ticket.daysOpen</span>
+     <label>@Messages("ticket.info.days_open")</label>
+    </li>
+    <li>
+     <span>@ticket.daysSinceLastChange</span>
+     <label>@Messages("ticket.info.days_since_change")</label>
+    </li>
+   </ul>
   </div>
  </div>
 

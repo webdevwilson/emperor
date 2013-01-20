@@ -5,7 +5,7 @@ import anorm.SqlParser._
 import emp.util.AnormExtension._
 import emp.util.Pagination.Page
 import emp.event._
-import org.joda.time.DateTime
+import org.joda.time.{DateTime,DateTimeZone,Days}
 import java.util.regex.Pattern
 import org.joda.time.DateTime
 import play.api.db.DB
@@ -104,12 +104,37 @@ case class FullTicket(
   proposedResolution: OptionalNamedThing,
   severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
-  summary: String, description: Option[String], dateCreated: DateTime
+  summary: String, description: Option[String], dateCreated: DateTime,
+  originalDateCreated: DateTime
 ) {
   def abbreviatedSummary(length: Int = 15) = summary match {
     case x if x.length > length => x.take(length) + "&hellip;"
     case x => x
   }
+
+  /**
+   * Returns true if this ticket has a resolution.
+   */
+  def isResolved = this.resolution.id.isDefined
+
+  /**
+   * Returns the number of days since this ticket was created.  If the ticket
+   * is resolved then returns the number of days since the last change.
+   */
+  def daysOpen = Days.daysBetween(
+    originalDateCreated,
+    // If resolved, use last change date, else use now.
+    if(isResolved) {
+      dateCreated
+    } else {
+      new DateTime(DateTimeZone.UTC)
+    }
+  ).getDays
+
+  /**
+   *
+   */
+  def daysSinceLastChange = Days.daysBetween(dateCreated, new DateTime(DateTimeZone.UTC)).getDays
 }
 
 /**
@@ -120,7 +145,8 @@ case class Ticket(
   attentionId: Long, projectId: Long, priorityId: Long,
   resolutionId: Option[Long], proposedResolutionId: Option[Long],
   severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
-  summary: String, description: Option[String], dateCreated: DateTime
+  summary: String, description: Option[String], dateCreated: DateTime,
+  originalDateCreated: DateTime
 )
 
 /**
@@ -163,8 +189,8 @@ object TicketModel {
   val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets  WHERE ticket_id={ticket_id} ORDER BY date_created ASC")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
-  val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
-  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created, original_date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description}, UTC_TIMESTAMP(), UTC_TIMESTAMP())")
+  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created, original_date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description}, UTC_TIMESTAMP(), {original_date_created})")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (type, user_id, ticket_id, content, date_created) VALUES ({type}, {user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
@@ -192,8 +218,9 @@ object TicketModel {
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") ~
-    get[DateTime]("date_created") map {
-      case id~tickId~repId~assId~attId~projId~priId~resId~propResId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
+    get[DateTime]("date_created") ~
+    get[DateTime]("original_date_created") map {
+      case id~tickId~repId~assId~attId~projId~priId~resId~propResId~sevId~statId~typeId~position~summary~description~dateCreated~originalDateCreated => Ticket(
         id = id,
         ticketId = tickId,
         reporterId = repId,
@@ -209,7 +236,8 @@ object TicketModel {
         position = position,
         summary = summary,
         description = description,
-        dateCreated = dateCreated
+        dateCreated = dateCreated,
+        originalDateCreated = originalDateCreated
       )
     }
   }
@@ -282,8 +310,9 @@ object TicketModel {
     get[Option[Long]]("position") ~
     get[String]("summary") ~
     get[Option[String]]("description") ~
-    get[DateTime]("date_created") map {
-      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~propResId~propResName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
+    get[DateTime]("date_created") ~
+    get[DateTime]("original_date_created") map {
+      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~propResId~propResName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated~originalDateCreated =>
         FullTicket(
           id = id,
           ticketId = tickId,
@@ -302,7 +331,8 @@ object TicketModel {
           position = position,
           summary = summary,
           description = description,
-          dateCreated = dateCreated
+          dateCreated = dateCreated,
+          originalDateCreated = originalDateCreated
         )
     }
   }
@@ -778,7 +808,8 @@ object TicketModel {
           'proposed_resolution_id -> ticket.proposedResolutionId,
           'position               -> ticket.position,
           'description            -> ticket.description,
-          'summary                -> ticket.summary
+          'summary                -> ticket.summary,
+          'original_date_created  -> oldTicket.dateCreated
         ).executeInsert()
 
         // Add a comment, if we had one.
