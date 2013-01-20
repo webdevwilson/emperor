@@ -24,30 +24,6 @@ object JsonFormats {
   private def optionStringtoJsValue(maybeId: Option[String]) = maybeId.map({ s => JsString(s) }).getOrElse(JsNull)
 
   /**
-   * JSON conversion for TicketPriority
-   */
-  implicit object TicketPriorityFormat extends Format[TicketPriority] {
-    def reads(json: JsValue): TicketPriority = TicketPriority(
-      id = Id((json \ "id").as[Long]),
-      name = (json \ "name").as[String],
-      color = (json \ "color").as[String],
-      position = (json \ "position").as[Int],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
-
-    def writes(obj: TicketPriority): JsValue = {
-      val doc: Map[String,JsValue] = Map(
-        "id"            -> JsNumber(obj.id.get),
-        "name"          -> JsString(obj.name),
-        "color"         -> JsString(obj.color),
-        "position"      -> JsNumber(obj.position),
-        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
-      )
-      toJson(doc)
-    }
-  }
-
-  /**
    * JSON conversion for Comment
    */
   implicit object CommentFormat extends Format[Comment] {
@@ -554,6 +530,82 @@ object JsonFormats {
         "default_type_id" -> ttype,
         "default_assignee" -> defAssign,
         "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for TicketPriority
+   */
+  implicit object TicketPriorityFormat extends Format[TicketPriority] {
+
+    def reads(json: JsValue): TicketPriority = TicketPriority(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      color       = (json \ "color").as[String],
+      position    = (json \ "position").as[Int],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: TicketPriority): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "color"         -> JsString(obj.color),
+        "position"      -> JsNumber(obj.position),
+        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for TicketSeverity
+   */
+  implicit object TicketSeverityFormat extends Format[TicketSeverity] {
+
+    def reads(json: JsValue): TicketSeverity = TicketSeverity(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      color       = (json \ "color").as[String],
+      position    = (json \ "position").as[Int],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: TicketSeverity): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "color"         -> JsString(obj.color),
+        "position"      -> JsNumber(obj.position),
+        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for TicketType
+   */
+  implicit object TicketTypeFormat extends Format[TicketType] {
+
+    def reads(json: JsValue): TicketType = TicketType(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      color       = (json \ "color").as[String],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    )
+
+    def writes(obj: TicketType): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "color"         -> JsString(obj.color),
+        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }

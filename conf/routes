@@ -91,6 +91,9 @@ GET     /api/group/:id/users            controllers.api.Group.users(id: Long, ca
 PUT     /api/group/:id/:username        controllers.api.Group.addUser(id: Long, username: String, callback: Option[String])
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long, callback: Option[String])
 
+GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String, callback: Option[String])
+PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String, callback: Option[String])
+
 GET     /api/permission                 controllers.api.Permission.index(callback: Option[String])
 
 GET     /api/permission_scheme/:id/users/:permissionId controller.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
@@ -110,8 +113,9 @@ GET     /api/ticket/search              controllers.api.Ticket.search(page: Int 
 GET     /api/ticket/startswith          controllers.api.Ticket.startsWith(q: Option[String], callback: Option[String])
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String, callback: Option[String])
 
-GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String, callback: Option[String])
-PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String, callback: Option[String])
+GET     /api/ticketpriority             controllers.api.TicketPriority.index(callback: Option[String])
+
+GET     /api/tickettype                 controllers.api.TicketType.index(callback: Option[String])
 
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String], callback: Option[String])
 DELETE  /api/user/token/:token          controllers.api.User.deleteToken(token: String, callback: Option[String])
