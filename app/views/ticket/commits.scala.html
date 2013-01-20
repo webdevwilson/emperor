@@ -5,6 +5,8 @@
   assignForm: Form[models.Assignment],
   commentForm: Form[models.Comment],
   comments: emp.util.Search.SearchResult[models.Comment],
+  commits: emp.util.Search.SearchResult[models.Comment],
+  history: emp.util.Pagination.Page[org.elasticsearch.search.SearchHit],
   statuses: Seq[WorkflowStatus]
 )(implicit request: AuthenticatedRequest)
 
@@ -19,9 +21,9 @@
   <div class="navbar-inner">
    <div class="container">
     <ul class="nav">
-     <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list")</a></li>
-     <li class="active"><a href="@routes.Ticket.item("commits", id = ticket.ticketId)">@Messages("ticket.commit.list")</a></li>
-     <li><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</a></li>
+     <li><a href="@routes.Ticket.item("comments", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.comment.list") <span class="badge badge-info">@comments.pager.total</span></a></li>
+     <li class="active"><a href="@routes.Ticket.item("commits", id = ticket.ticketId)">@Messages("ticket.commit.list") <span class="badge badge-info">@commits.pager.total</span></a></li>
+     <li><a href="@routes.Ticket.item("history", id = ticket.ticketId)" class="yui3-pjax">@Messages("ticket.history.list")</li>
     </ul>
     @helper.form(action = routes.Ticket.item(tab = "comments", id = ticket.ticketId), 'class -> "navbar-search") {
      <input type="text" name="query" class="search-query" placeholder="@Messages("ticket.comment.search.placeholder")">

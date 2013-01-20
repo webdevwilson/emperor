@@ -313,23 +313,54 @@ object Ticket extends Controller with Secured {
 
         val assignees = UserModel.getAssignable(projectId = Some(ticket.project.id)).map { user => (user.id.getOrElse("").toString -> Messages(user.realName)) }
 
+        // Find changes
+        val changeRes = {
+          val changeFilters = Map("ticket_id" -> Seq(ticketId))
+
+          // XXX Different page & count (100?)
+          val csm = SearchModel.searchChange(
+            page, 100, "", changeFilters
+          )
+          Page(csm.hits.hits, page, count, csm.hits.totalHits)
+        }
+
+        // Find commits
+        val commitRes = {
+          val commFilters = Map(
+            "ticket_id" -> Seq(ticketId),
+            "type"      -> Seq("commit")
+          )
+
+          val q = SearchQuery(
+            userId = request.user.id.get, page = 1,
+            count = 99999, query = query, filters = commFilters,
+            sortBy = Some("date_created"), sortOrder = Some("asc")
+          )
+          SearchModel.searchComment(q)
+        }
+
+        val commRes = {
+          val commFilters = Map(
+            "ticket_id" -> Seq(ticketId),
+            "type"      -> Seq("comment")
+          )
+
+          val q = SearchQuery(
+            userId = request.user.id.get, page = 1,
+            count = 99999, query = query, filters = commFilters,
+            sortBy = Some("date_created"), sortOrder = Some("asc")
+          )
+          SearchModel.searchComment(q)
+        }
+
         val ret = tab match {
           case "history"  => {
 
-            val changeFilters = Map("ticket_id" -> Seq(ticketId))
-
-            // XXX Different page & count (100?)
-            val changeRes = SearchModel.searchChange(
-              page, 100, "", changeFilters
-            )
-
-            val history = Page(changeRes.hits.hits, page, count, changeRes.hits.totalHits)
-
-            val historyFacets = changeRes.facets.facets.map { facet =>
-              facet match {
-                case t: InternalStringTermsFacet => t
-              }
-            } // filter { f => f.entries.size > 1 } // only show facets with > 1 item
+            // val historyFacets = changeRes.facets.facets.map { facet =>
+            //   facet match {
+            //     case t: InternalStringTermsFacet => t
+            //   }
+            // } // filter { f => f.entries.size > 1 } // only show facets with > 1 item
 
             Ok(views.html.ticket.history(
               ticket = ticket,
@@ -338,26 +369,15 @@ object Ticket extends Controller with Secured {
               resolveForm = resolveForm,
               assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
               commentForm = commentForm,
-              history = history,
-              historyFacets = historyFacets,
+              comments = commRes,
+              commits = commitRes,
+              history = changeRes,
               statuses = wfs
             )(request))
           }
           case "commits" => {
 
-            val commFilters = Map(
-              "ticket_id" -> Seq(ticketId),
-              "type"      -> Seq("commit")
-            )
-
-            val q = SearchQuery(
-              userId = request.user.id.get, page = 1,
-              count = 99999, query = query, filters = commFilters,
-              sortBy = Some("date_created"), sortOrder = Some("asc")
-            )
-            val commRes = SearchModel.searchComment(q)
-
-            Ok(views.html.ticket.commits(
+             Ok(views.html.ticket.commits(
               ticket = ticket,
               assignees = assignees,
               resolutions = resolutions,
@@ -365,22 +385,12 @@ object Ticket extends Controller with Secured {
               assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
               commentForm = commentForm,
               comments = commRes,
+              commits = commitRes,
+              history = changeRes,
               statuses = wfs
             )(request))
           }
           case _ => {
-
-            val commFilters = Map(
-              "ticket_id" -> Seq(ticketId),
-              "type"      -> Seq("comment")
-            )
-
-            val q = SearchQuery(
-              userId = request.user.id.get, page = 1,
-              count = 99999, query = query, filters = commFilters,
-              sortBy = Some("date_created"), sortOrder = Some("asc")
-            )
-            val commRes = SearchModel.searchComment(q)
 
             Ok(views.html.ticket.comments(
               ticket = ticket,
@@ -390,6 +400,8 @@ object Ticket extends Controller with Secured {
               assignForm = assignForm.fill(Assignment(ticket.assignee.id, None)),
               commentForm = commentForm,
               comments = commRes,
+              commits = commitRes,
+              history = changeRes,
               statuses = wfs
             )(request))
           }
