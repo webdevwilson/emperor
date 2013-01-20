@@ -159,6 +159,12 @@ object ProjectModel {
     }
   }
 
+  def getVisibleProjects(userId: Long): List[Project] = {
+    DB.withConnection { implicit conn =>
+      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(project *)
+    }
+  }
+
   def getVisibleProjectIds(userId: Long): List[Long] = {
     DB.withConnection { implicit conn =>
       getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id") *)
@@ -174,19 +180,19 @@ object ProjectModel {
 
   def list(userId: Long, page: Int = 1, count: Int = 10) : Page[Project] = {
 
-      val offset = count * (page - 1)
+    val offset = count * (page - 1)
 
-      DB.withConnection { implicit conn =>
-        val projects = allVisibleProjectsQuery.on(
-          'user_id -> userId,
-          'count  -> count,
-          'offset -> offset
-        ).as(project *)
+    DB.withConnection { implicit conn =>
+      val projects = allVisibleProjectsQuery.on(
+        'user_id -> userId,
+        'count  -> count,
+        'offset -> offset
+      ).as(project *)
 
-        val totalRows = listCountQuery.as(scalar[Long].single)
+      val totalRows = listCountQuery.as(scalar[Long].single)
 
-        Page(projects, page, count, totalRows)
-      }
+      Page(projects, page, count, totalRows)
+    }
   }
 
   /**
