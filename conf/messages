@@ -159,6 +159,7 @@ general.cancel=Cancel
 general.delete=Delete
 general.disable=Disable
 general.edit=Edit
+general.field.required=This field is required.
 general.home=Home
 general.password=Password
 general.projects=Projects

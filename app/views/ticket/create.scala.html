@@ -16,14 +16,14 @@
 <h1>@Messages("ticket.add")</h1>
 @helper.bootstrap.form(action = controllers.routes.Ticket.add, dataBind="submit: doSubmit", args = 'class -> "form-horizontal", 'id -> "add-ticket") {
  <fieldset>
-  @helper.bootstrap.select(field = objForm("project_id"), dataBind = "options: projects(), optionsCaption: 'Choose A Project…', optionsText: 'name', optionsValue: 'id', value: chosenProject", args = '_label -> Messages("ticket.project"))
+  @helper.bootstrap.select(field = objForm("projectId"), dataBind = "options: projects(), optionsCaption: 'Choose A Project…', optionsText: 'name', optionsValue: 'id', value: chosenProject", args = '_label -> Messages("ticket.project"))
   @helper.bootstrap.inputText(field = objForm("summary"), dataBind = "value: summary", args = 'class -> "span8", '_label -> Messages("ticket.summary"))
   @helper.bootstrap.textarea(field = objForm("description"), dataBind="value: description", args = 'class -> "span8", 'rows -> 5, '_label -> Messages("ticket.description"))
-  @helper.bootstrap.select(field = objForm("reporter_id"), dataBind = "options: reporters(), value: chosenReporter(), optionsText: 'realNameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.reporter"))
-  @helper.bootstrap.select(field = objForm("assignee_id"), dataBind = "options: assignees(), value: chosenAssignee(), optionsText: 'realNameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.assignee"))
-  @helper.bootstrap.select(field = objForm("type_id"), dataBind = "options: ttypes(), value: chosenType(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.type"))
-  @helper.bootstrap.select(field = objForm("priority_id"), dataBind = "options: priorities(), value: chosenPriority(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.priority"))
-  @helper.bootstrap.select(field = objForm("severity_id"), dataBind = "options: severities(), value: chosenSeverity(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.severity"))
+  @helper.bootstrap.select(field = objForm("reporterId"), dataBind = "options: reporters(), value: chosenReporter(), optionsText: 'realNameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.reporter"))
+  @helper.bootstrap.select(field = objForm("assigneeId"), dataBind = "options: assignees(), value: chosenAssignee(), optionsText: 'realNameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.assignee"))
+  @helper.bootstrap.select(field = objForm("typeId"), dataBind = "options: ttypes(), value: chosenType(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.type"))
+  @helper.bootstrap.select(field = objForm("priorityId"), dataBind = "options: priorities(), value: chosenPriority(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.priority"))
+  @helper.bootstrap.select(field = objForm("severityId"), dataBind = "options: severities(), value: chosenSeverity(), optionsText: 'nameI18N', optionsValue: 'id'", args = '_label -> Messages("ticket.severity"))
   <div class="form-actions">
    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("form.submit")</button>
   </div>

@@ -3,6 +3,8 @@ package controllers.api
 import emp.JsonFormats._
 import controllers._
 import models._
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.libs.json.Json
@@ -11,24 +13,37 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
+  val initialTicketForm = Form(
+    mapping(
+      "reporterId" -> longNumber,
+      "assigneeId" -> optional(longNumber),
+      "projectId"  -> longNumber,
+      "priorityId" -> longNumber,
+      "severityId" -> longNumber,
+      "typeId"     -> longNumber,
+      "position"    -> optional(longNumber),
+      "summary"     -> text.verifying(Messages("general.field.required"), { !_.isEmpty }),
+      "description" -> optional(text)
+    )(models.InitialTicket.apply)(models.InitialTicket.unapply)
+  )
+
   def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
 
     request.body.asJson.map({ data =>
-      println(data)
-      println(Json.fromJson[EditTicket](data))
-      Ok("ok")
+      initialTicketForm.bind(data).fold(
+        errors => {
+          println("### errors")
+          println(errors)
+          println(errors.errorsAsJson)
+          BadRequest(errors.errorsAsJson)
+        },
+        value => {
+          Ok("ok")
+        }
+      )
     }).getOrElse({
       BadRequest("Expecting JSON data.")
     })
-    // val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
-    //   ticket match {
-    //     case Some(t) => {
-    //       Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
-    //     }
-    //     case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
-    //   }
-    // }).getOrElse(Redirect(routes.Core.index()).flashing("error" -> "auth.notauthorized"))
-
   }
 
   def item(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
