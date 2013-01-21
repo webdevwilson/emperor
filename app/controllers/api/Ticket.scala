@@ -13,8 +13,13 @@ object Ticket extends Controller with Secured {
 
   def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
 
-    println(request.body.toString)
-    Ok("ok")
+    request.body.asJson.map({ data =>
+      println(data)
+      println(Json.fromJson[EditTicket](data))
+      Ok("ok")
+    }).getOrElse({
+      BadRequest("Expecting JSON data.")
+    })
     // val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
     //   ticket match {
     //     case Some(t) => {

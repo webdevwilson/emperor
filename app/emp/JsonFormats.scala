@@ -1,6 +1,6 @@
 package emp
 
-import anorm.Id
+import anorm.{Id,NotAssigned}
 import emp.text.Renderer
 import models._
 import org.joda.time.DateTime
@@ -55,32 +55,32 @@ object JsonFormats {
 
   implicit object EditTicketFormat extends Format[EditTicket] {
     def reads(json: JsValue): EditTicket = EditTicket(
-      ticketId      = Id((json \ "ticket_id").as[String]),
-      reporterId    = (json \ "reporter_id").as[Long],
-      assigneeId    = (json \ "assignee_id").as[Option[Long]],
-      priorityId    = (json \ "priority_id").as[Long],
-      projectId     = (json \ "project_id").as[Long],
-      resolutionId  = (json \ "resolution_id").as[Option[Long]],
-      severityId    = (json \ "severity_id").as[Long],
-      typeId        = (json \ "type_id").as[Long],
+      ticketId      = (json \ "ticketId").as[Option[String]].map({ id => Id(id) }).getOrElse(NotAssigned),
+      reporterId    = (json \ "reporterId").as[Long],
+      assigneeId    = (json \ "assigneeId").as[Option[Long]],
+      priorityId    = (json \ "priorityId").as[Long],
+      projectId     = (json \ "projectId").as[Long],
+      resolutionId  = (json \ "resolutionId").as[Option[Long]],
+      severityId    = (json \ "severityId").as[Long],
+      typeId        = (json \ "typeId").as[Long],
       summary       = (json \ "summary").as[String],
       description   = (json \ "description").as[Option[String]],
-      attentionId    = (json \ "attention_id").as[Option[Long]],
+      attentionId    = (json \ "attentionId").as[Option[Long]],
       position      = (json \ "position").as[Option[Long]],
-      proposedResolutionId = (json \ "proposed_resolution_id").as[Option[Long]]
+      proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]]
     )
 
     def writes(ticket: EditTicket): JsValue = {
 
       val tdoc: Map[String,JsValue] = Map(
-        "ticket_id"   -> JsString(ticket.ticketId.get),
-        "reporter_id" -> JsNumber(ticket.reporterId),
-        "assignee_id" -> optionLongtoJsValue(ticket.assigneeId),
-        "priority_id" -> JsNumber(ticket.priorityId),
-        "resolution_id" -> optionLongtoJsValue(ticket.resolutionId),
-        "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolutionId),
-        "severity_id" -> JsNumber(ticket.severityId),
-        "type_id"     -> JsNumber(ticket.typeId),
+        "ticketId"   -> JsString(ticket.ticketId.get),
+        "reporterId" -> JsNumber(ticket.reporterId),
+        "assigneeId" -> optionLongtoJsValue(ticket.assigneeId),
+        "priorityId" -> JsNumber(ticket.priorityId),
+        "resolutionId" -> optionLongtoJsValue(ticket.resolutionId),
+        "proposedResolutionId" -> optionLongtoJsValue(ticket.proposedResolutionId),
+        "severityId" -> JsNumber(ticket.severityId),
+        "typeId"     -> JsNumber(ticket.typeId),
         "position"    -> optionLongtoJsValue(ticket.position),
         "summary"     -> JsString(ticket.summary),
         "description" -> optionStringtoJsValue(ticket.description)
