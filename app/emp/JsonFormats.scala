@@ -478,15 +478,15 @@ object JsonFormats {
 
     def reads(json: JsValue): Project = Project(
       id          = Id((json \ "id").as[Long]),
-      workflowId  = (json \ "workflow_id").as[Long],
+      workflowId  = (json \ "workflowId").as[Long],
       name        = (json \ "name").as[String],
       key         = (json \ "key").as[String],
       ownerId     = (json \ "owner_id").as[Option[Long]],
-      permissionSchemeId = (json \ "permission_scheme_id").as[Long],
-      defaultPriorityId = (json \ "default_priority_id").as[Option[Long]],
-      defaultSeverityId = (json \ "default_severity_id").as[Option[Long]],
-      defaultTypeId = (json \ "default_type_id").as[Option[Long]],
-      defaultAssignee = (json \ "default_assignee").as[Option[Int]],
+      permissionSchemeId = (json \ "permissionSchemeId").as[Long],
+      defaultPriorityId = (json \ "defaultPriorityId").as[Option[Long]],
+      defaultSeverityId = (json \ "defaultSeverityId").as[Option[Long]],
+      defaultTypeId = (json \ "defaultTypeId").as[Option[Long]],
+      defaultAssignee = (json \ "defaultAssignee").as[Option[Int]],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     )
 
@@ -519,16 +519,16 @@ object JsonFormats {
 
       val doc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(obj.id.get),
-        "workflow_id"     -> JsNumber(obj.workflowId),
+        "workflowId"     -> JsNumber(obj.workflowId),
         "name"            -> JsString(obj.name),
         "key"             -> JsString(obj.key),
         "sequence_current"-> JsNumber(obj.sequenceCurrent),
-        "owner_id"        -> owner,
-        "permission_scheme_id" -> JsNumber(obj.permissionSchemeId),
-        "default_priority_id" -> prio,
-        "default_severity_id" -> sev,
-        "default_type_id" -> ttype,
-        "default_assignee" -> defAssign,
+        "ownerId"        -> owner,
+        "permission_schemeId" -> JsNumber(obj.permissionSchemeId),
+        "defaultPriorityId" -> prio,
+        "defaultSeverityId" -> sev,
+        "defaultTypeId" -> ttype,
+        "defaultAssignee" -> defAssign,
         "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
@@ -553,6 +553,7 @@ object JsonFormats {
       val doc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(obj.id.get),
         "name"          -> JsString(obj.name),
+        "nameI18N"      -> JsString(Messages(obj.name)),
         "color"         -> JsString(obj.color),
         "position"      -> JsNumber(obj.position),
         "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
@@ -579,6 +580,7 @@ object JsonFormats {
       val doc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(obj.id.get),
         "name"          -> JsString(obj.name),
+        "nameI18N"      -> JsString(Messages(obj.name)),
         "color"         -> JsString(obj.color),
         "position"      -> JsNumber(obj.position),
         "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
@@ -604,8 +606,9 @@ object JsonFormats {
       val doc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(obj.id.get),
         "name"          -> JsString(obj.name),
+        "nameI18N"      -> JsString(Messages(obj.name)),
         "color"         -> JsString(obj.color),
-        "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
+        "dateCreated"   -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
@@ -636,14 +639,15 @@ object JsonFormats {
         "id"              -> JsNumber(obj.id.get),
         "username"        -> JsString(obj.username),
         "password"        -> JsString(obj.password),
-        "real_name"       -> JsString(obj.realName),
+        "realName"        -> JsString(obj.realName),
+        "realNameI18N"    -> JsString(Messages(obj.realName)),
         "email"           -> JsString(obj.email),
         "timezone"        -> JsString(obj.timezone),
         "organization"    -> optionStringtoJsValue(obj.organization),
         "location"        -> optionStringtoJsValue(obj.location),
         "title"           -> optionStringtoJsValue(obj.title),
         "url"             -> optionStringtoJsValue(obj.url),
-        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+        "dateCreated"     -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }

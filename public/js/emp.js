@@ -43,6 +43,20 @@ function Permission(data, users, groups) {
   this.groups         = ko.observableArray(groups);
 }
 
+function Project(data) {
+  this.id             = ko.observable(data.id);
+  this.workflowId     = ko.observable(data.workflowId);
+  this.name           = ko.observable(data.name);
+  this.key            = ko.observable(data.key);
+  this.ownerId        = ko.observable(data.ownerId);
+  this.permissionSchemeId = ko.observable(data.permissionSchemeId);
+  this.defaultPriorityId = ko.observable(data.defaultPriorityId);
+  this.defaultSeverityId = ko.observable(data.defaultSeverityId);
+  this.defaultTypeId  = ko.observable(data.defaultTypeId);
+  this.defaultAssignee= ko.observable(data.defaultAssignee);
+  this.dateCreated    = ko.observable(data.dateCreated);
+}
+
 function Ticket(data) {
   this.id           = ko.observable(data.id);
   this.ticketId     = ko.observable(data.ticket_id);
@@ -102,6 +116,38 @@ function TicketLink(ticketId, data) {
   this.visibleURL = ko.computed(function() {
     return "/ticket/" + this.visibleTicketId()
   }, this);
+}
+
+function TicketPriority(data) {
+  this.id = ko.observable(data.id);
+  this.name = ko.observable(data.name);
+  this.nameI18N = ko.observable(data.nameI18N);
+  this.color = ko.observable(data.color);
+  this.position = ko.observable(data.position);
+  this.dateCreated = ko.observable(data.dateCreated);
+}
+
+function TicketType(data) {
+  this.id = ko.observable(data.id);
+  this.name = ko.observable(data.name);
+  this.nameI18N = ko.observable(data.nameI18N);
+  this.color = ko.observable(data.color);
+  this.dateCreated = ko.observable(data.dateCreated);
+}
+
+function User(data) {
+  this.id = ko.observable(data.id);
+  this.username = ko.observable(data.username);
+  this.password = ko.observable(data.password);
+  this.realName = ko.observable(data.realName);
+  this.realNameI18N = ko.observable(data.realNameI18N);
+  this.email = ko.observable(data.email);
+  this.timezone = ko.observable(data.timezone);
+  this.organization = ko.observable(data.organization);
+  this.location = ko.observable(data.location);
+  this.title = ko.observable(data.title);
+  this.url = ko.observable(data.url);
+  this.dateCreated = ko.observable(data.createCreated);
 }
 
 function UserToken(data) {
@@ -200,6 +246,30 @@ function GroupViewModel(groupId) {
     })
     .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve group users!") });
 }
+
+function TicketAddViewModel(user, projects, selectedProject, reporters, assignees, ttypes, priorities, severities) {
+  var self = this
+  self.user = ko.observable(user);
+  self.projects = ko.observableArray(projects);
+  self.selectedProject = ko.observable(new Project(selectedProject))
+  self.projectShit = ko.observable();
+  self.reporters = ko.observableArray(reporters);
+  self.assignees = ko.observableArray(assignees);
+  self.ttypes = ko.observableArray(ttypes);
+  self.priorities = ko.observableArray(priorities);
+  self.severities = ko.observableArray(severities);
+
+  this.projectShit.subscribe(function(data) {
+    self.selectedProject(
+      ko.utils.arrayFirst(self.projects(), function(item) {
+        return item.id === data
+      })
+    );
+    console.log("asd");
+
+  });
+}
+
 
 function TicketLinkViewModel() {
   var self = this;

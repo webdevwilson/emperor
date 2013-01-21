@@ -169,14 +169,13 @@ object Ticket extends Controller with Secured {
     initialTicketForm.bindFromRequest.fold(
       errors => {
         // Should be i18ned in the view
-        val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
-        val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-        val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+        val projs = Json.toJson(ProjectModel.getAll(userId = request.user.id.get)).toString
+        val ttypes = Json.toJson(TicketTypeModel.getAll).toString
+        val prios = Json.toJson(TicketPriorityModel.getAll).toString
+        val sevs = Json.toJson(TicketSeverityModel.getAll).toString
         val projId = errors("project_id").value.map({ pid => if(pid.isEmpty) None else Some(pid.toLong) }).getOrElse(None)
-        val assignees = UserModel.getAssignable(projectId = projId).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
-        val finalProjects = if(errors("project_id").value.isEmpty) projs else ("" -> Messages("project.choose")) +: projs
-        BadRequest(views.html.ticket.create(errors, assignees, assignees, finalProjects, ttypes, prios, sevs))
+        val assignees = Json.toJson(UserModel.getAssignable(projectId = projId)).toString
+        BadRequest(views.html.ticket.create(errors, assignees, assignees, projs, ttypes, prios, sevs, "{}"))
       },
       value => {
         val maybeCan = PermissionSchemeModel.hasPermission(
@@ -228,10 +227,10 @@ object Ticket extends Controller with Secured {
   def create(projectId: Option[Long]) = IsAuthenticated() { implicit request =>
 
     // Should be i18ned in the view
-    val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
-    val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
-    val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
+    val projs = Json.toJson(ProjectModel.getAll(userId = request.user.id.get)).toString
+    val ttypes = Json.toJson(TicketTypeModel.getAll).toString
+    val prios = Json.toJson(TicketPriorityModel.getAll).toString
+    val sevs = Json.toJson(TicketSeverityModel.getAll).toString
 
     // The worst case scenario, just the user id
     val startTicket = InitialTicket(
@@ -246,40 +245,14 @@ object Ticket extends Controller with Secured {
       description = None
     )
 
-    val finalTicket = projectId match {
-      case Some(pid) => {
-        val maybeProject = ProjectModel.getById(pid)
+    val maybeProject: Option[Project] = projectId.flatMap({ id => ProjectModel.getById(id) })
 
-        maybeProject match {
-          case Some(project) => {
-            // If we got a project then copy the "default" ticket and modify
-            // the appropriate settings for the project's defaults.
-            startTicket.copy(
-              assigneeId = project.defaultAssignee match {
-                // Choose the appropriate default assignee based on the
-                // strategy set on the project.
-                case Some(da) if da == Def_Assign_Owner.id => project.ownerId
-                case _ => None
-              },
-              projectId = pid,
-              priorityId = project.defaultPriorityId.getOrElse(0),
-              severityId = project.defaultSeverityId.getOrElse(0),
-              typeId = project.defaultTypeId.getOrElse(0)
-            )
-          }
-          case None => startTicket
-        }
-      }
-      case None => startTicket
-    }
+    val assignees = Json.toJson(UserModel.getAssignable(projectId = projectId)).toString
 
-    val assignees = UserModel.getAssignable(projectId = projectId).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
 
-    val defaultedForm = initialTicketForm.fill(finalTicket)
+    val pj: String = maybeProject.map({ p => Json.toJson(p).toString }).getOrElse("{}")
 
-    val finalProjects = projectId.map({ pid => projs }).getOrElse(("" -> Messages("project.choose")) +: projs)
-
-    Ok(views.html.ticket.create(defaultedForm, assignees, assignees, finalProjects, ttypes, prios, sevs)(request))
+    Ok(views.html.ticket.create(initialTicketForm, assignees, assignees, projs, ttypes, prios, sevs, pj)(request))
   }
 
   def edit(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>

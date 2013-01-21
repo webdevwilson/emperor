@@ -145,6 +145,7 @@ object UserModel {
     // Add the nobody. In the future this will likely be conditional based
     // on a project setting for allowing unassigned tickets or something.
     User(
+      id       = new Id(0.toLong),
       username = "",
       password = "",
       realName = Messages("ticket.unassigned"),

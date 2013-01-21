@@ -36,7 +36,7 @@ object DefaultAssignee extends Enumeration {
 object ProjectModel {
 
   val allQuery = SQL("SELECT * FROM projects WHERE pkey != 'EMPCORE'")
-  val allVisibleProjectsQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE'")
+  val allVisibleProjectsQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE' GROUP BY p.id")
   val getAllVisibleProjectIdsQuery = SQL("SELECT p.id FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE'")
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
   val getByKeyQuery = SQL("SELECT * FROM projects WHERE pkey={pkey}")

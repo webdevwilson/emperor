@@ -102,6 +102,7 @@ DELETE  /api/permission_scheme/:id/:perm/group/:groupId controller.api.Permissio
 DELETE  /api/permission_scheme/:id/:perm/user/:userId controller.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
 
 GET     /api/project                    controllers.api.Project.index(callback: Option[String])
+GET     /api/proejct/:id/assignees      controllers.api.Project.assignableUsers(id: Long, callback: Option[String])
 GET     /api/project/:id                controllers.api.Project.item(id: Long, callback: Option[String])
 
 POST    /api/third/github/commit        controllers.api.third.GitHub.commit

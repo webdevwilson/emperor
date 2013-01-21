@@ -11,6 +11,16 @@ import play.api.mvc._
 
 object Project extends Controller with Secured {
 
+  def assignableUsers(id: Long, callback: Option[String]) = IsAuthenticated() { implicit request =>
+
+    val json = Json.toJson(UserModel.getAssignable(Some(id)))
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
+  }
+
   def index(callback: Option[String]) = IsAuthenticated() { implicit request =>
     val json = Json.toJson(ProjectModel.getAll(request.user.id.get))
 
