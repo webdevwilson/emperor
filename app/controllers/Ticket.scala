@@ -175,7 +175,7 @@ object Ticket extends Controller with Secured {
         val sevs = Json.toJson(TicketSeverityModel.getAll).toString
         val projId = errors("project_id").value.map({ pid => if(pid.isEmpty) None else Some(pid.toLong) }).getOrElse(None)
         val assignees = Json.toJson(UserModel.getAssignable(projectId = projId)).toString
-        BadRequest(views.html.ticket.create(errors, assignees, assignees, projs, ttypes, prios, sevs, "{}"))
+        BadRequest(views.html.ticket.create(errors, assignees, projs, ttypes, prios, sevs, "{}"))
       },
       value => {
         val maybeCan = PermissionSchemeModel.hasPermission(
@@ -249,10 +249,9 @@ object Ticket extends Controller with Secured {
 
     val assignees = Json.toJson(UserModel.getAssignable(projectId = projectId)).toString
 
-
     val pj: String = maybeProject.map({ p => Json.toJson(p).toString }).getOrElse("{}")
 
-    Ok(views.html.ticket.create(initialTicketForm, assignees, assignees, projs, ttypes, prios, sevs, pj)(request))
+    Ok(views.html.ticket.create(initialTicketForm, assignees, projs, ttypes, prios, sevs, pj)(request))
   }
 
   def edit(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>

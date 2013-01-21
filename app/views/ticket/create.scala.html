@@ -1,6 +1,5 @@
 @(objForm: Form[(models.InitialTicket)],
   users: String,
-  assignees: String,
   projs: String,
   ttypes: String,
   priorities: String,
@@ -36,8 +35,7 @@ $(function(){
     @Html(Json.toJson(request.user).toString),
     @Html(projs),
     @Html(project),
-    @Html(assignees),
-    @Html(assignees),
+    @Html(users),
     @Html(ttypes),
     @Html(priorities),
     @Html(severities)

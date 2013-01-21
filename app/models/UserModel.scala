@@ -36,7 +36,7 @@ case class NewPassword(password: String, password2: String)
 object UserModel {
 
   val allQuery = SQL("SELECT * FROM users")
-  val getAllAssignableQuery = SQL("SELECT u.* FROM full_permissions AS fp JOIN users u on u.id = fp.user_id WHERE permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_id={project_id}")
+  val getAllAssignableQuery = SQL("SELECT u.* FROM full_permissions AS fp JOIN users u on u.id = fp.user_id WHERE permission_id IN ('PERM_PROJECT_ADMIN', 'PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_id={project_id} GROUP BY u.id")
   val getByIdQuery = SQL("SELECT * FROM users WHERE id={id}")
   val getByEmailQuery = SQL("SELECT * from users WHERE email={email}")
   val getByGroupIdQuery = SQL("SELECT * FROM users")

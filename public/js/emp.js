@@ -247,14 +247,14 @@ function GroupViewModel(groupId) {
     .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve group users!") });
 }
 
-function TicketAddViewModel(user, projects, selectedProject, reporters, assignees, ttypes, priorities, severities) {
+function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, priorities, severities) {
   var self = this
   self.user = ko.observable(user);
   self.projects = ko.observableArray(projects);
   self.selectedProject = ko.observable(new Project(selectedProject))
   self.projectShit = ko.observable();
   self.reporters = ko.observableArray(reporters);
-  self.assignees = ko.observableArray(assignees);
+  self.assignees = ko.observableArray([]); //ko.observableArray(assignees);
   self.ttypes = ko.observableArray(ttypes);
   self.priorities = ko.observableArray(priorities);
   self.severities = ko.observableArray(severities);
@@ -265,7 +265,14 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, assignee
         return item.id === data
       })
     );
-    console.log("asd");
+
+    $.getJSON("/api/project/" + self.selectedProject().id + "/assignees?callback=?")
+      .done(function(data) {
+        console.log("GOT EM");
+        // var assignees = $.map(data, function(item) { return new User(item) });
+        self.assignees(data);
+      })
+      .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
 
   });
 }
