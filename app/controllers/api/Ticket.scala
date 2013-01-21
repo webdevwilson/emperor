@@ -11,6 +11,21 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
+  def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
+
+    println(request.body.toString)
+    Ok("ok")
+    // val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
+    //   ticket match {
+    //     case Some(t) => {
+    //       Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
+    //     }
+    //     case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
+    //   }
+    // }).getOrElse(Redirect(routes.Core.index()).flashing("error" -> "auth.notauthorized"))
+
+  }
+
   def item(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
     val ticket = TicketModel.getFullById(ticketId)

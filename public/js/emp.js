@@ -250,31 +250,67 @@ function GroupViewModel(groupId) {
 function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, priorities, severities) {
   var self = this
   self.user = ko.observable(user);
+
   self.projects = ko.observableArray(projects);
-  self.selectedProject = ko.observable(new Project(selectedProject))
-  self.projectShit = ko.observable();
+  self.currentProject = ko.observable(new Project(selectedProject));
+  self.summary = "";
+  self.description = "";
+  self.chosenProject = ko.observable(selectedProject.id);
   self.reporters = ko.observableArray(reporters);
-  self.assignees = ko.observableArray([]); //ko.observableArray(assignees);
+  self.chosenReporter = ko.observable(user.id);
+  self.assignees = ko.observableArray([]);
+  self.chosenAssignee = ko.observable(-1);
   self.ttypes = ko.observableArray(ttypes);
+  self.chosenType = ko.observable(-1);
   self.priorities = ko.observableArray(priorities);
+  self.chosenPriority = ko.observable(-1);
   self.severities = ko.observableArray(severities);
+  self.chosenSeverity = ko.observable(-1);
 
-  this.projectShit.subscribe(function(data) {
-    self.selectedProject(
-      ko.utils.arrayFirst(self.projects(), function(item) {
-        return item.id === data
-      })
-    );
+  this.chosenProject.subscribe(function(data) {
 
-    $.getJSON("/api/project/" + self.selectedProject().id + "/assignees?callback=?")
-      .done(function(data) {
-        console.log("GOT EM");
-        // var assignees = $.map(data, function(item) { return new User(item) });
-        self.assignees(data);
-      })
-      .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
+    // Don't do anything unless we got a selection, as they could choose
+    // the undefined caption
+    if(typeof data !== "undefined") {
+      self.currentProject(
+        ko.utils.arrayFirst(self.projects(), function(item) {
+          return item.id === data
+        })
+      );
 
+      $.getJSON("/api/project/" + self.currentProject().id + "/assignees?callback=?")
+        .done(function(data) {
+          self.assignees(data);
+        })
+        .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
+
+      self.chosenAssignee(self.currentProject().defaultAssignee);
+      self.chosenPriority(self.currentProject().defaultPriorityId);
+      self.chosenSeverity(self.currentProject().defaultSeverityId);
+      self.chosenType(self.currentProject().defaultTypeId);
+    }
   });
+
+  self.doSubmit = function(data) {
+    $.ajax({
+      type: "POST",
+      url: "/api/project/" + self.chosenProject() + "/ticket",
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      data: JSON.stringify({
+        "reporterId": self.chosenReporter(),
+        "assigneeId": self.chosenAssignee(),
+        "projectId": self.chosenProject(),
+        "priorityId": self.chosenPriority(),
+        "severityId": self.chosenSeverity(),
+        "typeId": self.chosenType(),
+        "summary": self.summary,
+        "description": self.description
+      })
+    })
+      .success(function() { console.log("sucess") })
+      .error(function() { console.log("error")})
+  }
 }
 
 
