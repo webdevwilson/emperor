@@ -296,7 +296,7 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, 
       type: "POST",
       url: "/api/project/" + self.chosenProject() + "/ticket",
       contentType: "application/json; charset=utf-8",
-      dataType: "json",
+      dataType: "jsonp",
       data: JSON.stringify({
         "reporterId": self.chosenReporter(),
         "assigneeId": self.chosenAssignee(),
@@ -309,7 +309,7 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, 
       })
     })
       .success(function() { console.log("sucess") })
-      .error(function() { console.log("error")})
+      .error(function(e) { console.log(e)})
   }
 }
 
