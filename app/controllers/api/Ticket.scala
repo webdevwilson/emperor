@@ -22,7 +22,7 @@ object Ticket extends Controller with Secured {
       "severityId" -> longNumber,
       "typeId"     -> longNumber,
       "position"    -> optional(longNumber),
-      "summary"     -> text.verifying(Messages("general.field.required"), { !_.isEmpty }),
+      "summary"     -> nonEmptyText,
       "description" -> optional(text)
     )(models.InitialTicket.apply)(models.InitialTicket.unapply)
   )
@@ -32,13 +32,15 @@ object Ticket extends Controller with Secured {
     request.body.asJson.map({ data =>
       initialTicketForm.bind(data).fold(
         errors => {
-          println("### errors")
-          println(errors)
-          println(errors.errorsAsJson)
           BadRequest(errors.errorsAsJson)
         },
         value => {
-          Ok("ok")
+          TicketModel.create(request.user.id.get, value).map({ ticket =>
+            val json = Json.toJson(ticket)
+            // Inference goes nuts here unless we type this result
+            val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))
+            res
+          }).getOrElse(BadRequest(Json.toJson(Map("error" -> Messages("ticket.add.failure")))))
         }
       )
     }).getOrElse({

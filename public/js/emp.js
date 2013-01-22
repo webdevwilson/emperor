@@ -25,6 +25,18 @@ function ShowAlert(aclass, message) {
   }
 }
 
+function processJsonError(resp) {
+  var data = JSON.parse(resp)
+  if(typeof data !== "undefined") {
+    for(var k in data) {
+      if(data.hasOwnProperty(k)) {
+        console.log("#field-" + k);
+        $("#field-" + k).addClass("error");
+      }
+    }
+  }
+}
+
 function GroupUser(data) {
   this.id       = ko.observable(data.id);
   this.userId   = ko.observable(data.userId);
@@ -291,6 +303,14 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, 
     }
   });
 
+  self.hasProject = function() {
+    if(typeof this.chosenProject() !== "undefined") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   self.doSubmit = function(data) {
     $.ajax({
       type: "POST",
@@ -308,11 +328,14 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, 
         "description": self.description
       })
     })
-      .success(function() { console.log("sucess") })
-      .error(function(e) { console.log(e)})
+      .success(function(ticket) {
+        window.location = "/ticket/" + ticket.ticket_id;
+      })
+      .error(function(e) {
+        processJsonError(e.responseText);
+      })
   }
 }
-
 
 function TicketLinkViewModel() {
   var self = this;
