@@ -24,13 +24,13 @@
       <span class="symbol"> 
         <span class="name">create</span>
         
-        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
+        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], String, String, String, String, String, String, <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
       </span>
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], String, String, String, String, String, String, <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -129,13 +129,13 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate</dd></dl></div>
     </li><li visbl="pub" name="views.html.ticket.create#apply" data-isabs="false">
-      <a id="apply(Form[InitialTicket],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)])(AuthenticatedRequest):Html"></a>
+      <a id="apply(Form[InitialTicket],String,String,String,String,String,String)(AuthenticatedRequest):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">apply</span>
         
-        <span class="params">(<span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>]</span>, <span name="users">users: List[(String, String)]</span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="projs">projs: List[(String, String)]</span>, <span name="ttypes">ttypes: List[(String, String)]</span>, <span name="priorities">priorities: List[(String, String)]</span>, <span name="severities">severities: List[(String, String)]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>]</span>, <span name="users">users: String</span>, <span name="projs">projs: String</span>, <span name="ttypes">ttypes: String</span>, <span name="priorities">priorities: String</span>, <span name="severities">severities: String</span>, <span name="project">project: String</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p>
@@ -198,13 +198,13 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate → Equals → AnyRef → Any</dd></dl></div>
     </li><li visbl="pub" name="views.html.ticket.create#f" data-isabs="false">
-      <a id="f:(Form[InitialTicket], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)]) ⇒ (AuthenticatedRequest) ⇒ Html"></a>
+      <a id="f:(Form[InitialTicket], String, String, String, String, String, String) ⇒ (AuthenticatedRequest) ⇒ Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">f</span>
         
-        <span class="result">: (<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)]) ⇒ (<a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="result">: (<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], String, String, String, String, String, String) ⇒ (<a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       
@@ -366,13 +366,13 @@
       </h4>
       
     </li><li visbl="pub" name="views.html.ticket.create#render" data-isabs="false">
-      <a id="render(Form[InitialTicket],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)],List[(String, String)],AuthenticatedRequest):Html"></a>
+      <a id="render(Form[InitialTicket],String,String,String,String,String,String,AuthenticatedRequest):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">render</span>
         
-        <span class="params">(<span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>]</span>, <span name="users">users: List[(String, String)]</span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="projs">projs: List[(String, String)]</span>, <span name="ttypes">ttypes: List[(String, String)]</span>, <span name="priorities">priorities: List[(String, String)]</span>, <span name="severities">severities: List[(String, String)]</span>, <span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="objForm">objForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>]</span>, <span name="users">users: String</span>, <span name="projs">projs: String</span>, <span name="ttypes">ttypes: String</span>, <span name="priorities">priorities: String</span>, <span name="severities">severities: String</span>, <span name="project">project: String</span>, <span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="views.html.ticket.create" class="extype" href="">create</a> → Template8</dd></dl></div>
@@ -463,7 +463,7 @@
             </div>
 
         <div name="play.api.templates.Template8" class="parent">
-              <h3>Inherited from <span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
+              <h3>Inherited from <span name="play.api.templates.Template8" class="extype">Template8</span>[<span name="play.api.data.Form" class="extype">Form</span>[<a name="models.InitialTicket" class="extype" href="../../../models/InitialTicket.html">InitialTicket</a>], String, String, String, String, String, String, <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
             </div><div name="play.templates.BaseScalaTemplate" class="parent">
               <h3>Inherited from <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]]</h3>
             </div><div name="scala.Serializable" class="parent">

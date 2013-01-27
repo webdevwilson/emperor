@@ -2,35 +2,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>views.html.ticket.comments</title>
+          <title>views.html.helper.bootstrap.textarea</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../../lib/template.css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
     
         </head>
         <body class="value">
       <div id="definition">
-        <img src="../../../lib/object_big.png" />
-        <p id="owner"><a name="views" class="extype" href="../../package.html">views</a>.<a name="views.html" class="extype" href="../package.html">html</a>.<a name="views.html.ticket" class="extype" href="package.html">ticket</a></p>
-        <h1>comments</h1>
+        <img src="../../../../lib/object_big.png" />
+        <p id="owner"><a name="views" class="extype" href="../../../package.html">views</a>.<a name="views.html" class="extype" href="../../package.html">html</a>.<a name="views.html.helper" class="extype" href="../package.html">helper</a>.<a name="views.html.helper.bootstrap" class="extype" href="package.html">bootstrap</a></p>
+        <h1>textarea</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">object</span>
       <span class="symbol"> 
-        <span class="name">comments</span>
+        <span class="name">textarea</span>
         
-        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template11" class="extype">Template11</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
+        <span class="result"> extends <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]] with <span name="play.api.templates.Template5" class="extype">Template5</span>[<span name="play.api.data.Field" class="extype">Field</span>, String, <span name="scala.Array" class="extype">Array</span>[(<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)], <span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span>, <span name="play.api.i18n.Lang" class="extype">Lang</span>, <span name="play.api.templates.Html" class="extype">Html</span>]</span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Generate an HTML textarea.</p><p>Example:</p><pre>
+@textarea(field = myForm(&quot;address&quot;), args = 'rows -&gt; 3, 'cols -&gt; 50)
+</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="play.api.templates.Template11" class="extype">Template11</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span name="play.api.templates.Template5" class="extype">Template5</span>[<span name="play.api.data.Field" class="extype">Field</span>, String, <span name="scala.Array" class="extype">Array</span>[(<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)], <span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span>, <span name="play.api.i18n.Lang" class="extype">Lang</span>, <span name="play.api.templates.Html" class="extype">Html</span>], <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]], <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -46,7 +48,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="views.html.ticket.comments" class="in"><span>comments</span></li><li name="play.api.templates.Template11" class="in"><span>Template11</span></li><li name="play.templates.BaseScalaTemplate" class="in"><span>BaseScalaTemplate</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="views.html.helper.bootstrap.textarea" class="in"><span>textarea</span></li><li name="play.api.templates.Template5" class="in"><span>Template5</span></li><li name="play.templates.BaseScalaTemplate" class="in"><span>BaseScalaTemplate</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -128,17 +130,20 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate</dd></dl></div>
-    </li><li visbl="pub" name="views.html.ticket.comments#apply" data-isabs="false">
-      <a id="apply(FullTicket,List[(String, String)],List[(String, String)],Form[Resolution],Form[Assignment],Form[Comment],SearchResult[Comment],SearchResult[Comment],Page[SearchHit],Seq[WorkflowStatus])(AuthenticatedRequest):Html"></a>
+    </li><li visbl="pub" name="views.html.helper.bootstrap.textarea#apply" data-isabs="false">
+      <a id="apply(Field,String,(Symbol, Any)*)(FieldConstructor,Lang):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">apply</span>
         
-        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a></span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="resolutions">resolutions: List[(String, String)]</span>, <span name="resolveForm">resolveForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>]</span>, <span name="assignForm">assignForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>]</span>, <span name="commentForm">commentForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="comments">comments: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="commits">commits: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="history">history: <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>]</span>, <span name="statuses">statuses: Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="field">field: <span name="play.api.data.Field" class="extype">Field</span></span>, <span name="dataBind">dataBind: String</span>, <span name="args">args: (<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)*</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="handler">handler: <span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span></span>, <span name="lang">lang: <span name="play.api.i18n.Lang" class="extype">Lang</span></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p>
+      <p class="shortcomment cmt">Generate an HTML textarea.</p><div class="fullcomment"><div class="comment cmt"><p>Generate an HTML textarea.</p><p>Example:</p><pre>
+@textarea(field = myForm(&quot;address&quot;), args = 'rows -&gt; 3, 'cols -&gt; 50)
+</pre></div><dl class="paramcmts block"><dt class="param">field</dt><dd class="cmt"><p>The form field.</p></dd><dt class="param">args</dt><dd class="cmt"><p>Set of extra attributes.</p></dd><dt class="param">handler</dt><dd class="cmt"><p>The field constructor.
+</p></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -171,7 +176,7 @@
         <span class="params">()</span><span class="result">: AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -197,14 +202,14 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate → Equals → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="views.html.ticket.comments#f" data-isabs="false">
-      <a id="f:(FullTicket, List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], SearchResult[Comment], Page[SearchHit], Seq[WorkflowStatus]) ⇒ (AuthenticatedRequest) ⇒ Html"></a>
+    </li><li visbl="pub" name="views.html.helper.bootstrap.textarea#f" data-isabs="false">
+      <a id="f:(Field, String, Array[(Symbol, Any)]) ⇒ (FieldConstructor, Lang) ⇒ Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">f</span>
         
-        <span class="result">: (<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]) ⇒ (<a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="result">: (<span name="play.api.data.Field" class="extype">Field</span>, String, <span name="scala.Array" class="extype">Array</span>[(<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)]) ⇒ (<span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span>, <span name="play.api.i18n.Lang" class="extype">Lang</span>) ⇒ <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
       
@@ -218,7 +223,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -343,7 +348,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BaseScalaTemplate → Product</dd></dl></div>
-    </li><li visbl="prt" name="views.html.ticket.comments#readResolve" data-isabs="false">
+    </li><li visbl="prt" name="views.html.helper.bootstrap.textarea#readResolve" data-isabs="false">
       <a id="readResolve():AnyRef"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -354,28 +359,28 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
-    </li><li visbl="pub" name="views.html.ticket.comments#ref" data-isabs="false">
-      <a id="ref:views.html.ticket.comments.type"></a>
+    </li><li visbl="pub" name="views.html.helper.bootstrap.textarea#ref" data-isabs="false">
+      <a id="ref:views.html.helper.bootstrap.textarea.type"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">ref</span>
         
-        <span class="result">: views.html.ticket.comments.type</span>
+        <span class="result">: views.html.helper.bootstrap.textarea.type</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="views.html.ticket.comments#render" data-isabs="false">
-      <a id="render(FullTicket,List[(String, String)],List[(String, String)],Form[Resolution],Form[Assignment],Form[Comment],SearchResult[Comment],SearchResult[Comment],Page[SearchHit],Seq[WorkflowStatus],AuthenticatedRequest):Html"></a>
+    </li><li visbl="pub" name="views.html.helper.bootstrap.textarea#render" data-isabs="false">
+      <a id="render(Field,String,Array[(Symbol, Any)],FieldConstructor,Lang):Html"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">render</span>
         
-        <span class="params">(<span name="ticket">ticket: <a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a></span>, <span name="assignees">assignees: List[(String, String)]</span>, <span name="resolutions">resolutions: List[(String, String)]</span>, <span name="resolveForm">resolveForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>]</span>, <span name="assignForm">assignForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>]</span>, <span name="commentForm">commentForm: <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="comments">comments: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="commits">commits: <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>]</span>, <span name="history">history: <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>]</span>, <span name="statuses">statuses: Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>]</span>, <span name="request">request: <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
+        <span class="params">(<span name="field">field: <span name="play.api.data.Field" class="extype">Field</span></span>, <span name="dataBind">dataBind: String</span>, <span name="args">args: <span name="scala.Array" class="extype">Array</span>[(<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)]</span>, <span name="handler">handler: <span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span></span>, <span name="lang">lang: <span name="play.api.i18n.Lang" class="extype">Lang</span></span>)</span><span class="result">: <span name="play.api.templates.Html" class="extype">Html</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="views.html.ticket.comments" class="extype" href="">comments</a> → Template11</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="views.html.helper.bootstrap.textarea" class="extype" href="">textarea</a> → Template5</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -462,8 +467,8 @@
     </li></ol>
             </div>
 
-        <div name="play.api.templates.Template11" class="parent">
-              <h3>Inherited from <span name="play.api.templates.Template11" class="extype">Template11</span>[<a name="models.FullTicket" class="extype" href="../../../models/FullTicket.html">FullTicket</a>, List[(String, String)], List[(String, String)], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Resolution" class="extype" href="../../../models/Resolution.html">Resolution</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Assignment" class="extype" href="../../../models/Assignment.html">Assignment</a>], <span name="play.api.data.Form" class="extype">Form</span>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Search.SearchResult" class="extype" href="../../../emp/util/Search$$SearchResult.html">SearchResult</a>[<a name="models.Comment" class="extype" href="../../../models/Comment.html">Comment</a>], <a name="emp.util.Pagination.Page" class="extype" href="../../../emp/util/Pagination$$Page.html">Page</a>[<span name="org.elasticsearch.search.SearchHit" class="extype">SearchHit</span>], Seq[<a name="models.WorkflowStatus" class="extype" href="../../../models/WorkflowStatus.html">WorkflowStatus</a>], <a name="controllers.AuthenticatedRequest" class="extype" href="../../../controllers/AuthenticatedRequest.html">AuthenticatedRequest</a>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
+        <div name="play.api.templates.Template5" class="parent">
+              <h3>Inherited from <span name="play.api.templates.Template5" class="extype">Template5</span>[<span name="play.api.data.Field" class="extype">Field</span>, String, <span name="scala.Array" class="extype">Array</span>[(<span name="scala.Symbol" class="extype">Symbol</span>, <span name="scala.Any" class="extype">Any</span>)], <span name="views.html.helper.FieldConstructor" class="extype">FieldConstructor</span>, <span name="play.api.i18n.Lang" class="extype">Lang</span>, <span name="play.api.templates.Html" class="extype">Html</span>]</h3>
             </div><div name="play.templates.BaseScalaTemplate" class="parent">
               <h3>Inherited from <span name="play.templates.BaseScalaTemplate" class="extype">BaseScalaTemplate</span>[<span name="play.api.templates.Html" class="extype">Html</span>, <span name="play.templates.Format" class="extype">Format</span>[<span name="play.api.templates.Html" class="extype">Html</span>]]</h3>
             </div><div name="scala.Serializable" class="parent">
