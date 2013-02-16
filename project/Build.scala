@@ -9,9 +9,8 @@ object ApplicationBuild extends Build {
   val appVersion      = "0.0.24"
 
   val appDependencies = Seq(
-    "org.scala-lang" % "scala-compiler"         % "2.9.1",
     "org.specs2"    %% "specs2"                 % "1.12.1"           % "test",
-    "mysql"         % "mysql-connector-java"    % "5.1.22",
+    "mysql"         % "mysql-connector-java"    % "5.1.23",
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
     "org.pegdown"   % "pegdown"                 % "1.2.0",
     "javax.mail"    % "mail"                    % "1.4.1",
@@ -19,9 +18,9 @@ object ApplicationBuild extends Build {
     "org.apache.commons" % "commons-email"      % "1.2",
     "joda-time"     % "joda-time"               % "2.1",
     // ES thingies
-    "org.elasticsearch" % "elasticsearch"       % "0.20.2",
+    "org.elasticsearch" % "elasticsearch"       % "0.20.5",
     "com.spatial4j" % "spatial4j"               % "0.3",
-    "org.clapper"   %% "grizzled-slf4j"         % "0.6.10"
+    "org.clapper"   %% "grizzled-slf4j"         % "1.0.1"
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
