@@ -5,7 +5,7 @@ import emp.event._
 import emp.plugin._
 import play.api._
 import play.api.Play.current
-import play.db.DB
+import play.api.db.DB
 import models.SearchModel
 
 object Global extends GlobalSettings {

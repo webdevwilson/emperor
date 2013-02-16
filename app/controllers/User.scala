@@ -8,7 +8,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import play.api.mvc.Security._
-import play.db._
+import play.api.db._
 import models.{PermissionSchemeModel,ProjectModel,SearchModel,UserModel,UserTokenModel}
 import org.slf4j.{Logger,LoggerFactory}
 import emp.util.Search._

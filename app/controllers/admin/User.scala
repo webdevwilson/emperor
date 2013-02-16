@@ -13,7 +13,7 @@ import play.api.data.format.Formats._
 import play.api.libs.json.Json._
 import play.api.mvc._
 import play.api.Play.current
-import play.db._
+import play.api.db._
 
 object User extends Controller with Secured {
 

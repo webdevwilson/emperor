@@ -4,7 +4,7 @@ import emp.util.Search._
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Security._
-import play.db._
+import play.api.db._
 import models.SearchModel
 import emp.util.Search._
 

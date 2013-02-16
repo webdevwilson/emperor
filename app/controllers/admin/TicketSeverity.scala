@@ -10,7 +10,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.api.mvc._
-import play.db._
+import play.api.db._
 
 object TicketSeverity extends Controller with Secured {
 

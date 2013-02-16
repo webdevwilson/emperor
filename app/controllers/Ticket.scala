@@ -23,8 +23,6 @@ import org.elasticsearch.search.sort._
 import org.joda.time.DateTime
 import scala.math._
 
-import com.codahale.jerkson.Json._
-
 object Ticket extends Controller with Secured {
 
   val linkForm = Form(

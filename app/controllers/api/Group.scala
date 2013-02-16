@@ -1,7 +1,6 @@
 package controllers.api
 
 import emp.JsonFormats._
-import com.codahale.jerkson.Json._
 import controllers._
 import models.{GroupModel,UserModel}
 import play.api._
