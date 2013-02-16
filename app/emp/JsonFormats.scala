@@ -27,7 +27,7 @@ object JsonFormats {
    * JSON conversion for Comment
    */
   implicit object CommentFormat extends Format[Comment] {
-    def reads(json: JsValue): Comment = Comment(
+    def reads(json: JsValue): JsResult[Comment] = JsSuccess(Comment(
       id = Id((json \ "id").as[Long]),
       ctype = (json \ "type").as[String],
       userId = (json \ "user_id").as[Long],
@@ -36,7 +36,7 @@ object JsonFormats {
       ticketId = (json \ "ticket_id").as[String],
       content = (json \ "content").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(comment: Comment): JsValue = {
       val cdoc: Map[String,JsValue] = Map(
@@ -54,7 +54,7 @@ object JsonFormats {
   }
 
   implicit object EditTicketFormat extends Format[EditTicket] {
-    def reads(json: JsValue): EditTicket = EditTicket(
+    def reads(json: JsValue): JsResult[EditTicket] = JsSuccess(EditTicket(
       ticketId      = (json \ "ticketId").as[Option[String]].map({ id => Id(id) }).getOrElse(NotAssigned),
       reporterId    = (json \ "reporterId").as[Long],
       assigneeId    = (json \ "assigneeId").as[Option[Long]],
@@ -68,7 +68,7 @@ object JsonFormats {
       attentionId    = (json \ "attentionId").as[Option[Long]],
       position      = (json \ "position").as[Option[Long]],
       proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]]
-    )
+    ))
 
     def writes(ticket: EditTicket): JsValue = {
 
@@ -93,7 +93,7 @@ object JsonFormats {
    * JSON conversion for Event
    */
   implicit object EventFormat extends Format[Event] {
-    def reads(json: JsValue): Event = Event(
+    def reads(json: JsValue): JsResult[Event] = JsSuccess(Event(
       projectId = (json \ "project_id").as[Long],
       projectName = (json \ "project_name").as[String],
       userId = (json \ "user_id").as[Long],
@@ -103,7 +103,7 @@ object JsonFormats {
       content = (json \ "content").as[String],
       url = (json \ "url").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(event: Event): JsValue = {
       val edoc: Map[String,JsValue] = Map(
@@ -126,7 +126,7 @@ object JsonFormats {
    */
   implicit object FullLinkFormat extends Format[FullLink] {
 
-    def reads(json: JsValue): FullLink = FullLink(
+    def reads(json: JsValue): JsResult[FullLink] = JsSuccess(FullLink(
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "type_name").as[String],
@@ -137,7 +137,7 @@ object JsonFormats {
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(l: FullLink): JsValue = {
 
@@ -176,7 +176,7 @@ object JsonFormats {
 
     // XX This is allllll wrong.  To be able to inflate it should verify
     // all these IDs then poll the database for the values.
-    def reads(json: JsValue): FullTicket = FullTicket(
+    def reads(json: JsValue): JsResult[FullTicket] = JsSuccess(FullTicket(
       id        = Id((json \ "id").as[Long]),
       ticketId  = (json \ "ticket_id").as[String],
       user      = NamedThing(
@@ -234,7 +234,7 @@ object JsonFormats {
       description = (json \ "description").as[Option[String]],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime()),
       originalDateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(ticket: FullTicket): JsValue = {
 
@@ -291,11 +291,11 @@ object JsonFormats {
    */
   implicit object GroupFormat extends Format[Group] {
 
-    def reads(json: JsValue): Group = Group(
+    def reads(json: JsValue): JsResult[Group] = JsSuccess(Group(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: Group): JsValue = {
 
@@ -314,14 +314,14 @@ object JsonFormats {
    */
   implicit object GroupUserFormat extends Format[GroupUser] {
 
-    def reads(json: JsValue): GroupUser = GroupUser(
+    def reads(json: JsValue): JsResult[GroupUser] = JsSuccess(GroupUser(
       id          = Id((json \ "id").as[Long]),
       groupId     = (json \ "groupId").as[Long],
       userId      = (json \ "userId").as[Long],
       username    = (json \ "username").as[String],
       realName    = (json \ "realName").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: GroupUser): JsValue = {
 
@@ -344,14 +344,14 @@ object JsonFormats {
    */
   implicit object LinkFormat extends Format[Link] {
 
-    def reads(json: JsValue): Link = Link(
+    def reads(json: JsValue): JsResult[Link] = JsSuccess(Link(
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "name").as[String],
       parentId    = (json \ "parent_id").as[String],
       childId     = (json \ "child_id").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(l: Link): JsValue = {
 
@@ -374,10 +374,10 @@ object JsonFormats {
   implicit object PermissionFormat extends Format[Permission] {
 
     // This should be a boolean (global)
-    def reads(json: JsValue): Permission = Permission(
+    def reads(json: JsValue): JsResult[Permission] = JsSuccess(Permission(
       name  = (json \ "name").as[String],
       global = (json \ "global").as[Int]
-    )
+    ))
 
     def writes(obj: Permission): JsValue = {
       val doc: Map[String,JsValue] = Map(
@@ -398,14 +398,14 @@ object JsonFormats {
   implicit object PermissionSchemeGroupFormat extends Format[PermissionSchemeGroup] {
 
     // This should be a boolean (global)
-    def reads(json: JsValue): PermissionSchemeGroup = PermissionSchemeGroup(
+    def reads(json: JsValue): JsResult[PermissionSchemeGroup] = JsSuccess(PermissionSchemeGroup(
       id                = Id((json \ "id").as[Long]),
       permissionSchemeId= (json \ "permissionSchemeId").as[Long],
       permissionId      = (json \ "permissionId").as[String],
       groupId           = (json \ "groupId").as[Long],
       groupName         = (json \ "groupName").as[String],
       dateCreated       = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: PermissionSchemeGroup): JsValue = {
       val doc: Map[String,JsValue] = Map(
@@ -426,7 +426,7 @@ object JsonFormats {
   implicit object PermissionSchemeUserFormat extends Format[PermissionSchemeUser] {
 
     // This should be a boolean (global)
-    def reads(json: JsValue): PermissionSchemeUser = PermissionSchemeUser(
+    def reads(json: JsValue): JsResult[PermissionSchemeUser] = JsSuccess(PermissionSchemeUser(
       id                = Id((json \ "id").as[Long]),
       permissionSchemeId= (json \ "permissionSchemeId").as[Long],
       permissionId      = (json \ "permissionId").as[String],
@@ -434,7 +434,7 @@ object JsonFormats {
       username          = (json \ "userName").as[String],
       realName          = (json \ "realName").as[String],
       dateCreated       = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: PermissionSchemeUser): JsValue = {
       val doc: Map[String,JsValue] = Map(
@@ -452,12 +452,12 @@ object JsonFormats {
 
   implicit object PermissionSchemeFormat extends Format[PermissionScheme] {
 
-    def reads(json: JsValue): PermissionScheme = PermissionScheme(
+    def reads(json: JsValue): JsResult[PermissionScheme] = JsSuccess(PermissionScheme(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
       description = (json \ "description").as[Option[String]],
       dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: PermissionScheme): JsValue = {
       val doc: Map[String,JsValue] = Map(
@@ -476,7 +476,7 @@ object JsonFormats {
    */
   implicit object ProjectFormat extends Format[Project] {
 
-    def reads(json: JsValue): Project = Project(
+    def reads(json: JsValue): JsResult[Project] = JsSuccess(Project(
       id          = Id((json \ "id").as[Long]),
       workflowId  = (json \ "workflowId").as[Long],
       name        = (json \ "name").as[String],
@@ -488,7 +488,7 @@ object JsonFormats {
       defaultTypeId = (json \ "defaultTypeId").as[Option[Long]],
       defaultAssignee = (json \ "defaultAssignee").as[Option[Int]],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: Project): JsValue = {
 
@@ -540,13 +540,13 @@ object JsonFormats {
    */
   implicit object TicketPriorityFormat extends Format[TicketPriority] {
 
-    def reads(json: JsValue): TicketPriority = TicketPriority(
+    def reads(json: JsValue): JsResult[TicketPriority] = JsSuccess(TicketPriority(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
       color       = (json \ "color").as[String],
       position    = (json \ "position").as[Int],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: TicketPriority): JsValue = {
 
@@ -567,13 +567,13 @@ object JsonFormats {
    */
   implicit object TicketSeverityFormat extends Format[TicketSeverity] {
 
-    def reads(json: JsValue): TicketSeverity = TicketSeverity(
+    def reads(json: JsValue): JsResult[TicketSeverity] = JsSuccess(TicketSeverity(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
       color       = (json \ "color").as[String],
       position    = (json \ "position").as[Int],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: TicketSeverity): JsValue = {
 
@@ -594,12 +594,12 @@ object JsonFormats {
    */
   implicit object TicketTypeFormat extends Format[TicketType] {
 
-    def reads(json: JsValue): TicketType = TicketType(
+    def reads(json: JsValue): JsResult[TicketType] = JsSuccess(TicketType(
       id          = Id((json \ "id").as[Long]),
       name        = (json \ "name").as[String],
       color       = (json \ "color").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: TicketType): JsValue = {
 
@@ -619,7 +619,7 @@ object JsonFormats {
    */
   implicit object UserFormat extends Format[User] {
 
-    def reads(json: JsValue): User = User(
+    def reads(json: JsValue): JsResult[User] = JsSuccess(User(
       id          = Id((json \ "id").as[Long]),
       username    = (json \ "username").as[String],
       password    = (json \ "password").as[String],
@@ -631,7 +631,7 @@ object JsonFormats {
       title       = (json \ "title").as[Option[String]],
       url         = (json \ "url").as[Option[String]],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: User): JsValue = {
 
@@ -658,12 +658,12 @@ object JsonFormats {
    */
   implicit object UserTokenFormat extends Format[UserToken] {
 
-    def reads(json: JsValue): UserToken = UserToken(
+    def reads(json: JsValue): JsResult[UserToken] = JsSuccess(UserToken(
       token   = Id((json \ "name").as[String]),
       userId  = (json \ "userId").as[Long],
       comment = (json \ "comment").as[Option[String]],
       dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
-    )
+    ))
 
     def writes(obj: UserToken): JsValue = {
       val doc: Map[String,JsValue] = Map(
@@ -681,13 +681,13 @@ object JsonFormats {
    */
   implicit object WorkflowStatusFormat extends Format[WorkflowStatus] {
 
-    def reads(json: JsValue): WorkflowStatus = WorkflowStatus(
+    def reads(json: JsValue): JsResult[WorkflowStatus] = JsSuccess(WorkflowStatus(
       id          = Id((json \ "id").as[Long]),
       workflowId  = (json \ "workflow_id").as[Long],
       statusId    = (json \ "status_id").as[Long],
       name        = (json \ "name").as[String],
       position    = (json \ "position").as[Int]
-    )
+    ))
 
     def writes(ws: WorkflowStatus): JsValue = {
 

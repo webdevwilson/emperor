@@ -904,7 +904,7 @@ object SearchModel {
       filterMap = ticketCommentFilterMap, sortMap = ticketCommentSortMap,
       ticketCommentFacets, filterProjects = false
     )
-    val hits: Iterable[Comment] = res.hits.map { hit => Json.fromJson[Comment](Json.parse(hit.sourceAsString())) }
+    val hits: Iterable[Comment] = res.hits.map { hit => Json.fromJson[Comment](Json.parse(hit.sourceAsString())).asOpt.get }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
     emp.util.Search.parseSearchResponse(pager = pager, response = res)
@@ -916,7 +916,7 @@ object SearchModel {
   def searchEvent(query: SearchQuery): SearchResult[Event] = {
 
     val res = Search.runQuery(indexer, eventIndex, query, eventFilterMap, eventSortMap, eventFacets)
-    val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())) }
+    val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())).asOpt.get }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
     emp.util.Search.parseSearchResponse(pager = pager, response = res)
@@ -928,7 +928,7 @@ object SearchModel {
   def searchTicket(query: SearchQuery): SearchResult[FullTicket] = {
 
     val res = runQuery(indexer, ticketIndex, query, ticketFilterMap, ticketSortMap, ticketFacets)
-    val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())) }
+    val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())).asOpt.get }
 
     val pager = Page(hits, query.page, query.count, res.hits.totalHits)
     emp.util.Search.parseSearchResponse(pager = pager, response = res)
