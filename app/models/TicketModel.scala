@@ -441,10 +441,10 @@ object TicketModel {
    * Remove the resolution of a ticket with an optional comment.
    */
   def unresolve(ticketId: String, userId: Long, comment: Option[String] = None): FullTicket = {
-      val tick = this.getById(ticketId).get
+    val tick = this.getById(ticketId).get
 
-      val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
-      ft
+    val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
+    ft
   }
 
   /**
