@@ -259,7 +259,7 @@ function GroupViewModel(groupId) {
     .fail(function() { ShowAlert("alert-error", "XXX Failed to retrieve group users!") });
 }
 
-function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, priorities, severities) {
+function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, priorities, severities) {
   var self = this
   self.user = ko.observable(user);
 
@@ -268,9 +268,9 @@ function TicketAddViewModel(user, projects, selectedProject, reporters, ttypes, 
   self.summary = "";
   self.description = "";
   self.chosenProject = ko.observable(selectedProject.id);
-  self.reporters = ko.observableArray(reporters);
+  self.reporters = ko.observableArray(assignees);
   self.chosenReporter = ko.observable(user.id);
-  self.assignees = ko.observableArray([]);
+  self.assignees = ko.observableArray(assignees);
   self.chosenAssignee = ko.observable(-1);
   self.ttypes = ko.observableArray(ttypes);
   self.chosenType = ko.observable(-1);

@@ -636,7 +636,7 @@ object JsonFormats {
     def writes(obj: User): JsValue = {
 
       val doc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(obj.id.get),
+        "id"              -> obj.id.map(i => JsNumber(i)).getOrElse(JsNull),
         "username"        -> JsString(obj.username),
         "password"        -> JsString(obj.password),
         "realName"        -> JsString(obj.realName),

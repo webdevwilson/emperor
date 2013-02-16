@@ -166,7 +166,6 @@ object Ticket extends Controller with Secured {
 
     initialTicketForm.bindFromRequest.fold(
       errors => {
-        // Should be i18ned in the view
         val projs = Json.toJson(ProjectModel.getAll(userId = request.user.id.get)).toString
         val ttypes = Json.toJson(TicketTypeModel.getAll).toString
         val prios = Json.toJson(TicketPriorityModel.getAll).toString
