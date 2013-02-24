@@ -300,10 +300,10 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
         })
         .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
 
-      self.chosenAssignee(self.currentProject().defaultAssignee());
-      self.chosenPriority(self.currentProject().defaultPriorityId());
-      self.chosenSeverity(self.currentProject().defaultSeverityId());
-      self.chosenType(self.currentProject().defaultTypeId());
+      self.chosenAssignee(self.currentProject().defaultAssignee);
+      self.chosenPriority(self.currentProject().defaultPriorityId);
+      self.chosenSeverity(self.currentProject().defaultSeverityId);
+      self.chosenType(self.currentProject().defaultTypeId);
     }
   }
 
