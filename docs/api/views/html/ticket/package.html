@@ -2,151 +2,185 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>views.html.ticket</title>
+          <title>ticket - views.html.ticket</title>
+          <meta name="description" content="ticket - views.html.ticket" />
+          <meta name="keywords" content="ticket views.html.ticket" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'views.html.ticket.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="views" class="extype" href="../../package.html">views</a>.<a name="views.html" class="extype" href="../package.html">html</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="views">views</a>.<a href="../package.html" class="extype" name="views.html">html</a></p>
         <h1>ticket</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <span class="name">ticket</span>
-        
-        
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"></div>
+          <div id="comment" class="fullcommenttop"></div>
         
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
 
       <div id="template">
-
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          
-          
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-            </div>
-        </div>
+        <div id="allMembers">
+        
 
         
 
         
-        
-        
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="views.html.ticket.change" data-isabs="false">
+              <ol><li name="views.html.ticket.change" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="change"></a>
       <a id="change:change"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="change$.html"><span class="name">change</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template4[FullTicket, TicketStatus, Form[Comment], Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="change$.html"><span class="name">change</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template4">Template4</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <a href="../../../models/TicketStatus.html" class="extype" name="models.TicketStatus">TicketStatus</a>, <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.comments" data-isabs="false">
+    </li><li name="views.html.ticket.comments" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="comments"></a>
       <a id="comments:comments"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="comments$.html"><span class="name">comments</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template11[FullTicket, List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], SearchResult[Comment], Page[SearchHit], Seq[WorkflowStatus], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="comments$.html"><span class="name">comments</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template11">Template11</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Resolution.html" class="extype" name="models.Resolution">Resolution</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Assignment.html" class="extype" name="models.Assignment">Assignment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Pagination$$Page.html" class="extype" name="emp.util.Pagination.Page">Page</a>[<span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span>], <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../models/WorkflowStatus.html" class="extype" name="models.WorkflowStatus">WorkflowStatus</a>], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.commits" data-isabs="false">
+    </li><li name="views.html.ticket.commits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="commits"></a>
       <a id="commits:commits"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="commits$.html"><span class="name">commits</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template11[FullTicket, List[(String, String)], List[(String, String)], Form[Resolution], Form[Assignment], Form[Comment], SearchResult[Comment], SearchResult[Comment], Page[SearchHit], Seq[WorkflowStatus], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="commits$.html"><span class="name">commits</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template11">Template11</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Resolution.html" class="extype" name="models.Resolution">Resolution</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Assignment.html" class="extype" name="models.Assignment">Assignment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Pagination$$Page.html" class="extype" name="emp.util.Pagination.Page">Page</a>[<span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span>], <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../models/WorkflowStatus.html" class="extype" name="models.WorkflowStatus">WorkflowStatus</a>], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.create" data-isabs="false">
+    </li><li name="views.html.ticket.create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="create"></a>
       <a id="create:create"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="create$.html"><span class="name">create</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template8[Form[InitialTicket], String, String, String, String, String, String, AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="create$.html"><span class="name">create</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template8">Template8</span>[<span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/InitialTicket.html" class="extype" name="models.InitialTicket">InitialTicket</a>], <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.edit" data-isabs="false">
+    </li><li name="views.html.ticket.edit" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="edit"></a>
       <a id="edit:edit"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="edit$.html"><span class="name">edit</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template10[String, Form[EditTicket], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], List[(String, String)], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="edit$.html"><span class="name">edit</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template10">Template10</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/EditTicket.html" class="extype" name="models.EditTicket">EditTicket</a>], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.error" data-isabs="false">
+    </li><li name="views.html.ticket.error" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="error"></a>
       <a id="error:error"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="error$.html"><span class="name">error</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template1[Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="error$.html"><span class="name">error</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template1">Template1</span>[<span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.history" data-isabs="false">
+    </li><li name="views.html.ticket.history" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="history"></a>
       <a id="history:history"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="history$.html"><span class="name">history</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template11[FullTicket, List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], SearchResult[Comment], SearchResult[Comment], Page[SearchHit], Seq[WorkflowStatus], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="history$.html"><span class="name">history</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template11">Template11</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Assignment.html" class="extype" name="models.Assignment">Assignment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Resolution.html" class="extype" name="models.Resolution">Resolution</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <a href="../../../emp/util/Pagination$$Page.html" class="extype" name="emp.util.Pagination.Page">Page</a>[<span class="extype" name="org.elasticsearch.search.SearchHit">SearchHit</span>], <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../models/WorkflowStatus.html" class="extype" name="models.WorkflowStatus">WorkflowStatus</a>], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.item" data-isabs="false">
+    </li><li name="views.html.ticket.item" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="item"></a>
       <a id="item:item"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="item$.html"><span class="name">item</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template9[FullTicket, List[(String, String)], List[(String, String)], Form[Assignment], Form[Comment], Form[Resolution], Seq[WorkflowStatus], Html, AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="item$.html"><span class="name">item</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template9">Template9</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Assignment.html" class="extype" name="models.Assignment">Assignment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Comment.html" class="extype" name="models.Comment">Comment</a>], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/Resolution.html" class="extype" name="models.Resolution">Resolution</a>], <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../models/WorkflowStatus.html" class="extype" name="models.WorkflowStatus">WorkflowStatus</a>], <span class="extype" name="play.api.templates.Html">Html</span>, <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
-    </li><li visbl="pub" name="views.html.ticket.link" data-isabs="false">
+    </li><li name="views.html.ticket.link" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="link"></a>
       <a id="link:link"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="link$.html"><span class="name">link</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template5[FullTicket, List[(String, String)], Form[MakeLink], Seq[FullTicket], Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="link$.html"><span class="name">link</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template5">Template5</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>, <span class="extype" name="scala.List">List</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)], <span class="extype" name="play.api.data.Form">Form</span>[<a href="../../../models/MakeLink.html" class="extype" name="models.MakeLink">MakeLink</a>], <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../models/FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>], <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt"></p>
@@ -156,10 +190,26 @@
         
 
         
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>

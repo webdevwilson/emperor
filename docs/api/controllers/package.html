@@ -2,14 +2,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>controllers</title>
+          <title>controllers - controllers</title>
+          <meta name="description" content="controllers - controllers" />
+          <meta name="keywords" content="controllers controllers" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
-      <script type="text/javascript" src="../lib/jquery.js"></script>
+      <link href="../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../lib/template.js"></script>
       <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../index.html';
+            var hash = 'controllers.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
@@ -19,347 +34,414 @@
         <h1>controllers</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <span class="name">controllers</span>
-        
-        
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"></div>
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
         
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="controllers"><span>controllers</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
 
       <div id="template">
-
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          
-          
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-            </div>
-        </div>
-
+        <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="controllers.AuthenticatedRequest" data-isabs="false">
+              <ol><li name="controllers.AuthenticatedRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AuthenticatedRequestextendsWrappedRequest[play.api.mvc.AnyContent]withProductwithSerializable"></a>
       <a id="AuthenticatedRequest:AuthenticatedRequest"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="AuthenticatedRequest.html"><span class="name">AuthenticatedRequest</span></a>
-        
-        <span class="params">(<span name="user">user: User</span>, <span name="request">request: Request[AnyContent]</span>)</span><span class="result"> extends WrappedRequest[AnyContent] with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AuthenticatedRequest.html"><span class="name">AuthenticatedRequest</span></a><span class="params">(<span name="user">user: <a href="../models/User.html" class="extype" name="models.User">User</a></span>, <span name="request">request: <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>)</span><span class="result"> extends <span class="extype" name="play.api.mvc.WrappedRequest">WrappedRequest</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseAdmin" data-isabs="false">
+    </li><li name="controllers.ReverseAdmin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseAdminextendsObject"></a>
       <a id="ReverseAdmin:ReverseAdmin"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseAdmin.html"><span class="name">ReverseAdmin</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseAdmin.html"><span class="name">ReverseAdmin</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseAssets" data-isabs="false">
+    </li><li name="controllers.ReverseAssets" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseAssetsextendsObject"></a>
       <a id="ReverseAssets:ReverseAssets"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseAssets.html"><span class="name">ReverseAssets</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseAssets.html"><span class="name">ReverseAssets</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseAuth" data-isabs="false">
+    </li><li name="controllers.ReverseAuth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseAuthextendsObject"></a>
       <a id="ReverseAuth:ReverseAuth"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseAuth.html"><span class="name">ReverseAuth</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseAuth.html"><span class="name">ReverseAuth</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseCore" data-isabs="false">
+    </li><li name="controllers.ReverseCore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseCoreextendsObject"></a>
       <a id="ReverseCore:ReverseCore"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseCore.html"><span class="name">ReverseCore</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseCore.html"><span class="name">ReverseCore</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseProject" data-isabs="false">
+    </li><li name="controllers.ReverseProject" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseProjectextendsObject"></a>
       <a id="ReverseProject:ReverseProject"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseProject.html"><span class="name">ReverseProject</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseProject.html"><span class="name">ReverseProject</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseSearch" data-isabs="false">
+    </li><li name="controllers.ReverseSearch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseSearchextendsObject"></a>
       <a id="ReverseSearch:ReverseSearch"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseSearch.html"><span class="name">ReverseSearch</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseSearch.html"><span class="name">ReverseSearch</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseStack" data-isabs="false">
+    </li><li name="controllers.ReverseStack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseStackextendsObject"></a>
       <a id="ReverseStack:ReverseStack"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseStack.html"><span class="name">ReverseStack</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseStack.html"><span class="name">ReverseStack</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseTicket" data-isabs="false">
+    </li><li name="controllers.ReverseTicket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseTicketextendsObject"></a>
       <a id="ReverseTicket:ReverseTicket"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseTicket.html"><span class="name">ReverseTicket</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseTicket.html"><span class="name">ReverseTicket</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseTimeline" data-isabs="false">
+    </li><li name="controllers.ReverseTimeline" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseTimelineextendsObject"></a>
       <a id="ReverseTimeline:ReverseTimeline"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseTimeline.html"><span class="name">ReverseTimeline</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseTimeline.html"><span class="name">ReverseTimeline</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ReverseUser" data-isabs="false">
+    </li><li name="controllers.ReverseUser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReverseUserextendsObject"></a>
       <a id="ReverseUser:ReverseUser"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="ReverseUser.html"><span class="name">ReverseUser</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReverseUser.html"><span class="name">ReverseUser</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Secured" data-isabs="true">
+    </li><li name="controllers.Secured" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SecuredextendsObject"></a>
       <a id="Secured:Secured"></a>
       <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="Secured.html"><span class="name">Secured</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Secured.html"><span class="name">Secured</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">Provide security features
 </p>
-    </li><li visbl="pub" name="controllers.routes" data-isabs="false">
+    </li><li name="controllers.routes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="routesextendsObject"></a>
       <a id="routes:routes"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="routes.html"><span class="name">routes</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="routes.html"><span class="name">routes</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
     </li></ol>
             </div>
-        
+
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="controllers.Admin" data-isabs="false">
+              <ol><li name="controllers.Admin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Admin"></a>
       <a id="Admin:Admin"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Admin$.html"><span class="name">Admin</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Admin$.html"><span class="name">Admin</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Auth" data-isabs="false">
+    </li><li name="controllers.Auth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Auth"></a>
       <a id="Auth:Auth"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Auth$.html"><span class="name">Auth</span></a>
-        
-        <span class="result"> extends Controller</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Auth$.html"><span class="name">Auth</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Core" data-isabs="false">
+    </li><li name="controllers.Core" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Core"></a>
       <a id="Core:Core"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Core$.html"><span class="name">Core</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Core$.html"><span class="name">Core</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Group" data-isabs="false">
+    </li><li name="controllers.Group" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Group"></a>
       <a id="Group:Group"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Group$.html"><span class="name">Group</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Group$.html"><span class="name">Group</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Project" data-isabs="false">
+    </li><li name="controllers.Project" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Project"></a>
       <a id="Project:Project"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Project$.html"><span class="name">Project</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Project$.html"><span class="name">Project</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Search" data-isabs="false">
+    </li><li name="controllers.Search" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Search"></a>
       <a id="Search:Search"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Search$.html"><span class="name">Search</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Search$.html"><span class="name">Search</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Stack" data-isabs="false">
+    </li><li name="controllers.Stack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Stack"></a>
       <a id="Stack:Stack"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Stack$.html"><span class="name">Stack</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Stack$.html"><span class="name">Stack</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Ticket" data-isabs="false">
+    </li><li name="controllers.Ticket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Ticket"></a>
       <a id="Ticket:Ticket"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Ticket$.html"><span class="name">Ticket</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Ticket$.html"><span class="name">Ticket</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.Timeline" data-isabs="false">
+    </li><li name="controllers.Timeline" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Timeline"></a>
       <a id="Timeline:Timeline"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="Timeline$.html"><span class="name">Timeline</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Timeline$.html"><span class="name">Timeline</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.User" data-isabs="false">
+    </li><li name="controllers.User" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="User"></a>
       <a id="User:User"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="User$.html"><span class="name">User</span></a>
-        
-        <span class="result"> extends Controller with Secured</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="User$.html"><span class="name">User</span></a><span class="result"> extends <span class="extype" name="play.api.mvc.Controller">Controller</span> with <a href="Secured.html" class="extype" name="controllers.Secured">Secured</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.admin" data-isabs="false">
+    </li><li name="controllers.admin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="admin"></a>
       <a id="admin:admin"></a>
       <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <a href="admin/package.html"><span class="name">admin</span></a>
-        
-        
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.api" data-isabs="false">
+    </li><li name="controllers.api" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="api"></a>
       <a id="api:api"></a>
       <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <a href="api/package.html"><span class="name">api</span></a>
-        
-        
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.javascript" data-isabs="false">
+    </li><li name="controllers.javascript" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="javascript"></a>
       <a id="javascript:javascript"></a>
       <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <a href="javascript/package.html"><span class="name">javascript</span></a>
-        
-        
       </span>
       </h4>
       
-    </li><li visbl="pub" name="controllers.ref" data-isabs="false">
+    </li><li name="controllers.ref" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ref"></a>
       <a id="ref:ref"></a>
       <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="ref/package.html"><span class="name">ref</span></a>
-        
-        
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
       </span>
-      </h4>
-      
-    </li><li visbl="pub" name="controllers.routes" data-isabs="false">
-      <a id="routes:routes"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="routes$.html"><span class="name">routes</span></a>
-        
-        <span class="result"> extends </span>
+      <span class="symbol">
+        <a href="ref/package.html"><span class="name">ref</span></a>
       </span>
       </h4>
       
@@ -369,10 +451,30 @@
         
 
         
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>

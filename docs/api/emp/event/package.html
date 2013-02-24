@@ -2,176 +2,214 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>emp.event</title>
+          <title>event - emp.event</title>
+          <meta name="description" content="event - emp.event" />
+          <meta name="keywords" content="event emp.event" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
-      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'emp.event.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
       <div id="definition">
         <img src="../../lib/package_big.png" />
-        <p id="owner"><a name="emp" class="extype" href="../package.html">emp</a></p>
+        <p id="owner"><a href="../package.html" class="extype" name="emp">emp</a></p>
         <h1>event</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <span class="name">event</span>
-        
-        
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"></div>
+          <div id="comment" class="fullcommenttop"></div>
         
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
 
       <div id="template">
-
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          
-          
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-            </div>
-        </div>
-
+        <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="emp.event.ChangeProjectEvent" data-isabs="false">
+              <ol><li name="emp.event.ChangeProjectEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ChangeProjectEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="ChangeProjectEvent:ChangeProjectEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="ChangeProjectEvent.html"><span class="name">ChangeProjectEvent</span></a>
-        
-        <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChangeProjectEvent.html"><span class="name">ChangeProjectEvent</span></a><span class="params">(<span name="projectId">projectId: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>project/changed</code>: Represents a modification of a project.</p>
-    </li><li visbl="pub" name="emp.event.ChangeTicketEvent" data-isabs="false">
+    </li><li name="emp.event.ChangeTicketEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ChangeTicketEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="ChangeTicketEvent:ChangeTicketEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="ChangeTicketEvent.html"><span class="name">ChangeTicketEvent</span></a>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="resolved">resolved: Boolean</span>, <span name="newTicketId">newTicketId: Long</span>, <span name="oldTicketId">oldTicketId: Long</span>, <span name="unresolved">unresolved: Boolean</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChangeTicketEvent.html"><span class="name">ChangeTicketEvent</span></a><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resolved">resolved: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="newTicketId">newTicketId: <span class="extype" name="scala.Long">Long</span></span>, <span name="oldTicketId">oldTicketId: <span class="extype" name="scala.Long">Long</span></span>, <span name="unresolved">unresolved: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>ticket/changed</code>: Represents a modification of a ticket.</p>
-    </li><li visbl="pub" name="emp.event.CommentTicketEvent" data-isabs="false">
+    </li><li name="emp.event.CommentTicketEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CommentTicketEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="CommentTicketEvent:CommentTicketEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="CommentTicketEvent.html"><span class="name">CommentTicketEvent</span></a>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="commentId">commentId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CommentTicketEvent.html"><span class="name">CommentTicketEvent</span></a><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="commentId">commentId: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>ticket/commentedon</code>: Represents a comment added to a ticket.</p>
-    </li><li visbl="pub" name="emp.event.EmperorEvent" data-isabs="false">
+    </li><li name="emp.event.EmperorEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EmperorEventextendsObject"></a>
       <a id="EmperorEvent:EmperorEvent"></a>
       <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="EmperorEvent.html"><span class="name">EmperorEvent</span></a>
-        
-        <span class="result"> extends AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="EmperorEvent.html"><span class="name">EmperorEvent</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">Base class for events.</p>
-    </li><li visbl="pub" name="emp.event.LinkTicketEvent" data-isabs="false">
+    </li><li name="emp.event.LinkTicketEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LinkTicketEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="LinkTicketEvent:LinkTicketEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="LinkTicketEvent.html"><span class="name">LinkTicketEvent</span></a>
-        
-        <span class="params">(<span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LinkTicketEvent.html"><span class="name">LinkTicketEvent</span></a><span class="params">(<span name="parentId">parentId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="childId">childId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>ticket/linked</code>: Represents a link created between two tickets.</p>
-    </li><li visbl="pub" name="emp.event.LogInUserEvent" data-isabs="false">
+    </li><li name="emp.event.LogInUserEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LogInUserEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="LogInUserEvent:LogInUserEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="LogInUserEvent.html"><span class="name">LogInUserEvent</span></a>
-        
-        <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LogInUserEvent.html"><span class="name">LogInUserEvent</span></a><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>user/loggedin</code>: Represents a user logging in.</p>
-    </li><li visbl="pub" name="emp.event.NewProjectEvent" data-isabs="false">
+    </li><li name="emp.event.NewProjectEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NewProjectEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="NewProjectEvent:NewProjectEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="NewProjectEvent.html"><span class="name">NewProjectEvent</span></a>
-        
-        <span class="params">(<span name="projectId">projectId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NewProjectEvent.html"><span class="name">NewProjectEvent</span></a><span class="params">(<span name="projectId">projectId: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>project/created</code>: Represents the creation of a project.</p>
-    </li><li visbl="pub" name="emp.event.NewTicketEvent" data-isabs="false">
+    </li><li name="emp.event.NewTicketEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NewTicketEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="NewTicketEvent:NewTicketEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="NewTicketEvent.html"><span class="name">NewTicketEvent</span></a>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NewTicketEvent.html"><span class="name">NewTicketEvent</span></a><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>ticket/created</code>: Represents the creation of a ticket.</p>
-    </li><li visbl="pub" name="emp.event.NewUserEvent" data-isabs="false">
+    </li><li name="emp.event.NewUserEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NewUserEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="NewUserEvent:NewUserEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="NewUserEvent.html"><span class="name">NewUserEvent</span></a>
-        
-        <span class="params">(<span name="userId">userId: Long</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NewUserEvent.html"><span class="name">NewUserEvent</span></a><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>user/created</code>: Represents the creation of a user.</p>
-    </li><li visbl="pub" name="emp.event.UnlinkTicketEvent" data-isabs="false">
+    </li><li name="emp.event.UnlinkTicketEvent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnlinkTicketEventextendsEmperorEventwithProductwithSerializable"></a>
       <a id="UnlinkTicketEvent:UnlinkTicketEvent"></a>
       <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="UnlinkTicketEvent.html"><span class="name">UnlinkTicketEvent</span></a>
-        
-        <span class="params">(<span name="childId">childId: String</span>, <span name="parentId">parentId: String</span>)</span><span class="result"> extends EmperorEvent with Product with Serializable</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnlinkTicketEvent.html"><span class="name">UnlinkTicketEvent</span></a><span class="params">(<span name="childId">childId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="parentId">parentId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="EmperorEvent.html" class="extype" name="emp.event.EmperorEvent">EmperorEvent</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt"><code>ticket/unlinked</code>: Represents the removal of a link between two tickets.</p>
     </li></ol>
             </div>
-        
+
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="emp.event.EmperorEventBus" data-isabs="false">
+              <ol><li name="emp.event.EmperorEventBus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EmperorEventBus"></a>
       <a id="EmperorEventBus:EmperorEventBus"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="EmperorEventBus$.html"><span class="name">EmperorEventBus</span></a>
-        
-        <span class="result"> extends ActorEventBus with LookupClassification</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="EmperorEventBus$.html"><span class="name">EmperorEventBus</span></a><span class="result"> extends <span class="extype" name="akka.event.ActorEventBus">ActorEventBus</span> with <span class="extype" name="akka.event.LookupClassification">LookupClassification</span></span>
       </span>
       </h4>
       <p class="comment cmt">Internal event bus used to notify interested plugins about activity within
@@ -182,10 +220,26 @@ emperor.</p>
         
 
         
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>

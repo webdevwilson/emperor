@@ -2,107 +2,133 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>views.html.util</title>
+          <title>util - views.html.util</title>
+          <meta name="description" content="util - views.html.util" />
+          <meta name="keywords" content="util views.html.util" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'views.html.util.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
       <div id="definition">
         <img src="../../../lib/package_big.png" />
-        <p id="owner"><a name="views" class="extype" href="../../package.html">views</a>.<a name="views.html" class="extype" href="../package.html">html</a></p>
+        <p id="owner"><a href="../../package.html" class="extype" name="views">views</a>.<a href="../package.html" class="extype" name="views.html">html</a></p>
         <h1>util</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <span class="name">util</span>
-        
-        
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"></div>
+          <div id="comment" class="fullcommenttop"></div>
         
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
 
       <div id="template">
-
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          
-          
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
-            </div>
-        </div>
+        <div id="allMembers">
+        
 
         
 
         
-        
-        
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="views.html.util.gravatar" data-isabs="false">
+              <ol><li name="views.html.util.gravatar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="gravatar"></a>
       <a id="gravatar:gravatar"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="gravatar$.html"><span class="name">gravatar</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template3[Long, Int, Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="gravatar$.html"><span class="name">gravatar</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template3">Template3</span>[<span class="extype" name="scala.Long">Long</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Generate a gravatar img tag.</p>
-    </li><li visbl="pub" name="views.html.util.linker" data-isabs="false">
+    </li><li name="views.html.util.linker" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="linker"></a>
       <a id="linker:linker"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="linker$.html"><span class="name">linker</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template3[String, List[TicketLinkType], Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="linker$.html"><span class="name">linker</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template3">Template3</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.List">List</span>[<a href="../../../models/TicketLinkType.html" class="extype" name="models.TicketLinkType">TicketLinkType</a>], <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Generate a linker div.</p>
-    </li><li visbl="pub" name="views.html.util.pager" data-isabs="false">
+    </li><li name="views.html.util.pager" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pager"></a>
       <a id="pager:pager"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="pager$.html"><span class="name">pager</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template2[Page[Any], Request[AnyContent], Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="pager$.html"><span class="name">pager</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template2">Template2</span>[<a href="../../../emp/util/Pagination$$Page.html" class="extype" name="emp.util.Pagination.Page">Page</a>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="play.api.mvc.Request">Request</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>], <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Generate a pager control for a given [emp.</p>
-    </li><li visbl="pub" name="views.html.util.timeline" data-isabs="false">
+    </li><li name="views.html.util.timeline" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="timeline"></a>
       <a id="timeline:timeline"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="timeline$.html"><span class="name">timeline</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template2[SearchResult[Event], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="timeline$.html"><span class="name">timeline</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template2">Template2</span>[<a href="../../../emp/util/Search$$SearchResult.html" class="extype" name="emp.util.Search.SearchResult">SearchResult</a>[<a href="../../../models/Event.html" class="extype" name="models.Event">Event</a>], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Generate a timeline listing.</p>
-    </li><li visbl="pub" name="views.html.util.topmenu" data-isabs="false">
+    </li><li name="views.html.util.topmenu" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="topmenu"></a>
       <a id="topmenu:topmenu"></a>
       <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="topmenu$.html"><span class="name">topmenu</span></a>
-        
-        <span class="result"> extends BaseScalaTemplate[Html, Format[Html]] with Template2[Option[Long], AuthenticatedRequest, Html]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="topmenu$.html"><span class="name">topmenu</span></a><span class="result"> extends <span class="extype" name="play.templates.BaseScalaTemplate">BaseScalaTemplate</span>[<span class="extype" name="play.api.templates.Html">Html</span>, <span class="extype" name="play.templates.Format">Format</span>[<span class="extype" name="play.api.templates.Html">Html</span>]] with <span class="extype" name="play.api.templates.Template2">Template2</span>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>], <a href="../../../controllers/AuthenticatedRequest.html" class="extype" name="controllers.AuthenticatedRequest">AuthenticatedRequest</a>, <span class="extype" name="play.api.templates.Html">Html</span>]</span>
       </span>
       </h4>
       <p class="comment cmt">Generate the top menu.</p>
@@ -112,10 +138,26 @@
         
 
         
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>

@@ -2,820 +2,984 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>models.TicketModel</title>
+          <title>TicketModel - models.TicketModel</title>
+          <meta name="description" content="TicketModel - models.TicketModel" />
+          <meta name="keywords" content="TicketModel models.TicketModel" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../lib/template.css" />
-      <script type="text/javascript" src="../lib/jquery.js"></script>
+      <link href="../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../lib/template.js"></script>
       <script type="text/javascript" src="../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../index.html';
+            var hash = 'models.TicketModel$';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
       <div id="definition">
         <img src="../lib/object_big.png" />
-        <p id="owner"><a name="models" class="extype" href="package.html">models</a></p>
+        <p id="owner"><a href="package.html" class="extype" name="models">models</a></p>
         <h1>TicketModel</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
         <span class="name">TicketModel</span>
-        
-        <span class="result"> extends AnyRef</span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
-      <div id="template">
-
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          <div id="order">
-                <span class="filtertype">Ordering</span>
-                <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
-              </div>
-          <div id="ancestors">
-                <span class="filtertype">Inherited</span>
-                <ol><li class="hideall out"><span>Hide All</span></li>
-                <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="models.TicketModel" class="in"><span>TicketModel</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
-              </div>
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
             </div>
-        </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="models.TicketModel"><span>TicketModel</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
 
         
 
         
-        
-        
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">!=</span>
-        
-        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">!=</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
       <a id="##():Int"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">##</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">==</span>
-        
-        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">==</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#addComment" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="models.TicketModel#addComment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="addComment(ticketId:String,ctype:String,userId:Long,content:String):Option[models.Comment]"></a>
       <a id="addComment(String,String,Long,String):Option[Comment]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">addComment</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="ctype">ctype: String</span>, <span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="content">content: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.Comment" class="extype" href="Comment.html">Comment</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addComment</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ctype">ctype: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="content">content: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Comment.html" class="extype" name="models.Comment">Comment</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Add a comment.</p>
-    </li><li visbl="pub" name="models.TicketModel#allCommentsQuery" data-isabs="false">
+    </li><li name="models.TicketModel#allCommentsQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="allCommentsQuery:anorm.SqlQuery"></a>
       <a id="allCommentsQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">allCommentsQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allCommentsQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#allQuery" data-isabs="false">
+    </li><li name="models.TicketModel#allQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="allQuery:anorm.SqlQuery"></a>
       <a id="allQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">allQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">asInstanceOf</span>
-        <span class="tparams">[<span name="T0">T0</span>]</span>
-        <span class="result">: T0</span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#assign" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="models.TicketModel#assign" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="assign(ticketId:String,userId:Long,assigneeId:Option[Long],comment:Option[String]):models.FullTicket"></a>
       <a id="assign(String,Long,Option[Long],Option[String]):FullTicket"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">assign</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="assigneeId">assigneeId: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Long" class="extype">Long</span>]</span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>)</span><span class="result">: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">assign</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="assigneeId">assigneeId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>]</span>, <span name="comment">comment: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Assign a ticket with an optional comment.</p>
-    </li><li visbl="pub" name="models.TicketModel#changeStatus" data-isabs="false">
+    </li><li name="models.TicketModel#changeStatus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="changeStatus(ticketId:String,newStatusId:Long,userId:Long,comment:Option[String]):models.FullTicket"></a>
       <a id="changeStatus(String,Long,Long,Option[String]):FullTicket"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">changeStatus</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="newStatusId">newStatusId: <span name="scala.Long" class="extype">Long</span></span>, <span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>)</span><span class="result">: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">changeStatus</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="newStatusId">newStatusId: <span class="extype" name="scala.Long">Long</span></span>, <span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="comment">comment: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Change the status of a ticket.</p><div class="fullcomment"><div class="comment cmt"><p>Change the status of a ticket.  Is really a wrapper around <code>update</code>.
 </p></div></div>
-    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">clone</span>
-        
-        <span class="params">()</span><span class="result">: AnyRef</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<span class="extype" name="java.lang">java.lang</span>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#comment" data-isabs="false">
+    </li><li name="models.TicketModel#comment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="comment:anorm.RowParser[models.Comment]"></a>
       <a id="comment:RowParser[Comment]"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">comment</span>
-        
-        <span class="result">: <span name="anorm.RowParser" class="extype">RowParser</span>[<a name="models.Comment" class="extype" href="Comment.html">Comment</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">comment</span><span class="result">: <span class="extype" name="anorm.RowParser">RowParser</span>[<a href="Comment.html" class="extype" name="models.Comment">Comment</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#create" data-isabs="false">
+    </li><li name="models.TicketModel#create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="create(userId:Long,ticket:models.InitialTicket):Option[models.FullTicket]"></a>
       <a id="create(Long,InitialTicket):Option[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">create</span>
-        
-        <span class="params">(<span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="ticket">ticket: <a name="models.InitialTicket" class="extype" href="InitialTicket.html">InitialTicket</a></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">create</span><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="ticket">ticket: <a href="InitialTicket.html" class="extype" name="models.InitialTicket">InitialTicket</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Create a ticket.</p>
-    </li><li visbl="pub" name="models.TicketModel#delete" data-isabs="false">
+    </li><li name="models.TicketModel#delete" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="delete(ticketId:String):Unit"></a>
       <a id="delete(String):Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">delete</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">delete</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Delete a ticket.</p>
-    </li><li visbl="pub" name="models.TicketModel#deleteComment" data-isabs="false">
+    </li><li name="models.TicketModel#deleteComment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="deleteComment(id:Long):Boolean"></a>
       <a id="deleteComment(Long):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">deleteComment</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deleteComment</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Delete comment.</p>
-    </li><li visbl="pub" name="models.TicketModel#deleteCommentQuery" data-isabs="false">
+    </li><li name="models.TicketModel#deleteCommentQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="deleteCommentQuery:anorm.SqlQuery"></a>
       <a id="deleteCommentQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">deleteCommentQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deleteCommentQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#deleteLinkQuery" data-isabs="false">
+    </li><li name="models.TicketModel#deleteLinkQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="deleteLinkQuery:anorm.SqlQuery"></a>
       <a id="deleteLinkQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">deleteLinkQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deleteLinkQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#deleteQuery" data-isabs="false">
+    </li><li name="models.TicketModel#deleteQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="deleteQuery:anorm.SqlQuery"></a>
       <a id="deleteQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">deleteQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deleteQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#editTicket" data-isabs="false">
+    </li><li name="models.TicketModel#editTicket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="editTicket:anorm.RowParser[models.EditTicket]"></a>
       <a id="editTicket:RowParser[EditTicket]"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">editTicket</span>
-        
-        <span class="result">: <span name="anorm.RowParser" class="extype">RowParser</span>[<a name="models.EditTicket" class="extype" href="EditTicket.html">EditTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">editTicket</span><span class="result">: <span class="extype" name="anorm.RowParser">RowParser</span>[<a href="EditTicket.html" class="extype" name="models.EditTicket">EditTicket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">eq</span>
-        
-        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">equals</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">finalize</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<span class="extype" name="java.lang">java.lang</span>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#fullTicket" data-isabs="false">
+    </li><li name="models.TicketModel#fullTicket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fullTicket:anorm.RowParser[models.FullTicket]"></a>
       <a id="fullTicket:RowParser[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">fullTicket</span>
-        
-        <span class="result">: <span name="anorm.RowParser" class="extype">RowParser</span>[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fullTicket</span><span class="result">: <span class="extype" name="anorm.RowParser">RowParser</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllComments" data-isabs="false">
+    </li><li name="models.TicketModel#getAllComments" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllComments:List[models.Comment]"></a>
       <a id="getAllComments:List[Comment]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getAllComments</span>
-        
-        <span class="result">: List[<a name="models.Comment" class="extype" href="Comment.html">Comment</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllComments</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="Comment.html" class="extype" name="models.Comment">Comment</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllCurrent" data-isabs="false">
+    </li><li name="models.TicketModel#getAllCurrent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllCurrent:List[models.Ticket]"></a>
       <a id="getAllCurrent:List[Ticket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getAllCurrent</span>
-        
-        <span class="result">: List[<a name="models.Ticket" class="extype" href="Ticket.html">Ticket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllCurrent</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="Ticket.html" class="extype" name="models.Ticket">Ticket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllCurrentFull" data-isabs="false">
+    </li><li name="models.TicketModel#getAllCurrentFull" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllCurrentFull:List[models.FullTicket]"></a>
       <a id="getAllCurrentFull:List[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getAllCurrentFull</span>
-        
-        <span class="result">: List[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllCurrentFull</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllCurrentQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getAllCurrentQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllCurrentQuery:anorm.SqlQuery"></a>
       <a id="getAllCurrentQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getAllCurrentQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllCurrentQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllFullById" data-isabs="false">
+    </li><li name="models.TicketModel#getAllFullById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllFullById(id:String):List[models.FullTicket]"></a>
       <a id="getAllFullById(String):List[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getAllFullById</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: List[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllFullById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllFullByIdCountQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getAllFullByIdCountQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllFullByIdCountQuery:anorm.SqlQuery"></a>
       <a id="getAllFullByIdCountQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getAllFullByIdCountQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllFullByIdCountQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllFullByIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getAllFullByIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllFullByIdQuery:anorm.SqlQuery"></a>
       <a id="getAllFullByIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getAllFullByIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllFullByIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getAllFullCountById" data-isabs="false">
+    </li><li name="models.TicketModel#getAllFullCountById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllFullCountById(id:String):Long"></a>
       <a id="getAllFullCountById(String):Long"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getAllFullCountById</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllFullCountById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getById" data-isabs="false">
+    </li><li name="models.TicketModel#getById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getById(id:String):Option[models.EditTicket]"></a>
       <a id="getById(String):Option[EditTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getById</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.EditTicket" class="extype" href="EditTicket.html">EditTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="EditTicket.html" class="extype" name="models.EditTicket">EditTicket</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get ticket by ticketId.</p>
-    </li><li visbl="pub" name="models.TicketModel#getByIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getByIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByIdQuery:anorm.SqlQuery"></a>
       <a id="getByIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getByIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
-      <a id="getClass():java.lang.Class[_]"></a>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getClass</span>
-        
-        <span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#getCommentById" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="models.TicketModel#getCommentById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getCommentById(id:Long):Option[models.Comment]"></a>
       <a id="getCommentById(Long):Option[Comment]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getCommentById</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.Comment" class="extype" href="Comment.html">Comment</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCommentById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Comment.html" class="extype" name="models.Comment">Comment</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get a comment by id.</p>
-    </li><li visbl="pub" name="models.TicketModel#getCommentByIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getCommentByIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getCommentByIdQuery:anorm.SqlQuery"></a>
       <a id="getCommentByIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getCommentByIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCommentByIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getFullByActualId" data-isabs="false">
+    </li><li name="models.TicketModel#getFullByActualId" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getFullByActualId(id:Long):Option[models.FullTicket]"></a>
       <a id="getFullByActualId(Long):Option[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getFullByActualId</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getFullByActualId</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get a version of a ticket by id.</p><div class="fullcomment"><div class="comment cmt"><p>Get a version of a ticket by id.  This version returns the <code>FullTicket</code>.
 </p></div></div>
-    </li><li visbl="pub" name="models.TicketModel#getFullByActualIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getFullByActualIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getFullByActualIdQuery:anorm.SqlQuery"></a>
       <a id="getFullByActualIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getFullByActualIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getFullByActualIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getFullById" data-isabs="false">
+    </li><li name="models.TicketModel#getFullById" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getFullById(id:String):Option[models.FullTicket]"></a>
       <a id="getFullById(String):Option[FullTicket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getFullById</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getFullById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get ticket by ticketId.</p><div class="fullcomment"><div class="comment cmt"><p>Get ticket by ticketId.  This version returns the <code>FullTicket</code>.
 </p></div></div>
-    </li><li visbl="pub" name="models.TicketModel#getFullByIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getFullByIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getFullByIdQuery:anorm.SqlQuery"></a>
       <a id="getFullByIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getFullByIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getFullByIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getFullLinkById" data-isabs="false">
+    </li><li name="models.TicketModel#getFullLinkById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getFullLinkById(id:Long):Option[models.FullLink]"></a>
       <a id="getFullLinkById(Long):Option[FullLink]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getFullLinkById</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullLink" class="extype" href="FullLink.html">FullLink</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getFullLinkById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="FullLink.html" class="extype" name="models.FullLink">FullLink</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get a FullLink by id.</p>
-    </li><li visbl="pub" name="models.TicketModel#getLinkById" data-isabs="false">
+    </li><li name="models.TicketModel#getLinkById" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getLinkById(id:Long):Option[models.Link]"></a>
       <a id="getLinkById(Long):Option[Link]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getLinkById</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.Link" class="extype" href="Link.html">Link</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLinkById</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="Link.html" class="extype" name="models.Link">Link</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get a Link by id.</p>
-    </li><li visbl="pub" name="models.TicketModel#getLinkByIdQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getLinkByIdQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getLinkByIdQuery:anorm.SqlQuery"></a>
       <a id="getLinkByIdQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getLinkByIdQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLinkByIdQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#getLinks" data-isabs="false">
+    </li><li name="models.TicketModel#getLinks" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getLinks(id:String):List[models.FullLink]"></a>
       <a id="getLinks(String):List[FullLink]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">getLinks</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: List[<a name="models.FullLink" class="extype" href="FullLink.html">FullLink</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLinks</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<a href="FullLink.html" class="extype" name="models.FullLink">FullLink</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Get links for a ticket.</p>
-    </li><li visbl="pub" name="models.TicketModel#getLinksQuery" data-isabs="false">
+    </li><li name="models.TicketModel#getLinksQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getLinksQuery:anorm.SqlQuery"></a>
       <a id="getLinksQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">getLinksQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLinksQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">hashCode</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#idPattern" data-isabs="false">
+    </li><li name="models.TicketModel#idPattern" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="idPattern:java.util.regex.Pattern"></a>
       <a id="idPattern:Pattern"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">idPattern</span>
-        
-        <span class="result">: <span name="java.util.regex.Pattern" class="extype">Pattern</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">idPattern</span><span class="result">: <span class="extype" name="java.util.regex.Pattern">Pattern</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#insertCommentQuery" data-isabs="false">
+    </li><li name="models.TicketModel#insertCommentQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="insertCommentQuery:anorm.SqlQuery"></a>
       <a id="insertCommentQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">insertCommentQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">insertCommentQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#insertLinkQuery" data-isabs="false">
+    </li><li name="models.TicketModel#insertLinkQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="insertLinkQuery:anorm.SqlQuery"></a>
       <a id="insertLinkQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">insertLinkQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">insertLinkQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#insertQuery" data-isabs="false">
+    </li><li name="models.TicketModel#insertQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="insertQuery:anorm.SqlQuery"></a>
       <a id="insertQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">insertQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">insertQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">isInstanceOf</span>
-        <span class="tparams">[<span name="T0">T0</span>]</span>
-        <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#isValidTicketId" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="models.TicketModel#isValidTicketId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isValidTicketId(id:String):Boolean"></a>
       <a id="isValidTicketId(String):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">isValidTicketId</span>
-        
-        <span class="params">(<span name="id">id: String</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isValidTicketId</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Verifies that a string is a valid ticket id via regex.</p>
-    </li><li visbl="pub" name="models.TicketModel#link" data-isabs="false">
+    </li><li name="models.TicketModel#link" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="link(linkTypeId:Long,parentId:String,childId:String):Option[models.FullLink]"></a>
       <a id="link(Long,String,String):Option[FullLink]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">link</span>
-        
-        <span class="params">(<span name="linkTypeId">linkTypeId: <span name="scala.Long" class="extype">Long</span></span>, <span name="parentId">parentId: String</span>, <span name="childId">childId: String</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="models.FullLink" class="extype" href="FullLink.html">FullLink</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">link</span><span class="params">(<span name="linkTypeId">linkTypeId: <span class="extype" name="scala.Long">Long</span></span>, <span name="parentId">parentId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="childId">childId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="FullLink.html" class="extype" name="models.FullLink">FullLink</a>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">Link a child ticket to a parent with a type.</p>
-    </li><li visbl="pub" name="models.TicketModel#link" data-isabs="false">
+    </li><li name="models.TicketModel#link" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="link:anorm.RowParser[models.Link]"></a>
       <a id="link:RowParser[Link]"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">link</span>
-        
-        <span class="result">: <span name="anorm.RowParser" class="extype">RowParser</span>[<a name="models.Link" class="extype" href="Link.html">Link</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">link</span><span class="result">: <span class="extype" name="anorm.RowParser">RowParser</span>[<a href="Link.html" class="extype" name="models.Link">Link</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#list" data-isabs="false">
+    </li><li name="models.TicketModel#list" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="list(page:Int,count:Int):emp.util.Pagination.Page[models.Ticket]"></a>
       <a id="list(Int,Int):Page[Ticket]"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">list</span>
-        
-        <span class="params">(<span name="page">page: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">1</span></span>, <span name="count">count: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">10</span></span>)</span><span class="result">: <a name="emp.util.Pagination.Page" class="extype" href="../emp/util/Pagination$$Page.html">Page</a>[<a name="models.Ticket" class="extype" href="Ticket.html">Ticket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">list</span><span class="params">(<span name="page">page: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">1</span></span>, <span name="count">count: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">10</span></span>)</span><span class="result">: <a href="../emp/util/Pagination$$Page.html" class="extype" name="emp.util.Pagination.Page">Page</a>[<a href="Ticket.html" class="extype" name="models.Ticket">Ticket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#listCountQuery" data-isabs="false">
+    </li><li name="models.TicketModel#listCountQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="listCountQuery:anorm.SqlQuery"></a>
       <a id="listCountQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">listCountQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">listCountQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="models.TicketModel#listQuery" data-isabs="false">
+    </li><li name="models.TicketModel#listQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="listQuery:anorm.SqlQuery"></a>
       <a id="listQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">listQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">listQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">ne</span>
-        
-        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">notify</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">notifyAll</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#removeLink" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="models.TicketModel#removeLink" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="removeLink(id:Long):Unit"></a>
       <a id="removeLink(Long):Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">removeLink</span>
-        
-        <span class="params">(<span name="id">id: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">removeLink</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Remove a link between tickets.</p>
-    </li><li visbl="pub" name="models.TicketModel#resolve" data-isabs="false">
+    </li><li name="models.TicketModel#resolve" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="resolve(ticketId:String,userId:Long,resolutionId:Long,comment:Option[String]):models.FullTicket"></a>
       <a id="resolve(String,Long,Long,Option[String]):FullTicket"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">resolve</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="resolutionId">resolutionId: <span name="scala.Long" class="extype">Long</span></span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>)</span><span class="result">: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">resolve</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="resolutionId">resolutionId: <span class="extype" name="scala.Long">Long</span></span>, <span name="comment">comment: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Mark a ticket as resolved with an optional comment.</p>
-    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
-      <a id="synchronized[T0](⇒ T0):T0"></a>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">synchronized</span>
-        <span class="tparams">[<span name="T0">T0</span>]</span>
-        <span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#ticket" data-isabs="false">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="models.TicketModel#ticket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ticket:anorm.RowParser[models.Ticket]"></a>
       <a id="ticket:RowParser[Ticket]"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">ticket</span>
-        
-        <span class="result">: <span name="anorm.RowParser" class="extype">RowParser</span>[<a name="models.Ticket" class="extype" href="Ticket.html">Ticket</a>]</span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ticket</span><span class="result">: <span class="extype" name="anorm.RowParser">RowParser</span>[<a href="Ticket.html" class="extype" name="models.Ticket">Ticket</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
       <a id="toString():String"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">toString</span>
-        
-        <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="models.TicketModel#unresolve" data-isabs="false">
+    </li><li name="models.TicketModel#unresolve" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="unresolve(ticketId:String,userId:Long,comment:Option[String]):models.FullTicket"></a>
       <a id="unresolve(String,Long,Option[String]):FullTicket"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">unresolve</span>
-        
-        <span class="params">(<span name="ticketId">ticketId: String</span>, <span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>)</span><span class="result">: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unresolve</span><span class="params">(<span name="ticketId">ticketId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="comment">comment: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Remove the resolution of a ticket with an optional comment.</p>
-    </li><li visbl="pub" name="models.TicketModel#update" data-isabs="false">
+    </li><li name="models.TicketModel#update" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="update(userId:Long,id:String,ticket:models.EditTicket,resolutionId:Option[Long],statusId:Option[Long],clearResolution:Boolean,comment:Option[String]):models.FullTicket"></a>
       <a id="update(Long,String,EditTicket,Option[Long],Option[Long],Boolean,Option[String]):FullTicket"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">update</span>
-        
-        <span class="params">(<span name="userId">userId: <span name="scala.Long" class="extype">Long</span></span>, <span name="id">id: String</span>, <span name="ticket">ticket: <a name="models.EditTicket" class="extype" href="EditTicket.html">EditTicket</a></span>, <span name="resolutionId">resolutionId: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Long" class="extype">Long</span>] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>, <span name="statusId">statusId: <span name="scala.Option" class="extype">Option</span>[<span name="scala.Long" class="extype">Long</span>] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>, <span name="clearResolution">clearResolution: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>, <span name="comment">comment: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../scala/package.html">None</a></span></span></span>)</span><span class="result">: <a name="models.FullTicket" class="extype" href="FullTicket.html">FullTicket</a></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">update</span><span class="params">(<span name="userId">userId: <span class="extype" name="scala.Long">Long</span></span>, <span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ticket">ticket: <a href="EditTicket.html" class="extype" name="models.EditTicket">EditTicket</a></span>, <span name="resolutionId">resolutionId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="statusId">statusId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Long">Long</span>] = <span class="symbol">None</span></span>, <span name="clearResolution">clearResolution: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="comment">comment: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result">: <a href="FullTicket.html" class="extype" name="models.FullTicket">FullTicket</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Change the contents of a ticket.</p><div class="fullcomment"><div class="comment cmt"><p>Change the contents of a ticket. The resolution, status and clear resolution
@@ -825,56 +989,64 @@ allows the clearing of a resolution.  The optional comment will add a comment in
 addition to other changes.
 Note that if there is no change, nothing will happen here.
 </p></div></div>
-    </li><li visbl="pub" name="models.TicketModel#updateQuery" data-isabs="false">
+    </li><li name="models.TicketModel#updateQuery" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="updateQuery:anorm.SqlQuery"></a>
       <a id="updateQuery:SqlQuery"></a>
       <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol"> 
-        <span class="name">updateQuery</span>
-        
-        <span class="result">: <span name="anorm.SqlQuery" class="extype">SqlQuery</span></span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">updateQuery</span><span class="result">: <span class="extype" name="anorm.SqlQuery">SqlQuery</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">wait</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">wait</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">wait</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -883,15 +1055,31 @@ Note that if there is no change, nothing will happen here.
 
         
 
-        <div name="scala.AnyRef" class="parent">
-              <h3>Inherited from AnyRef</h3>
-            </div><div name="scala.Any" class="parent">
-              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>
