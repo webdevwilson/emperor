@@ -2,6 +2,13 @@
 @main-subdued-color: #cccccc;
 body {
   color: #333;
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+/* Portrait tablet to landscape and desktop */
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
 }
 .navbar {
   .navbar-search .search-query {
@@ -42,30 +49,6 @@ body {
 }
 .remover {
   cursor: pointer;
-}
-#linker {
-  font-size: 12px;
-}
-#link-body {
-  h4 {
-    a {
-      color: #333;
-    }
-    a:hover {
-      color: #333;
-      text-decoration: none;
-    }
-  }
-  .accordion-toggle i {
-    background-position: -288px -120px;
-  }
-  .accordion-inner {
-    border-top: none;
-    padding: 0;
-  }
-  .collapsed i {
-    background-position: -313px -119px;
-  }
 }
 .btn-primary {
   background: rgb(129,139,158); /* Old browsers */
