@@ -4,11 +4,10 @@
 @(currentProject: Option[Long] = None)(implicit request: AuthenticatedRequest)
 
 <ul class="nav">
- <li @if(request.path.equals("/")) { class="active" }><a href="@routes.Core.index()">@Messages("general.home")</a></li>
+ <li @if(request.path.startsWith("/ticket/create")) { class="active" }><a href="@controllers.routes.Ticket.create(project = currentProject)">@Messages("ticket.add")</a></li>
  <li @if(request.path.startsWith("/search")) { class="active" }><a href="@controllers.routes.Search.index()">@Messages("general.ticket")</a></li>
  <li @if(request.path.startsWith("/timeline")) { class="active" }><a href="@controllers.routes.Timeline.index()">@Messages("general.timeline")</a></li>
  <li @if(request.path.startsWith("/project")) { class="active" }><a href="@controllers.routes.Project.index()">@Messages("general.projects")</a></li>
- <li @if(request.path.startsWith("/admin")) { class="active" }><a href="@routes.Admin.index">@Messages("general.admin")</a></li>
 </ul>
 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-align-justify"></i></a>
 <div class="nav-collapse collapse navbar-responsive-collapse in">
@@ -16,7 +15,7 @@
   <input type="text" name="query" class="search-query" placeholder="@Messages("search.placeholder")">
  }
  <ul class="nav pull-right">
-  <li><a href="@controllers.routes.Ticket.create(project = currentProject)">@Messages("ticket.add")</a></li>
+  <li @if(request.path.startsWith("/admin")) { class="active" }><a href="@routes.Admin.index">@Messages("general.admin")</a></li>
   <li class="divider-vertical"></li>
   @if(request.user.isAnonymous) {
    <a href="@controllers.routes.Auth.login(redirectUrl = request.request.uri)" class="btn btn-primary">@Messages("auth.login")</a>
