@@ -121,7 +121,7 @@ admin.workflow.modify.final=Final Workflow
 admin.workflow.modify.help=You may drag items from the available list on the left to the final list on the right, remove items by dragging them from right to left or reorder them.
 admin.workflow.with.id=Workflow {0}
 
-app.footer.blurb=This is <a href="http://emperorapp.com">Emperor</a> version {0}. Copyright &copy; 2012 Cory Watson
+app.footer.blurb=This is <a href="http://emperorapp.com">Emperor</a> version {0}. Copyright &copy; 2012 - 2013 Cory Watson
 
 auth.login=Login
 auth.failure=Login failed.
