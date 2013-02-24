@@ -1,7 +1,7 @@
 @(ticket: models.FullTicket, linkTypes: List[(String,String)], linkForm: Form[models.MakeLink], recents: Seq[FullTicket])(implicit request: Request[AnyContent])
 
 @import helper._
-@import helper.bootstrap._
+@import helper.bootstrap.bootstrapField
 
 @helper.form(action = routes.Ticket.doLink(ticket.ticketId), args = 'method -> "POST") {
 <div class="modal-header">

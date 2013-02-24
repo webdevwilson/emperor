@@ -6,7 +6,9 @@ package views.html.helper
 package object bootstrap {
 
   implicit val bootstrapField = new FieldConstructor {
-    def apply(elems: FieldElements) = bootstrapFieldConstructor(elems)
+    def apply(elts: FieldElements) = {
+    	bootstrapFieldConstructor(elts)
+    }
   }
 
 }

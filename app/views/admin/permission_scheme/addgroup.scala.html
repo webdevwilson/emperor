@@ -1,7 +1,7 @@
 @(ps: models.PermissionScheme, perm: models.Permission, groupForm: Form[controllers.admin.AddedPermissionSchemeGroup])(implicit request: AuthenticatedRequest)
 
 @import helper._
-@import helper.bootstrap._
+@import helper.bootstrap.bootstrapField
 
 @helper.form(action = controllers.admin.routes.PermissionScheme.addGroup(ps.id.get), 'id -> "add-group-form") {
 <div class="modal-header">

@@ -1,7 +1,7 @@
 @(id: String, objForm: Form[(EditTicket)], users: List[(String,String)], assignees: List[(String,String)], attentions: List[(String,String)], projs: List[(String,String)], ttypes: List[(String,String)], priorities: List[(String,String)], severities: List[(String,String)])(implicit request: AuthenticatedRequest)
 
 @import helper._
-@import helper.bootstrap._
+@import helper.bootstrap.bootstrapField
 
 @main(Messages("ticket.edit")) {
 <h1>@Messages("ticket.edit")</h1>
