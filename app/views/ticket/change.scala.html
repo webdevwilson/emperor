@@ -1,21 +1,20 @@
 @(ticket: models.FullTicket, status: models.TicketStatus, commentForm: Form[models.Comment])(implicit request: Request[AnyContent])
 
- @import helper.bootstrap.bootstrapField
+@import helper.bootstrap.bootstrapField
 
  <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3>@Messages("ticket.change", Messages(status.name))</h3>
  </div>
- <div class="modal-body">
  @helper.form(action = routes.Ticket.status(ticket.ticketId), args = 'method -> "POST") {
+ <div class="modal-body">
   <fieldset>
    <input type="hidden" name="status_id" value="@status.id.get">
    @helper.textarea(field = commentForm("comment"), args = '_label -> Messages("ticket.comment"), 'class -> "input-xxlarge", 'rows -> 5)
   </fieldset>
- }
  </div>
  <div class="modal-footer">
   <a href="#" class="btn" data-dismiss="modal">@Messages("form.cancel")</a>
   <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> @Messages("ticket.change.confirm")</button>
  </div>
-
+ }
