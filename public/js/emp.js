@@ -280,6 +280,10 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
   self.chosenSeverity = ko.observable(-1);
 
   this.chosenProject.subscribe(function(data) {
+    self.changeProject(data);
+  });
+
+  self.changeProject = function(data) {
 
     // Don't do anything unless we got a selection, as they could choose
     // the undefined caption
@@ -296,12 +300,12 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
         })
         .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
 
-      self.chosenAssignee(self.currentProject().defaultAssignee);
-      self.chosenPriority(self.currentProject().defaultPriorityId);
-      self.chosenSeverity(self.currentProject().defaultSeverityId);
-      self.chosenType(self.currentProject().defaultTypeId);
+      self.chosenAssignee(self.currentProject().defaultAssignee());
+      self.chosenPriority(self.currentProject().defaultPriorityId());
+      self.chosenSeverity(self.currentProject().defaultSeverityId());
+      self.chosenType(self.currentProject().defaultTypeId());
     }
-  });
+  }
 
   self.hasProject = function() {
     if(typeof this.chosenProject() !== "undefined") {
@@ -334,6 +338,14 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
       .error(function(e) {
         processJsonError(e.responseText);
       })
+  }
+
+  // Set the current information
+  if(self.hasProject) {
+    self.chosenAssignee(self.currentProject().defaultAssignee());
+    self.chosenPriority(self.currentProject().defaultPriorityId());
+    self.chosenSeverity(self.currentProject().defaultSeverityId());
+    self.chosenType(self.currentProject().defaultTypeId());
   }
 }
 
