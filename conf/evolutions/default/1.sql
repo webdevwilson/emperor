@@ -252,8 +252,6 @@ SELECT
   tp.color      AS priority_color,
   t.resolution_id AS resolution_id,
   tr.name       AS resolution_name,
-  t.proposed_resolution_id AS proposed_resolution_id,
-  ptr.name      AS proposed_resolution_name,
   t.assignee_id AS assignee_id,
   uass.realname AS assignee_realname,
   t.attention_id  AS attention_id,
@@ -285,7 +283,6 @@ FROM tickets t
   LEFT JOIN users uass ON uass.id = t.assignee_id
   LEFT JOIN users uatt ON uatt.id = t.attention_id
   LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id
-  LEFT JOIN ticket_resolutions ptr ON ptr.id = t.proposed_resolution_id
 WHERE t.id IN (
   SELECT MAX(id) FROM tickets GROUP BY ticket_id
 );
@@ -303,8 +300,6 @@ SELECT
   tp.color      AS priority_color,
   t.resolution_id AS resolution_id,
   tr.name       AS resolution_name,
-  t.proposed_resolution_id AS proposed_resolution_id,
-  ptr.name      AS proposed_resolution_name,
   t.assignee_id AS assignee_id,
   uass.realname AS assignee_realname,
   t.attention_id  AS attention_id,
@@ -335,5 +330,4 @@ FROM tickets t
   JOIN users urep ON urep.id = t.reporter_id
   LEFT JOIN users uass ON uass.id = t.assignee_id
   LEFT JOIN users uatt ON uatt.id = t.attention_id
-  LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id
-  LEFT JOIN ticket_resolutions ptr ON ptr.id = t.proposed_resolution_id;
+  LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id;
