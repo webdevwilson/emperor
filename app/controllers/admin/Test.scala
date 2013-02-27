@@ -29,7 +29,7 @@ object Test extends Controller with Secured {
 
     val fakeProjects = projects.map { project =>
       ProjectModel.create(models.Project(
-        workflowId = 1, sequenceCurrent = 0, name = project._1,
+        workflowId = 1, name = project._1,
         ownerId = None, permissionSchemeId = 1, defaultPriorityId = None,
         defaultSeverityId = None, defaultTypeId = None, defaultAssignee = None,
         key = project._2, dateCreated = new DateTime()

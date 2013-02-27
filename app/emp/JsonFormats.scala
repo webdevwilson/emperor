@@ -522,7 +522,6 @@ object JsonFormats {
         "workflowId"     -> JsNumber(obj.workflowId),
         "name"            -> JsString(obj.name),
         "key"             -> JsString(obj.key),
-        "sequence_current"-> JsNumber(obj.sequenceCurrent),
         "ownerId"        -> owner,
         "permission_schemeId" -> JsNumber(obj.permissionSchemeId),
         "defaultPriorityId" -> prio,

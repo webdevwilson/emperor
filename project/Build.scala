@@ -12,6 +12,7 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "org.specs2"    %% "specs2"                 % "1.12.1"           % "test",
+    // "postgresql"    % "postgresql"              % "9.2-1002.jdbc4",
     "mysql"         % "mysql-connector-java"    % "5.1.23",
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
     "org.pegdown"   % "pegdown"                 % "1.2.0",

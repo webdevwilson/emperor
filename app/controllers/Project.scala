@@ -18,7 +18,6 @@ object Project extends Controller with Secured {
     mapping(
       "id"                  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id"         -> longNumber,
-      "sequence_current"    -> ignored(0.toLong),
       "name"                -> nonEmptyText,
       "key"                 -> text(minLength = 3, maxLength = 16).verifying("project.key.invalid", ProjectModel.isValidKey(_)),
       "owner_id"            -> optional(longNumber),
@@ -35,7 +34,6 @@ object Project extends Controller with Secured {
     mapping(
       "id"                  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id"         -> longNumber,
-      "sequence_current"    -> ignored[Long](0.toLong),
       "name"                -> nonEmptyText,
       "key"                 -> ignored[String](""),
       "owner_id"            -> optional(longNumber),

@@ -16,7 +16,6 @@ import play.api.Play.current
 case class Project(
   id: Pk[Long] = NotAssigned,
   workflowId: Long,
-  sequenceCurrent: Long = 0,
   name: String,
   key: String,
   ownerId: Option[Long],
@@ -52,7 +51,6 @@ object ProjectModel {
   val project = {
     get[Pk[Long]]("id") ~
     get[Long]("workflow_id") ~
-    get[Long]("sequence_current") ~
     get[String]("name") ~
     get[String]("pkey") ~
     get[Option[Long]]("owner_id") ~
@@ -62,9 +60,9 @@ object ProjectModel {
     get[Option[Long]]("default_ticket_type_id") ~
     get[Option[Int]]("default_assignee") ~
     get[DateTime]("date_created") map {
-      case id~workflowId~seqCurr~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
+      case id~workflowId~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
         id = id, workflowId = workflowId, name = name, key = pkey,
-        sequenceCurrent = seqCurr, permissionSchemeId = permId, ownerId = ownerId,
+        permissionSchemeId = permId, ownerId = ownerId,
         defaultPriorityId = defPrioId, defaultSeverityId = defSevId,
         defaultTypeId = defTypeId, defaultAssignee = defAss,
         dateCreated = dateCreated
