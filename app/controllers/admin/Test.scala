@@ -33,7 +33,7 @@ object Test extends Controller with Secured {
         ownerId = None, permissionSchemeId = 1, defaultPriorityId = None,
         defaultSeverityId = None, defaultTypeId = None, defaultAssignee = None,
         key = project._2, dateCreated = new DateTime()
-      ))
+      )).get
     }
 
     val users = List(

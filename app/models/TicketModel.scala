@@ -480,7 +480,7 @@ object TicketModel {
 
           // If these are missing? XXX
           val proj = ProjectModel.getById(ticket.projectId).get
-          val tid = ProjectModel.getNextSequence(ticket.projectId).get
+          val tid = ProjectModel.getNextSequence(ticket.projectId)
 
           val ticketId = proj.key + "-" + tid.toString
           val id = insertQuery.on(
