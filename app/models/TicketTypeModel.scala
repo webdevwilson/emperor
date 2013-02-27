@@ -14,9 +14,9 @@ object TicketTypeModel {
 
   val allQuery = SQL("SELECT * FROM ticket_types")
   val getByIdQuery = SQL("SELECT * FROM ticket_types WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_types LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_types LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_types")
-  val insertQuery = SQL("INSERT INTO ticket_types (name, color, date_created) VALUES ({name}, {color}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_types (name, color) VALUES ({name}, {color})")
   val updateQuery = SQL("UPDATE ticket_types SET name={name}, color={color} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_types WHERE id={id}")
 

@@ -14,9 +14,9 @@ object TicketStatusModel {
 
   val allQuery = SQL("SELECT * FROM ticket_statuses")
   val getByIdQuery = SQL("SELECT * FROM ticket_statuses WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_statuses LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_statuses LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_statuses")
-  val insertQuery = SQL("INSERT INTO ticket_statuses (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_statuses (name) VALUES ({name})")
   val updateQuery = SQL("UPDATE ticket_statuses SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_statuses WHERE id={id}")
 

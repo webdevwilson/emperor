@@ -62,10 +62,10 @@ object PermissionSchemeModel {
   val getPermForUserQuery = SQL("SELECT CAST(source as CHAR) AS source FROM full_permissions WHERE (project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}) OR (project_id={project_id} AND permission_id='PERM_PROJECT_ADMIN' AND user_id={user_id}) OR (project_key='EMPCORE' AND permission_id='PERM_GLOBAL_ADMIN' AND user_id={user_id}) LIMIT 1")
   val getUsersForPermissionQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
   val getUsersQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id}")
-  val insertQuery = SQL("INSERT INTO permission_schemes (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO permission_schemes (name, description) VALUES ({name}, {description})")
   val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {group_id}, UTC_TIMESTAMP())")
   val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {user_id}, UTC_TIMESTAMP())")
-  val listQuery = SQL("SELECT * FROM permission_schemes LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM permission_schemes LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM permission_schemes")
   val updateQuery = SQL("UPDATE permission_schemes SET name={name}, description={description} WHERE id={id}")
 

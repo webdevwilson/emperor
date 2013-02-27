@@ -17,9 +17,9 @@ object TicketLinkTypeModel {
 
   val allQuery = SQL("SELECT * FROM ticket_link_types")
   val getByIdQuery = SQL("SELECT * FROM ticket_link_types WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_link_types LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_link_types LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_link_types")
-  val insertQuery = SQL("INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ({name}, {invertable}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_link_types (name, invertable) VALUES ({name}, {invertable})")
   val updateQuery = SQL("UPDATE ticket_link_types SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_link_types WHERE id={id}")
 

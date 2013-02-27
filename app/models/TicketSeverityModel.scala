@@ -14,9 +14,9 @@ object TicketSeverityModel {
 
   val allQuery = SQL("SELECT * FROM ticket_severities ORDER BY position ASC")
   val getByIdQuery = SQL("SELECT * FROM ticket_severities WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_severities ORDER BY position ASC LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_severities ORDER BY position ASC LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_severities")
-  val insertQuery = SQL("INSERT INTO ticket_severities (name, color, position, date_created) VALUES ({name}, {color}, {position}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_severities (name, color, position) VALUES ({name}, {color}, {position})")
   val updateQuery = SQL("UPDATE ticket_severities SET name={name}, color={color}, position={position} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_severities WHERE id={id}")
 
