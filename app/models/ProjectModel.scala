@@ -82,7 +82,7 @@ object ProjectModel {
    */
   def create(project: Project): Option[Project] = {
 
-    DB.withTransaction { implicit conn =>
+    val pid: Option[Long] = DB.withTransaction { implicit conn =>
       val id = insertQuery.on(
         'name         -> project.name,
         'pkey         -> project.key,
@@ -95,7 +95,7 @@ object ProjectModel {
         'default_assignee -> project.defaultAssignee
       ).executeInsert()
 
-      id.flatMap({ pid =>
+      id.map({ pid =>
         SQL("CREATE SEQUENCE " + getSequenceName(pid)).execute
 
         EmperorEventBus.publish(
@@ -103,9 +103,17 @@ object ProjectModel {
             projectId = pid
           )
         )
-        getById(pid)
-      })
+        Some(pid)
+      }).getOrElse(None)
     }
+
+    // Read out the created project in a different block, as Pg seems to wig out
+    // otherwise.
+    pid.flatMap({ id =>
+      DB.withConnection { implicit conn =>
+        getById(id)
+      }
+    })
   }
 
   /**
