@@ -97,7 +97,6 @@ object ProjectModel {
 
       id.flatMap({ pid =>
         SQL("CREATE SEQUENCE " + getSequenceName(pid)).execute
-        // createSequenceQuery.on('seqname -> ).execute
 
         EmperorEventBus.publish(
           NewProjectEvent(
@@ -155,8 +154,7 @@ object ProjectModel {
   def getNextSequence(id: Long): Long = {
 
     DB.withConnection { implicit conn =>
-      SQL("SELECT nextval('" + getSequenceName(id) + "'')").as(scalar[Long].single)
-      // nextSequenceQuery.on('seqname -> )
+      SQL("SELECT nextval('" + getSequenceName(id) + "')").as(scalar[Long].single)
     }
   }
 

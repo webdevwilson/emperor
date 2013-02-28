@@ -77,8 +77,8 @@ class ProjectModelSpec extends Specification {
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
 
         val p = models.Project(
-          name = "Test Project 1",
-          key = "TEST1",
+          name = "Test Project 2",
+          key = "TEST2",
           workflowId = work.get.id.get,
           ownerId = None,
           permissionSchemeId = 1,
