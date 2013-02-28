@@ -38,7 +38,7 @@ class ProjectModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
         newProject must beAnInstanceOf[models.Project]
 
         // Get it by id
@@ -88,13 +88,11 @@ class ProjectModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
-        newProject.sequenceCurrent mustEqual(0)
+        val newProject = ProjectModel.create(p).get
 
         // Verify it increments
         val neyext = ProjectModel.getNextSequence(newProject.id.get)
-        neyext must beSome
-        neyext.get mustEqual(1)
+        neyext mustEqual(1)
 
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)

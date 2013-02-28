@@ -6,7 +6,7 @@ import sbtbuildinfo.Plugin._
 object ApplicationBuild extends Build {
 
   val appName         = "emperor"
-  val appVersion      = "0.0.26"
+  val appVersion      = "0.1.0"
 
   val appDependencies = Seq(
     jdbc,

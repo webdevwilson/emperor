@@ -30,7 +30,7 @@ class TicketModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
 
         val user = UserModel.getById(1).get
 
@@ -78,7 +78,7 @@ class TicketModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
 
         val user = UserModel.getById(1).get
 
@@ -174,7 +174,7 @@ class TicketModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
 
         val user = UserModel.getById(1).get
 
