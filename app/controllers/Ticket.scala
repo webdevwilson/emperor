@@ -67,23 +67,10 @@ object Ticket extends Controller with Secured {
     )(models.Comment.apply)(models.Comment.unapply)
   )
 
-  val initialTicketForm = Form(
-    mapping(
-      "reporter_id" -> longNumber,
-      "assignee_id" -> optional(longNumber),
-      "project_id"  -> longNumber,
-      "priority_id" -> longNumber,
-      "severity_id" -> longNumber,
-      "type_id"     -> longNumber,
-      "position"    -> optional(longNumber),
-      "summary"     -> nonEmptyText,
-      "description" -> optional(text)
-    )(models.InitialTicket.apply)(models.InitialTicket.unapply)
-  )
-
   val ticketForm = Form(
     mapping(
-      "ticket_id"     -> ignored(NotAssigned:Pk[String]),
+      "id"            -> ignored(NotAssigned:Pk[Long]),
+      "ticket_id"     -> ignored[String](""),
       "reporter_id"   -> longNumber,
       "assignee_id"   -> optional(longNumber),
       "attention_id"  -> optional(longNumber),
@@ -92,11 +79,13 @@ object Ticket extends Controller with Secured {
       "resolution_id" -> optional(longNumber),
       "proposed_resolution_id" -> optional(longNumber),
       "severity_id"   -> longNumber,
+      "status_id"     -> ignored[Long](0),
       "type_id"       -> longNumber,
       "position"      -> optional(longNumber),
       "summary"       -> nonEmptyText,
-      "description"   -> optional(text)
-    )(models.EditTicket.apply)(models.EditTicket.unapply)
+      "description"   -> optional(text),
+      "dateCreated"   -> ignored[DateTime](new DateTime())
+    )(models.Ticket.apply)(models.Ticket.unapply)
   )
 
   def doResolve(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_RESOLVE") { implicit request =>
@@ -164,7 +153,7 @@ object Ticket extends Controller with Secured {
 
   def add = IsAuthenticated() { implicit request =>
 
-    initialTicketForm.bindFromRequest.fold(
+    ticketForm.bindFromRequest.fold(
       errors => {
         val projs = Json.toJson(ProjectModel.getAll(userId = request.user.id.get)).toString
         val ttypes = Json.toJson(TicketTypeModel.getAll).toString
@@ -230,16 +219,20 @@ object Ticket extends Controller with Secured {
     val sevs = Json.toJson(TicketSeverityModel.getAll).toString
 
     // The worst case scenario, just the user id
-    val startTicket = InitialTicket(
+    val startTicket = models.Ticket(
+      id = NotAssigned:Pk[Long],
+      ticketId = "",
       reporterId = request.user.id.get,
       assigneeId = None,
       projectId = 0,
       priorityId = 0,
       severityId = 0,
+      statusId = 0,
       typeId = 0,
       position = None,
       summary = "",
-      description = None
+      description = None,
+      dateCreated = new DateTime()
     )
 
     val maybeProject: Option[Project] = projectId.flatMap({ id => ProjectModel.getById(id) })
@@ -248,7 +241,7 @@ object Ticket extends Controller with Secured {
 
     val pj: String = maybeProject.map({ p => Json.toJson(p).toString }).getOrElse("{}")
 
-    Ok(views.html.ticket.create(initialTicketForm, assignees, projs, ttypes, prios, sevs, pj)(request))
+    Ok(views.html.ticket.create(ticketForm, assignees, projs, ttypes, prios, sevs, pj)(request))
   }
 
   def edit(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>

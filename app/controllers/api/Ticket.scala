@@ -1,8 +1,10 @@
 package controllers.api
 
+import anorm.{NotAssigned,Pk}
 import emp.JsonFormats._
 import controllers._
 import models._
+import org.joda.time.DateTime
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
@@ -13,24 +15,31 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
-  val initialTicketForm = Form(
+  val ticketForm = Form(
     mapping(
+      "id"         -> ignored(NotAssigned:Pk[Long]),
+      "ticketId"   -> ignored[String](""),
       "reporterId" -> longNumber,
       "assigneeId" -> optional(longNumber),
+      "attentionId"-> ignored[Option[Long]](None),
       "projectId"  -> longNumber,
       "priorityId" -> longNumber,
+      "resolutionId"-> ignored[Option[Long]](None),
+      "proposedResolutionId" -> ignored[Option[Long]](None),
       "severityId" -> longNumber,
+      "statusId"   -> ignored[Long](1),
       "typeId"     -> longNumber,
       "position"    -> optional(longNumber),
       "summary"     -> nonEmptyText,
-      "description" -> optional(text)
-    )(models.InitialTicket.apply)(models.InitialTicket.unapply)
+      "description" -> optional(text),
+      "dateCreated" -> ignored[DateTime](new DateTime())
+    )(models.Ticket.apply)(models.Ticket.unapply)
   )
 
   def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
 
     request.body.asJson.map({ data =>
-      initialTicketForm.bind(data).fold(
+      ticketForm.bind(data).fold(
         errors => {
           BadRequest(errors.errorsAsJson)
         },
@@ -54,19 +63,6 @@ object Ticket extends Controller with Secured {
 
     ticket match {
       case Some(t) => {
-
-        // val prevStatus = WorkflowModel.getPreviousStatus(t.workflowStatusId)
-        // val nextStatus = WorkflowModel.getNextStatus(t.workflowStatusId)
-
-        // val statuses: Map[String,Option[WorkflowStatus]] = Map(
-        //   "previous" -> prevStatus,
-        //   "next" -> nextStatus
-        // )
-
-        // val apiTick: Map[String,JsValue] = Map(
-        //   "ticket" -> Json.toJson(t),
-        //   "workflow" -> Json.toJson(statuses)
-        // )
 
         val json = Json.toJson(t)
         callback match {

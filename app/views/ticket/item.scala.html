@@ -32,7 +32,7 @@
    <label>@Messages("ticket.type")</label>
    <span class="label" style="background-color: #@ticket.ttype.color">@Messages(ticket.ttype.name)</span>
    <label>@Messages("ticket.date_created")</label>
-   <span class="label">@DateFormatter.displayLongDateTime(ticket.originalDateCreated)</span>
+   <span class="label">@DateFormatter.displayLongDateTime(ticket.dateCreated)</span>
    <label>@Messages("ticket.reporter")</label>
    <span class="label"><a href="@routes.User.item(ticket.reporter.id)">@Messages(ticket.reporter.name)</a></span>
    <label>@Messages("ticket.assignee")</label>

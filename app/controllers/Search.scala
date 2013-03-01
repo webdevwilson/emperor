@@ -10,14 +10,14 @@ object Search extends Controller with Secured {
 
   def index(page: Int, count: Int, query: String, sort: Option[String] = None, order: Option[String] = None) = IsAuthenticated() { implicit request =>
 
-    val existingTicket: Option[EditTicket] = if(TicketModel.isValidTicketId(query)) {
+    val existingTicket: Option[Ticket] = if(TicketModel.isValidTicketId(query)) {
       TicketModel.getById(query)
     } else {
       None
     }
 
     existingTicket.map({ t =>
-      Redirect(routes.Ticket.item("comments", t.ticketId.get))
+      Redirect(routes.Ticket.item("comments", t.ticketId))
     }).getOrElse({
       val filters = request.queryString filterKeys { key =>
         SearchModel.ticketFilterMap.get(key).isDefined

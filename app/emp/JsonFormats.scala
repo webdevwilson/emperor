@@ -53,33 +53,40 @@ object JsonFormats {
     }
   }
 
-  implicit object EditTicketFormat extends Format[EditTicket] {
-    def reads(json: JsValue): JsResult[EditTicket] = JsSuccess(EditTicket(
-      ticketId      = (json \ "ticketId").as[Option[String]].map({ id => Id(id) }).getOrElse(NotAssigned),
+  implicit object TicketFormat extends Format[Ticket] {
+    def reads(json: JsValue): JsResult[Ticket] = JsSuccess(Ticket(
+      id            = NotAssigned,
+      ticketId      = "",
       reporterId    = (json \ "reporterId").as[Long],
       assigneeId    = (json \ "assigneeId").as[Option[Long]],
       priorityId    = (json \ "priorityId").as[Long],
       projectId     = (json \ "projectId").as[Long],
       resolutionId  = (json \ "resolutionId").as[Option[Long]],
       severityId    = (json \ "severityId").as[Long],
+      statusId      = 1L,
       typeId        = (json \ "typeId").as[Long],
       summary       = (json \ "summary").as[String],
       description   = (json \ "description").as[Option[String]],
       attentionId    = (json \ "attentionId").as[Option[Long]],
       position      = (json \ "position").as[Option[Long]],
-      proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]]
+      proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]],
+      dateCreated   = new DateTime()
     ))
 
-    def writes(ticket: EditTicket): JsValue = {
+    def writes(ticket: Ticket): JsValue = {
 
       val tdoc: Map[String,JsValue] = Map(
-        "ticketId"   -> JsString(ticket.ticketId.get),
+        "id"         -> JsNumber(ticket.id.get),
+        "ticketId"   -> JsString(ticket.ticketId),
         "reporterId" -> JsNumber(ticket.reporterId),
         "assigneeId" -> optionLongtoJsValue(ticket.assigneeId),
+        "attentionId"-> optionLongtoJsValue(ticket.attentionId),
+        "projectId"  -> JsNumber(ticket.projectId),
         "priorityId" -> JsNumber(ticket.priorityId),
         "resolutionId" -> optionLongtoJsValue(ticket.resolutionId),
         "proposedResolutionId" -> optionLongtoJsValue(ticket.proposedResolutionId),
         "severityId" -> JsNumber(ticket.severityId),
+        "statusId"   -> JsNumber(ticket.statusId),
         "typeId"     -> JsNumber(ticket.typeId),
         "position"    -> optionLongtoJsValue(ticket.position),
         "summary"     -> JsString(ticket.summary),
@@ -232,8 +239,7 @@ object JsonFormats {
       position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
       description = (json \ "description").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime()),
-      originalDateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
     def writes(ticket: FullTicket): JsValue = {
@@ -279,8 +285,7 @@ object JsonFormats {
         "short_summary"   -> JsString(ticket.abbreviatedSummary()),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(Renderer.render(ticket.description)),
-        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated)),
-        "original_date_created" -> JsString(dateFormatter.print(ticket.originalDateCreated))
+        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated))
       )
       toJson(tdoc)
     }
