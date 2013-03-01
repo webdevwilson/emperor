@@ -141,14 +141,14 @@ object GroupModel {
     DB.withConnection { implicit conn =>
       startsWithQuery.on(
         'name -> likeQuery
-      ).as(group *)
+      ).as(group.*)
     }
   }
 
   def getAll: List[Group] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(group *)
+      allQuery.as(group.*)
     }
   }
 
@@ -158,7 +158,7 @@ object GroupModel {
   def getGroupUsersForUser(userId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
-      allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
+      allGroupUsersForUserQuery.on('userId -> userId).as(groupUser.*)
     }
   }
 
@@ -168,7 +168,7 @@ object GroupModel {
   def getGroupUsersForGroup(groupId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
-      allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser *)
+      allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser.*)
     }
   }
 
@@ -178,7 +178,7 @@ object GroupModel {
   def getForUser(userId: Long): List[Group] = {
 
     DB.withConnection { implicit conn =>
-      allForUserQuery.on('userId -> userId).as(group *)
+      allForUserQuery.on('userId -> userId).as(group.*)
     }
   }
 
@@ -190,7 +190,7 @@ object GroupModel {
         val groups = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(group *)
+        ).as(group.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

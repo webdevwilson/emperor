@@ -131,7 +131,7 @@ object ProjectModel {
    */
   def getAll(userId: Long): List[Project] = {
     DB.withConnection { implicit conn =>
-      allVisibleProjectsQuery.on('user_id -> userId).as(project *)
+      allVisibleProjectsQuery.on('user_id -> userId).as(project.*)
     }
   }
 
@@ -174,14 +174,14 @@ object ProjectModel {
 
   def getVisibleProjectIds(userId: Long): List[Long] = {
     DB.withConnection { implicit conn =>
-      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id") *)
+      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id").*)
     }
   }
 
   def getWithWorkflow(id: Long): Seq[Project] = {
 
     DB.withConnection { implicit conn =>
-      getByWorkflowQuery.on('workflow_id -> id).as(project *)
+      getByWorkflowQuery.on('workflow_id -> id).as(project.*)
     }
   }
 
@@ -194,7 +194,7 @@ object ProjectModel {
         'user_id -> userId,
         'count  -> count,
         'offset -> offset
-      ).as(project *)
+      ).as(project.*)
 
       val totalRows = listCountQuery.as(scalar[Long].single)
 

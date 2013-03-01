@@ -105,7 +105,7 @@ object WorkflowModel {
   def getStatuses(id: Long) : Seq[WorkflowStatus] = {
 
     DB.withConnection { implicit conn =>
-      allStatuses.on('id -> id).as(workflowStatus *)
+      allStatuses.on('id -> id).as(workflowStatus.*)
     }
   }
 
@@ -165,7 +165,7 @@ object WorkflowModel {
   def getAll: List[Workflow] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(workflow *)
+      allQuery.as(workflow.*)
     }
   }
 
@@ -177,7 +177,7 @@ object WorkflowModel {
         val workflows = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(workflow *)
+        ).as(workflow.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

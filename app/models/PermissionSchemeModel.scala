@@ -187,7 +187,7 @@ object PermissionSchemeModel {
   def getAll: List[PermissionScheme] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(permissionScheme *)
+      allQuery.as(permissionScheme.*)
     }
   }
 
@@ -197,7 +197,7 @@ object PermissionSchemeModel {
   def getAllPermissions: List[Permission] = {
 
     DB.withConnection { implicit conn =>
-      allPermissionsQuery.as(permission *)
+      allPermissionsQuery.as(permission.*)
     }
   }
 
@@ -224,7 +224,7 @@ object PermissionSchemeModel {
   def getGroups(id: Long): List[PermissionSchemeGroup] = {
 
     DB.withConnection { implicit conn =>
-      getGroupsQuery.on('permission_scheme_id -> id).as(permissionSchemeGroup *)
+      getGroupsQuery.on('permission_scheme_id -> id).as(permissionSchemeGroup.*)
     }
   }
 
@@ -234,7 +234,7 @@ object PermissionSchemeModel {
       getGroupsForPermissionQuery.on(
         'permission_scheme_id -> id,
         'permission_id -> permissionId
-      ).as(permissionSchemeGroup *)
+      ).as(permissionSchemeGroup.*)
     }
   }
 
@@ -250,7 +250,7 @@ object PermissionSchemeModel {
   def getUsers(id: Long): List[PermissionSchemeUser] = {
 
     DB.withConnection { implicit conn =>
-      getUsersQuery.on('permission_scheme_id -> id).as(permissionSchemeUser *)
+      getUsersQuery.on('permission_scheme_id -> id).as(permissionSchemeUser.*)
     }
   }
 
@@ -260,7 +260,7 @@ object PermissionSchemeModel {
       getUsersForPermissionQuery.on(
         'permission_scheme_id -> id,
         'permission_id -> permissionId
-      ).as(permissionSchemeUser *)
+      ).as(permissionSchemeUser.*)
     }
   }
 
@@ -291,7 +291,7 @@ object PermissionSchemeModel {
         val pms = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(permissionScheme *)
+        ).as(permissionScheme.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

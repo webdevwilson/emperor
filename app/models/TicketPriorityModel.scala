@@ -82,7 +82,7 @@ object TicketPriorityModel {
   def getAll: List[TicketPriority] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(ticket_priority *)
+      allQuery.as(ticket_priority.*)
     }
   }
 
@@ -94,7 +94,7 @@ object TicketPriorityModel {
         val tps = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(ticket_priority *)
+        ).as(ticket_priority.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

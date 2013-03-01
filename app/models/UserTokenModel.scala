@@ -98,14 +98,14 @@ object UserTokenModel {
   def getAll: List[UserToken] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(userToken *)
+      allQuery.as(userToken.*)
     }
   }
 
   def getByUser(userId: Long) : Page[UserToken] = {
 
     DB.withConnection { implicit conn =>
-      val tokens = getByUserIdQuery.on('user_id -> userId).as(userToken *)
+      val tokens = getByUserIdQuery.on('user_id -> userId).as(userToken.*)
 
       val totalRows = listUserCountQuery.on('user_id -> userId).as(scalar[Long].single)
 
@@ -121,7 +121,7 @@ object UserTokenModel {
         val userTokens = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(userToken *)
+        ).as(userToken.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

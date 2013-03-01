@@ -568,27 +568,27 @@ object TicketModel {
   def getAllCurrent: List[Ticket] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(ticket *)
+      allQuery.as(ticket.*)
     }
   }
 
   def getAllCurrentFull: List[FullTicket] = {
     DB.withConnection { implicit conn =>
-      getAllCurrentQuery.as(fullTicket *)
+      getAllCurrentQuery.as(fullTicket.*)
     }
   }
 
   def getAllComments: List[Comment] = {
 
     DB.withConnection { implicit conn =>
-      allCommentsQuery.as(comment *)
+      allCommentsQuery.as(comment.*)
     }
   }
 
   def getAllFullById(id: String): List[FullTicket] = {
 
     DB.withConnection { implicit conn =>
-      getAllFullByIdQuery.on('ticket_id -> id).as(fullTicket *)
+      getAllFullByIdQuery.on('ticket_id -> id).as(fullTicket.*)
     }
   }
 
@@ -605,7 +605,7 @@ object TicketModel {
   def getLinks(id: String): List[FullLink] = {
 
     DB.withConnection { implicit conn =>
-      val links = getLinksQuery.on('ticket_id -> id).as(link *)
+      val links = getLinksQuery.on('ticket_id -> id).as(link.*)
 
       links.map { link =>
 
@@ -720,7 +720,7 @@ object TicketModel {
       val tickets = listQuery.on(
         'count  -> count,
         'offset -> offset
-      ).as(ticket *)
+      ).as(ticket.*)
 
       val totalRows = listCountQuery.as(scalar[Long].single)
 

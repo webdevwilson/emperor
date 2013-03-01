@@ -72,7 +72,7 @@ object TicketLinkTypeModel {
   def getAll: List[TicketLinkType] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(ticket_link_type *)
+      allQuery.as(ticket_link_type.*)
     }
   }
 
@@ -84,7 +84,7 @@ object TicketLinkTypeModel {
         val tss = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(ticket_link_type *)
+        ).as(ticket_link_type.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

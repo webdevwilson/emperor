@@ -71,7 +71,7 @@ object TicketTypeModel {
   def getAll: List[TicketType] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(ticket_type *)
+      allQuery.as(ticket_type.*)
     }
   }
 
@@ -83,7 +83,7 @@ object TicketTypeModel {
         val tss = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(ticket_type *)
+        ).as(ticket_type.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

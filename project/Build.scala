@@ -26,6 +26,8 @@ object ApplicationBuild extends Build {
     "org.clapper"   %% "grizzled-slf4j"         % "1.0.1"
   )
 
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+
   val main = play.Project(appName, appVersion, appDependencies, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
     // Add your own project settings here
     scalaVersion := "2.10.0"

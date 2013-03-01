@@ -123,14 +123,14 @@ object UserModel {
   def getByEmail(email: String) : List[User] = {
 
     DB.withConnection { implicit conn =>
-      getByEmailQuery.on('email -> email).as(user *)
+      getByEmailQuery.on('email -> email).as(user.*)
     }
   }
 
   def getAll: List[User] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(user *)
+      allQuery.as(user.*)
     }
   }
 
@@ -138,7 +138,7 @@ object UserModel {
 
     val users = projectId.map({ pid =>
       DB.withConnection { implicit conn =>
-        getAllAssignableQuery.on('project_id -> pid).as(user *)
+        getAllAssignableQuery.on('project_id -> pid).as(user.*)
       }
     }).getOrElse(UserModel.getAll)
 
@@ -184,7 +184,7 @@ object UserModel {
     DB.withConnection { implicit conn =>
       startsWithQuery.on(
         'username -> likeQuery
-      ).as(user *)
+      ).as(user.*)
     }
   }
 
@@ -196,7 +196,7 @@ object UserModel {
         val users = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(user *)
+        ).as(user.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 
