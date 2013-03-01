@@ -26,13 +26,6 @@ POST    /admin/permission_scheme/:id      controllers.admin.PermissionScheme.upd
 GET     /admin/permission_scheme/edit/:id controllers.admin.PermissionScheme.edit(id: Long)
 POST    /admin/permission_scheme          controllers.admin.PermissionScheme.add
 
-GET     /admin/role                     controllers.admin.Role.index(page: Int ?= 1, count: Int ?= 10)
-GET     /admin/role/create              controllers.admin.Role.create
-GET     /admin/role/:id                 controllers.admin.Role.item(id: Long)
-POST    /admin/role/:id                 controllers.admin.Role.update(id: Long)
-GET     /admin/role/edit/:id            controllers.admin.Role.edit(id: Long)
-POST    /admin/role                     controllers.admin.Role.add
-
 GET     /admin/test/generate            controllers.admin.Test.generate
 
 GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 1, count: Int ?= 10)

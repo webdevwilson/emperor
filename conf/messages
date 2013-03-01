@@ -49,15 +49,6 @@ admin.project.menu.list=Projects
 admin.reindex=Reindex Search
 admin.reindex.success=Search Reindex Successful
 
-admin.role.add=Add Role
-
-admin.role.add.success=Role Added
-admin.role.edit=Edit Role
-admin.role.edit.success=Role Updated
-admin.role.list=Roles
-admin.role.menu.list=Roles
-admin.role.with.id=Role {0}
-
 admin.security=Security
 
 admin.tickets=Tickets
@@ -203,9 +194,6 @@ project.summary.owner=Project Owner
 project.summary.unowned=This project has no owner.
 project.with.id=Project {0}
 project.workflow=Workflow
-
-role.description=Description
-role.name=Name
 
 search.placeholder=Search
 search.facet.assignee=Assignee
