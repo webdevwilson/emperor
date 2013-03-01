@@ -79,7 +79,6 @@ case class FullTicket(
   assignee: OptionalNamedThing, attention: OptionalNamedThing,
   project: NamedThing,  priority: ColoredPositionedThing,
   resolution: OptionalNamedThing,
-  proposedResolution: OptionalNamedThing,
   severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
   summary: String, description: Option[String], dateCreated: DateTime
@@ -172,16 +171,18 @@ object TicketModel {
 
   val allCommentsQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
-  val getByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
+  val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
+  val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE id={id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
   val getFullByActualIdQuery = SQL("SELECT * FROM full_all_tickets WHERE id={id}")
   val getFullByIdQuery = SQL("SELECT * FROM full_tickets WHERE ticket_id={ticket_id}")
   val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t  WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
   val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets  WHERE ticket_id={ticket_id} ORDER BY date_created ASC")
-  val listQuery = SQL("SELECT * FROM tickets LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM tickets LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
-  val insertQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, priority_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
-  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, proposed_resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {proposed_resolution_id}, {position}, {summary}, {description})")
+  val insertQuery = SQL("INSERT INTO tickets (user_id, project_id, project_ticket_id) VALUES ({user_id}, {project_id}, {project_ticket_id})")
+  val insertDataQuery = SQL("INSERT INTO ticket_data (ticket_id, user_id, priority_id, resolution_id, assignee_id, attention_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {priority_id}, {resolution_id}, {assignee_id}, {attention_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
+  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {position}, {summary}, {description})")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (type, user_id, ticket_id, content, date_created) VALUES ({type}, {user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
@@ -195,14 +196,29 @@ object TicketModel {
   // parser for retrieving a ticket
   val ticket = {
     get[Pk[Long]]("id") ~
-    get[String]("ticket_id") ~
-    get[Long]("reporter_id") ~
-    get[Option[Long]]("assignee_id") ~
-    get[Option[Long]]("attention_id") ~
+    get[Long]("user_id") ~
     get[Long]("project_id") ~
+    get[Long]("project_ticket_id") ~
+    get[DateTime]("date_created") map {
+      case id~userId~projId~projTickId~dateCreated => Ticket(
+        id = id,
+        userId = userId,
+        projectId = projId,
+        projectTicketId = projTickId,
+        dateCreated = dateCreated
+      )
+    }
+  }
+
+  // parser for retrieving a ticket
+  val ticketData = {
+    get[Pk[Long]]("id") ~
+    get[String]("ticket_id") ~
+    get[Long]("user_id") ~
     get[Long]("priority_id") ~
     get[Option[Long]]("resolution_id") ~
-    get[Option[Long]]("proposed_resolution_id") ~
+    get[Option[Long]]("assignee_id") ~
+    get[Option[Long]]("attention_id") ~
     get[Long]("severity_id") ~
     get[Long]("status_id") ~
     get[Long]("type_id") ~
@@ -210,16 +226,14 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[DateTime]("date_created") map {
-      case id~tickId~repId~assId~attId~projId~priId~resId~propResId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
+      case id~tickId~userId~priId~resId~assId~attId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
         id = id,
         ticketId = tickId,
-        reporterId = repId,
-        assigneeId = assId,
-        attentionId = attId,
-        projectId = projId,
+        userId = userId,
         priorityId = priId,
         resolutionId = resId,
-        proposedResolutionId = propResId,
+        assigneeId = assId,
+        attentionId = attId,
         severityId = sevId,
         statusId = statId,
         typeId = typeId,
@@ -230,6 +244,7 @@ object TicketModel {
       )
     }
   }
+
 
   // Parser for retrieving a FullTicket
   val fullTicket = {
@@ -251,8 +266,6 @@ object TicketModel {
     get[Int]("priority_position") ~
     get[Option[Long]]("resolution_id") ~
     get[Option[String]]("resolution_name") ~
-    get[Option[Long]]("proposed_resolution_id") ~
-    get[Option[String]]("proposed_resolution_name") ~
     get[Long]("severity_id") ~
     get[String]("severity_name") ~
     get[String]("severity_color") ~
@@ -267,7 +280,7 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[DateTime]("date_created") map {
-      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~propResId~propResName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
+      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
           ticketId = tickId,
@@ -278,7 +291,6 @@ object TicketModel {
           project = NamedThing(projId, projName),
           priority = ColoredPositionedThing(priId, priName, priColor, priPos),
           resolution = OptionalNamedThing(resId, resName),
-          proposedResolution = OptionalNamedThing(propResId, propResName),
           severity = ColoredPositionedThing(sevId, sevName, sevColor, sevPos),
           workflowStatusId = workflowStatusId,
           status = NamedThing(statusId, statusName),
@@ -374,7 +386,7 @@ object TicketModel {
    * Assign a ticket with an optional comment.
    */
   def assign(ticketId: String, userId: Long, assigneeId: Option[Long], comment: Option[String] = None): FullTicket = {
-    val tick = this.getById(ticketId).get
+    val tick = this.getFullById(ticketId).get
 
     val assigned = tick.copy(assigneeId = assigneeId)
     val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
@@ -385,7 +397,7 @@ object TicketModel {
    * Mark a ticket as resolved with an optional comment.
    */
   def resolve(ticketId: String, userId: Long, resolutionId: Long, comment: Option[String] = None): FullTicket = {
-    val tick = this.getById(ticketId).get
+    val tick = this.getFullById(ticketId).get
 
     val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = Some(resolutionId), comment = comment)
     ft
@@ -395,7 +407,7 @@ object TicketModel {
    * Remove the resolution of a ticket with an optional comment.
    */
   def unresolve(ticketId: String, userId: Long, comment: Option[String] = None): FullTicket = {
-    val tick = this.getById(ticketId).get
+    val tick = this.getFullById(ticketId).get
 
     val ft = this.update(userId = userId, id = ticketId, ticket = tick, resolutionId = None, clearResolution = true, comment = comment)
     ft
@@ -417,7 +429,7 @@ object TicketModel {
   /**
    * Create a ticket.
    */
-  def create(userId: Long, ticket: Ticket): Option[FullTicket] = {
+  def create(userId: Long, ticket: Ticket, ticketData: TicketData): Option[FullTicket] = {
 
     val project = ProjectModel.getById(ticket.projectId)
 
@@ -436,22 +448,29 @@ object TicketModel {
           val proj = ProjectModel.getById(ticket.projectId).get
           val tid = ProjectModel.getNextSequence(ticket.projectId)
 
-          val ticketId = proj.key + "-" + tid.toString
+          // val ticketId = proj.key + "-" + tid.toString
           val id = insertQuery.on(
-            'ticket_id    -> ticketId,
             'user_id      -> userId,
-            'reporter_id  -> ticket.reporterId,
-            'assignee_id  -> ticket.assigneeId,
             'project_id   -> ticket.projectId,
-            'priority_id  -> ticket.priorityId,
-            'severity_id  -> ticket.severityId,
-            'status_id    -> status.id,
-            'type_id      -> ticket.typeId,
-            'description  -> ticket.description,
-            'position     -> ticket.position,
-            'summary      -> ticket.summary
+            'project_ticket_id -> tid
           ).executeInsert()
-          val nt = this.getFullById(ticketId)
+
+          val tdid = insertDataQuery.on(
+            'ticket_id    -> id,
+            'user_id      -> userId,
+            'priority_id  -> ticketData.priorityId,
+            'resolution_id-> ticketData.resolutionId,
+            'assignee_id  -> ticketData.assigneeId,
+            'attention_id -> ticketData.attentionId,
+            'severity_id  -> ticketData.severityId,
+            'status_id    -> status.id,
+            'type_id      -> ticketData.typeId,
+            'position     -> ticketData.position,
+            'description  -> ticketData.description,
+            'summary      -> ticketData.summary
+          ).executeInsert()
+
+          val nt = this.getFullById(id)
 
           nt.map { t =>
             // Get on the bus!
@@ -691,7 +710,7 @@ object TicketModel {
    * Note that if there is no change, nothing will happen here.
    */
   def update(
-    userId: Long, id: String, ticket: Ticket,
+    userId: Long, id: String, ticket: FullTicket,
     resolutionId: Option[Long] = None, statusId: Option[Long] = None,
     clearResolution: Boolean = false,
     comment: Option[String] = None
@@ -714,25 +733,23 @@ object TicketModel {
       case false  => resolutionId.getOrElse(oldTicket.resolution.id)
     }
 
-    val changed = if(oldTicket.project.id != ticket.projectId) {
+    val changed = if(oldTicket.project.id != ticket.project.id) {
       true
-    } else if(oldTicket.priority.id != ticket.priorityId) {
+    } else if(oldTicket.priority.id != ticket.priority.id) {
       true
     } else if(oldTicket.resolution.id != newResId) {
       true
-    } else if(oldTicket.proposedResolution.id != ticket.proposedResolutionId) {
+    } else if(oldTicket.reporter.id != ticket.reporter.id) {
       true
-    } else if(oldTicket.reporter.id != ticket.reporterId) {
+    } else if(oldTicket.assignee.id != ticket.assignee.id) {
       true
-    } else if(oldTicket.assignee.id != ticket.assigneeId) {
+    } else if(oldTicket.attention.id != ticket.attention.id) {
       true
-    } else if(oldTicket.attention.id != ticket.attentionId) {
-      true
-    } else if(oldTicket.severity.id != ticket.severityId) {
+    } else if(oldTicket.severity.id != ticket.severity.id) {
       true
     } else if(oldTicket.status.id != statusId.getOrElse(oldTicket.status.id)) {
       true
-    } else if(oldTicket.ttype.id != ticket.typeId) {
+    } else if(oldTicket.ttype.id != ticket.ttype.id) {
       true
     } else if(oldTicket.description != ticket.description) {
       true
@@ -751,15 +768,14 @@ object TicketModel {
           'ticket_id              -> id,
           'user_id                -> userId,
           'project_id             -> oldTicket.project.id,
-          'reporter_id            -> ticket.reporterId,
-          'assignee_id            -> ticket.assigneeId,
-          'attention_id           -> ticket.attentionId,
-          'priority_id            -> ticket.priorityId,
-          'severity_id            -> ticket.severityId,
+          'reporter_id            -> ticket.reporter.id,
+          'assignee_id            -> ticket.assignee.id,
+          'attention_id           -> ticket.attention.id,
+          'priority_id            -> ticket.priority.id,
+          'severity_id            -> ticket.severity.id,
           'status_id              -> statusId.getOrElse(oldTicket.status.id),
-          'type_id                -> ticket.typeId,
+          'type_id                -> ticket.ttype.id,
           'resolution_id          -> newResId,
-          'proposed_resolution_id -> ticket.proposedResolutionId,
           'position               -> ticket.position,
           'description            -> ticket.description,
           'summary                -> ticket.summary
