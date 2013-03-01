@@ -145,43 +145,43 @@ INSERT INTO permission_schemes (name) VALUES ('EMP_PERM_SCHEME_CORE');
 INSERT INTO permission_schemes (name) VALUES ('EMP_PERM_SCHEME_DEFAULT');
 
 CREATE TABLE projects (
-    id SERIAL PRIMARY KEY,
-    owner_id INT REFERENCES users (id),
-    default_priority_id INT REFERENCES ticket_priorities (id),
-    default_severity_id INT REFERENCES ticket_severities (id),
-    default_ticket_type_id INT REFERENCES ticket_types (id),
-    default_assignee SMALLINT,
+  id SERIAL PRIMARY KEY,
+  owner_id INT REFERENCES users (id),
+  default_priority_id INT REFERENCES ticket_priorities (id),
+  default_severity_id INT REFERENCES ticket_severities (id),
+  default_ticket_type_id INT REFERENCES ticket_types (id),
+  default_assignee SMALLINT,
 	permission_scheme_id INT NOT NULL REFERENCES permission_schemes(id),
-    name VARCHAR(255) NOT NULL,
-    pkey VARCHAR(16) NOT NULL UNIQUE,
-    workflow_id INT NOT NULL REFERENCES workflows(id),
-    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  name VARCHAR(255) NOT NULL,
+  pkey VARCHAR(16) NOT NULL UNIQUE,
+  workflow_id INT NOT NULL REFERENCES workflows(id),
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE tickets (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id),
-    project_id INT NOT NULL REFERENCES projects(id),
-    project_ticket_id INT NOT NULL,
-    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  project_id INT NOT NULL REFERENCES projects(id),
+  project_ticket_id INT NOT NULL,
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT tickets_project_ticket_id_project_uniq UNIQUE(project_ticket_id, project_id)
 );
 
 CREATE TABLE ticket_data (
 	id SERIAL PRIMARY KEY,
 	ticket_id INT NOT NULL REFERENCES tickets(id),
-    priority_id INT NOT NULL REFERENCES ticket_priorities(id),
-    resolution_id INT REFERENCES ticket_resolutions(id),
-    assignee_id INT REFERENCES users(id),
-    attention_id INT REFERENCES users(id),
-    reporter_id INT NOT NULL REFERENCES users(id),
-    severity_id INT NOT NULL REFERENCES ticket_severities(id),
-    status_id INT NOT NULL REFERENCES workflow_statuses(id),
-    type_id INT NOT NULL REFERENCES ticket_types(id),
-    position INT,
-    summary VARCHAR(255) NOT NULL,
-    description TEXT,
-    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  user_id INT NOT NULL REFERENCES users(id),
+  priority_id INT NOT NULL REFERENCES ticket_priorities(id),
+  resolution_id INT REFERENCES ticket_resolutions(id),
+  assignee_id INT REFERENCES users(id),
+  attention_id INT REFERENCES users(id),
+  severity_id INT NOT NULL REFERENCES ticket_severities(id),
+  status_id INT NOT NULL REFERENCES workflow_statuses(id),
+  type_id INT NOT NULL REFERENCES ticket_types(id),
+  position INT,
+  summary VARCHAR(255) NOT NULL,
+  description TEXT,
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ticket_links (

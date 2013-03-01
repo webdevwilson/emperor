@@ -118,11 +118,26 @@ case class FullTicket(
  * Class for getting a ticket.
  */
 case class Ticket(
-  id: Pk[Long] = NotAssigned, ticketId: String, reporterId: Long, assigneeId: Option[Long],
-  attentionId: Option[Long] = None, projectId: Long, priorityId: Long,
-  resolutionId: Option[Long] = None, proposedResolutionId: Option[Long] = None,
-  severityId: Long, statusId: Long, typeId: Long, position: Option[Long],
-  summary: String, description: Option[String], dateCreated: DateTime
+  id: Pk[Long] = NotAssigned, ticketId: String, userId: Long,
+  projectId: Long, projectTicketId: Long,
+  dateCreated: DateTime
+)
+
+case class TicketData(
+  id: Pk[Long] = NotAssigned,
+  ticketId: String,
+  priorityId: Long,
+  resolutionId: Option[Long] = None,
+  assigneeId: Option[Long],
+  attentionId: Option[Long] = None,
+  userId: Long,
+  severityId: Long,
+  statusId: Long,
+  typeId: Long,
+  position: Option[Long],
+  summary: String,
+  description: Option[String],
+  dateCreated: DateTime
 )
 
 /**
