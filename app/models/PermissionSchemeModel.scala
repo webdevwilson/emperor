@@ -14,7 +14,7 @@ import emp.util.Pagination._
  */
 case class Permission(
   name: String,
-  global: Int
+  global: Boolean
 )
 
 /**
@@ -58,13 +58,12 @@ object PermissionSchemeModel {
   val getByNameQuery = SQL("SELECT * from permission_schemes WHERE name={name}")
   val getGroupsForPermissionQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
   val getGroupsQuery = SQL("SELECT * FROM permission_scheme_groups psg JOIN groups g ON psg.group_id = g.id WHERE permission_scheme_id={permission_scheme_id}")
-  // For some reason the combination of MySQL 5.1 and Java 6 need this cast…
-  val getPermForUserQuery = SQL("SELECT CAST(source as CHAR) AS source FROM full_permissions WHERE (project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}) OR (project_id={project_id} AND permission_id='PERM_PROJECT_ADMIN' AND user_id={user_id}) OR (project_key='EMPCORE' AND permission_id='PERM_GLOBAL_ADMIN' AND user_id={user_id}) LIMIT 1")
+  val getPermForUserQuery = SQL("SELECT source FROM full_permissions WHERE (project_id={project_id} AND permission_id={permission_id} AND user_id={user_id}) OR (project_id={project_id} AND permission_id='PERM_PROJECT_ADMIN' AND user_id={user_id}) OR (project_key='EMPCORE' AND permission_id='PERM_GLOBAL_ADMIN' AND user_id={user_id}) LIMIT 1")
   val getUsersForPermissionQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id} AND permission_id={permission_id}")
   val getUsersQuery = SQL("SELECT * FROM permission_scheme_users psu JOIN users u ON psu.user_id = u.id WHERE permission_scheme_id={permission_scheme_id}")
   val insertQuery = SQL("INSERT INTO permission_schemes (name, description) VALUES ({name}, {description})")
-  val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {group_id}, UTC_TIMESTAMP())")
-  val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id, date_created) VALUES ({permission_scheme_id}, {permission_id}, {user_id}, UTC_TIMESTAMP())")
+  val insertGroupPermQuery = SQL("INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES ({permission_scheme_id}, {permission_id}, {group_id})")
+  val insertUserPermQuery = SQL("INSERT INTO permission_scheme_users (permission_scheme_id, permission_id, user_id) VALUES ({permission_scheme_id}, {permission_id}, {user_id})")
   val listQuery = SQL("SELECT * FROM permission_schemes LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM permission_schemes")
   val updateQuery = SQL("UPDATE permission_schemes SET name={name}, description={description} WHERE id={id}")
@@ -72,7 +71,7 @@ object PermissionSchemeModel {
   // Parser for retrieving a permission
   val permission = {
     get[String]("name") ~
-    get[Int]("global") map {
+    get[Boolean]("global") map {
       case name~global => Permission(name = name, global = global)
     }
   }

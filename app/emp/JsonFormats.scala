@@ -376,7 +376,7 @@ object JsonFormats {
     // This should be a boolean (global)
     def reads(json: JsValue): JsResult[Permission] = JsSuccess(Permission(
       name  = (json \ "name").as[String],
-      global = (json \ "global").as[Int]
+      global = (json \ "global").as[Boolean]
     ))
 
     def writes(obj: Permission): JsValue = {
@@ -386,7 +386,7 @@ object JsonFormats {
         "nameI18N"    -> JsString(Messages(obj.name)),
         "description" -> JsString(obj.name + "_DESC"),
         "descriptionI18N" -> JsString(Messages(obj.name + "_DESC")),
-        "global"      -> JsNumber(obj.global)
+        "global"      -> JsBoolean(obj.global)
       )
       toJson(doc)
     }
