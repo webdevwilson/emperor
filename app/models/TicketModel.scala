@@ -140,12 +140,12 @@ case class Ticket(
 
 case class TicketData(
   id: Pk[Long] = NotAssigned,
-  ticketId: String,
+  ticketId: Long,
+  userId: Long,
   priorityId: Long,
   resolutionId: Option[Long] = None,
   assigneeId: Option[Long],
   attentionId: Option[Long] = None,
-  userId: Long,
   severityId: Long,
   statusId: Long,
   typeId: Long,
@@ -235,7 +235,7 @@ object TicketModel {
   // parser for retrieving a ticket
   val ticketData = {
     get[Pk[Long]]("id") ~
-    get[String]("ticket_id") ~
+    get[Long]("ticket_id") ~
     get[Long]("user_id") ~
     get[Long]("priority_id") ~
     get[Option[Long]]("resolution_id") ~
@@ -549,6 +549,16 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('ticket_id -> id).as(ticket.singleOpt)
+    }
+  }
+
+  /**
+   * Get ticket data by ticketId.
+   */
+  def getDataById(id: String) : Option[TicketData] = {
+
+    DB.withConnection { implicit conn =>
+      getByIdQuery.on('ticket_id -> id).as(ticketData.singleOpt)
     }
   }
 

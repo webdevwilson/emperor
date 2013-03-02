@@ -80,6 +80,24 @@ object Ticket extends Controller with Secured {
     )(models.NewTicket.apply)(models.NewTicket.unapply)
   )
 
+  val ticketDataForm = Form(
+    mapping(
+      "id"         -> ignored(NotAssigned:Pk[Long]),
+      "ticketId"   -> ignored(0L),
+      "userId"     -> ignored(0L),
+      "priorityId" -> longNumber,
+      "resolutionId" -> ignored(0L),
+      "assigneeId" -> optional(longNumber),
+      "attentionId" -> ignored(0L),
+      "severityId" -> longNumber,
+      "statusId"   -> ignored(0L),
+      "typeId"     -> longNumber,
+      "position"    -> optional(longNumber),
+      "summary"     -> nonEmptyText,
+      "description" -> optional(text)
+    )(models.TicketData.apply)(models.TicketData.unapply)
+  )
+
   def doResolve(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_RESOLVE") { implicit request =>
 
     val ticket = TicketModel.getFullById(ticketId)
@@ -239,12 +257,13 @@ object Ticket extends Controller with Secured {
 
     maybeTicket match {
       case Some(ticket) => {
+        val data = TicketModel.getDataById(maybeTicket.id.get)
         val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val assignees = UserModel.getAssignable(projectId = Some(ticket.projectId)).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
-        Ok(views.html.ticket.edit(ticketId, ticketForm.fill(ticket), assignees, assignees, assignees, projs, ttypes, prios, sevs)(request))
+        Ok(views.html.ticket.edit(ticketId, ticketDataForm.fill(data), assignees, assignees, assignees, projs, ttypes, prios, sevs)(request))
       }
       case None => NotFound
     }
@@ -466,7 +485,7 @@ object Ticket extends Controller with Secured {
 
     TicketModel.getById(ticketId).map({ ticket =>
 
-      ticketForm.bindFromRequest.fold(
+      ticketDataForm.bindFromRequest.fold(
         errors => {
           val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
           val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
