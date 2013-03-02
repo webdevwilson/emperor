@@ -34,7 +34,7 @@
    <label>@Messages("ticket.date_created")</label>
    <span class="label">@DateFormatter.displayLongDateTime(ticket.dateCreated)</span>
    <label>@Messages("ticket.reporter")</label>
-   <span class="label"><a href="@routes.User.item(ticket.reporter.id)">@Messages(ticket.reporter.name)</a></span>
+   <span class="label"><a href="@routes.User.item(ticket.user.id)">@Messages(ticket.user.name)</a></span>
    <label>@Messages("ticket.assignee")</label>
    <span class="label">@if(ticket.assignee.id.isDefined) { <a href="@routes.User.item(ticket.assignee.id.get)">@Messages(ticket.assignee.name.get)</a> } else { @Messages("ticket.unassigned") }</span>
    <label>@Messages("ticket.priority")</label>

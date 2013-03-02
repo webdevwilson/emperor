@@ -33,7 +33,7 @@ object JsonFormats {
       userId = (json \ "user_id").as[Long],
       username = (json \ "user_name").as[String],
       realName = (json \ "user_realname").as[String],
-      ticketId = (json \ "ticket_id").as[String],
+      ticketId = (json \ "ticket_id").as[Long],
       content = (json \ "content").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
@@ -42,7 +42,7 @@ object JsonFormats {
       val cdoc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(comment.id.get),
         "type"          -> JsString(comment.ctype),
-        "ticket_id"     -> JsString(comment.ticketId),
+        "ticket_id"     -> JsNumber(comment.ticketId),
         "user_id"       -> JsNumber(comment.userId),
         "user_name"     -> JsString(comment.username),
         "user_realname" -> JsString(comment.realName),
@@ -94,10 +94,10 @@ object JsonFormats {
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "type_name").as[String],
-      parentId    = (json \ "parent_id").as[String],
+      parentId    = (json \ "parent_id").as[Long],
       parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
       parentSummary = (json \ "parent_summary").as[String],
-      childId     = (json \ "parent_id").as[String],
+      childId     = (json \ "child_id").as[Long],
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
@@ -121,10 +121,10 @@ object JsonFormats {
         "type_name"       -> JsString(l.typeName),
         "type_name_i18n"  -> JsString(Messages(l.typeName)),
         "type_name_i18n_inverted" -> JsString(Messages(l.typeName + "_INVERT")),
-        "parent_id"       -> JsString(l.parentId),
+        "parent_id"       -> JsNumber(l.parentId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),
-        "child_id"        -> JsString(l.childId),
+        "child_id"        -> JsNumber(l.childId),
         "child_resolution_id" -> childRes,
         "child_summary"   -> JsString(l.childSummary),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
@@ -142,14 +142,10 @@ object JsonFormats {
     // all these IDs then poll the database for the values.
     def reads(json: JsValue): JsResult[FullTicket] = JsSuccess(FullTicket(
       id        = Id((json \ "id").as[Long]),
-      ticketCounterId = (json \ "ticket_counter_id").as[Long],
+      projectTicketId = (json \ "project_ticket_id").as[Long],
       user      = NamedThing(
         id    = (json \ "user_id").as[Long],
         name  = (json \ "user_name").as[String]
-      ),
-      reporter  = NamedThing(
-        id    = (json \ "reporter_id").as[Long],
-        name  = (json \ "reporter_name").as[String]
       ),
       assignee = OptionalNamedThing(
         id    = (json \ "assignee_id").as[Option[Long]],
@@ -200,7 +196,7 @@ object JsonFormats {
 
       val tdoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(ticket.id.get),
-        "ticket_id"       -> JsString(ticket.ticketId),
+        "project_ticket_id" -> JsNumber(ticket.projectTicketId),
         "project_id"      -> JsNumber(ticket.project.id),
         "project_name"    -> JsString(ticket.project.name),
         "priority_id"     -> JsNumber(ticket.priority.id),
@@ -212,8 +208,6 @@ object JsonFormats {
         // A ticket with no resolution gets a default name, hence the differing logic here
         "resolution_name" -> JsString(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")),
         "resolution_name_i18n" -> JsString(Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))),
-        "reporter_id"     -> JsNumber(ticket.reporter.id),
-        "reporter_name"   -> JsString(ticket.reporter.name),
         "assignee_id"     -> optionLongtoJsValue(ticket.assignee.id),
         "assignee_name"   -> optionStringtoJsValue(ticket.assignee.name),
         "attention_id"    -> optionLongtoJsValue(ticket.attention.id),
@@ -304,8 +298,8 @@ object JsonFormats {
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "name").as[String],
-      parentId    = (json \ "parent_id").as[String],
-      childId     = (json \ "child_id").as[String],
+      parentId    = (json \ "parent_id").as[Long],
+      childId     = (json \ "child_id").as[Long],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
@@ -316,8 +310,8 @@ object JsonFormats {
         "type_id"         -> JsNumber(l.typeId),
         "name"            -> JsString(l.typeName),
         "name_i18n"       -> JsString(Messages(l.typeName)),
-        "parent_id"       -> JsString(l.parentId),
-        "child_id"        -> JsString(l.childId),
+        "parent_id"       -> JsNumber(l.parentId),
+        "child_id"        -> JsNumber(l.childId),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)

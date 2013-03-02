@@ -28,8 +28,8 @@ class SearchIndexer(configuration: Configuration) extends Actor {
           Logger.debug("Received change event for " + ft.ticketId + ", indexing.")
           SearchModel.indexTicket(ticket = ft)
 
-          val newTicket = TicketModel.getFullByActualId(cte.newTicketId)
-          val oldTicket = TicketModel.getFullByActualId(cte.oldTicketId)
+          val newTicket = TicketModel.getFullById(cte.newTicketId)
+          val oldTicket = TicketModel.getFullById(cte.oldTicketId)
 
           SearchModel.indexHistory(newTick = newTicket.get, oldTick = oldTicket.get, block = true)
         })

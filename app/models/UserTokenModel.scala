@@ -22,10 +22,10 @@ object UserTokenModel {
   val getByIdQuery = SQL("SELECT * FROM user_tokens WHERE token={token}")
   val getByIdAndUserQuery = SQL("SELECT * FROM user_tokens WHERE token={token} AND user_id={user_id")
   val getByUserIdQuery = SQL("SELECT * FROM user_tokens WHERE user_id={user_id}")
-  val listQuery = SQL("SELECT * FROM user_tokens ORDER BY date_created LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM user_tokens ORDER BY date_created LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM user_tokens")
   val listUserCountQuery = SQL("SELECT count(*) FROM user_tokens WHERE user_id={user_id}")
-  val insertQuery = SQL("INSERT INTO user_tokens (token, user_id, comment, date_created) VALUES ({token}, {user_id}, {comment}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO user_tokens (token, user_id, comment) VALUES ({token}, {user_id}, {comment})")
   val deleteQuery = SQL("DELETE FROM user_tokens WHERE user_id={user_id} AND token={token}")
 
   val userToken = {

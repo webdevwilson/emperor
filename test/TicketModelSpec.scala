@@ -38,22 +38,21 @@ class TicketModelSpec extends Specification {
         val ts = TicketSeverityModel.getById(1).get
         val tt = TicketTypeModel.getById(1).get
 
-        val t = models.Ticket(
+        val newTicket = TicketModel.create(
           userId = user.id.get,
           projectId = newProject.id.get,
+          typeId = tt.id.get,
           priorityId = tp.id.get,
           severityId = ts.id.get,
-          typeId = tt.id.get,
           summary = "Test Ticket 1"
         )
-        val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
         newTicket must beSome
         newTicket.get must beAnInstanceOf[models.FullTicket]
         newTicket.get.ticketId must beEqualTo("TEST1-1")
 
         val eTicket = TicketModel.getById(newTicket.get.ticketId)
         eTicket must beSome
-        eTicket.get must beAnInstanceOf[models.EditTicket]
+        eTicket.get must beAnInstanceOf[models.Ticket]
 
         TicketModel.delete(newTicket.get.ticketId)
         ProjectModel.delete(newProject.id.get)
@@ -86,15 +85,14 @@ class TicketModelSpec extends Specification {
         val ts = TicketSeverityModel.getById(1).get
         val tt = TicketTypeModel.getById(1).get
 
-        val t = models.InitialTicket(
-          reporterId = user.id.get,
+        val newTicket = TicketModel.create(
+          userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
           severityId = ts.id.get,
           typeId = tt.id.get,
           summary = "Test Ticket 2"
         )
-        val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
 
         val comm = TicketModel.addComment(ticketId = newTicket.get.ticketId, ctype = "comment", userId = user.id.get, content = "Comment!")
         comm must beSome
@@ -182,30 +180,32 @@ class TicketModelSpec extends Specification {
         val ts = TicketSeverityModel.getById(1).get
         val tt = TicketTypeModel.getById(1).get
 
-        val t = models.InitialTicket(
-          reporterId = user.id.get,
+        val newTicket = TicketModel.create(
+          userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
           severityId = ts.id.get,
           typeId = tt.id.get,
           summary = "Test Ticket 4"
         )
-        val newTicket = TicketModel.create(userId = user.id.get, ticket = t)
+        newTicket must beSome
 
-        val t2 = models.InitialTicket(
-          reporterId = user.id.get,
+        val newTicket2 = TicketModel.create(
+          userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
           severityId = ts.id.get,
           typeId = tt.id.get,
           summary = "Test Ticket 5"
         )
-        val newTicket2 = TicketModel.create(userId = user.id.get, ticket = t2)
+        newTicket2 must beSome
 
         val lt = TicketLinkTypeModel.getById(1)
         lt must beSome
 
-        val link = TicketModel.link(linkTypeId = lt.get.id.get, parentId = newTicket.get.ticketId, childId = newTicket2.get.ticketId)
+        val link = TicketModel.link(
+          linkTypeId = lt.get.id.get, parentId = newTicket.get.ticketId, childId = newTicket2.get.ticketId
+        )
         link must beSome
         link.get.typeId must beEqualTo(lt.get.id.get)
         link.get.typeName must beEqualTo(lt.get.name)

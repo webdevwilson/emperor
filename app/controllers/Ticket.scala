@@ -58,10 +58,10 @@ object Ticket extends Controller with Secured {
     mapping(
       "id"      -> ignored(NotAssigned:Pk[Long]),
       "ctype"   -> ignored[String]("comment"),
-      "user_id" -> ignored[Long](0.toLong),
+      "user_id" -> ignored[Long](0L),
       "username"-> ignored[String](""),
       "realname"-> ignored[String](""),
-      "ticket_id" -> ignored[String](""),
+      "ticket_id" -> ignored[Long](0L),
       "content" -> nonEmptyText,
       "date_created" -> ignored[DateTime](new DateTime())
     )(models.Comment.apply)(models.Comment.unapply)
@@ -86,15 +86,16 @@ object Ticket extends Controller with Secured {
       "ticketId"   -> ignored(0L),
       "userId"     -> ignored(0L),
       "priorityId" -> longNumber,
-      "resolutionId" -> ignored(0L),
+      "resolutionId" -> optional(longNumber),
       "assigneeId" -> optional(longNumber),
-      "attentionId" -> ignored(0L),
+      "attentionId" -> optional(longNumber),
       "severityId" -> longNumber,
       "statusId"   -> ignored(0L),
       "typeId"     -> longNumber,
       "position"    -> optional(longNumber),
       "summary"     -> nonEmptyText,
-      "description" -> optional(text)
+      "description" -> optional(text),
+      "dateCreated" -> ignored[DateTime](new DateTime())
     )(models.TicketData.apply)(models.TicketData.unapply)
   )
 
@@ -257,13 +258,14 @@ object Ticket extends Controller with Secured {
 
     maybeTicket match {
       case Some(ticket) => {
-        val data = TicketModel.getDataById(maybeTicket.id.get)
+        val data = TicketModel.getDataById(ticket.id.get)
         val projs = ProjectModel.getAll(userId = request.user.id.get).map { x => (x.id.get.toString -> Messages(x.name)) }
         val ttypes = TicketTypeModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val prios = TicketPriorityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val sevs = TicketSeverityModel.getAll.map { x => (x.id.get.toString -> Messages(x.name)) }
         val assignees = UserModel.getAssignable(projectId = Some(ticket.projectId)).map { x => (x.id.getOrElse("").toString -> Messages(x.realName)) }
-        Ok(views.html.ticket.edit(ticketId, ticketDataForm.fill(data), assignees, assignees, assignees, projs, ttypes, prios, sevs)(request))
+        // XXX Data might be None!
+        Ok(views.html.ticket.edit(ticketId, ticketDataForm.fill(data.get), assignees, assignees, assignees, projs, ttypes, prios, sevs)(request))
       }
       case None => NotFound
     }

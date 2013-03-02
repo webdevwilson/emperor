@@ -53,7 +53,6 @@ object SearchModel {
     "assignee"    -> "assignee_name",
     "project"     -> "project_name",
     "priority"    -> "priority_name",
-    "reporter"    -> "reporter_name",
     "resolution"  -> "resolution_name",
     "severity"    -> "severity_name",
     "status"      -> "status_name",
@@ -124,14 +123,6 @@ object SearchModel {
           "index": "not_analyzed"
         },
         "attention_name": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "reporter_id": {
-          "type": "long",
-          "index": "not_analyzed"
-        },
-        "reporter_name": {
           "type": "string",
           "index": "not_analyzed"
         },
@@ -418,26 +409,6 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
-      "reporter_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "old_reporter_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "reporter_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "old_reporter_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "reporter_changed": {
-        "type": "boolean",
-        "index": "not_analyzed"
-      },
       "severity_id": {
         "type": "long",
         "index": "not_analyzed"
@@ -546,8 +517,7 @@ object SearchModel {
     "priority" -> "priority_name",
     "severity" -> "severity_name",
     "status" -> "status_name",
-    "assignee" -> "assignee_name",
-    "reporter" ->"reporter_name"
+    "assignee" -> "assignee_name"
   )
 
   /**
@@ -608,7 +578,7 @@ object SearchModel {
       projectName   = ft.project.name,
       userId        = user.id.get,
       userRealName  = user.realName,
-      eKey          = comment.ticketId,
+      eKey          = comment.ticketId.toString,
       eType         = comment.ctype,
       content       = Renderer.render(Some(comment.content)),
       url           = controllers.routes.Ticket.item("commits", ft.ticketId).url + "#comment-" + comment.id.get,
@@ -641,7 +611,6 @@ object SearchModel {
     val resoChanged = newTick.resolution.id != oldTick.resolution.id
     val assChanged = newTick.assignee.id != oldTick.assignee.id
     val attChanged = newTick.attention.id != oldTick.attention.id
-    val repChanged = newTick.reporter.id != oldTick.reporter.id
     val sevChanged = newTick.severity.id != oldTick.severity.id
     val statChanged = newTick.status.id != oldTick.status.id
     val typeChanged = newTick.ttype.id != oldTick.ttype.id
@@ -710,11 +679,6 @@ object SearchModel {
         case None       => JsNull
       } },
       "attention_changed" -> JsBoolean(attChanged),
-      "reporter_id"       -> JsNumber(newTick.reporter.id),
-      "old_reporter_id"   -> JsNumber(oldTick.reporter.id),
-      "reporter_name"     -> JsString(newTick.reporter.name),
-      "old_reporter_name" -> JsString(oldTick.reporter.name),
-      "reporter_changed"  -> JsBoolean(repChanged),
       "severity_id"       -> JsNumber(newTick.severity.id),
       "old_severity_id"   -> JsNumber(oldTick.severity.id),
       "severity_name"     -> JsString(newTick.severity.name),
@@ -832,7 +796,6 @@ object SearchModel {
       facets = Seq(
         // termsFacet("user_id").field("user_id"), // XXX Broken due to differing classes
         termsFacet("changed_priority").field("priority_changed"),
-        termsFacet("changed_reporter").field("reporter_changed"),
         termsFacet("changed_resolution").field("resolution_changed"),
         termsFacet("changed_severity").field("severity_changed"),
         termsFacet("changed_status").field("status_changed")
