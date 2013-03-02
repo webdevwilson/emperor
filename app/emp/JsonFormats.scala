@@ -53,49 +53,6 @@ object JsonFormats {
     }
   }
 
-  implicit object TicketFormat extends Format[Ticket] {
-    def reads(json: JsValue): JsResult[Ticket] = JsSuccess(Ticket(
-      id            = NotAssigned,
-      ticketId      = "",
-      reporterId    = (json \ "reporterId").as[Long],
-      assigneeId    = (json \ "assigneeId").as[Option[Long]],
-      priorityId    = (json \ "priorityId").as[Long],
-      projectId     = (json \ "projectId").as[Long],
-      resolutionId  = (json \ "resolutionId").as[Option[Long]],
-      severityId    = (json \ "severityId").as[Long],
-      statusId      = 1L,
-      typeId        = (json \ "typeId").as[Long],
-      summary       = (json \ "summary").as[String],
-      description   = (json \ "description").as[Option[String]],
-      attentionId    = (json \ "attentionId").as[Option[Long]],
-      position      = (json \ "position").as[Option[Long]],
-      proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]],
-      dateCreated   = new DateTime()
-    ))
-
-    def writes(ticket: Ticket): JsValue = {
-
-      val tdoc: Map[String,JsValue] = Map(
-        "id"         -> JsNumber(ticket.id.get),
-        "ticketId"   -> JsString(ticket.ticketId),
-        "reporterId" -> JsNumber(ticket.reporterId),
-        "assigneeId" -> optionLongtoJsValue(ticket.assigneeId),
-        "attentionId"-> optionLongtoJsValue(ticket.attentionId),
-        "projectId"  -> JsNumber(ticket.projectId),
-        "priorityId" -> JsNumber(ticket.priorityId),
-        "resolutionId" -> optionLongtoJsValue(ticket.resolutionId),
-        "proposedResolutionId" -> optionLongtoJsValue(ticket.proposedResolutionId),
-        "severityId" -> JsNumber(ticket.severityId),
-        "statusId"   -> JsNumber(ticket.statusId),
-        "typeId"     -> JsNumber(ticket.typeId),
-        "position"    -> optionLongtoJsValue(ticket.position),
-        "summary"     -> JsString(ticket.summary),
-        "description" -> optionStringtoJsValue(ticket.description)
-      )
-      toJson(tdoc)
-    }
-  }
-
   /**
    * JSON conversion for Event
    */
@@ -216,10 +173,6 @@ object JsonFormats {
         id    = (json \ "resolution_id").as[Option[Long]],
         name  = (json \ "resolution_name").as[Option[String]]
       ),
-      proposedResolution = OptionalNamedThing(
-        id    = (json \ "proposed_resolution_id").as[Option[Long]],
-        name  = (json \ "proposed_resolution_name").as[Option[String]]
-      ),
       severity  = ColoredPositionedThing(
         id    = (json \ "severity_id").as[Long],
         name  = (json \ "severity_name").as[String],
@@ -258,9 +211,6 @@ object JsonFormats {
         // A ticket with no resolution gets a default name, hence the differing logic here
         "resolution_name" -> JsString(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")),
         "resolution_name_i18n" -> JsString(Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))),
-        "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolution.id),
-        "proposed_resolution_name" -> optionStringtoJsValue(ticket.proposedResolution.name),
-        "proposed_resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.proposedResolution.name),
         "reporter_id"     -> JsNumber(ticket.reporter.id),
         "reporter_name"   -> JsString(ticket.reporter.name),
         "assignee_id"     -> optionLongtoJsValue(ticket.assignee.id),

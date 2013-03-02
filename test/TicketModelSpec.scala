@@ -38,8 +38,8 @@ class TicketModelSpec extends Specification {
         val ts = TicketSeverityModel.getById(1).get
         val tt = TicketTypeModel.getById(1).get
 
-        val t = models.InitialTicket(
-          reporterId = user.id.get,
+        val t = models.Ticket(
+          userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
           severityId = ts.id.get,

@@ -71,6 +71,20 @@ case class FullLink(
 )
 
 /**
+ * Convenience class for creating new tickets.
+ */
+case class NewTicket(
+  projectId: Long,
+  typeId: Long,
+  priorityId: Long,
+  severityId: Long,
+  summary: String,
+  description: Option[String],
+  assigneeId: Option[Long] = None,
+  position: Option[Long] = None
+)
+
+/**
  * Class for getting all possible information out of a ticket. Uses other case classes
  * to avoid the 22 limit.
  */
@@ -117,7 +131,7 @@ case class FullTicket(
  * Class for getting a ticket.
  */
 case class Ticket(
-  id: Pk[Long] = NotAssigned, ticketId: String, userId: Long,
+  id: Pk[Long] = NotAssigned, userId: Long,
   projectId: Long, projectTicketId: Long,
   dateCreated: DateTime
 )
@@ -182,7 +196,6 @@ object TicketModel {
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (user_id, project_id, project_ticket_id) VALUES ({user_id}, {project_id}, {project_ticket_id})")
   val insertDataQuery = SQL("INSERT INTO ticket_data (ticket_id, user_id, priority_id, resolution_id, assignee_id, attention_id, severity_id, status_id, type_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {priority_id}, {resolution_id}, {assignee_id}, {attention_id}, {severity_id}, {status_id}, {type_id}, {position}, {summary}, {description})")
-  val updateQuery = SQL("INSERT INTO tickets (ticket_id, user_id, reporter_id, assignee_id, project_id, attention_id, priority_id, severity_id, status_id, type_id, resolution_id, position, summary, description, date_created) VALUES ({ticket_id}, {user_id}, {reporter_id}, {assignee_id}, {project_id}, {attention_id}, {priority_id}, {severity_id}, {status_id}, {type_id}, {resolution_id}, {position}, {summary}, {description})")
   val getCommentByIdQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id WHERE ticket_comments.id={id} ORDER BY ticket_comments.date_created")
   val insertCommentQuery = SQL("INSERT INTO ticket_comments (type, user_id, ticket_id, content, date_created) VALUES ({type}, {user_id}, {ticket_id}, {content}, UTC_TIMESTAMP())")
   val deleteCommentQuery = SQL("DELETE FROM ticket_comments WHERE id={id}")
@@ -226,7 +239,7 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[DateTime]("date_created") map {
-      case id~tickId~userId~priId~resId~assId~attId~sevId~statId~typeId~position~summary~description~dateCreated => Ticket(
+      case id~tickId~userId~priId~resId~assId~attId~sevId~statId~typeId~position~summary~description~dateCreated => TicketData(
         id = id,
         ticketId = tickId,
         userId = userId,
@@ -340,6 +353,13 @@ object TicketModel {
    */
   def isValidTicketId(id: String): Boolean = idPattern.matcher(id).matches
 
+  def parseTicketId(id: String): Option[Tuple2[String, Long]] = {
+    id.indexOf("-") match {
+      case -1   => None
+      case pos  => Some((id.substring(0, pos), id.substring(pos + 1).toLong))
+    }
+  }
+
   /**
    * Add a comment.
    */
@@ -388,9 +408,11 @@ object TicketModel {
   def assign(ticketId: String, userId: Long, assigneeId: Option[Long], comment: Option[String] = None): FullTicket = {
     val tick = this.getFullById(ticketId).get
 
-    val assigned = tick.copy(assigneeId = assigneeId)
-    val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
-    ft
+    // XXXXX
+    // val assigned = tick.copy(assigneeId = assigneeId)
+    // val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
+    // ft
+    tick
   }
 
   /**
@@ -420,7 +442,7 @@ object TicketModel {
 
     DB.withConnection { implicit conn =>
 
-      val tick = this.getById(ticketId).get
+      val tick = this.getFullById(ticketId).get
 
       this.update(userId = userId, id = ticketId, ticket = tick, statusId = Some(newStatusId), comment = comment)
     }
@@ -429,9 +451,12 @@ object TicketModel {
   /**
    * Create a ticket.
    */
-  def create(userId: Long, ticket: Ticket, ticketData: TicketData): Option[FullTicket] = {
+  def create(userId: Long, projectId: Long, typeId: Long, priorityId: Long, severityId: Long, summary: String, description: Option[String],
+    assigneeId: Option[Long] = None, attentionId: Option[Long] = None, position: Option[Long] = None
+  ): Option[FullTicket] = {
 
-    val project = ProjectModel.getById(ticket.projectId)
+    // If this is missing? XXX
+    val project = ProjectModel.getById(projectId)
 
     // Fetch the starting status we should use for the project's workflow.
     val startingStatus = project match {
@@ -444,33 +469,31 @@ object TicketModel {
       case Some(status) => {
         DB.withConnection { implicit conn =>
 
-          // If these are missing? XXX
-          val proj = ProjectModel.getById(ticket.projectId).get
-          val tid = ProjectModel.getNextSequence(ticket.projectId)
+          val tid = ProjectModel.getNextSequence(projectId)
 
-          // val ticketId = proj.key + "-" + tid.toString
           val id = insertQuery.on(
             'user_id      -> userId,
-            'project_id   -> ticket.projectId,
+            'project_id   -> projectId,
             'project_ticket_id -> tid
           ).executeInsert()
 
           val tdid = insertDataQuery.on(
             'ticket_id    -> id,
             'user_id      -> userId,
-            'priority_id  -> ticketData.priorityId,
-            'resolution_id-> ticketData.resolutionId,
-            'assignee_id  -> ticketData.assigneeId,
-            'attention_id -> ticketData.attentionId,
-            'severity_id  -> ticketData.severityId,
+            'priority_id  -> priorityId,
+            'resolution_id-> None,
+            'assignee_id  -> assigneeId,
+            'attention_id -> attentionId,
+            'severity_id  -> severityId,
             'status_id    -> status.id,
-            'type_id      -> ticketData.typeId,
-            'position     -> ticketData.position,
-            'description  -> ticketData.description,
-            'summary      -> ticketData.summary
+            'type_id      -> typeId,
+            'position     -> position,
+            'description  -> description,
+            'summary      -> summary
           ).executeInsert()
 
-          val nt = this.getFullById(id)
+          // XXX Might not be here?
+          val nt = this.getFullByActualId(id.get)
 
           nt.map { t =>
             // Get on the bus!
@@ -763,19 +786,16 @@ object TicketModel {
       // Only record something if a change was made.
       val tid = DB.withTransaction { implicit conn =>
 
-        // XXX Project
-        updateQuery.on(
+        insertDataQuery.on(
           'ticket_id              -> id,
           'user_id                -> userId,
-          'project_id             -> oldTicket.project.id,
-          'reporter_id            -> ticket.reporter.id,
+          'priority_id            -> ticket.priority.id,
+          'resolution_id          -> newResId,
           'assignee_id            -> ticket.assignee.id,
           'attention_id           -> ticket.attention.id,
-          'priority_id            -> ticket.priority.id,
           'severity_id            -> ticket.severity.id,
           'status_id              -> statusId.getOrElse(oldTicket.status.id),
           'type_id                -> ticket.ttype.id,
-          'resolution_id          -> newResId,
           'position               -> ticket.position,
           'description            -> ticket.description,
           'summary                -> ticket.summary

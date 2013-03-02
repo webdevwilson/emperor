@@ -69,23 +69,15 @@ object Ticket extends Controller with Secured {
 
   val ticketForm = Form(
     mapping(
-      "id"            -> ignored(NotAssigned:Pk[Long]),
-      "ticket_id"     -> ignored[String](""),
-      "reporter_id"   -> longNumber,
-      "assignee_id"   -> optional(longNumber),
-      "attention_id"  -> optional(longNumber),
-      "project_id"    -> ignored[Long](0.toLong),
-      "priority_id"   -> longNumber,
-      "resolution_id" -> optional(longNumber),
-      "proposed_resolution_id" -> optional(longNumber),
-      "severity_id"   -> longNumber,
-      "status_id"     -> ignored[Long](0),
-      "type_id"       -> longNumber,
-      "position"      -> optional(longNumber),
-      "summary"       -> nonEmptyText,
-      "description"   -> optional(text),
-      "dateCreated"   -> ignored[DateTime](new DateTime())
-    )(models.Ticket.apply)(models.Ticket.unapply)
+      "projectId"  -> longNumber,
+      "typeId"     -> longNumber,
+      "priorityId" -> longNumber,
+      "severityId" -> longNumber,
+      "summary"     -> nonEmptyText,
+      "description" -> optional(text),
+      "assigneeId" -> optional(longNumber),
+      "position"    -> optional(longNumber)
+    )(models.NewTicket.apply)(models.NewTicket.unapply)
   )
 
   def doResolve(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_RESOLVE") { implicit request =>
@@ -170,7 +162,11 @@ object Ticket extends Controller with Secured {
         // Check the permission and only execute the create if it's defined,
         // otherwise return a redurect and tell 'em no.
         maybeCan.map({ perm =>
-          val ticket = TicketModel.create(userId = request.user.id.get, ticket = value)
+          val ticket = TicketModel.create(
+            userId = request.user.id.get, projectId = value.projectId, typeId = value.typeId, priorityId = value.priorityId,
+            severityId = value.severityId, summary = value.summary, description = value.description,
+            assigneeId = value.assigneeId, position = value.position
+          )
           ticket match {
             case Some(t) => {
               Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
@@ -219,20 +215,14 @@ object Ticket extends Controller with Secured {
     val sevs = Json.toJson(TicketSeverityModel.getAll).toString
 
     // The worst case scenario, just the user id
-    val startTicket = models.Ticket(
-      id = NotAssigned:Pk[Long],
-      ticketId = "",
-      reporterId = request.user.id.get,
-      assigneeId = None,
+    val startTicket = models.NewTicket(
+      userId = request.user.id.get,
       projectId = 0,
       priorityId = 0,
       severityId = 0,
-      statusId = 0,
       typeId = 0,
-      position = None,
       summary = "",
-      description = None,
-      dateCreated = new DateTime()
+      description = None
     )
 
     val maybeProject: Option[Project] = projectId.flatMap({ id => ProjectModel.getById(id) })

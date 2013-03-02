@@ -15,25 +15,18 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
+
   val ticketForm = Form(
     mapping(
-      "id"         -> ignored(NotAssigned:Pk[Long]),
-      "ticketId"   -> ignored[String](""),
-      "reporterId" -> longNumber,
-      "assigneeId" -> optional(longNumber),
-      "attentionId"-> ignored[Option[Long]](None),
       "projectId"  -> longNumber,
-      "priorityId" -> longNumber,
-      "resolutionId"-> ignored[Option[Long]](None),
-      "proposedResolutionId" -> ignored[Option[Long]](None),
-      "severityId" -> longNumber,
-      "statusId"   -> ignored[Long](1),
       "typeId"     -> longNumber,
-      "position"    -> optional(longNumber),
+      "priorityId" -> longNumber,
+      "severityId" -> longNumber,
       "summary"     -> nonEmptyText,
       "description" -> optional(text),
-      "dateCreated" -> ignored[DateTime](new DateTime())
-    )(models.Ticket.apply)(models.Ticket.unapply)
+      "assigneeId" -> optional(longNumber),
+      "position"    -> optional(longNumber)
+    )(models.NewTicket.apply)(models.NewTicket.unapply)
   )
 
   def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
@@ -44,7 +37,11 @@ object Ticket extends Controller with Secured {
           BadRequest(errors.errorsAsJson)
         },
         value => {
-          TicketModel.create(request.user.id.get, value).map({ ticket =>
+          TicketModel.create(
+            userId = request.user.id.get, projectId = value.projectId, typeId = value.typeId, priorityId = value.priorityId,
+            severityId = value.severityId, summary = value.summary, description = value.description,
+            assigneeId = value.assigneeId, position = value.position
+          ).map({ ticket =>
             val json = Json.toJson(ticket)
             // Inference goes nuts here unless we type this result
             val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))

@@ -111,14 +111,6 @@ object SearchModel {
           "type": "string",
           "index": "not_analyzed"
         },
-        "proposed_resolution_id": {
-          "type": "long",
-          "index": "not_analyzed"
-        },
-        "proposed_resolution_name": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
         "assignee_id": {
           "type": "long",
           "index": "not_analyzed"
@@ -386,26 +378,6 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
-      "proposed_resolution_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "old_proposed_resolution_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "proposed_resolution_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "old_proposed_resolution_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "proposed_resolution_changed": {
-        "type": "boolean",
-        "index": "not_analyzed"
-      },
       "assignee_id": {
         "type": "long",
         "index": "not_analyzed"
@@ -667,7 +639,6 @@ object SearchModel {
     val projChanged = newTick.project.id != oldTick.project.id
     val prioChanged = newTick.priority.id != oldTick.priority.id
     val resoChanged = newTick.resolution.id != oldTick.resolution.id
-    val propResoChanged = newTick.proposedResolution.id != oldTick.proposedResolution.id
     val assChanged = newTick.assignee.id != oldTick.assignee.id
     val attChanged = newTick.attention.id != oldTick.attention.id
     val repChanged = newTick.reporter.id != oldTick.reporter.id
@@ -705,23 +676,6 @@ object SearchModel {
       } },
       "old_resolution_name" -> JsString(oldTick.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
-      "proposed_resolution_id" -> { newTick.proposedResolution.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      "old_proposed_resolution_id" -> { oldTick.proposedResolution.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      "proposed_resolution_name" -> { newTick.proposedResolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      } },
-      "old_proposed_resolution_name" -> { oldTick.proposedResolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      } },
-      "proposed_resolution_changed"-> JsBoolean(propResoChanged),
       "assignee_id"       -> { newTick.assignee.id match {
         case Some(assId)=> JsNumber(assId)
         case None       => JsNull
