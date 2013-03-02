@@ -142,7 +142,7 @@ object JsonFormats {
     // all these IDs then poll the database for the values.
     def reads(json: JsValue): JsResult[FullTicket] = JsSuccess(FullTicket(
       id        = Id((json \ "id").as[Long]),
-      ticketId  = (json \ "ticket_id").as[String],
+      ticketCounterId = (json \ "ticket_counter_id").as[Long],
       user      = NamedThing(
         id    = (json \ "user_id").as[Long],
         name  = (json \ "user_name").as[String]
@@ -159,9 +159,10 @@ object JsonFormats {
         id    = (json \ "attention_id").as[Option[Long]],
         name  = (json \ "attention_name").as[Option[String]]
       ),
-      project  = NamedThing(
+      project  = NamedKeyedThing(
         id    = (json \ "project_id").as[Long],
-        name  = (json \ "project_name").as[String]
+        name  = (json \ "project_name").as[String],
+        key   = (json \ "project_key").as[String]
       ),
       priority  = ColoredPositionedThing(
         id    = (json \ "priority_id").as[Long],

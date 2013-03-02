@@ -89,9 +89,9 @@ case class NewTicket(
  * to avoid the 22 limit.
  */
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, ticketId: String, user: NamedThing, reporter: NamedThing,
+  id: Pk[Long] = NotAssigned, ticketCounterId: Long, user: NamedThing, reporter: NamedThing,
   assignee: OptionalNamedThing, attention: OptionalNamedThing,
-  project: NamedThing,  priority: ColoredPositionedThing,
+  project: NamedKeyedThing,  priority: ColoredPositionedThing,
   resolution: OptionalNamedThing,
   severity: ColoredPositionedThing, workflowStatusId: Long, status: NamedThing,
   ttype: ColoredThing, position: Option[Long],
@@ -125,6 +125,8 @@ case class FullTicket(
    *
    */
   def daysSinceLastChange = Days.daysBetween(dateCreated, new DateTime(DateTimeZone.UTC)).getDays
+
+  def ticketId = project.key + "-" + this.ticketCounterId
 }
 
 /**
@@ -158,6 +160,13 @@ case class TicketData(
  */
 case class NamedThing(
   id: Long, name: String
+)
+
+/**
+ * A thing with a name and id.
+ */
+case class NamedKeyedThing(
+  id: Long, name: String, key: String
 )
 
 /**
@@ -263,6 +272,7 @@ object TicketModel {
   val fullTicket = {
     get[Pk[Long]]("id") ~
     get[String]("ticket_id") ~
+    get[Long]("ticket_counter_id") ~
     get[Long]("user_id") ~
     get[String]("user_realname") ~
     get[Long]("reporter_id") ~
@@ -273,6 +283,7 @@ object TicketModel {
     get[Option[String]]("attention_realname") ~
     get[Long]("project_id") ~
     get[String]("project_name") ~
+    get[String]("project_key") ~
     get[Long]("priority_id") ~
     get[String]("priority_name") ~
     get[String]("priority_color") ~
@@ -293,15 +304,15 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[DateTime]("date_created") map {
-      case id~tickId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~priId~priName~priColor~priPos~resId~resName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
+      case id~tickId~tickCountId~userId~userName~repId~repName~assId~assName~attId~attName~projId~projName~projKey~priId~priName~priColor~priPos~resId~resName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
-          ticketId = tickId,
+          ticketCounterId = tickCountId,
           user = NamedThing(userId, userName),
           reporter = NamedThing(repId, repName),
           assignee = OptionalNamedThing(assId, assName),
           attention = OptionalNamedThing(attId, attName),
-          project = NamedThing(projId, projName),
+          project = NamedKeyedThing(projId, projName, projKey),
           priority = ColoredPositionedThing(priId, priName, priColor, priPos),
           resolution = OptionalNamedThing(resId, resName),
           severity = ColoredPositionedThing(sevId, sevName, sevColor, sevPos),

@@ -10,8 +10,8 @@ object Search extends Controller with Secured {
 
   def index(page: Int, count: Int, query: String, sort: Option[String] = None, order: Option[String] = None) = IsAuthenticated() { implicit request =>
 
-    val existingTicket: Option[Ticket] = if(TicketModel.isValidTicketId(query)) {
-      TicketModel.getById(query)
+    val existingTicket: Option[FullTicket] = if(TicketModel.isValidTicketId(query)) {
+      TicketModel.getFullById(query)
     } else {
       None
     }

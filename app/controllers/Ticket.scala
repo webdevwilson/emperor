@@ -216,7 +216,6 @@ object Ticket extends Controller with Secured {
 
     // The worst case scenario, just the user id
     val startTicket = models.NewTicket(
-      userId = request.user.id.get,
       projectId = 0,
       priorityId = 0,
       severityId = 0,
