@@ -436,13 +436,10 @@ object TicketModel {
    * Assign a ticket with an optional comment.
    */
   def assign(ticketId: Long, userId: Long, assigneeId: Option[Long], comment: Option[String] = None): FullTicket = {
-    val tick = this.getFullById(ticketId).get
+    val tick = this.getDataById(ticketId).get
 
-    // XXXXX
-    // val assigned = tick.copy(assigneeId = assigneeId)
-    // val ft = this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
-    // ft
-    tick
+    val assigned = tick.copy(assigneeId = assigneeId)
+    this.update(userId = userId, id = ticketId, ticket = assigned, comment = comment)
   }
 
   /**

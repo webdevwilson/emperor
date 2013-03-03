@@ -13,6 +13,15 @@ class TicketModelSpec extends Specification {
 
   "Ticket model" should {
 
+    "parse and validate string ids" in {
+
+      TicketModel.isValidTicketId("FOO-1") must beTrue
+      TicketModel.isValidTicketId("-1") must beFalse
+
+      TicketModel.parseTicketId("FOO-1") must beSome
+      TicketModel.parseTicketId("123") must beNone
+    }
+
     "create, retrieve and delete ticket" in {
       running(FakeApplication()) {
 
@@ -53,6 +62,49 @@ class TicketModelSpec extends Specification {
         val eTicket = TicketModel.getById(newTicket.get.id.get)
         eTicket must beSome
         eTicket.get must beAnInstanceOf[models.Ticket]
+
+        TicketModel.delete(newTicket.get.id.get)
+        ProjectModel.delete(newProject.id.get)
+        1 mustEqual(1)
+      }
+    }
+
+    "provide convenience methods for string id operations" in {
+      running(FakeApplication()) {
+
+        val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+        val p = models.Project(
+          name = "Test Project 1",
+          key = "TEST1",
+          workflowId = work.get.id.get,
+          ownerId = None,
+          permissionSchemeId = 1,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
+          dateCreated = new DateTime
+        )
+        val newProject = ProjectModel.create(p).get
+
+        val user = UserModel.getById(1).get
+
+        val tp = TicketPriorityModel.getById(1).get
+        val ts = TicketSeverityModel.getById(1).get
+        val tt = TicketTypeModel.getById(1).get
+
+        val newTicket = TicketModel.create(
+          userId = user.id.get,
+          projectId = newProject.id.get,
+          typeId = tt.id.get,
+          priorityId = tp.id.get,
+          severityId = ts.id.get,
+          summary = "Test Ticket 1"
+        )
+        newTicket must beSome
+
+        TicketModel.getActualId(newTicket.get.ticketId) must beEqualTo(newTicket.get.id.get)
 
         TicketModel.delete(newTicket.get.id.get)
         ProjectModel.delete(newProject.id.get)
