@@ -141,11 +141,12 @@ object Ticket extends Controller with Secured {
 
   def links(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val links = TicketModel.getLinks(ticketId)
+    val json = TicketModel.getByStringId(ticketId).map({ ticket =>
 
-    // XXX Need to put the actual tickets in here, at least the Edit ticket
+      // XXX Need to put the actual tickets in here, at least the Edit ticket
+      Json.toJson(TicketModel.getLinks(ticket.id.get))
+    }).getOrElse(Json.obj("error" -> "Ticket not found"))
 
-    val json = Json.toJson(links)
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
       case None => Ok(json)

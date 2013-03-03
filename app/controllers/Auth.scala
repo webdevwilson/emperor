@@ -101,7 +101,7 @@ trait Secured {
               case None => None
             }
           } else {
-            // Worse case, get the core Emperor project
+            // Worst case, get the core Emperor project
             Some(ProjectModel.getByKey("EMPCORE").get.id.get) // Return the default project id, this must be a global check
           }
 

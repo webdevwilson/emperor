@@ -212,7 +212,7 @@ object TicketModel {
   val deleteDataQuery = SQL("DELETE FROM ticket_data WHERE ticket_id={ticket_id}")
 
   val insertLinkQuery = SQL("INSERT INTO ticket_links (link_type_id, parent_ticket_id, child_ticket_id) VALUES ({link_type_id}, {parent_ticket_id}, {child_ticket_id})")
-  val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} GROUP BY ticket_links.id ORDER BY link_type_id, ticket_links.date_created ASC")
+  val getLinksQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id WHERE parent_ticket_id={ticket_id} OR child_ticket_id={ticket_id} ORDER BY link_type_id, ticket_links.date_created ASC")
   val getLinkByIdQuery = SQL("SELECT * FROM ticket_links JOIN ticket_link_types ON ticket_link_types.id = ticket_links.link_type_id WHERE ticket_links.id={id}")
   val deleteLinkQuery = SQL("DELETE FROM ticket_links WHERE id={id}")
 
@@ -467,7 +467,7 @@ object TicketModel {
   /**
    * Change the status of a ticket.  Is really a wrapper around `update`.
    */
-  def changeStatus(ticketId: Long, newStatusId: Long, userId: Long, comment: Option[String] = None) = {
+  def changeStatus(ticketId: Long, userId: Long, newStatusId: Long, comment: Option[String] = None) = {
 
     DB.withConnection { implicit conn =>
 
@@ -647,16 +647,13 @@ object TicketModel {
   /**
    * Get links for a ticket.
    */
-  def getLinks(id: String): List[FullLink] = {
+  def getLinks(id: Long): List[FullLink] = {
 
     DB.withConnection { implicit conn =>
       val links = getLinksQuery.on('ticket_id -> id).as(link.*)
 
       links.map { link =>
 
-        // XXX This sucks.  I would love to fix this, but I can't turn
-        // the link query into a JOIN to the full_tickets view because it
-        // hangs MySQL. Ugh. - gphat
         val parent = getFullById(link.parentId).get
         val child = getFullById(link.childId).get
 

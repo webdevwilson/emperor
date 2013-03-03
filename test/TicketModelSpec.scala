@@ -63,6 +63,22 @@ class TicketModelSpec extends Specification {
         eTicket must beSome
         eTicket.get must beAnInstanceOf[models.Ticket]
 
+        val efTicket = TicketModel.getFullById(newTicket.get.id.get)
+        efTicket must beSome
+        efTicket.get must beAnInstanceOf[models.FullTicket]
+
+        val sTicket = TicketModel.getByStringId(newTicket.get.ticketId)
+        sTicket must beSome
+        sTicket.get must beAnInstanceOf[models.Ticket]
+
+        val sfTicket = TicketModel.getFullByStringId(newTicket.get.ticketId)
+        sfTicket must beSome
+        sfTicket.get must beAnInstanceOf[models.FullTicket]
+
+        val ticketData = TicketModel.getDataById(newTicket.get.id.get)
+        ticketData must beSome
+        ticketData.get must beAnInstanceOf[models.TicketData]
+
         TicketModel.delete(newTicket.get.id.get)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
@@ -224,6 +240,58 @@ class TicketModelSpec extends Specification {
       }
     }
 
+    "handle status change" in {
+      running(FakeApplication()) {
+
+        val work = WorkflowModel.getById(1) // Assumes the default workflow exists
+
+        val p = models.Project(
+          name = "Test Project 1",
+          key = "TEST1",
+          workflowId = work.get.id.get,
+          ownerId = None,
+          permissionSchemeId = 1,
+          defaultPriorityId = None,
+          defaultSeverityId = None,
+          defaultTypeId = None,
+          defaultAssignee = None,
+          dateCreated = new DateTime
+        )
+        val newProject = ProjectModel.create(p).get
+
+        val user = UserModel.getById(1).get
+
+        val tp = TicketPriorityModel.getById(1).get
+        val ts = TicketSeverityModel.getById(1).get
+        val tt = TicketTypeModel.getById(1).get
+
+        val newTicket = TicketModel.create(
+          userId = user.id.get,
+          projectId = newProject.id.get,
+          typeId = tt.id.get,
+          priorityId = tp.id.get,
+          severityId = ts.id.get,
+          summary = "Test Ticket 1"
+        )
+
+        newTicket must beSome
+        newTicket.get.assignee.id must beNone
+
+        val status = TicketStatusModel.getById(3)
+
+        // Resolve it!
+        val changedTicket = TicketModel.changeStatus(
+          ticketId = newTicket.get.id.get,
+          userId = user.id.get,
+          newStatusId = status.get.id.get
+        )
+        changedTicket.status.id must beEqualTo(status.get.id.get)
+
+        TicketModel.delete(newTicket.get.id.get)
+        ProjectModel.delete(newProject.id.get)
+        1 mustEqual(1)
+      }
+    }
 
     "handle comments" in {
       running(FakeApplication()) {
@@ -378,6 +446,10 @@ class TicketModelSpec extends Specification {
         link.get.parentSummary must beEqualTo(newTicket.get.summary)
         link.get.childId must beEqualTo(newTicket2.get.id.get)
         link.get.childSummary must beEqualTo(newTicket2.get.summary)
+
+        val links = TicketModel.getLinks(newTicket.get.id.get)
+        links must have size(1)
+        links(0).id.get must beEqualTo(link.get.id.get)
 
         TicketModel.removeLink(link.get.id.get)
         TicketModel.delete(newTicket2.get.id.get)
