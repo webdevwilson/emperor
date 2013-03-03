@@ -49,7 +49,7 @@ object UserTokenModel {
         'token    -> tokenString,
         'user_id  -> userId,
         'comment  -> comment
-      ).executeInsert()
+      ).execute()
 
       this.getById(tokenString).get
     }

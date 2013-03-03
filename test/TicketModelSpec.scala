@@ -451,6 +451,10 @@ class TicketModelSpec extends Specification {
         links must have size(1)
         links(0).id.get must beEqualTo(link.get.id.get)
 
+        val fLink = TicketModel.getLinkById(link.get.id.get)
+        fLink must beSome
+        fLink.get.id.get must beEqualTo(link.get.id.get)
+
         TicketModel.removeLink(link.get.id.get)
         TicketModel.delete(newTicket2.get.id.get)
         TicketModel.delete(newTicket.get.id.get)

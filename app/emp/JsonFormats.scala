@@ -431,13 +431,13 @@ object JsonFormats {
       workflowId  = (json \ "workflowId").as[Long],
       name        = (json \ "name").as[String],
       key         = (json \ "key").as[String],
-      ownerId     = (json \ "owner_id").as[Option[Long]],
+      ownerId     = (json \ "ownerId").as[Option[Long]],
       permissionSchemeId = (json \ "permissionSchemeId").as[Long],
       defaultPriorityId = (json \ "defaultPriorityId").as[Option[Long]],
       defaultSeverityId = (json \ "defaultSeverityId").as[Option[Long]],
       defaultTypeId = (json \ "defaultTypeId").as[Option[Long]],
       defaultAssignee = (json \ "defaultAssignee").as[Option[Int]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
     def writes(obj: Project): JsValue = {
@@ -468,17 +468,17 @@ object JsonFormats {
       }
 
       val doc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(obj.id.get),
+        "id"             -> JsNumber(obj.id.get),
         "workflowId"     -> JsNumber(obj.workflowId),
-        "name"            -> JsString(obj.name),
-        "key"             -> JsString(obj.key),
+        "name"           -> JsString(obj.name),
+        "key"            -> JsString(obj.key),
         "ownerId"        -> owner,
-        "permission_schemeId" -> JsNumber(obj.permissionSchemeId),
+        "permissionSchemeId" -> JsNumber(obj.permissionSchemeId),
         "defaultPriorityId" -> prio,
         "defaultSeverityId" -> sev,
         "defaultTypeId" -> ttype,
         "defaultAssignee" -> defAssign,
-        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+        "dateCreated"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
