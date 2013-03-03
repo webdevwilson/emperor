@@ -235,8 +235,8 @@ SELECT
   td.summary     AS summary,
   td.description AS description,
   t.date_created  AS date_created
-FROM tickets t
-  JOIN ticket_data td ON td.ticket_id = t.id
+FROM ticket_data td
+  JOIN tickets t ON t.id = td.ticket_id
   JOIN projects p ON p.id = t.project_id
   JOIN ticket_priorities tp ON tp.id = td.priority_id
   JOIN ticket_severities sevs ON sevs.id = td.severity_id
@@ -248,8 +248,8 @@ FROM tickets t
   LEFT JOIN users uass ON uass.id = td.assignee_id
   LEFT JOIN users uatt ON uatt.id = td.attention_id
   LEFT JOIN ticket_resolutions tr ON tr.id = td.resolution_id
-WHERE t.id IN (
-  SELECT MAX(ticket_id) FROM ticket_data GROUP BY ticket_id
+WHERE td.id IN (
+  SELECT MAX(id) FROM ticket_data GROUP BY ticket_id
 );
 
 CREATE VIEW full_all_tickets AS

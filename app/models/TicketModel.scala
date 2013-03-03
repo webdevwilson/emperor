@@ -196,7 +196,7 @@ object TicketModel {
   val allQuery = SQL("SELECT * FROM tickets")
   val getIdQuery = SQL("SELECT id FROM tickets WHERE project_id={project_id} AND project_ticket_id={project_ticket_id}")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
-  val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE id={id}")
+  val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE ticket_id={ticket_id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
   val getFullByIdQuery = SQL("SELECT * FROM full_tickets WHERE id={id}")
   val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t  WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
@@ -563,7 +563,7 @@ object TicketModel {
   }
 
   /**
-   * Get ticket by ticketId.
+   * Get ticket by id.
    */
   def getById(id: Long): Option[Ticket] = {
 
@@ -596,7 +596,7 @@ object TicketModel {
   def getDataById(id: Long): Option[TicketData] = {
 
     DB.withConnection { implicit conn =>
-      getByIdQuery.on('ticket_id -> id).as(ticketData.singleOpt)
+      getDataByIdQuery.on('ticket_id -> id).as(ticketData.singleOpt)
     }
   }
 
