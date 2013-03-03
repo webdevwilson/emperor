@@ -101,16 +101,16 @@ object Ticket extends Controller with Secured {
 
   def doResolve(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_RESOLVE") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullByStringId(ticketId)
 
-    ticket match {
-      case Some(value) => {
+    maybeTicket match {
+      case Some(ticket) => {
         resolveForm.bindFromRequest.fold(
           errors => {
             BadRequest(views.html.ticket.error(request))
           }, {
             case resolution: models.Resolution => {
-              val nt = TicketModel.resolve(ticketId = ticketId, userId = request.user.id.get, resolutionId = resolution.resolutionId,  comment = resolution.comment)
+              val nt = TicketModel.resolve(ticketId = ticket.id.get, userId = request.user.id.get, resolutionId = resolution.resolutionId,  comment = resolution.comment)
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.resolution")
             }
           }
@@ -122,16 +122,16 @@ object Ticket extends Controller with Secured {
 
   def doUnResolve(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_RESOLVE") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullByStringId(ticketId)
 
-    ticket match {
-      case Some(value) => {
+    maybeTicket match {
+      case Some(ticket) => {
         commentForm.bindFromRequest.fold(
           errors => {
             BadRequest(views.html.ticket.error(request))
           }, {
             case unresolution: models.Comment => {
-              val nt = TicketModel.unresolve(ticketId = ticketId, userId = request.user.id.get, comment = Some(unresolution.content))
+              val nt = TicketModel.unresolve(ticketId = ticket.id.get, userId = request.user.id.get, comment = Some(unresolution.content))
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.unresolution")
             }
           }
@@ -143,16 +143,16 @@ object Ticket extends Controller with Secured {
 
   def doAssign(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullByStringId(ticketId)
 
-    ticket match {
-      case Some(value) => {
+    maybeTicket match {
+      case Some(ticket) => {
         assignForm.bindFromRequest.fold(
           errors => {
             BadRequest(views.html.ticket.error(request))
           }, {
             case assignment: models.Assignment => {
-              val nt = TicketModel.assign(ticketId = ticketId, userId = request.user.id.get, assigneeId = assignment.userId, comment = assignment.comment)
+              val nt = TicketModel.assign(ticketId = ticket.id.get, userId = request.user.id.get, assigneeId = assignment.userId, comment = assignment.comment)
               Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.assignment.success")
             }
           }
@@ -200,7 +200,7 @@ object Ticket extends Controller with Secured {
   def change(ticketId: String, statusId: Long) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
     TicketStatusModel.getById(statusId).map({ status =>
-      TicketModel.getFullById(ticketId).map({ ticket =>
+      TicketModel.getFullByStringId(ticketId).map({ ticket =>
         Ok(views.html.ticket.change(ticket, status, commentForm))
       }).getOrElse(NotFound)
     }).getOrElse(NotFound)
@@ -208,16 +208,18 @@ object Ticket extends Controller with Secured {
 
   def comment(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_COMMENT") { implicit request =>
 
-    commentForm.bindFromRequest.fold(
-      errors => {
-        Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
-      },
-      value => {
-        val comm = TicketModel.addComment(ticketId, value.ctype, request.user.id.get, value.content)
+    TicketModel.getByStringId(ticketId).map({ ticket =>
+      commentForm.bindFromRequest.fold(
+        errors => {
+          Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.comment.invalid")
+        },
+        value => {
+          val comm = TicketModel.addComment(ticket.id.get, value.ctype, request.user.id.get, value.content)
 
-        Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
-      }
-    )
+          Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.comment.added")
+        }
+      )
+    }).getOrElse(NotFound)
   }
 
   /**
@@ -254,7 +256,7 @@ object Ticket extends Controller with Secured {
 
   def edit(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    val maybeTicket = TicketModel.getById(ticketId)
+    val maybeTicket = TicketModel.getByStringId(ticketId)
 
     maybeTicket match {
       case Some(ticket) => {
@@ -273,12 +275,12 @@ object Ticket extends Controller with Secured {
 
   def item(tab: String = "comments", ticketId: String, page: Int = 1, count: Int= 10, query: String = "*") = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val maybeTicket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullByStringId(ticketId)
 
     maybeTicket match {
       case Some(ticket) => {
 
-        val wf = WorkflowModel.getForTicket(ticket.ticketId)
+        val wf = WorkflowModel.getForTicket(ticket.id.get)
         val wfs = WorkflowModel.getStatuses(wf.get.id.get)
 
         val resolutions = TicketResolutionModel.getAll.map { reso => (reso.id.get.toString -> Messages(reso.name)) }
@@ -398,7 +400,7 @@ object Ticket extends Controller with Secured {
 
   def link(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    TicketModel.getFullById(ticketId).map({ ticket =>
+    TicketModel.getFullByStringId(ticketId).map({ ticket =>
       val linkTypes = TicketLinkTypeModel.getAll.flatMap(ltype => {
         if(ltype.invertable) {
           // Include the INVERT version with a negative ID so we can pick it up on submission. SO CLEVER.
@@ -410,7 +412,7 @@ object Ticket extends Controller with Secured {
 
       val recents: Seq[FullTicket] = session.get("recent_tickets").map({ rt =>
         rt.split(",").toSeq.map({ rtid =>
-          TicketModel.getFullById(rtid).get
+          TicketModel.getFullByStringId(rtid).get
         }).reverse
       }).getOrElse(Seq());
       Ok(views.html.ticket.link(ticket, linkTypes, linkForm, recents))
@@ -419,14 +421,14 @@ object Ticket extends Controller with Secured {
 
   def doLink(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    TicketModel.getById(ticketId).map({ ticket =>
+    TicketModel.getByStringId(ticketId).map({ ticket =>
       linkForm.bindFromRequest.fold(
         errors => {
           Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.linker.failure")
         }, {
           case value: models.MakeLink => {
             value.comment.map({ comm =>
-              TicketModel.addComment(ticketId, "comment", request.user.id.get, comm)
+              TicketModel.addComment(ticket.id.get, "comment", request.user.id.get, comm)
             })
 
             value.tickets.foreach({ otherTicketId =>
@@ -458,11 +460,11 @@ object Ticket extends Controller with Secured {
 
   def status(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val maybeTicket = TicketModel.getFullByStringId(ticketId)
 
-    ticket match {
-      case Some(value) => {
-        val wf = WorkflowModel.getForTicket(ticketId).get;
+    maybeTicket match {
+      case Some(ticket) => {
+        val wf = WorkflowModel.getForTicket(ticket.id.get).get;
 
         statusChangeForm.bindFromRequest.fold(
           errors => {
@@ -470,7 +472,7 @@ object Ticket extends Controller with Secured {
           }, {
             case statusChange: models.StatusChange => {
               if(WorkflowModel.verifyStatusInWorkflow(wf.id.get, statusChange.statusId)) {
-                TicketModel.changeStatus(ticketId, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
+                TicketModel.changeStatus(ticket.id.get, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
                 Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
               } else {
                 Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status.invalid")
@@ -485,7 +487,7 @@ object Ticket extends Controller with Secured {
 
   def update(ticketId: String) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_EDIT") { implicit request =>
 
-    TicketModel.getById(ticketId).map({ ticket =>
+    TicketModel.getByStringId(ticketId).map({ ticket =>
 
       ticketDataForm.bindFromRequest.fold(
         errors => {
@@ -498,7 +500,7 @@ object Ticket extends Controller with Secured {
           BadRequest(views.html.ticket.edit(ticketId, errors, assignees, assignees, assignees, projs, ttypes, prios, sevs))
         },
         value => {
-          TicketModel.update(request.user.id.get, ticketId, value)
+          TicketModel.update(request.user.id.get, ticket.id.get, value)
           Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.edit.success")
         }
       )

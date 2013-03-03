@@ -85,7 +85,7 @@ object WorkflowModel {
     }
   }
 
-  def getForTicket(ticketId: String): Option[Workflow] = {
+  def getForTicket(ticketId: Long): Option[Workflow] = {
 
     DB.withConnection { implicit conn =>
       getWorkflowForTicketQuery.on('ticket_id -> ticketId).as(workflow.singleOpt)

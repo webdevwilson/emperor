@@ -56,7 +56,7 @@ object Ticket extends Controller with Secured {
 
   def item(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val ticket = TicketModel.getFullByStringId(ticketId)
 
     ticket match {
       case Some(t) => {

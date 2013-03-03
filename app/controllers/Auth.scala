@@ -96,7 +96,7 @@ trait Secured {
             projectId
           } else if(ticketId.isDefined) {
             // Got a ticket id.  Fetch the ticket to get the project
-            TicketModel.getById(ticketId.get) match {
+            TicketModel.getByStringId(ticketId.get) match {
               case Some(ticket) => Some(ticket.projectId)
               case None => None
             }

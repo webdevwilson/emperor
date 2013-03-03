@@ -194,6 +194,7 @@ object TicketModel {
 
   val allCommentsQuery = SQL("SELECT * FROM ticket_comments JOIN users ON users.id = ticket_comments.user_id")
   val allQuery = SQL("SELECT * FROM tickets")
+  val getIdQuery = SQL("SELECT id FROM tickets WHERE project_id={project_id} AND project_ticket_id={project_ticket_id}")
   val getByIdQuery = SQL("SELECT * FROM tickets WHERE id={id}")
   val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE id={id}")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
@@ -374,6 +375,22 @@ object TicketModel {
   }
 
   /**
+   * Get the ID of a ticket via it's string-id.
+   */
+  def getActualId(id: String): Option[Long] = {
+    parseTicketId(id).flatMap({ parts =>
+      ProjectModel.getByKey(parts._1).map({ proj =>
+        DB.withConnection { implicit conn =>
+          getIdQuery.on(
+            'project_id -> proj.id.get,
+            'project_ticket_id -> parts._2.toLong
+          ).as(scalar[Long].single)
+        }
+      })
+    })
+  }
+
+  /**
    * Add a comment.
    */
   def addComment(ticketId: Long, ctype: String, userId: Long, content: String) : Option[Comment] = {
@@ -544,7 +561,7 @@ object TicketModel {
   /**
    * Get a comment by id.
    */
-  def getCommentById(id: Long) : Option[Comment] = {
+  def getCommentById(id: Long): Option[Comment] = {
 
     DB.withConnection { implicit conn =>
       getCommentByIdQuery.on('id -> id).as(comment.singleOpt)
@@ -554,7 +571,7 @@ object TicketModel {
   /**
    * Get ticket by ticketId.
    */
-  def getById(id: Long) : Option[Ticket] = {
+  def getById(id: Long): Option[Ticket] = {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket.singleOpt)
@@ -562,9 +579,27 @@ object TicketModel {
   }
 
   /**
+   * Convenience method for getting a ticket by it's string id.
+   */
+  def getByStringId(id: String): Option[Ticket] = {
+    getActualId(id).flatMap({ tid =>
+      getById(tid)
+    })
+  }
+
+  /**
+   * Convenience method for getting a full ticket by it's string id.
+   */
+  def getFullByStringId(id: String): Option[FullTicket] = {
+    getActualId(id).flatMap({ tid =>
+      getFullById(tid)
+    })
+  }
+
+  /**
    * Get ticket data by ticketId.
    */
-  def getDataById(id: Long) : Option[TicketData] = {
+  def getDataById(id: Long): Option[TicketData] = {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('ticket_id -> id).as(ticketData.singleOpt)
@@ -574,7 +609,7 @@ object TicketModel {
   /**
    * Get ticket by ticketId.  This version returns the `FullTicket`.
    */
-  def getFullById(id: Long) : Option[FullTicket] = {
+  def getFullById(id: Long): Option[FullTicket] = {
 
     DB.withConnection { implicit conn =>
       getFullByIdQuery.on('id -> id).as(fullTicket.singleOpt)
