@@ -547,14 +547,11 @@ object TicketModel {
   /**
    * Delete a ticket.
    */
-  def delete(ticketId: String) {
-
-    // Could be none XXX
-    val (projKey, tid) = parseTicketId(ticketId).get
+  def delete(id: Long) {
 
     DB.withTransaction { implicit conn =>
-      deleteDataQuery.on('ticket_id -> tid).execute
-      deleteQuery.on('id -> tid).execute
+      deleteDataQuery.on('ticket_id -> id).execute
+      deleteQuery.on('id -> id).execute
     }
   }
 
@@ -691,6 +688,9 @@ object TicketModel {
       val maybeL = getLinkByIdQuery.on('id -> id).as(link.singleOpt)
       maybeL match {
         case Some(l) => {
+
+          println(l.parentId)
+
           val parent = getFullById(l.parentId).get
           val child = getFullById(l.childId).get
 
@@ -725,25 +725,19 @@ object TicketModel {
   /**
    * Link a child ticket to a parent with a type.
    */
-  def link(linkTypeId: Long, parentId: String, childId: String): Option[FullLink] = {
-
-    println("parent " + parentId)
-    println("child " + childId)
-
-    val (parentProj, parentTick) = parseTicketId(parentId).get
-    val (childProj, childTick) = parseTicketId(childId).get
+  def link(linkTypeId: Long, parentId: Long, childId: Long): Option[FullLink] = {
 
     DB.withConnection { implicit conn =>
       val li = insertLinkQuery.on(
         'link_type_id     -> linkTypeId,
-        'parent_ticket_id -> parentTick,
-        'child_ticket_id  -> childTick
+        'parent_ticket_id -> parentId,
+        'child_ticket_id  -> childId
       ).executeInsert()
       li.map({ lid =>
         EmperorEventBus.publish(
           LinkTicketEvent(
-            parentId = parentTick,
-            childId = childTick
+            parentId = parentId,
+            childId = childId
           )
         )
         getFullLinkById(lid)

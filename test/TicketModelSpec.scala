@@ -50,11 +50,11 @@ class TicketModelSpec extends Specification {
         newTicket.get must beAnInstanceOf[models.FullTicket]
         newTicket.get.ticketId must beEqualTo("TEST1-1")
 
-        val eTicket = TicketModel.getById(newTicket.get.ticketId)
+        val eTicket = TicketModel.getById(newTicket.get.id.get)
         eTicket must beSome
         eTicket.get must beAnInstanceOf[models.Ticket]
 
-        TicketModel.delete(newTicket.get.ticketId)
+        TicketModel.delete(newTicket.get.id.get)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }
@@ -94,7 +94,7 @@ class TicketModelSpec extends Specification {
           summary = "Test Ticket 2"
         )
 
-        val comm = TicketModel.addComment(ticketId = newTicket.get.ticketId, ctype = "comment", userId = user.id.get, content = "Comment!")
+        val comm = TicketModel.addComment(ticketId = newTicket.get.id.get, ctype = "comment", userId = user.id.get, content = "Comment!")
         comm must beSome
         comm.get must beAnInstanceOf[models.Comment]
 
@@ -103,7 +103,7 @@ class TicketModelSpec extends Specification {
         gcomm.get must beAnInstanceOf[models.Comment]
 
         TicketModel.deleteComment(comm.get.id.get)
-        TicketModel.delete(newTicket.get.ticketId)
+        TicketModel.delete(newTicket.get.id.get)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }
@@ -204,19 +204,19 @@ class TicketModelSpec extends Specification {
         lt must beSome
 
         val link = TicketModel.link(
-          linkTypeId = lt.get.id.get, parentId = newTicket.get.ticketId, childId = newTicket2.get.ticketId
+          linkTypeId = lt.get.id.get, parentId = newTicket.get.id.get, childId = newTicket2.get.id.get
         )
         link must beSome
         link.get.typeId must beEqualTo(lt.get.id.get)
         link.get.typeName must beEqualTo(lt.get.name)
-        link.get.parentId must beEqualTo(newTicket.get.ticketId)
+        link.get.parentId must beEqualTo(newTicket.get.id.get)
         link.get.parentSummary must beEqualTo(newTicket.get.summary)
-        link.get.childId must beEqualTo(newTicket2.get.ticketId)
+        link.get.childId must beEqualTo(newTicket2.get.id.get)
         link.get.childSummary must beEqualTo(newTicket2.get.summary)
 
         TicketModel.removeLink(link.get.id.get)
-        TicketModel.delete(newTicket2.get.ticketId)
-        TicketModel.delete(newTicket.get.ticketId)
+        TicketModel.delete(newTicket2.get.id.get)
+        TicketModel.delete(newTicket.get.id.get)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }

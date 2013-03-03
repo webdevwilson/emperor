@@ -106,9 +106,16 @@ object Ticket extends Controller with Secured {
         if(childId.get == ticketId) {
           Left("Can't link ticket to itself.")
         } else {
-          Right(TicketModel.link(
-            linkTypeId = typeId.get, parentId = ticketId, childId = childId.get
-          ))
+          val parent = TicketModel.getByStringId(ticketId)
+          val child = TicketModel.getByStringId(childId.get)
+
+          if(parent.isDefined && child.isDefined) {
+            Right(TicketModel.link(
+              linkTypeId = typeId.get, parentId = parent.get.id.get, childId = child.get.id.get
+            ))
+          } else {
+            Left("Unknown ticket id.")
+          }
         }
       } else {
         Left("Must have both child_ticket_id and link_type_id")

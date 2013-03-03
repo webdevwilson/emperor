@@ -29,7 +29,7 @@ object Ticket extends Controller with Secured {
     mapping(
       "link_type_id"-> longNumber,
       "ticket" -> play.api.data.Forms.list(nonEmptyText),
-      "comment"     -> optional(text)
+      "comment" -> optional(text)
     )(models.MakeLink.apply)(models.MakeLink.unapply)
   )
 
@@ -446,11 +446,15 @@ object Ticket extends Controller with Secured {
                 otherTicketId
               }
 
-              TicketModel.link(
-                linkTypeId = abs(ltype), parentId = parentId, childId = childId
-              )
-            });
+              val parent = TicketModel.getByStringId(ticketId)
+              val child = TicketModel.getByStringId(childId)
 
+              if(parent.isDefined && child.isDefined) {
+                TicketModel.link(
+                  linkTypeId = abs(ltype), parentId = parent.get.id.get, childId = child.get.id.get
+                )
+              }
+            });
             Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.linker.success")
           }
         }

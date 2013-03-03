@@ -249,7 +249,7 @@ FROM tickets t
   LEFT JOIN users uatt ON uatt.id = td.attention_id
   LEFT JOIN ticket_resolutions tr ON tr.id = td.resolution_id
 WHERE t.id IN (
-  SELECT MAX(id) FROM tickets GROUP BY ticket_id
+  SELECT MAX(ticket_id) FROM ticket_data GROUP BY ticket_id
 );
 
 CREATE VIEW full_all_tickets AS
