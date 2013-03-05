@@ -19,11 +19,11 @@ case class User(
   realName: String,
   timezone: String,
   email: String,
-  organization: Option[String],
-  location: Option[String],
-  title: Option[String],
-  url: Option[String],
-  dateCreated: DateTime
+  organization: Option[String] = None,
+  location: Option[String] = None,
+  title: Option[String] = None,
+  url: Option[String] = None,
+  dateCreated: DateTime = DateTime.now
 ) {
 
   def isAnonymous = username.equals("anonymous")

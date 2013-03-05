@@ -42,9 +42,9 @@ class ProjectAPISpec extends Specification {
         val result = route(FakeRequest( GET, "/api/project/" + newProject.id.get).withHeaders("Authorization" -> tokenStr)).get
         status(result) must equalTo(200)
 
-        println(contentAsString(result))
         val apiProj = Json.fromJson[Project](Json.parse(contentAsString(result)))
 
+        UserTokenModel.delete(user.id.get, token.token.get)
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }

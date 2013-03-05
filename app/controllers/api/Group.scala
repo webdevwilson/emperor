@@ -10,20 +10,43 @@ import play.api.libs.json.Json
 
 object Group extends Controller with Secured {
 
+  /**
+   * Retrieve a group by id.
+   */
+  def item(id: Long, callback: Option[String]) = IsAuthenticated() { implicit request =>
+
+    GroupModel.getById(id).map({ project =>
+
+      val json = Json.toJson(project)
+      callback.map({ callback =>
+        Ok(Jsonp(callback, json))
+      }).getOrElse(Ok(json))
+    }).getOrElse(NotFound(Json.toJson(Map("error" -> "api.unknown.entity"))))
+  }
+
+  /**
+   * List all groups.
+   */
+  def index(callback: Option[String]) = IsAuthenticated() { implicit request =>
+    val json = Json.toJson(GroupModel.getAll)
+
+    callback.map({ callback =>
+      Ok(Jsonp(callback, json))
+    }).getOrElse(Ok(json))
+  }
+
+  /**
+   * Find groups that start with a string
+   */
   def startsWith(q: Option[String], callback: Option[String]) = IsAuthenticated() { implicit request =>
 
-    q match {
-      case Some(query) => {
+    q.map({ query =>
+      val json = Json.toJson(GroupModel.getStartsWith(query))
 
-        val json = Json.toJson(GroupModel.getStartsWith(query))
-
-        callback match {
-          case Some(callback) => Ok(Jsonp(callback, json))
-          case None => Ok(json)
-        }
-      }
-      case None => NotFound
-    }
+      callback.map({ callback =>
+        Ok(Jsonp(callback, json))
+      }).getOrElse(Ok(json))
+    }).getOrElse(NotFound(Json.toJson(Map("error" -> "api.unknown.entity"))))
   }
 
   /**
@@ -31,18 +54,15 @@ object Group extends Controller with Secured {
    */
   def addUser(id: Long, username: String, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
-    val maybeUser = UserModel.getByUsername(username)
+    // XXX Check if group exists!
+    UserModel.getByUsername(username).map({ user =>
 
-    maybeUser match {
-      case Some(user) => {
-        val gu = GroupModel.addUser(user.id.get, id)
-        val json = Json.toJson(gu.get) // This might be none XXX
-        callback.map({ cb =>
-          Ok(Jsonp(cb, json))
-        }).getOrElse(Ok(json))
-      }
-      case None => NotFound
-    }
+      val gu = GroupModel.addUser(user.id.get, id)
+      val json = Json.toJson(gu.get) // This might be none XXX
+      callback.map({ cb =>
+        Ok(Jsonp(cb, json))
+      }).getOrElse(Ok(json))
+    }).getOrElse(NotFound(Json.toJson(Map("error" -> "api.unknown.entity"))))
   }
 
   /**
@@ -52,10 +72,9 @@ object Group extends Controller with Secured {
 
     GroupModel.removeUser(userId, id)
     val json = Json.toJson(Map("ok" -> "ok"))
-    callback match {
-      case Some(callback) => Ok(Jsonp(callback, json))
-      case None => Ok(json)
-    }
+    callback.map({ callback =>
+      Ok(Jsonp(callback, json))
+    }).getOrElse(Ok(json))
   }
 
   /**
@@ -64,9 +83,8 @@ object Group extends Controller with Secured {
   def users(id: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
     val users = GroupModel.getGroupUsersForGroup(id)
     val json = Json.toJson(users)
-    callback match {
-      case Some(callback) => Ok(Jsonp(callback, json))
-      case None => Ok(json)
-    }
+    callback.map({ callback =>
+      Ok(Jsonp(callback, json))
+    }).getOrElse(Ok(json))
   }
 }

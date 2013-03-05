@@ -12,7 +12,7 @@ import play.Logger
 /**
  * Class for groups.
  */
-case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime)
+case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime = DateTime.now)
 
 /**
  * Class for users in a group.
