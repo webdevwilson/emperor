@@ -61,7 +61,7 @@ object TicketTypeModel {
   /**
    * Get a type by it's id.
    */
-  def getById(id: Long) : Option[TicketType] = {
+  def getById(id: Long): Option[TicketType] = {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(ticket_type.singleOpt)
@@ -75,7 +75,7 @@ object TicketTypeModel {
     }
   }
 
-  def list(page: Int = 1, count: Int = 10) : Page[TicketType] = {
+  def list(page: Int = 1, count: Int = 10): Page[TicketType] = {
 
       val offset = count * (page - 1)
 

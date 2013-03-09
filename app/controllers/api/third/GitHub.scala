@@ -19,6 +19,7 @@ object GitHub extends Controller with Secured {
    */
   def commit = IsAuthenticated() { implicit request =>
 
+    // XXX This should be a plugin
     request.body.asFormUrlEncoded.map { data =>
       data.get("payload").map { payload =>
         val ghcommits = Json.parse(payload.head)
