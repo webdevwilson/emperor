@@ -15,9 +15,9 @@ object Group extends Controller with Secured {
    */
   def item(id: Long, callback: Option[String]) = IsAuthenticated() { implicit request =>
 
-    GroupModel.getById(id).map({ project =>
+    GroupModel.getById(id).map({ group =>
 
-      val json = Json.toJson(project)
+      val json = Json.toJson(group)
       callback.map({ callback =>
         Ok(Jsonp(callback, json))
       }).getOrElse(Ok(json))

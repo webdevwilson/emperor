@@ -24,7 +24,7 @@ case class PermissionScheme(
   id: Pk[Long] = NotAssigned,
   name: String,
   description: Option[String],
-  dateCreated: DateTime
+  dateCreated: DateTime = DateTime.now
 )
 
 case class PermissionSchemeGroup(
@@ -33,7 +33,7 @@ case class PermissionSchemeGroup(
   permissionId: String,
   groupId: Long,
   groupName: String,
-  dateCreated: DateTime
+  dateCreated: DateTime = DateTime.now
 )
 
 case class PermissionSchemeUser(
@@ -43,7 +43,7 @@ case class PermissionSchemeUser(
   userId: Long,
   username: String,
   realName: String,
-  dateCreated: DateTime
+  dateCreated: DateTime = DateTime.now
 )
 
 object PermissionSchemeModel {
