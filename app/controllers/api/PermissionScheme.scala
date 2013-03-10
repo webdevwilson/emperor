@@ -47,10 +47,38 @@ object PermissionScheme extends Controller with Secured {
   }
 
   /**
+   * Add a group to the scheme.
+   */
+  def addGroup(id: Long, permission: String, groupId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+    PermissionSchemeModel.addGroupToScheme(permissionSchemeId = id, perm = permission, groupId = groupId)
+
+    val json = Json.toJson(Map("ok" -> "ok"))
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
+  }
+
+  /**
    * Revoke permission from the specified group.
    */
   def removeGroup(id: Long, permission: String, groupId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
-    PermissionSchemeModel.removeGroupFromScheme(permissionSchemeId = id, perm = permission, groupId = groupId);
+    PermissionSchemeModel.removeGroupFromScheme(permissionSchemeId = id, perm = permission, groupId = groupId)
+
+    val json = Json.toJson(Map("ok" -> "ok"))
+
+    callback match {
+      case Some(callback) => Ok(Jsonp(callback, json))
+      case None => Ok(json)
+    }
+  }
+
+  /**
+   * Add a user to the scheme.
+   */
+  def addUser(id: Long, permission: String, userId: Long, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
+    PermissionSchemeModel.addUserToScheme(permissionSchemeId = id, perm = permission, userId = userId)
 
     val json = Json.toJson(Map("ok" -> "ok"))
 

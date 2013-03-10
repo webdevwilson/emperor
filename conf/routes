@@ -88,11 +88,13 @@ GET 	/api/group  					controllers.api.Group.index(callback: Option[String])
 
 GET     /api/permission                 controllers.api.Permission.index(callback: Option[String])
 
-GET     /api/permission_scheme/:id/users/:permissionId controllers.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
+GET     /api/permission_scheme/:id/users/:permissionId 	controllers.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
 GET     /api/permission_scheme/:id/groups/:permissionId controllers.api.PermissionScheme.permissionGroups(id: Long, permissionId: String, callback: Option[String])
 DELETE  /api/permission_scheme/:id/:perm/group/:groupId controllers.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
-DELETE  /api/permission_scheme/:id/:perm/user/:userId controllers.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
-GET 	/api/permission_scheme/:id 		controllers.api.PermissionScheme.item(id: Long, callback: Option[String])
+DELETE  /api/permission_scheme/:id/:perm/user/:userId 	controllers.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
+PUT  	/api/permission_scheme/:id/:perm/group/:groupId controllers.api.PermissionScheme.addGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
+PUT  	/api/permission_scheme/:id/:perm/user/:userId 	controllers.api.PermissionScheme.addUser(id: Long, perm: String, userId: Long, callback: Option[String])
+GET 	/api/permission_scheme/:id 						controllers.api.PermissionScheme.item(id: Long, callback: Option[String])
 
 GET     /api/project                    controllers.api.Project.index(callback: Option[String])
 POST    /api/project/:projectId/ticket  controllers.api.Ticket.create(projectId: Long, callback: Option[String])
