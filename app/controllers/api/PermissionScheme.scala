@@ -11,6 +11,9 @@ import play.api.libs.json._
 
 object PermissionScheme extends Controller with Secured {
 
+  /**
+   * Get the permission scheme with the specified id.
+   */
   def item(id: Long, callback: Option[String]) = IsAuthenticated() { implicit request =>
 
     PermissionSchemeModel.getById(id).map({ ps =>
@@ -22,6 +25,9 @@ object PermissionScheme extends Controller with Secured {
     }).getOrElse(NotFound(Json.toJson(Map("error" -> "api.unknown.entity"))))
   }
 
+  /**
+   * Get groups with the specified permission.
+   */
   def permissionGroups(id: Long, permissionId: String, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val groups = PermissionSchemeModel.getGroupsForPermission(id, permissionId)
@@ -34,6 +40,9 @@ object PermissionScheme extends Controller with Secured {
     }
   }
 
+  /**
+   * Get users with the specified permission.
+   */
   def permissionUsers(id: Long, permissionId: String, callback: Option[String]) = IsAuthenticated(perm = "PERM_GLOBAL_ADMIN") { implicit request =>
 
     val users = PermissionSchemeModel.getUsersForPermission(id, permissionId)
