@@ -37,8 +37,11 @@ class ProjectAPISpec extends Specification {
         val user = UserModel.getById(1).get
 
         val token = UserTokenModel.create(userId = user.id.get, comment = None)
-
         val tokenStr = "Token token=" + token.token.get
+
+        val result2 = route(FakeRequest( GET, "/api/project").withHeaders("Authorization" -> tokenStr)).get
+        status(result2) must equalTo(200)
+
         val result = route(FakeRequest( GET, "/api/project/" + newProject.id.get).withHeaders("Authorization" -> tokenStr)).get
         status(result) must equalTo(200)
 
