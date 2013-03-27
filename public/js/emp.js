@@ -300,7 +300,9 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
         })
         .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
 
-      self.chosenAssignee(self.currentProject().defaultAssignee);
+      // Not setting the assigne when the project changes. THis code is wrong, as the defaultAssignee
+      // is either 0 for nobody or 1 for "owner of project". Setting that to the chosenAssignee is wrong
+      //self.chosenAssignee(self.currentProject().defaultAssignee);
       self.chosenPriority(self.currentProject().defaultPriorityId);
       self.chosenSeverity(self.currentProject().defaultSeverityId);
       self.chosenType(self.currentProject().defaultTypeId);
