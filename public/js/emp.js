@@ -271,7 +271,7 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
   self.reporters = ko.observableArray(assignees);
   self.chosenReporter = ko.observable(user.id);
   self.assignees = ko.observableArray(assignees);
-  self.chosenAssignee = ko.observable(-1);
+  self.chosenAssignee = ko.observable(null);
   self.ttypes = ko.observableArray(ttypes);
   self.chosenType = ko.observable(-1);
   self.priorities = ko.observableArray(priorities);
@@ -344,7 +344,9 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
 
   // Set the current information
   if(self.hasProject) {
-    self.chosenAssignee(self.currentProject().defaultAssignee());
+    // Not setting the assigne when the project changes. THis code is wrong, as the defaultAssignee
+    // is either 0 for nobody or 1 for "owner of project". Setting that to the chosenAssignee is wrong
+    //self.chosenAssignee(self.currentProject().defaultAssignee());
     self.chosenPriority(self.currentProject().defaultPriorityId());
     self.chosenSeverity(self.currentProject().defaultSeverityId());
     self.chosenType(self.currentProject().defaultTypeId());

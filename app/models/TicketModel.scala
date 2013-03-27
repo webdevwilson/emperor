@@ -199,7 +199,7 @@ object TicketModel {
   val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE id IN (SELECT MAX(id) FROM ticket_data WHERE ticket_id={ticket_id})")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
   val getFullByIdQuery = SQL("SELECT * FROM full_tickets WHERE id={id}")
-  val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t  WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
+  val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
   val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets  WHERE ticket_id={ticket_id} ORDER BY date_created ASC")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
@@ -499,6 +499,9 @@ object TicketModel {
         DB.withConnection { implicit conn =>
 
           val tid = ProjectModel.getNextSequence(projectId)
+
+          // WTF, why does using a transaction mean it won't fucking return?
+          DontCompile
 
           val id = insertQuery.on(
             'user_id      -> userId,
