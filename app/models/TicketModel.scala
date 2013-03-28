@@ -496,20 +496,15 @@ object TicketModel {
 
     val result = startingStatus match {
       case Some(status) => {
-        DB.withConnection { implicit conn =>
-
-          val tid = ProjectModel.getNextSequence(projectId)
-
-          // WTF, why does using a transaction mean it won't fucking return?
-          DontCompile
+        val tid = DB.withTransaction { implicit conn =>
 
           val id = insertQuery.on(
             'user_id      -> userId,
             'project_id   -> projectId,
-            'project_ticket_id -> tid
+            'project_ticket_id -> ProjectModel.getNextSequence(projectId)
           ).executeInsert()
 
-          val tdid = insertDataQuery.on(
+          insertDataQuery.on(
             'ticket_id    -> id,
             'user_id      -> userId,
             'priority_id  -> priorityId,
@@ -523,9 +518,11 @@ object TicketModel {
             'description  -> description,
             'summary      -> summary
           ).executeInsert()
-
+        }
+        // WTF, why does using a transaction cause the select to fail?
+        DB.withConnection { implicit conn =>
           // XXX Might not be here?
-          val nt = this.getFullById(id.get)
+          val nt = this.getFullById(tid.get)
 
           nt.map { t =>
             // Get on the bus!

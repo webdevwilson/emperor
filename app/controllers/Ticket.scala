@@ -190,7 +190,7 @@ object Ticket extends Controller with Secured {
             case Some(t) => {
               Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
             }
-            case None => Redirect(routes.Ticket.item("comments", ticket.get.ticketId)).flashing("error" -> "ticket.add.failure")
+            case None => Redirect(routes.Core.index()).flashing("error" -> "ticket.add.failure")
           }
         }).getOrElse(Redirect(routes.Core.index()).flashing("error" -> "auth.notauthorized"))
       }

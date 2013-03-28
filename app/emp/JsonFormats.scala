@@ -196,6 +196,7 @@ object JsonFormats {
 
       val tdoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(ticket.id.get),
+        "ticket_id"       -> JsString(ticket.ticketId),
         "project_ticket_id" -> JsNumber(ticket.projectTicketId),
         "project_id"      -> JsNumber(ticket.project.id),
         "project_name"    -> JsString(ticket.project.name),
