@@ -36,7 +36,7 @@ class TicketSeverityAPISpec extends Specification {
       }
     }
 
-    "retrieve ticket sevrity" in {
+    "retrieve ticket severity" in {
       running(FakeApplication()) {
 
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
