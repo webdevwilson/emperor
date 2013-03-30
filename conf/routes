@@ -111,8 +111,13 @@ GET     /api/ticket/startswith          controllers.api.Ticket.startsWith(q: Opt
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String, callback: Option[String])
 
 GET     /api/ticketpriority             controllers.api.TicketPriority.index(callback: Option[String])
+GET 	/api/ticketpriority/:id 		controllers.api.TicketPriority.item(id: Long, callback: Option[String])
+
+GET     /api/ticketseverity             controllers.api.TicketSeverity.index(callback: Option[String])
+GET 	/api/ticketseverity/:id 		controllers.api.TicketSeverity.item(id: Long, callback: Option[String])
 
 GET     /api/tickettype                 controllers.api.TicketType.index(callback: Option[String])
+GET 	/api/tickettype/:id 			controllers.api.TicketType.item(id: Long, callback: Option[String])
 
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String], callback: Option[String])
 DELETE  /api/user/token/:token          controllers.api.User.deleteToken(token: String, callback: Option[String])
