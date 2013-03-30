@@ -199,6 +199,7 @@ object JsonFormats {
         "ticket_id"       -> JsString(ticket.ticketId),
         "project_ticket_id" -> JsNumber(ticket.projectTicketId),
         "project_id"      -> JsNumber(ticket.project.id),
+        "project_key"     -> JsString(ticket.project.key),
         "project_name"    -> JsString(ticket.project.name),
         "priority_id"     -> JsNumber(ticket.priority.id),
         "priority_name"   -> JsString(ticket.priority.name),

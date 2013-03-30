@@ -15,10 +15,9 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
-
   val ticketForm = Form(
     mapping(
-      "projectId"  -> longNumber,
+      "projectId"  -> ignored(1L),
       "typeId"     -> longNumber,
       "priorityId" -> longNumber,
       "severityId" -> longNumber,
@@ -38,7 +37,7 @@ object Ticket extends Controller with Secured {
         },
         value => {
           TicketModel.create(
-            userId = request.user.id.get, projectId = value.projectId, typeId = value.typeId, priorityId = value.priorityId,
+            userId = request.user.id.get, projectId = projectId, typeId = value.typeId, priorityId = value.priorityId,
             severityId = value.severityId, summary = value.summary, description = value.description,
             assigneeId = value.assigneeId, position = value.position
           ).map({ ticket =>
