@@ -541,6 +541,31 @@ object JsonFormats {
   }
 
   /**
+   * JSON conversion for TicketLinkType
+   */
+  implicit object TicketLinkTypeFormat extends Format[TicketLinkType] {
+
+    def reads(json: JsValue): JsResult[TicketLinkType] = JsSuccess(TicketLinkType(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      invertable  = (json \ "invertable").as[Boolean],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    ))
+
+    def writes(obj: TicketLinkType): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "nameI18N"      -> JsString(Messages(obj.name)),
+        "invertable"    -> JsBoolean(obj.invertable),
+        "dateCreated"   -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
    * JSON conversion for TicketType
    */
   implicit object TicketTypeFormat extends Format[TicketType] {

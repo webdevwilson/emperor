@@ -110,6 +110,9 @@ GET     /api/ticket/search              controllers.api.Ticket.search(page: Int 
 GET     /api/ticket/startswith          controllers.api.Ticket.startsWith(q: Option[String], callback: Option[String])
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String, callback: Option[String])
 
+GET     /api/ticketlinktype             controllers.api.TicketLinkType.index(callback: Option[String])
+GET 	/api/ticketlinktype/:id 		controllers.api.TicketLinkType.item(id: Long, callback: Option[String])
+
 GET     /api/ticketpriority             controllers.api.TicketPriority.index(callback: Option[String])
 GET 	/api/ticketpriority/:id 		controllers.api.TicketPriority.item(id: Long, callback: Option[String])
 
