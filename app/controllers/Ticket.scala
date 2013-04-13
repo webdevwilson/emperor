@@ -292,7 +292,7 @@ object Ticket extends Controller with Secured {
 
         // Find changes
         val changeRes = {
-          val changeFilters = Map("ticket_id" -> Seq(ticketId))
+          val changeFilters = Map("ticket_id" -> Seq(ticket.id.get.toString))
 
           // XXX Different page & count (100?)
           val csm = SearchModel.searchChange(
