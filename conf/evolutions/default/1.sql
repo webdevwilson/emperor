@@ -1,339 +1,362 @@
 # --- !Ups
 
 CREATE TABLE workflows (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO workflows (name, date_created) VALUES ('WORK_EMP_DEFAULT', UTC_TIMESTAMP());
+INSERT INTO workflows (name) VALUES ('WORK_EMP_DEFAULT');
 
 CREATE TABLE users (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     realname VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(username)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+	organization VARCHAR(128),
+	location VARCHAR(128),
+	timezone VARCHAR(64) NOT NULL DEFAULT 'America/Los_Angeles',
+	title VARCHAR(128),
+	url VARCHAR(128),
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO users (username, password, realname, email, date_created) VALUES ('admin', '$2a$12$kjx926AcdoK38pJBotfoROSVJxNkIkwxqHVHODiSLhfv94a4KPKuW', 'admin', 'admin@admin.com', UTC_TIMESTAMP());
+INSERT INTO users (username, password, realname, email) VALUES ('admin', '$2a$12$kjx926AcdoK38pJBotfoROSVJxNkIkwxqHVHODiSLhfv94a4KPKuW', 'admin', 'admin@admin.com');
+INSERT INTO users (username, password, realname, email) VALUES ('anonymous', 'anonymous', 'EMP_USER_ANONYMOUS', 'anonymous@example.com');
+
+CREATE TABLE user_tokens (
+  token VARCHAR(32) NOT NULL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  comment VARCHAR(255),
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE groups (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    id SERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Put admin into groups
+INSERT INTO groups (name) VALUES ('emperor-admins');
+INSERT INTO groups (name) VALUES ('emperor-users');
 
 CREATE TABLE group_users (
-    id INT UNSIGNED AUTO_INCREMENT,
-    group_id INT UNSIGNED NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY (group_id) REFERENCES groups(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    id SERIAL PRIMARY KEY,
+    group_id INT NOT NULL REFERENCES groups(id),
+    user_id INT NOT NULL REFERENCES users(id),
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT group_users_grou_user_uniq UNIQUE(group_id, user_id)
+);
 
-CREATE TABLE roles (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
-INSERT INTO roles (name, date_created) VALUES ('ROLE_QA', UTC_TIMESTAMP());
-INSERT INTO roles (name, date_created) VALUES ('ROLE_DEVELOPER', UTC_TIMESTAMP());
+INSERT INTO group_users (group_id, user_id) VALUES (1, 1);
+INSERT INTO group_users (group_id, user_id) VALUES (2, 1);
 
 CREATE TABLE ticket_resolutions (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_resolutions (name, date_created) VALUES ("TICK_RESO_FIXED", UTC_TIMESTAMP());
-INSERT INTO ticket_resolutions (name, date_created) VALUES ("TICK_RESO_WONTFIX", UTC_TIMESTAMP());
+INSERT INTO ticket_resolutions (name) VALUES ('TICK_RESO_FIXED');
+INSERT INTO ticket_resolutions (name) VALUES ('TICK_RESO_WONTFIX');
 
 CREATE TABLE ticket_statuses (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_statuses (name, date_created) VALUES ("TICK_STATUS_OPEN", UTC_TIMESTAMP());
-INSERT INTO ticket_statuses (name, date_created) VALUES ("TICK_STATUS_IN_PROG", UTC_TIMESTAMP());
-INSERT INTO ticket_statuses (name, date_created) VALUES ("TICK_STATUS_CLOSED", UTC_TIMESTAMP());
+INSERT INTO ticket_statuses (name) VALUES ('TICK_STATUS_OPEN');
+INSERT INTO ticket_statuses (name) VALUES ('TICK_STATUS_IN_PROG');
+INSERT INTO ticket_statuses (name) VALUES ('TICK_STATUS_CLOSED');
 
 CREATE TABLE ticket_types (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     color VARCHAR(6) NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_types (name, color, date_created) VALUES ("TICK_TYPE_BUG", "f2dede", UTC_TIMESTAMP());
-INSERT INTO ticket_types (name, color, date_created) VALUES ("TICK_TYPE_IMPROVEMENT", "d9edf7", UTC_TIMESTAMP());
-INSERT INTO ticket_types (name, color, date_created) VALUES ("TICK_TYPE_MILESTONE", "dff0d8", UTC_TIMESTAMP());
+INSERT INTO ticket_types (name, color) VALUES ('TICK_TYPE_BUG', 'f2dede');
+INSERT INTO ticket_types (name, color) VALUES ('TICK_TYPE_IMPROVEMENT', 'd9edf7');
+INSERT INTO ticket_types (name, color) VALUES ('TICK_TYPE_MILESTONE', 'dff0d8');
 
 CREATE TABLE ticket_link_types (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    date_created DATETIME NOT NULL,
-    invertable BOOLEAN DEFAULT 1,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    invertable BOOLEAN DEFAULT true,
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_BLOCKS", 1, UTC_TIMESTAMP());
-INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_CONTAINS", 1, UTC_TIMESTAMP());
-INSERT INTO ticket_link_types (name, invertable, date_created) VALUES ("TICK_LINK_RELATED", 0, UTC_TIMESTAMP());
+INSERT INTO ticket_link_types (name, invertable) VALUES ('TICK_LINK_BLOCKS', true);
+INSERT INTO ticket_link_types (name, invertable) VALUES ('TICK_LINK_CONTAINS', true);
+INSERT INTO ticket_link_types (name, invertable) VALUES ('TICK_LINK_RELATED', false);
 
 CREATE TABLE ticket_severities (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     color VARCHAR(6) NOT NULL,
     position INT NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_DIFFICULT", "f2dede", 100, UTC_TIMESTAMP());
-INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_NORMAL", "d9edf7", 66, UTC_TIMESTAMP());
-INSERT INTO ticket_severities (name, color, position, date_created) VALUES ("TICK_SEV_TRIVIAL", "dff0d8", 33, UTC_TIMESTAMP());
+INSERT INTO ticket_severities (name, color, position) VALUES ('TICK_SEV_DIFFICULT', 'f2dede', 100);
+INSERT INTO ticket_severities (name, color, position) VALUES ('TICK_SEV_NORMAL', 'd9edf7', 66);
+INSERT INTO ticket_severities (name, color, position) VALUES ('TICK_SEV_TRIVIAL', 'dff0d8', 33);
 
 CREATE TABLE ticket_priorities (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     color VARCHAR(6) NOT NULL,
     position INT NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    UNIQUE KEY(name)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_HIGH", "fcf8e3", 100, UTC_TIMESTAMP());
-INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_NORMAL", "d9edf7", 66, UTC_TIMESTAMP());
-INSERT INTO ticket_priorities (name, color, position, date_created) VALUES ("TICK_PRIO_LOW", "dff0d8", 33, UTC_TIMESTAMP());
+INSERT INTO ticket_priorities (name, color, position) VALUES ('TICK_PRIO_HIGH', 'fcf8e3', 100);
+INSERT INTO ticket_priorities (name, color, position) VALUES ('TICK_PRIO_NORMAL', 'd9edf7', 66);
+INSERT INTO ticket_priorities (name, color, position) VALUES ('TICK_PRIO_LOW', 'dff0d8', 33);
 
 CREATE TABLE workflow_statuses (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    workflow_id INT UNSIGNED NOT NULL,
-    status_id INT UNSIGNED NOT NULL,
+    id SERIAL PRIMARY KEY,
+    workflow_id INT NOT NULL REFERENCES workflows(id),
+    status_id INT NOT NULL REFERENCES ticket_statuses(id),
     position INT,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(workflow_id) REFERENCES workflows(id),
-    FOREIGN KEY(status_id) REFERENCES ticket_statuses(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO workflow_statuses (workflow_id, status_id, position, date_created) VALUES (1, 1, 25, UTC_TIMESTAMP());
-INSERT INTO workflow_statuses (workflow_id, status_id, position, date_created) VALUES (1, 2, 50, UTC_TIMESTAMP());
-INSERT INTO workflow_statuses (workflow_id, status_id, position, date_created) VALUES (1, 3, 75, UTC_TIMESTAMP());
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 1, 25);
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 2, 50);
+INSERT INTO workflow_statuses (workflow_id, status_id, position) VALUES (1, 3, 75);
+
+CREATE TABLE permission_schemes (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Core scheme
+INSERT INTO permission_schemes (name) VALUES ('EMP_PERM_SCHEME_CORE');
+-- Default scheme
+INSERT INTO permission_schemes (name) VALUES ('EMP_PERM_SCHEME_DEFAULT');
 
 CREATE TABLE projects (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    pkey VARCHAR(16) NOT NULL UNIQUE,
-    sequence_current INT UNSIGNED NOT NULL DEFAULT 0,
-    workflow_id INT UNSIGNED NOT NULL,
-    date_created DATETIME NOT NULL,
-    FOREIGN KEY (workflow_id) REFERENCES workflows(id),
-    PRIMARY KEY(id),
-    UNIQUE KEY(pkey)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
-CREATE TABLE project_role_users (
-    id INT UNSIGNED AUTO_INCREMENT,
-    project_id INT UNSIGNED NOT NULL,
-    role_id INT UNSIGNED NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY (project_id) REFERENCES projects(id),
-    FOREIGN KEY (role_id) REFERENCES roles(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+  id SERIAL PRIMARY KEY,
+  owner_id INT REFERENCES users (id),
+  default_priority_id INT REFERENCES ticket_priorities (id),
+  default_severity_id INT REFERENCES ticket_severities (id),
+  default_ticket_type_id INT REFERENCES ticket_types (id),
+  default_assignee SMALLINT,
+	permission_scheme_id INT NOT NULL REFERENCES permission_schemes(id),
+  name VARCHAR(255) NOT NULL,
+  pkey VARCHAR(16) NOT NULL UNIQUE,
+  workflow_id INT NOT NULL REFERENCES workflows(id),
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE tickets (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    ticket_id VARCHAR(255) NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    project_id INT UNSIGNED NOT NULL,
-    priority_id INT UNSIGNED NOT NULL,
-    resolution_id INT UNSIGNED,
-    proposed_resolution_id INT UNSIGNED,
-    assignee_id INT UNSIGNED,
-    attention_id INT UNSIGNED,
-    reporter_id INT UNSIGNED NOT NULL,
-    severity_id INT UNSIGNED NOT NULL,
-    status_id INT UNSIGNED NOT NULL,
-    type_id INT UNSIGNED NOT NULL,
-    position INT,
-    summary VARCHAR(255) NOT NULL,
-    description TEXT,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    INDEX(ticket_id),
-    FOREIGN KEY (project_id) REFERENCES projects(id),
-    FOREIGN KEY (priority_id) REFERENCES ticket_priorities(id),
-    FOREIGN KEY (resolution_id) REFERENCES ticket_resolutions(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (assignee_id) REFERENCES users(id),
-    FOREIGN KEY (attention_id) REFERENCES users(id),
-    FOREIGN KEY (reporter_id) REFERENCES users(id),
-    FOREIGN KEY (severity_id) REFERENCES ticket_severities(id),
-    FOREIGN KEY (status_id) REFERENCES workflow_statuses(id),
-    FOREIGN KEY (type_id) REFERENCES ticket_types(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id),
+  project_id INT NOT NULL REFERENCES projects(id),
+  project_ticket_id INT NOT NULL,
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT tickets_project_ticket_id_project_uniq UNIQUE(project_ticket_id, project_id)
+);
+
+CREATE TABLE ticket_data (
+	id SERIAL PRIMARY KEY,
+	ticket_id INT NOT NULL REFERENCES tickets(id),
+  user_id INT NOT NULL REFERENCES users(id),
+  priority_id INT NOT NULL REFERENCES ticket_priorities(id),
+  resolution_id INT REFERENCES ticket_resolutions(id),
+  assignee_id INT REFERENCES users(id),
+  attention_id INT REFERENCES users(id),
+  severity_id INT NOT NULL REFERENCES ticket_severities(id),
+  status_id INT NOT NULL REFERENCES workflow_statuses(id),
+  type_id INT NOT NULL REFERENCES ticket_types(id),
+  position INT,
+  summary VARCHAR(255) NOT NULL,
+  description TEXT,
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE ticket_links (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    link_type_id INT UNSIGNED NOT NULL,
-    parent_ticket_id VARCHAR(64) NOT NULL,
-    child_ticket_id VARCHAR(64) NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(link_type_id) REFERENCES ticket_link_types(id),
-    FOREIGN KEY(parent_ticket_id) REFERENCES tickets(ticket_id),
-    FOREIGN KEY(child_ticket_id) REFERENCES tickets(ticket_id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
-ALTER TABLE ticket_links ADD UNIQUE link_parent_child_idx (link_type_id, parent_ticket_id, child_ticket_id);
+    id SERIAL PRIMARY KEY,
+    link_type_id INT NOT NULL REFERENCES ticket_link_types(id),
+    parent_ticket_id INT NOT NULL REFERENCES tickets(id),
+    child_ticket_id INT NOT NULL REFERENCES tickets(id),
+    date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT ticket_links_link_uniq UNIQUE(link_type_id, parent_ticket_id, child_ticket_id)
+);
 
 CREATE TABLE ticket_comments (
-  id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-  ticket_id VARCHAR(64) NOT NULL,
-  user_id INT UNSIGNED NOT NULL,
+  id SERIAL PRIMARY KEY,
+  ticket_id INT NOT NULL REFERENCES tickets(id),
+  type VARCHAR(32) DEFAULT 'comment',
+  user_id INT NOT NULL REFERENCES users(id),
   content TEXT,
-  date_created DATETIME NOT NULL,
-  PRIMARY KEY(id),
-  FOREIGN KEY(ticket_id) REFERENCES tickets(ticket_id),
-  FOREIGN KEY(user_id) REFERENCES users(id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
-CREATE TABLE ticket_stacks (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    ticket_id VARCHAR(64) NOT NULL,
-    position INT NOT NULL,
-    date_created DATETIME NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(ticket_id) REFERENCES tickets(ticket_id)
-) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE VIEW full_tickets AS
 SELECT
   t.id      AS id,
-  t.ticket_id   AS ticket_id,
+  td.id     AS data_id,
+  t.project_ticket_id AS project_ticket_id,
   t.user_id     AS user_id,
   uc.realname   AS user_realname,
   t.project_id  AS project_id,
   p.name        AS project_name,
-  t.priority_id AS priority_id,
+  p.pkey        AS project_key,
+  td.priority_id AS priority_id,
   tp.name       AS priority_name,
   tp.color      AS priority_color,
-  t.resolution_id AS resolution_id,
+  tp.position   AS priority_position,
+  td.resolution_id AS resolution_id,
   tr.name       AS resolution_name,
-  t.proposed_resolution_id AS proposed_resolution_id,
-  ptr.name      AS proposed_resolution_name,
-  t.assignee_id AS assignee_id,
+  td.assignee_id AS assignee_id,
   uass.realname AS assignee_realname,
-  t.attention_id  AS attention_id,
+  td.attention_id  AS attention_id,
   uatt.realname AS attention_realname,
-  t.reporter_id AS reporter_id,
-  urep.realname AS reporter_realname,
-  t.severity_id AS severity_id,
+  td.severity_id AS severity_id,
   sevs.name     AS severity_name,
   sevs.color    AS severity_color,
-  t.status_id   AS status_id,
+  sevs.position AS severity_position,
+  td.status_id   AS status_id,
   ts.name       AS status_name,
-  t.type_id     AS type_id,
+  td.type_id     AS type_id,
   tt.name       AS type_name,
   tt.color      AS type_color,
   ws.status_id  AS workflow_status_id,
-  t.position    AS position,
-  t.summary     AS summary,
-  t.description AS description,
+  td.position    AS position,
+  td.summary     AS summary,
+  td.description AS description,
   t.date_created  AS date_created
-FROM tickets t
+FROM ticket_data td
+  JOIN tickets t ON t.id = td.ticket_id
   JOIN projects p ON p.id = t.project_id
-  JOIN ticket_priorities tp ON tp.id = t.priority_id
-  JOIN ticket_severities sevs ON sevs.id = t.severity_id
-  JOIN workflow_statuses ws ON ws.id = t.status_id
+  JOIN ticket_priorities tp ON tp.id = td.priority_id
+  JOIN ticket_severities sevs ON sevs.id = td.severity_id
+  JOIN workflow_statuses ws ON ws.id = td.status_id
   JOIN ticket_statuses ts ON ts.id = ws.status_id
-  JOIN ticket_types tt ON tt.id = t.type_id
+  JOIN ticket_types tt ON tt.id = td.type_id
   JOIN users uc ON uc.id = t.user_id
-  JOIN users urep ON urep.id = t.reporter_id
-  LEFT JOIN users uass ON uass.id = t.assignee_id
-  LEFT JOIN users uatt ON uatt.id = t.attention_id
-  LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id
-  LEFT JOIN ticket_resolutions ptr ON ptr.id = t.proposed_resolution_id
-WHERE t.id IN (
-  SELECT MAX(id) FROM tickets GROUP BY ticket_id
+  JOIN users urep ON urep.id = t.user_id
+  LEFT JOIN users uass ON uass.id = td.assignee_id
+  LEFT JOIN users uatt ON uatt.id = td.attention_id
+  LEFT JOIN ticket_resolutions tr ON tr.id = td.resolution_id
+WHERE td.id IN (
+  SELECT MAX(id) FROM ticket_data GROUP BY ticket_id
 );
 
 CREATE VIEW full_all_tickets AS
 SELECT
   t.id      AS id,
-  t.ticket_id   AS ticket_id,
+  td.id     AS data_id,
+  t.project_ticket_id AS project_ticket_id,
   t.user_id     AS user_id,
   uc.realname   AS user_realname,
   t.project_id  AS project_id,
   p.name        AS project_name,
-  t.priority_id AS priority_id,
+  p.pkey        AS project_key,
+  td.priority_id AS priority_id,
   tp.name       AS priority_name,
   tp.color      AS priority_color,
-  t.resolution_id AS resolution_id,
+  tp.position   AS priority_position,
+  td.resolution_id AS resolution_id,
   tr.name       AS resolution_name,
-  t.proposed_resolution_id AS proposed_resolution_id,
-  ptr.name      AS proposed_resolution_name,
-  t.assignee_id AS assignee_id,
+  td.assignee_id AS assignee_id,
   uass.realname AS assignee_realname,
-  t.attention_id  AS attention_id,
+  td.attention_id  AS attention_id,
   uatt.realname AS attention_realname,
-  t.reporter_id AS reporter_id,
-  urep.realname AS reporter_realname,
-  t.severity_id AS severity_id,
+  td.severity_id AS severity_id,
   sevs.name     AS severity_name,
   sevs.color    AS severity_color,
-  t.status_id   AS status_id,
+  sevs.position AS severity_position,
+  td.status_id   AS status_id,
   ts.name       AS status_name,
-  t.type_id     AS type_id,
+  td.type_id     AS type_id,
   tt.name       AS type_name,
   tt.color      AS type_color,
   ws.status_id  AS workflow_status_id,
-  t.position    AS position,
-  t.summary     AS summary,
-  t.description AS description,
+  td.position    AS position,
+  td.summary     AS summary,
+  td.description AS description,
   t.date_created  AS date_created
 FROM tickets t
+  JOIN ticket_data td ON td.ticket_id = t.id
   JOIN projects p ON p.id = t.project_id
-  JOIN ticket_priorities tp ON tp.id = t.priority_id
-  JOIN ticket_severities sevs ON sevs.id = t.severity_id
-  JOIN workflow_statuses ws ON ws.id = t.status_id
+  JOIN ticket_priorities tp ON tp.id = td.priority_id
+  JOIN ticket_severities sevs ON sevs.id = td.severity_id
+  JOIN workflow_statuses ws ON ws.id = td.status_id
   JOIN ticket_statuses ts ON ts.id = ws.status_id
-  JOIN ticket_types tt ON tt.id = t.type_id
+  JOIN ticket_types tt ON tt.id = td.type_id
   JOIN users uc ON uc.id = t.user_id
-  JOIN users urep ON urep.id = t.reporter_id
-  LEFT JOIN users uass ON uass.id = t.assignee_id
-  LEFT JOIN users uatt ON uatt.id = t.attention_id
-  LEFT JOIN ticket_resolutions tr ON tr.id = t.resolution_id
-  LEFT JOIN ticket_resolutions ptr ON ptr.id = t.proposed_resolution_id;
+  JOIN users urep ON urep.id = t.user_id
+  LEFT JOIN users uass ON uass.id = td.assignee_id
+  LEFT JOIN users uatt ON uatt.id = td.attention_id
+  LEFT JOIN ticket_resolutions tr ON tr.id = td.resolution_id;
+
+CREATE TABLE permissions (
+  name VARCHAR(32) NOT NULL PRIMARY KEY UNIQUE,
+  global BOOLEAN NOT NULL DEFAULT false
+);
+
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_ADMIN', true);
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_LOGIN', true);
+INSERT INTO permissions (name, global) VALUES ('PERM_GLOBAL_PROJECT_CREATE', true);
+
+INSERT INTO permissions (name) VALUES ('PERM_PROJECT_ADMIN');
+INSERT INTO permissions (name) VALUES ('PERM_PROJECT_BROWSE');
+
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_COMMENT');
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_CREATE');
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_EDIT');
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_LINK');
+INSERT INTO permissions (name) VALUES ('PERM_TICKET_RESOLVE');
+
+CREATE TABLE permission_scheme_users (
+  id SERIAL PRIMARY KEY,
+  permission_scheme_id INT NOT NULL REFERENCES permission_schemes(id),
+  permission_id VARCHAR(32) NOT NULL REFERENCES permissions(name),
+  user_id INT NOT NULL REFERENCES users(id),
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT permission_scheme_users_permission_user_uniq UNIQUE(permission_scheme_id, user_id, permission_id)
+);
+
+CREATE TABLE permission_scheme_groups (
+  id SERIAL PRIMARY KEY,
+  permission_scheme_id INT REFERENCES permission_schemes(id),
+  permission_id VARCHAR(32) NOT NULL REFERENCES permissions(name),
+  group_id INT NOT NULL REFERENCES groups(id),
+  date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT permission_scheme_groups_permission_group_uniq UNIQUE(permission_scheme_id, group_id, permission_id)
+);
+
+-- Give emperor-admins admin permission
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (1, 'PERM_GLOBAL_ADMIN', 1);
+-- Give emperor-users login permission
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (1, 'PERM_GLOBAL_LOGIN', 2);
+
+-- Give all other permissions to emperor-users
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_PROJECT_BROWSE', 2);
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_TICKET_COMMENT', 2);
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_TICKET_CREATE', 2);
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_TICKET_EDIT', 2);
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_TICKET_LINK', 2);
+INSERT INTO permission_scheme_groups (permission_scheme_id, permission_id, group_id) VALUES (2, 'PERM_TICKET_RESOLVE', 2);
+
+-- Create a view of all the permissions for easy selection!
+CREATE VIEW full_permissions AS
+  SELECT p.id as project_id, p.pkey AS project_key, psg.permission_id as permission_id, gu.user_id as user_id, CONCAT('permission_scheme_groups:',psg.id) AS source FROM projects p JOIN permission_scheme_groups psg ON psg.permission_scheme_id=p.permission_scheme_id JOIN group_users gu ON gu.group_id = psg.group_id
+  UNION
+  SELECT p.id as project_id, p.pkey AS project_key, psu.permission_id as permission_id, psu.user_id as user_id,CONCAT('permission_scheme_users:',psu.id) AS source FROM projects p JOIN permission_scheme_users psu ON psu.permission_scheme_id=p.permission_scheme_id;
+
+INSERT INTO projects (name, pkey, workflow_id, permission_scheme_id) VALUES ('Emperor Core', 'EMPCORE', 1, 1);
+
+
+# --- !Downs

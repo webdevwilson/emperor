@@ -12,7 +12,7 @@ import play.Logger
 /**
  * Class for groups.
  */
-case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime)
+case class Group(id: Pk[Long] = NotAssigned, name: String, dateCreated: DateTime = DateTime.now)
 
 /**
  * Class for users in a group.
@@ -28,19 +28,19 @@ case class GroupUser(
 
 object GroupModel {
 
-  val addUserQuery = SQL("INSERT IGNORE INTO group_users (user_id, group_id, date_created) VALUES ({userId}, {groupId}, UTC_TIMESTAMP())")
+  val addUserQuery = SQL("INSERT INTO group_users (user_id, group_id) VALUES ({userId}, {groupId})")
   val removeUserQuery = SQL("DELETE FROM group_users WHERE user_id={userId} AND group_id={groupId}")
   val allQuery = SQL("SELECT * FROM groups")
   val allGroupUsersForGroupQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE group_id={groupId} ORDER BY u.username")
   val allGroupUsersForUserQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE user_id={userId}")
   val allForUserQuery = SQL("SELECT * FROM groups g JOIN group_users gu ON g.id = gu.group_id WHERE gu.user_id={userId}")
-  val startsWithQuery = SQL("SELECT * FROM groups WHERE name COLLATE utf8_unicode_ci LIKE {name}")
+  val startsWithQuery = SQL("SELECT * FROM groups WHERE name LIKE {name}")
   val getByIdQuery = SQL("SELECT * FROM groups WHERE id={id}")
   val getByNameQuery = SQL("SELECT * FROM groups WHERE name={name}")
   val getGoupUserByIdQuery = SQL("SELECT * FROM group_users gu JOIN users u ON u.id = gu.user_id WHERE gu.id={id}")
-  val listQuery = SQL("SELECT * FROM groups ORDER BY name LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM groups ORDER BY name LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM groups")
-  val insertQuery = SQL("INSERT INTO groups (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO groups (name) VALUES ({name})")
   val updateQuery = SQL("UPDATE groups SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM groups WHERE id={id}")
 
@@ -141,14 +141,14 @@ object GroupModel {
     DB.withConnection { implicit conn =>
       startsWithQuery.on(
         'name -> likeQuery
-      ).as(group *)
+      ).as(group.*)
     }
   }
 
   def getAll: List[Group] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(group *)
+      allQuery.as(group.*)
     }
   }
 
@@ -158,7 +158,7 @@ object GroupModel {
   def getGroupUsersForUser(userId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
-      allGroupUsersForUserQuery.on('userId -> userId).as(groupUser *)
+      allGroupUsersForUserQuery.on('userId -> userId).as(groupUser.*)
     }
   }
 
@@ -168,7 +168,7 @@ object GroupModel {
   def getGroupUsersForGroup(groupId: Long): List[GroupUser] = {
 
     DB.withConnection { implicit conn =>
-      allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser *)
+      allGroupUsersForGroupQuery.on('groupId -> groupId).as(groupUser.*)
     }
   }
 
@@ -178,7 +178,7 @@ object GroupModel {
   def getForUser(userId: Long): List[Group] = {
 
     DB.withConnection { implicit conn =>
-      allForUserQuery.on('userId -> userId).as(group *)
+      allForUserQuery.on('userId -> userId).as(group.*)
     }
   }
 
@@ -190,7 +190,7 @@ object GroupModel {
         val groups = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(group *)
+        ).as(group.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

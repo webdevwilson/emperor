@@ -26,13 +26,6 @@ POST    /admin/permission_scheme/:id      controllers.admin.PermissionScheme.upd
 GET     /admin/permission_scheme/edit/:id controllers.admin.PermissionScheme.edit(id: Long)
 POST    /admin/permission_scheme          controllers.admin.PermissionScheme.add
 
-GET     /admin/role                     controllers.admin.Role.index(page: Int ?= 1, count: Int ?= 10)
-GET     /admin/role/create              controllers.admin.Role.create
-GET     /admin/role/:id                 controllers.admin.Role.item(id: Long)
-POST    /admin/role/:id                 controllers.admin.Role.update(id: Long)
-GET     /admin/role/edit/:id            controllers.admin.Role.edit(id: Long)
-POST    /admin/role                     controllers.admin.Role.add
-
 GET     /admin/test/generate            controllers.admin.Test.generate
 
 GET     /admin/ticket/linktype          controllers.admin.TicketLinkType.index(page: Int ?= 1, count: Int ?= 10)
@@ -90,16 +83,18 @@ GET     /api/group/startswith           controllers.api.Group.startsWith(q: Opti
 GET     /api/group/:id/users            controllers.api.Group.users(id: Long, callback: Option[String])
 PUT     /api/group/:id/:username        controllers.api.Group.addUser(id: Long, username: String, callback: Option[String])
 DELETE  /api/group/:id/:userId          controllers.api.Group.removeUser(id: Long, userId: Long, callback: Option[String])
-
-GET     /api/linkticket/:id             controllers.api.LinkTicket.item(id: String, callback: Option[String])
-PUT     /api/linkticket/:id             controllers.api.LinkTicket.link(id: String, callback: Option[String])
+GET     /api/group/:id                	controllers.api.Group.item(id: Long, callback: Option[String])
+GET 	/api/group  					controllers.api.Group.index(callback: Option[String])
 
 GET     /api/permission                 controllers.api.Permission.index(callback: Option[String])
 
-GET     /api/permission_scheme/:id/users/:permissionId controller.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
-GET     /api/permission_scheme/:id/groups/:permissionId controller.api.PermissionScheme.permissionGroups(id: Long, permissionId: String, callback: Option[String])
-DELETE  /api/permission_scheme/:id/:perm/group/:groupId controller.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
-DELETE  /api/permission_scheme/:id/:perm/user/:userId controller.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
+GET     /api/permission_scheme/:id/users/:permissionId 	controllers.api.PermissionScheme.permissionUsers(id: Long, permissionId: String, callback: Option[String])
+GET     /api/permission_scheme/:id/groups/:permissionId controllers.api.PermissionScheme.permissionGroups(id: Long, permissionId: String, callback: Option[String])
+DELETE  /api/permission_scheme/:id/:perm/group/:groupId controllers.api.PermissionScheme.removeGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
+DELETE  /api/permission_scheme/:id/:perm/user/:userId 	controllers.api.PermissionScheme.removeUser(id: Long, perm: String, userId: Long, callback: Option[String])
+PUT  	/api/permission_scheme/:id/:perm/group/:groupId controllers.api.PermissionScheme.addGroup(id: Long, perm: String, groupId: Long, callback: Option[String])
+PUT  	/api/permission_scheme/:id/:perm/user/:userId 	controllers.api.PermissionScheme.addUser(id: Long, perm: String, userId: Long, callback: Option[String])
+GET 	/api/permission_scheme/:id 						controllers.api.PermissionScheme.item(id: Long, callback: Option[String])
 
 GET     /api/project                    controllers.api.Project.index(callback: Option[String])
 POST    /api/project/:projectId/ticket  controllers.api.Ticket.create(projectId: Long, callback: Option[String])
@@ -115,9 +110,17 @@ GET     /api/ticket/search              controllers.api.Ticket.search(page: Int 
 GET     /api/ticket/startswith          controllers.api.Ticket.startsWith(q: Option[String], callback: Option[String])
 GET     /api/ticket/:id                 controllers.api.Ticket.item(id: String, callback: Option[String])
 
+GET     /api/ticketlinktype             controllers.api.TicketLinkType.index(callback: Option[String])
+GET 	/api/ticketlinktype/:id 		controllers.api.TicketLinkType.item(id: Long, callback: Option[String])
+
 GET     /api/ticketpriority             controllers.api.TicketPriority.index(callback: Option[String])
+GET 	/api/ticketpriority/:id 		controllers.api.TicketPriority.item(id: Long, callback: Option[String])
+
+GET     /api/ticketseverity             controllers.api.TicketSeverity.index(callback: Option[String])
+GET 	/api/ticketseverity/:id 		controllers.api.TicketSeverity.item(id: Long, callback: Option[String])
 
 GET     /api/tickettype                 controllers.api.TicketType.index(callback: Option[String])
+GET 	/api/tickettype/:id 			controllers.api.TicketType.item(id: Long, callback: Option[String])
 
 GET     /api/user/startswith            controllers.api.User.startsWith(q: Option[String], callback: Option[String])
 DELETE  /api/user/token/:token          controllers.api.User.deleteToken(token: String, callback: Option[String])

@@ -33,7 +33,7 @@ object JsonFormats {
       userId = (json \ "user_id").as[Long],
       username = (json \ "user_name").as[String],
       realName = (json \ "user_realname").as[String],
-      ticketId = (json \ "ticket_id").as[String],
+      ticketId = (json \ "ticket_id").as[Long],
       content = (json \ "content").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
@@ -42,7 +42,7 @@ object JsonFormats {
       val cdoc: Map[String,JsValue] = Map(
         "id"            -> JsNumber(comment.id.get),
         "type"          -> JsString(comment.ctype),
-        "ticket_id"     -> JsString(comment.ticketId),
+        "ticket_id"     -> JsNumber(comment.ticketId),
         "user_id"       -> JsNumber(comment.userId),
         "user_name"     -> JsString(comment.username),
         "user_realname" -> JsString(comment.realName),
@@ -50,42 +50,6 @@ object JsonFormats {
         "date_created"  -> JsString(dateFormatter.print(comment.dateCreated))
       )
       toJson(cdoc)
-    }
-  }
-
-  implicit object EditTicketFormat extends Format[EditTicket] {
-    def reads(json: JsValue): JsResult[EditTicket] = JsSuccess(EditTicket(
-      ticketId      = (json \ "ticketId").as[Option[String]].map({ id => Id(id) }).getOrElse(NotAssigned),
-      reporterId    = (json \ "reporterId").as[Long],
-      assigneeId    = (json \ "assigneeId").as[Option[Long]],
-      priorityId    = (json \ "priorityId").as[Long],
-      projectId     = (json \ "projectId").as[Long],
-      resolutionId  = (json \ "resolutionId").as[Option[Long]],
-      severityId    = (json \ "severityId").as[Long],
-      typeId        = (json \ "typeId").as[Long],
-      summary       = (json \ "summary").as[String],
-      description   = (json \ "description").as[Option[String]],
-      attentionId    = (json \ "attentionId").as[Option[Long]],
-      position      = (json \ "position").as[Option[Long]],
-      proposedResolutionId = (json \ "proposedResolutionId").as[Option[Long]]
-    ))
-
-    def writes(ticket: EditTicket): JsValue = {
-
-      val tdoc: Map[String,JsValue] = Map(
-        "ticketId"   -> JsString(ticket.ticketId.get),
-        "reporterId" -> JsNumber(ticket.reporterId),
-        "assigneeId" -> optionLongtoJsValue(ticket.assigneeId),
-        "priorityId" -> JsNumber(ticket.priorityId),
-        "resolutionId" -> optionLongtoJsValue(ticket.resolutionId),
-        "proposedResolutionId" -> optionLongtoJsValue(ticket.proposedResolutionId),
-        "severityId" -> JsNumber(ticket.severityId),
-        "typeId"     -> JsNumber(ticket.typeId),
-        "position"    -> optionLongtoJsValue(ticket.position),
-        "summary"     -> JsString(ticket.summary),
-        "description" -> optionStringtoJsValue(ticket.description)
-      )
-      toJson(tdoc)
     }
   }
 
@@ -130,10 +94,12 @@ object JsonFormats {
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "type_name").as[String],
-      parentId    = (json \ "parent_id").as[String],
+      parentId    = (json \ "parent_id").as[Long],
+      parentTicketId = (json \ "parent_ticket_id").as[String],
       parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
       parentSummary = (json \ "parent_summary").as[String],
-      childId     = (json \ "parent_id").as[String],
+      childId     = (json \ "child_id").as[Long],
+      childTicketId = (json \ "child_ticket_id").as[String],
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
@@ -157,10 +123,12 @@ object JsonFormats {
         "type_name"       -> JsString(l.typeName),
         "type_name_i18n"  -> JsString(Messages(l.typeName)),
         "type_name_i18n_inverted" -> JsString(Messages(l.typeName + "_INVERT")),
-        "parent_id"       -> JsString(l.parentId),
+        "parent_id"       -> JsNumber(l.parentId),
+        "parent_ticket_id" -> JsString(l.parentTicketId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),
-        "child_id"        -> JsString(l.childId),
+        "child_id"        -> JsNumber(l.childId),
+        "child_ticket_id" -> JsString(l.childTicketId),
         "child_resolution_id" -> childRes,
         "child_summary"   -> JsString(l.childSummary),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
@@ -178,14 +146,11 @@ object JsonFormats {
     // all these IDs then poll the database for the values.
     def reads(json: JsValue): JsResult[FullTicket] = JsSuccess(FullTicket(
       id        = Id((json \ "id").as[Long]),
-      ticketId  = (json \ "ticket_id").as[String],
+      dataId    = (json \ "data_id").as[Long],
+      projectTicketId = (json \ "project_ticket_id").as[Long],
       user      = NamedThing(
         id    = (json \ "user_id").as[Long],
         name  = (json \ "user_name").as[String]
-      ),
-      reporter  = NamedThing(
-        id    = (json \ "reporter_id").as[Long],
-        name  = (json \ "reporter_name").as[String]
       ),
       assignee = OptionalNamedThing(
         id    = (json \ "assignee_id").as[Option[Long]],
@@ -195,9 +160,10 @@ object JsonFormats {
         id    = (json \ "attention_id").as[Option[Long]],
         name  = (json \ "attention_name").as[Option[String]]
       ),
-      project  = NamedThing(
+      project  = NamedKeyedThing(
         id    = (json \ "project_id").as[Long],
-        name  = (json \ "project_name").as[String]
+        name  = (json \ "project_name").as[String],
+        key   = (json \ "project_key").as[String]
       ),
       priority  = ColoredPositionedThing(
         id    = (json \ "priority_id").as[Long],
@@ -208,10 +174,6 @@ object JsonFormats {
       resolution = OptionalNamedThing(
         id    = (json \ "resolution_id").as[Option[Long]],
         name  = (json \ "resolution_name").as[Option[String]]
-      ),
-      proposedResolution = OptionalNamedThing(
-        id    = (json \ "proposed_resolution_id").as[Option[Long]],
-        name  = (json \ "proposed_resolution_name").as[Option[String]]
       ),
       severity  = ColoredPositionedThing(
         id    = (json \ "severity_id").as[Long],
@@ -232,16 +194,18 @@ object JsonFormats {
       position = (json \ "position").as[Option[Long]],
       summary = (json \ "summary").as[String],
       description = (json \ "description").as[Option[String]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime()),
-      originalDateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
     def writes(ticket: FullTicket): JsValue = {
 
       val tdoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(ticket.id.get),
+        "data_id"         -> JsNumber(ticket.dataId),
         "ticket_id"       -> JsString(ticket.ticketId),
+        "project_ticket_id" -> JsNumber(ticket.projectTicketId),
         "project_id"      -> JsNumber(ticket.project.id),
+        "project_key"     -> JsString(ticket.project.key),
         "project_name"    -> JsString(ticket.project.name),
         "priority_id"     -> JsNumber(ticket.priority.id),
         "priority_name"   -> JsString(ticket.priority.name),
@@ -252,11 +216,6 @@ object JsonFormats {
         // A ticket with no resolution gets a default name, hence the differing logic here
         "resolution_name" -> JsString(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED")),
         "resolution_name_i18n" -> JsString(Messages(ticket.resolution.name.getOrElse("TICK_RESO_UNRESOLVED"))),
-        "proposed_resolution_id" -> optionLongtoJsValue(ticket.proposedResolution.id),
-        "proposed_resolution_name" -> optionStringtoJsValue(ticket.proposedResolution.name),
-        "proposed_resolution_name_i18n" -> optionI18nStringtoJsValue(ticket.proposedResolution.name),
-        "reporter_id"     -> JsNumber(ticket.reporter.id),
-        "reporter_name"   -> JsString(ticket.reporter.name),
         "assignee_id"     -> optionLongtoJsValue(ticket.assignee.id),
         "assignee_name"   -> optionStringtoJsValue(ticket.assignee.name),
         "attention_id"    -> optionLongtoJsValue(ticket.attention.id),
@@ -279,8 +238,7 @@ object JsonFormats {
         "short_summary"   -> JsString(ticket.abbreviatedSummary()),
         "workflow_status_id" -> JsNumber(ticket.workflowStatusId),
         "description"     -> JsString(Renderer.render(ticket.description)),
-        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated)),
-        "original_date_created" -> JsString(dateFormatter.print(ticket.originalDateCreated))
+        "date_created"    -> JsString(dateFormatter.print(ticket.dateCreated))
       )
       toJson(tdoc)
     }
@@ -348,8 +306,8 @@ object JsonFormats {
       id          = Id((json \ "id").as[Long]),
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "name").as[String],
-      parentId    = (json \ "parent_id").as[String],
-      childId     = (json \ "child_id").as[String],
+      parentId    = (json \ "parent_id").as[Long],
+      childId     = (json \ "child_id").as[Long],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
@@ -360,8 +318,8 @@ object JsonFormats {
         "type_id"         -> JsNumber(l.typeId),
         "name"            -> JsString(l.typeName),
         "name_i18n"       -> JsString(Messages(l.typeName)),
-        "parent_id"       -> JsString(l.parentId),
-        "child_id"        -> JsString(l.childId),
+        "parent_id"       -> JsNumber(l.parentId),
+        "child_id"        -> JsNumber(l.childId),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))
       )
       toJson(ldoc)
@@ -376,7 +334,7 @@ object JsonFormats {
     // This should be a boolean (global)
     def reads(json: JsValue): JsResult[Permission] = JsSuccess(Permission(
       name  = (json \ "name").as[String],
-      global = (json \ "global").as[Int]
+      global = (json \ "global").as[Boolean]
     ))
 
     def writes(obj: Permission): JsValue = {
@@ -386,7 +344,7 @@ object JsonFormats {
         "nameI18N"    -> JsString(Messages(obj.name)),
         "description" -> JsString(obj.name + "_DESC"),
         "descriptionI18N" -> JsString(Messages(obj.name + "_DESC")),
-        "global"      -> JsNumber(obj.global)
+        "global"      -> JsBoolean(obj.global)
       )
       toJson(doc)
     }
@@ -481,13 +439,13 @@ object JsonFormats {
       workflowId  = (json \ "workflowId").as[Long],
       name        = (json \ "name").as[String],
       key         = (json \ "key").as[String],
-      ownerId     = (json \ "owner_id").as[Option[Long]],
+      ownerId     = (json \ "ownerId").as[Option[Long]],
       permissionSchemeId = (json \ "permissionSchemeId").as[Long],
       defaultPriorityId = (json \ "defaultPriorityId").as[Option[Long]],
       defaultSeverityId = (json \ "defaultSeverityId").as[Option[Long]],
       defaultTypeId = (json \ "defaultTypeId").as[Option[Long]],
       defaultAssignee = (json \ "defaultAssignee").as[Option[Int]],
-      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+      dateCreated = (json \ "dateCreated").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
     ))
 
     def writes(obj: Project): JsValue = {
@@ -518,18 +476,17 @@ object JsonFormats {
       }
 
       val doc: Map[String,JsValue] = Map(
-        "id"              -> JsNumber(obj.id.get),
+        "id"             -> JsNumber(obj.id.get),
         "workflowId"     -> JsNumber(obj.workflowId),
-        "name"            -> JsString(obj.name),
-        "key"             -> JsString(obj.key),
-        "sequence_current"-> JsNumber(obj.sequenceCurrent),
+        "name"           -> JsString(obj.name),
+        "key"            -> JsString(obj.key),
         "ownerId"        -> owner,
-        "permission_schemeId" -> JsNumber(obj.permissionSchemeId),
+        "permissionSchemeId" -> JsNumber(obj.permissionSchemeId),
         "defaultPriorityId" -> prio,
         "defaultSeverityId" -> sev,
         "defaultTypeId" -> ttype,
         "defaultAssignee" -> defAssign,
-        "date_created"    -> JsString(dateFormatter.print(obj.dateCreated))
+        "dateCreated"    -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }
@@ -584,6 +541,31 @@ object JsonFormats {
         "color"         -> JsString(obj.color),
         "position"      -> JsNumber(obj.position),
         "date_created"  -> JsString(dateFormatter.print(obj.dateCreated))
+      )
+      toJson(doc)
+    }
+  }
+
+  /**
+   * JSON conversion for TicketLinkType
+   */
+  implicit object TicketLinkTypeFormat extends Format[TicketLinkType] {
+
+    def reads(json: JsValue): JsResult[TicketLinkType] = JsSuccess(TicketLinkType(
+      id          = Id((json \ "id").as[Long]),
+      name        = (json \ "name").as[String],
+      invertable  = (json \ "invertable").as[Boolean],
+      dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
+    ))
+
+    def writes(obj: TicketLinkType): JsValue = {
+
+      val doc: Map[String,JsValue] = Map(
+        "id"            -> JsNumber(obj.id.get),
+        "name"          -> JsString(obj.name),
+        "nameI18N"      -> JsString(Messages(obj.name)),
+        "invertable"    -> JsBoolean(obj.invertable),
+        "dateCreated"   -> JsString(dateFormatter.print(obj.dateCreated))
       )
       toJson(doc)
     }

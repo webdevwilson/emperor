@@ -91,7 +91,7 @@ class PermissionSchemeModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
 
         val perms = PermissionSchemeModel.getAllPermissions
 
@@ -182,7 +182,7 @@ class PermissionSchemeModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
 
         val perms = PermissionSchemeModel.getAllPermissions
 

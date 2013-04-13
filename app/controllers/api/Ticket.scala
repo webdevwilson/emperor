@@ -1,8 +1,10 @@
 package controllers.api
 
+import anorm.{NotAssigned,Pk}
 import emp.JsonFormats._
 import controllers._
 import models._
+import org.joda.time.DateTime
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
@@ -13,34 +15,42 @@ import play.api.mvc._
 
 object Ticket extends Controller with Secured {
 
-  val initialTicketForm = Form(
+  val ticketForm = Form(
     mapping(
-      "reporterId" -> longNumber,
-      "assigneeId" -> optional(longNumber),
-      "projectId"  -> longNumber,
+      "projectId"  -> ignored(1L),
+      "typeId"     -> longNumber,
       "priorityId" -> longNumber,
       "severityId" -> longNumber,
-      "typeId"     -> longNumber,
-      "position"    -> optional(longNumber),
       "summary"     -> nonEmptyText,
-      "description" -> optional(text)
-    )(models.InitialTicket.apply)(models.InitialTicket.unapply)
+      "description" -> optional(text),
+      "assigneeId" -> optional(longNumber),
+      "position"    -> optional(longNumber)
+    )(models.NewTicket.apply)(models.NewTicket.unapply)
   )
 
   def create(projectId: Long, callback: Option[String]) = IsAuthenticated(projectId = Some(projectId), perm = "PERM_TICKET_CREATE") { implicit request =>
 
     request.body.asJson.map({ data =>
-      initialTicketForm.bind(data).fold(
+      ticketForm.bind(data).fold(
         errors => {
           BadRequest(errors.errorsAsJson)
         },
         value => {
-          TicketModel.create(request.user.id.get, value).map({ ticket =>
-            val json = Json.toJson(ticket)
-            // Inference goes nuts here unless we type this result
-            val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))
-            res
-          }).getOrElse(BadRequest(Json.toJson(Map("error" -> Messages("ticket.add.failure")))))
+          TicketModel.create(
+            userId = request.user.id.get, projectId = projectId, typeId = value.typeId, priorityId = value.priorityId,
+            severityId = value.severityId, summary = value.summary, description = value.description,
+            assigneeId = value.assigneeId, position = value.position
+          ).fold(
+            error => {
+              BadRequest(Json.toJson(Map("error" -> Messages(error))))
+            },
+            ticket => {
+              val json = Json.toJson(ticket)
+              // Inference goes nuts here unless we type this result
+              val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))
+              res
+            }
+          )
         }
       )
     }).getOrElse({
@@ -50,23 +60,10 @@ object Ticket extends Controller with Secured {
 
   def item(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val ticket = TicketModel.getFullById(ticketId)
+    val ticket = TicketModel.getFullByStringId(ticketId)
 
     ticket match {
       case Some(t) => {
-
-        // val prevStatus = WorkflowModel.getPreviousStatus(t.workflowStatusId)
-        // val nextStatus = WorkflowModel.getNextStatus(t.workflowStatusId)
-
-        // val statuses: Map[String,Option[WorkflowStatus]] = Map(
-        //   "previous" -> prevStatus,
-        //   "next" -> nextStatus
-        // )
-
-        // val apiTick: Map[String,JsValue] = Map(
-        //   "ticket" -> Json.toJson(t),
-        //   "workflow" -> Json.toJson(statuses)
-        // )
 
         val json = Json.toJson(t)
         callback match {
@@ -80,8 +77,10 @@ object Ticket extends Controller with Secured {
 
   def deleteLink(ticketId: String, id: Long, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_TICKET_LINK") { implicit request =>
 
+    val (tProj, tId) = TicketModel.parseTicketId(ticketId).get
+
     val maybeLink = TicketModel.getLinkById(id).map({ link =>
-      if(link.parentId == ticketId || link.childId == ticketId) {
+      if(link.parentId == tId || link.childId == tId) {
         link
       } else {
         None
@@ -111,9 +110,16 @@ object Ticket extends Controller with Secured {
         if(childId.get == ticketId) {
           Left("Can't link ticket to itself.")
         } else {
-          Right(TicketModel.link(
-            linkTypeId = typeId.get, parentId = ticketId, childId = childId.get
-          ))
+          val parent = TicketModel.getByStringId(ticketId)
+          val child = TicketModel.getByStringId(childId.get)
+
+          if(parent.isDefined && child.isDefined) {
+            Right(TicketModel.link(
+              linkTypeId = typeId.get, parentId = parent.get.id.get, childId = child.get.id.get
+            ))
+          } else {
+            Left("Unknown ticket id.")
+          }
         }
       } else {
         Left("Must have both child_ticket_id and link_type_id")
@@ -139,11 +145,12 @@ object Ticket extends Controller with Secured {
 
   def links(ticketId: String, callback: Option[String]) = IsAuthenticated(ticketId = Some(ticketId), perm = "PERM_PROJECT_BROWSE") { implicit request =>
 
-    val links = TicketModel.getLinks(ticketId)
+    val json = TicketModel.getByStringId(ticketId).map({ ticket =>
 
-    // XXX Need to put the actual tickets in here, at least the Edit ticket
+      // XXX Need to put the actual tickets in here, at least the Edit ticket
+      Json.toJson(TicketModel.getLinks(ticket.id.get))
+    }).getOrElse(Json.obj("error" -> "Ticket not found"))
 
-    val json = Json.toJson(links)
     callback match {
       case Some(callback) => Ok(Jsonp(callback, json))
       case None => Ok(json)

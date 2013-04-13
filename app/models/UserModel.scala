@@ -19,11 +19,11 @@ case class User(
   realName: String,
   timezone: String,
   email: String,
-  organization: Option[String],
-  location: Option[String],
-  title: Option[String],
-  url: Option[String],
-  dateCreated: DateTime
+  organization: Option[String] = None,
+  location: Option[String] = None,
+  title: Option[String] = None,
+  url: Option[String] = None,
+  dateCreated: DateTime = DateTime.now
 ) {
 
   def isAnonymous = username.equals("anonymous")
@@ -42,9 +42,9 @@ object UserModel {
   val getByGroupIdQuery = SQL("SELECT * FROM users")
   val getByUsernameQuery = SQL("SELECT * FROM users WHERE username={username}")
   val getIdByUsernameQuery = SQL("SELECT id FROM users WHERE username={username}")
-  val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM users ORDER BY username LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM users")
-  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, timezone, organization, location, title, url, date_created) VALUES ({username}, {password}, {realname}, {email}, {timezone}, {organization}, {location}, {title}, {url}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO users (username, password, realname, email, timezone, organization, location, title, url) VALUES ({username}, {password}, {realname}, {email}, {timezone}, {organization}, {location}, {title}, {url})")
   val startsWithQuery = SQL("SELECT * FROM users WHERE username COLLATE utf8_unicode_ci LIKE {username}")
   val updateQuery = SQL("UPDATE users SET username={username}, realname={realname}, email={email}, timezone={timezone}, organization={organization}, location={location}, title={title}, url={url} WHERE id={id}")
   val updatePassQuery = SQL("UPDATE users SET password={password} WHERE id={id}")
@@ -123,14 +123,14 @@ object UserModel {
   def getByEmail(email: String) : List[User] = {
 
     DB.withConnection { implicit conn =>
-      getByEmailQuery.on('email -> email).as(user *)
+      getByEmailQuery.on('email -> email).as(user.*)
     }
   }
 
   def getAll: List[User] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(user *)
+      allQuery.as(user.*)
     }
   }
 
@@ -138,7 +138,7 @@ object UserModel {
 
     val users = projectId.map({ pid =>
       DB.withConnection { implicit conn =>
-        getAllAssignableQuery.on('project_id -> pid).as(user *)
+        getAllAssignableQuery.on('project_id -> pid).as(user.*)
       }
     }).getOrElse(UserModel.getAll)
 
@@ -184,7 +184,7 @@ object UserModel {
     DB.withConnection { implicit conn =>
       startsWithQuery.on(
         'username -> likeQuery
-      ).as(user *)
+      ).as(user.*)
     }
   }
 
@@ -196,7 +196,7 @@ object UserModel {
         val users = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(user *)
+        ).as(user.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

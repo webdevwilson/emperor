@@ -53,7 +53,6 @@ object SearchModel {
     "assignee"    -> "assignee_name",
     "project"     -> "project_name",
     "priority"    -> "priority_name",
-    "reporter"    -> "reporter_name",
     "resolution"  -> "resolution_name",
     "severity"    -> "severity_name",
     "status"      -> "status_name",
@@ -111,14 +110,6 @@ object SearchModel {
           "type": "string",
           "index": "not_analyzed"
         },
-        "proposed_resolution_id": {
-          "type": "long",
-          "index": "not_analyzed"
-        },
-        "proposed_resolution_name": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
         "assignee_id": {
           "type": "long",
           "index": "not_analyzed"
@@ -132,14 +123,6 @@ object SearchModel {
           "index": "not_analyzed"
         },
         "attention_name": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "reporter_id": {
-          "type": "long",
-          "index": "not_analyzed"
-        },
-        "reporter_name": {
           "type": "string",
           "index": "not_analyzed"
         },
@@ -386,26 +369,6 @@ object SearchModel {
         "type": "boolean",
         "index": "not_analyzed"
       },
-      "proposed_resolution_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "old_proposed_resolution_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "proposed_resolution_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "old_proposed_resolution_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "proposed_resolution_changed": {
-        "type": "boolean",
-        "index": "not_analyzed"
-      },
       "assignee_id": {
         "type": "long",
         "index": "not_analyzed"
@@ -443,26 +406,6 @@ object SearchModel {
         "index": "not_analyzed"
       },
       "attention_changed": {
-        "type": "boolean",
-        "index": "not_analyzed"
-      },
-      "reporter_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "old_reporter_id": {
-        "type": "long",
-        "index": "not_analyzed"
-      },
-      "reporter_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "old_reporter_name": {
-        "type": "string",
-        "index": "not_analyzed"
-      },
-      "reporter_changed": {
         "type": "boolean",
         "index": "not_analyzed"
       },
@@ -574,8 +517,7 @@ object SearchModel {
     "priority" -> "priority_name",
     "severity" -> "severity_name",
     "status" -> "status_name",
-    "assignee" -> "assignee_name",
-    "reporter" ->"reporter_name"
+    "assignee" -> "assignee_name"
   )
 
   /**
@@ -636,7 +578,7 @@ object SearchModel {
       projectName   = ft.project.name,
       userId        = user.id.get,
       userRealName  = user.realName,
-      eKey          = comment.ticketId,
+      eKey          = comment.ticketId.toString,
       eType         = comment.ctype,
       content       = Renderer.render(Some(comment.content)),
       url           = controllers.routes.Ticket.item("commits", ft.ticketId).url + "#comment-" + comment.id.get,
@@ -667,10 +609,8 @@ object SearchModel {
     val projChanged = newTick.project.id != oldTick.project.id
     val prioChanged = newTick.priority.id != oldTick.priority.id
     val resoChanged = newTick.resolution.id != oldTick.resolution.id
-    val propResoChanged = newTick.proposedResolution.id != oldTick.proposedResolution.id
     val assChanged = newTick.assignee.id != oldTick.assignee.id
     val attChanged = newTick.attention.id != oldTick.attention.id
-    val repChanged = newTick.reporter.id != oldTick.reporter.id
     val sevChanged = newTick.severity.id != oldTick.severity.id
     val statChanged = newTick.status.id != oldTick.status.id
     val typeChanged = newTick.ttype.id != oldTick.ttype.id
@@ -678,7 +618,7 @@ object SearchModel {
     val descChanged = newTick.description != oldTick.description
 
     val hdoc: Map[String,JsValue] = Map(
-      "ticket_id"         -> JsString(newTick.ticketId),
+      "ticket_id"         -> JsNumber(newTick.id.get),
       "user_id"           -> JsNumber(newTick.user.id),
       "user_realname"     -> JsString(newTick.user.name),
       "project_id"        -> JsNumber(newTick.project.id),
@@ -705,23 +645,6 @@ object SearchModel {
       } },
       "old_resolution_name" -> JsString(oldTick.resolution.name.getOrElse("")),
       "resolution_changed"-> JsBoolean(resoChanged),
-      "proposed_resolution_id" -> { newTick.proposedResolution.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      "old_proposed_resolution_id" -> { oldTick.proposedResolution.id match {
-        case Some(id) => JsNumber(id)
-        case None     => JsNull
-      } },
-      "proposed_resolution_name" -> { newTick.proposedResolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      } },
-      "old_proposed_resolution_name" -> { oldTick.proposedResolution.name match {
-        case Some(name) => JsString(name)
-        case None       => JsNull
-      } },
-      "proposed_resolution_changed"-> JsBoolean(propResoChanged),
       "assignee_id"       -> { newTick.assignee.id match {
         case Some(assId)=> JsNumber(assId)
         case None       => JsNull
@@ -756,11 +679,6 @@ object SearchModel {
         case None       => JsNull
       } },
       "attention_changed" -> JsBoolean(attChanged),
-      "reporter_id"       -> JsNumber(newTick.reporter.id),
-      "old_reporter_id"   -> JsNumber(oldTick.reporter.id),
-      "reporter_name"     -> JsString(newTick.reporter.name),
-      "old_reporter_name" -> JsString(oldTick.reporter.name),
-      "reporter_changed"  -> JsBoolean(repChanged),
       "severity_id"       -> JsNumber(newTick.severity.id),
       "old_severity_id"   -> JsNumber(oldTick.severity.id),
       "severity_name"     -> JsString(newTick.severity.name),
@@ -786,7 +704,7 @@ object SearchModel {
     )
     indexer.index(
       index = ticketHistoryIndex, `type` = ticketHistoryType,
-      id = newTick.id.toString, source = toJson(hdoc).toString,
+      id = newTick.dataId.toString, source = toJson(hdoc).toString,
       refresh = Some(block)
     )
 
@@ -831,9 +749,9 @@ object SearchModel {
         dateCreated   = ticket.dateCreated
       ))
 
-      val count = TicketModel.getAllFullCountById(ticket.ticketId)
+      val count = TicketModel.getAllFullCountById(ticket.id.get)
       if(count > 1) {
-        TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
+        TicketModel.getAllFullById(ticket.id.get).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
           // First run will NOT index history because oldTick is None (as None starts the fold)
           oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
 
@@ -878,7 +796,6 @@ object SearchModel {
       facets = Seq(
         // termsFacet("user_id").field("user_id"), // XXX Broken due to differing classes
         termsFacet("changed_priority").field("priority_changed"),
-        termsFacet("changed_reporter").field("reporter_changed"),
         termsFacet("changed_resolution").field("resolution_changed"),
         termsFacet("changed_severity").field("severity_changed"),
         termsFacet("changed_status").field("status_changed")

@@ -49,15 +49,6 @@ admin.project.menu.list=Projects
 admin.reindex=Reindex Search
 admin.reindex.success=Search Reindex Successful
 
-admin.role.add=Add Role
-
-admin.role.add.success=Role Added
-admin.role.edit=Edit Role
-admin.role.edit.success=Role Updated
-admin.role.list=Roles
-admin.role.menu.list=Roles
-admin.role.with.id=Role {0}
-
 admin.security=Security
 
 admin.tickets=Tickets
@@ -120,6 +111,8 @@ admin.workflow.modify.available=Available Statuses
 admin.workflow.modify.final=Final Workflow
 admin.workflow.modify.help=You may drag items from the available list on the left to the final list on the right, remove items by dragging them from right to left or reorder them.
 admin.workflow.with.id=Workflow {0}
+
+api.unknown.entity=Unknown Entity
 
 app.footer.blurb=This is <a href="http://emperorapp.com">Emperor</a> version {0}. Copyright &copy; 2012 - 2013 Cory Watson
 
@@ -204,9 +197,6 @@ project.summary.unowned=This project has no owner.
 project.with.id=Project {0}
 project.workflow=Workflow
 
-role.description=Description
-role.name=Name
-
 search.placeholder=Search
 search.facet.assignee=Assignee
 search.facet.none=No facets.
@@ -259,6 +249,9 @@ ticket.description=Description
 ticket.description.none=Ticket has no description.
 ticket.edit=Edit Ticket
 ticket.edit.success=Ticket Updated
+ticket.error.create.database=Error creating ticket.
+ticket.error.create.missing_project=Missing project for ticket.
+ticket.error.create.starting_status=Unable to find starting status for ticket.
 ticket.error.status=Error Changing Status
 ticket.error.status.invalid=Invalid status for this ticket's workflow.
 ticket.history.change.set=set to

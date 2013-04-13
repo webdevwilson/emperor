@@ -14,9 +14,9 @@ object TicketResolutionModel {
 
   val allQuery = SQL("SELECT * FROM ticket_resolutions ORDER BY id")
   val getByIdQuery = SQL("SELECT * FROM ticket_resolutions WHERE id={id}")
-  val listQuery = SQL("SELECT * FROM ticket_resolutions LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM ticket_resolutions LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM ticket_resolutions")
-  val insertQuery = SQL("INSERT INTO ticket_resolutions (name, date_created) VALUES ({name}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO ticket_resolutions (name) VALUES ({name})")
   val updateQuery = SQL("UPDATE ticket_resolutions SET name={name} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM ticket_resolutions WHERE id={id}")
 
@@ -64,7 +64,7 @@ object TicketResolutionModel {
   def getAll: List[TicketResolution] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(ticket_resolution *)
+      allQuery.as(ticket_resolution.*)
     }
   }
 
@@ -76,7 +76,7 @@ object TicketResolutionModel {
         val trs = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(ticket_resolution *)
+        ).as(ticket_resolution.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

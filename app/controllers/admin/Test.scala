@@ -29,11 +29,11 @@ object Test extends Controller with Secured {
 
     val fakeProjects = projects.map { project =>
       ProjectModel.create(models.Project(
-        workflowId = 1, sequenceCurrent = 0, name = project._1,
+        workflowId = 1, name = project._1,
         ownerId = None, permissionSchemeId = 1, defaultPriorityId = None,
         defaultSeverityId = None, defaultTypeId = None, defaultAssignee = None,
         key = project._2, dateCreated = new DateTime()
-      ))
+      )).get
     }
 
     val users = List(
@@ -99,28 +99,24 @@ object Test extends Controller with Secured {
       val summWords = rand.nextInt(30)
       TicketModel.create(
         userId = fakeUsers(rand.nextInt(fakeUsers.size)).id.get,
-        ticket = InitialTicket(
-          reporterId = fakeUsers(rand.nextInt(fakeUsers.size)).id.get,
-          assigneeId = rand.nextInt(2) match {
-            // Some should be unassigned
-            case 0 => None
-            // Some assigned
-            case 1 => Some(fakeUsers(rand.nextInt(fakeUsers.size)).id.get)
-          },
-          projectId = fakeProjects(rand.nextInt(fakeProjects.size)).id.get,
-          priorityId = tickPrios(rand.nextInt(tickPrios.size)).toLong,
-          severityId = tickSevs(rand.nextInt(tickSevs.size)).toLong,
-          typeId = tickTypes(rand.nextInt(tickTypes.size)).toLong,
-          position = None,
-          summary = textGen.getWords(summWords, summWords - rand.nextInt(10) match {
-            case x if x < 0 => 0
-            case y => y
-          }),
-          description = rand.nextInt(4) match {
-            case 1 => None
-            case _ => Some(textGen.getWords(rand.nextInt(100)))
-          }
-        )
+        projectId = fakeProjects(rand.nextInt(fakeProjects.size)).id.get,
+        typeId = tickTypes(rand.nextInt(tickTypes.size)).toLong,
+        priorityId = tickPrios(rand.nextInt(tickPrios.size)).toLong,
+        severityId = tickSevs(rand.nextInt(tickSevs.size)).toLong,
+        summary = textGen.getWords(summWords, summWords - rand.nextInt(10) match {
+          case x if x < 0 => 0
+          case y => y
+        }),
+        description = rand.nextInt(4) match {
+          case 1 => None
+          case _ => Some(textGen.getWords(rand.nextInt(100)))
+        },
+        assigneeId = rand.nextInt(2) match {
+          // Some should be unassigned
+          case 0 => None
+          // Some assigned
+          case 1 => Some(fakeUsers(rand.nextInt(fakeUsers.size)).id.get)
+        }
       )
     }
 

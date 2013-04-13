@@ -16,7 +16,6 @@ import play.api.Play.current
 case class Project(
   id: Pk[Long] = NotAssigned,
   workflowId: Long,
-  sequenceCurrent: Long = 0,
   name: String,
   key: String,
   ownerId: Option[Long],
@@ -41,10 +40,9 @@ object ProjectModel {
   val getByIdQuery = SQL("SELECT * FROM projects WHERE id={id}")
   val getByKeyQuery = SQL("SELECT * FROM projects WHERE pkey={pkey}")
   val getByWorkflowQuery = SQL("SELECT * FROM projects WHERE workflow_id={workflow_id} AND pkey != 'EMPCORE'")
-  val updateSequenceQuery = SQL("UPDATE projects SET sequence_current = LAST_INSERT_ID(sequence_current + 1) WHERE id={id}")
-  val listQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE' LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT p.* FROM full_permissions AS fp JOIN projects p ON p.id = fp.project_id WHERE user_id={user_id} AND permission_id IN ('PERM_PROJECT_BROWSE', 'PERM_GLOBAL_ADMIN') AND project_key != 'EMPCORE' LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM projects WHERE pkey != 'EMPCORE'")
-  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, owner_id, permission_scheme_id, default_priority_id, default_severity_id, default_ticket_type_id, default_assignee, date_created) VALUES ({name}, UPPER({pkey}), {workflow_id}, {owner_id}, {permission_scheme_id}, {default_priority_id}, {default_severity_id}, {default_ticket_type_id}, {default_assignee}, UTC_TIMESTAMP())")
+  val insertQuery = SQL("INSERT INTO projects (name, pkey, workflow_id, owner_id, permission_scheme_id, default_priority_id, default_severity_id, default_ticket_type_id, default_assignee) VALUES ({name}, UPPER({pkey}), {workflow_id}, {owner_id}, {permission_scheme_id}, {default_priority_id}, {default_severity_id}, {default_ticket_type_id}, {default_assignee})")
   val updateQuery = SQL("UPDATE projects SET name={name}, workflow_id={workflow_id}, owner_id={owner_id}, permission_scheme_id={permission_scheme_id}, default_priority_id={default_priority_id}, default_severity_id={default_severity_id}, default_ticket_type_id={default_ticket_type_id}, default_assignee={default_assignee} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM projects WHERE id={id}")
 
@@ -52,7 +50,6 @@ object ProjectModel {
   val project = {
     get[Pk[Long]]("id") ~
     get[Long]("workflow_id") ~
-    get[Long]("sequence_current") ~
     get[String]("name") ~
     get[String]("pkey") ~
     get[Option[Long]]("owner_id") ~
@@ -62,9 +59,9 @@ object ProjectModel {
     get[Option[Long]]("default_ticket_type_id") ~
     get[Option[Int]]("default_assignee") ~
     get[DateTime]("date_created") map {
-      case id~workflowId~seqCurr~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
+      case id~workflowId~name~pkey~ownerId~permId~defPrioId~defSevId~defTypeId~defAss~dateCreated => Project(
         id = id, workflowId = workflowId, name = name, key = pkey,
-        sequenceCurrent = seqCurr, permissionSchemeId = permId, ownerId = ownerId,
+        permissionSchemeId = permId, ownerId = ownerId,
         defaultPriorityId = defPrioId, defaultSeverityId = defSevId,
         defaultTypeId = defTypeId, defaultAssignee = defAss,
         dateCreated = dateCreated
@@ -83,9 +80,9 @@ object ProjectModel {
   /**
    * Create a project.
    */
-  def create(project: Project): Project = {
+  def create(project: Project): Option[Project] = {
 
-    DB.withConnection { implicit conn =>
+    val pid: Option[Long] = DB.withTransaction { implicit conn =>
       val id = insertQuery.on(
         'name         -> project.name,
         'pkey         -> project.key,
@@ -98,24 +95,34 @@ object ProjectModel {
         'default_assignee -> project.defaultAssignee
       ).executeInsert()
 
-      id.map { pid =>
+      id.map({ pid =>
+        SQL("CREATE SEQUENCE " + getSequenceName(pid)).execute
+
         EmperorEventBus.publish(
           NewProjectEvent(
             projectId = pid
           )
         )
-      }
-
-      this.getById(id.get).get
+        Some(pid)
+      }).getOrElse(None)
     }
+
+    // Read out the created project in a different block, as Pg seems to wig out
+    // otherwise.
+    pid.flatMap({ id =>
+      DB.withConnection { implicit conn =>
+        getById(id)
+      }
+    })
   }
 
   /**
    * Delete project.
    */
   def delete(id: Long) {
-    DB.withConnection { implicit conn =>
+    DB.withTransaction { implicit conn =>
       deleteQuery.on('id -> id).execute
+      SQL("DROP SEQUENCE " + getSequenceName(id)).execute
     }
   }
 
@@ -124,14 +131,14 @@ object ProjectModel {
    */
   def getAll(userId: Long): List[Project] = {
     DB.withConnection { implicit conn =>
-      allVisibleProjectsQuery.on('user_id -> userId).as(project *)
+      allVisibleProjectsQuery.on('user_id -> userId).as(project.*)
     }
   }
 
   /**
    * Get a project by id.
    */
-  def getById(id: Long) : Option[Project] = {
+  def getById(id: Long): Option[Project] = {
 
     DB.withConnection { implicit conn =>
       getByIdQuery.on('id -> id).as(project.singleOpt)
@@ -141,7 +148,7 @@ object ProjectModel {
   /**
    * Get a project by id.
    */
-  def getByKey(pkey: String) : Option[Project] = {
+  def getByKey(pkey: String): Option[Project] = {
 
     DB.withConnection { implicit conn =>
       getByKeyQuery.on('pkey -> pkey).as(project.singleOpt)
@@ -150,25 +157,31 @@ object ProjectModel {
 
   /**
    * Increment this project's sequence and return the new
-   * value.  The operation is atomic.
+   * value. The operation is atomic.
    */
-  def getNextSequence(id: Long) : Option[Long] = {
+  def getNextSequence(id: Long): Long = {
 
     DB.withConnection { implicit conn =>
-      updateSequenceQuery.on('id -> id).executeInsert()
+      SQL("SELECT nextval('" + getSequenceName(id) + "')").as(scalar[Long].single)
     }
   }
 
+  /**
+   * Get the sequence name for the provided project.
+   */
+  def getSequenceName(id: Long): String = "project_" + id + "_ticket_counter"
+
+
   def getVisibleProjectIds(userId: Long): List[Long] = {
     DB.withConnection { implicit conn =>
-      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id") *)
+      getAllVisibleProjectIdsQuery.on('user_id -> userId).as(long("id").*)
     }
   }
 
   def getWithWorkflow(id: Long): Seq[Project] = {
 
     DB.withConnection { implicit conn =>
-      getByWorkflowQuery.on('workflow_id -> id).as(project *)
+      getByWorkflowQuery.on('workflow_id -> id).as(project.*)
     }
   }
 
@@ -181,7 +194,7 @@ object ProjectModel {
         'user_id -> userId,
         'count  -> count,
         'offset -> offset
-      ).as(project *)
+      ).as(project.*)
 
       val totalRows = listCountQuery.as(scalar[Long].single)
 

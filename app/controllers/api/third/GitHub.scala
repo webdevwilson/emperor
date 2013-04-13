@@ -19,6 +19,7 @@ object GitHub extends Controller with Secured {
    */
   def commit = IsAuthenticated() { implicit request =>
 
+    // XXX This should be a plugin
     request.body.asFormUrlEncoded.map { data =>
       data.get("payload").map { payload =>
         val ghcommits = Json.parse(payload.head)
@@ -34,14 +35,16 @@ object GitHub extends Controller with Secured {
                 // Put [[]] around ticket-looking things so the wiki linker picks them up
                 val repl = ticketFinder.replaceAllIn(message, m => "[[" + m.group(0) + "]]")
                 ticketFinder.findAllIn(message).foreach({ t =>
-                  TicketModel.addComment(
-                    ticketId = t,
-                    ctype = "commit",
-                    userId = user.id.get,
-                    // Make content with a link to the URL
-                    content = "[" + sha + "](" + url + "): " + repl
-                  )
-                  Logger.debug("Added GitHub comment to " + t)
+                  TicketModel.getActualId(t).map({ tid =>
+                    TicketModel.addComment(
+                      ticketId = tid,
+                      ctype = "commit",
+                      userId = user.id.get,
+                      // Make content with a link to the URL
+                      content = "[" + sha + "](" + url + "): " + repl
+                    )
+                    Logger.debug("Added GitHub comment to " + t)
+                  })
                 })
               })
             })

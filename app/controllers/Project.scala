@@ -18,7 +18,6 @@ object Project extends Controller with Secured {
     mapping(
       "id"                  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id"         -> longNumber,
-      "sequence_current"    -> ignored(0.toLong),
       "name"                -> nonEmptyText,
       "key"                 -> text(minLength = 3, maxLength = 16).verifying("project.key.invalid", ProjectModel.isValidKey(_)),
       "owner_id"            -> optional(longNumber),
@@ -35,7 +34,6 @@ object Project extends Controller with Secured {
     mapping(
       "id"                  -> ignored(NotAssigned:Pk[Long]),
       "workflow_id"         -> longNumber,
-      "sequence_current"    -> ignored[Long](0.toLong),
       "name"                -> nonEmptyText,
       "key"                 -> ignored[String](""),
       "owner_id"            -> optional(longNumber),
@@ -64,8 +62,12 @@ object Project extends Controller with Secured {
         BadRequest(views.html.project.create(errors, workflows, users, asses.toList, ttypes, prios, sevs, perms))
       },
       value => {
-        val project = ProjectModel.create(value)
-        Redirect(routes.Project.item(project.id.get)).flashing("success" -> "project.add.success")
+        ProjectModel.create(value) match {
+          case Some(project) => {
+            Redirect(routes.Project.item(project.id.get)).flashing("success" -> "project.add.success")
+          }
+          case None => Redirect(routes.Project.index()).flashing("error" -> "project.add.failure")
+        }
       }
     )
   }
@@ -84,7 +86,7 @@ object Project extends Controller with Secured {
     Ok(views.html.project.create(addProjectForm, workflows, users, asses.toList, ttypes, prios, sevs, perms)(request))
   }
 
-  def index(page: Int, count: Int) = IsAuthenticated() { implicit request =>
+  def index(page: Int = 1, count: Int = 10) = IsAuthenticated() { implicit request =>
 
     val projs = ProjectModel.list(userId = request.user.id.get, page = page, count = count)
 

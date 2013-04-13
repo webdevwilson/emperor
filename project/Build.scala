@@ -6,15 +6,15 @@ import sbtbuildinfo.Plugin._
 object ApplicationBuild extends Build {
 
   val appName         = "emperor"
-  val appVersion      = "0.0.26"
+  val appVersion      = "0.1.0"
 
   val appDependencies = Seq(
     jdbc,
     anorm,
     "org.specs2"    %% "specs2"                 % "1.12.1"           % "test",
-    "mysql"         % "mysql-connector-java"    % "5.1.23",
+    // "postgresql"    % "postgresql"              % "9.2-1002.jdbc4",
     "org.mindrot"   % "jbcrypt"                 % "0.3m",
-    "org.pegdown"   % "pegdown"                 % "1.2.0",
+    "org.pegdown"   % "pegdown"                 % "1.2.1",
     "javax.mail"    % "mail"                    % "1.4.1",
     // "commons-codec" % "commons-codec"           % "1.7",
     "org.apache.commons" % "commons-email"      % "1.2",
@@ -24,6 +24,8 @@ object ApplicationBuild extends Build {
     "com.spatial4j" % "spatial4j"               % "0.3",
     "org.clapper"   %% "grizzled-slf4j"         % "1.0.1"
   )
+
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
   val main = play.Project(appName, appVersion, appDependencies, settings = Defaults.defaultSettings ++ buildInfoSettings).settings(
     // Add your own project settings here

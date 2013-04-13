@@ -16,7 +16,7 @@ class GroupModelSpec extends Specification {
     "create, retrieve, update and delete" in {
       running(FakeApplication()) {
 
-        val group = models.Group(id = NotAssigned, name = "Test Group!", dateCreated = new DateTime())
+        val group = models.Group(name = "Test Group!")
         val newGroup = GroupModel.create(group)
         newGroup must beAnInstanceOf[models.Group]
 

@@ -176,7 +176,7 @@ object Search {
     // }
     // val actualQuery = filteredQuery(queryString(if(query.query.isEmpty) "*" else query.query), finalFilter)
 
-    Logger.debug("Running ES query:")
+    Logger.debug("Running ES query against index " + index + ":")
     Logger.debug(actualQuery.toString)
 
     val sortOrder = query.sortOrder match {

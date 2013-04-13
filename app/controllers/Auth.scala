@@ -96,12 +96,12 @@ trait Secured {
             projectId
           } else if(ticketId.isDefined) {
             // Got a ticket id.  Fetch the ticket to get the project
-            TicketModel.getById(ticketId.get) match {
+            TicketModel.getByStringId(ticketId.get) match {
               case Some(ticket) => Some(ticket.projectId)
               case None => None
             }
           } else {
-            // Worse case, get the core Emperor project
+            // Worst case, get the core Emperor project
             Some(ProjectModel.getByKey("EMPCORE").get.id.get) // Return the default project id, this must be a global check
           }
 

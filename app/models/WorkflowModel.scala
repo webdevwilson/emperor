@@ -18,11 +18,11 @@ object WorkflowModel {
   val allQuery = SQL("SELECT * FROM workflows")
   val allStatuses = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.workflow_id={id} ORDER BY position ASC")
   val getByIdQuery = SQL("SELECT * FROM workflows WHERE id={id}")
-  val getWorkflowForTicketQuery = SQL("SELECT wf.* FROM full_tickets ft JOIN projects p ON p.id = ft.project_id JOIN workflows wf ON wf.id = p.workflow_id WHERE ticket_id={ticket_id}")
+  val getWorkflowForTicketQuery = SQL("SELECT wf.* FROM tickets t JOIN projects p ON p.id = t.project_id JOIN workflows wf ON wf.id = p.workflow_id WHERE t.id={id}")
   val getWorkflowStatusByIdQuery = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON (ticket_statuses.id = workflow_statuses.status_id) WHERE workflow_statuses.id={id}")
-  val listQuery = SQL("SELECT * FROM workflows LIMIT {offset},{count}")
+  val listQuery = SQL("SELECT * FROM workflows LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM workflows")
-  val addQuery = SQL("INSERT INTO workflows (name, description, date_created) VALUES ({name}, {description}, UTC_TIMESTAMP())")
+  val addQuery = SQL("INSERT INTO workflows (name, description) VALUES ({name}, {description})")
   val updateQuery = SQL("UPDATE workflows SET name={name}, description={description} WHERE id={id}")
   val deleteQuery = SQL("DELETE FROM workflows WHERE id={id}")
   val getStartingStatus = SQL("SELECT * FROM workflow_statuses JOIN ticket_statuses ON ticket_statuses.id = workflow_statuses.status_id WHERE workflow_id={id} ORDER BY position ASC LIMIT 1")
@@ -85,10 +85,10 @@ object WorkflowModel {
     }
   }
 
-  def getForTicket(ticketId: String): Option[Workflow] = {
+  def getForTicket(ticketId: Long): Option[Workflow] = {
 
     DB.withConnection { implicit conn =>
-      getWorkflowForTicketQuery.on('ticket_id -> ticketId).as(workflow.singleOpt)
+      getWorkflowForTicketQuery.on('id -> ticketId).as(workflow.singleOpt)
     }
   }
 
@@ -105,7 +105,7 @@ object WorkflowModel {
   def getStatuses(id: Long) : Seq[WorkflowStatus] = {
 
     DB.withConnection { implicit conn =>
-      allStatuses.on('id -> id).as(workflowStatus *)
+      allStatuses.on('id -> id).as(workflowStatus.*)
     }
   }
 
@@ -165,7 +165,7 @@ object WorkflowModel {
   def getAll: List[Workflow] = {
 
     DB.withConnection { implicit conn =>
-      allQuery.as(workflow *)
+      allQuery.as(workflow.*)
     }
   }
 
@@ -177,7 +177,7 @@ object WorkflowModel {
         val workflows = listQuery.on(
           'count  -> count,
           'offset -> offset
-        ).as(workflow *)
+        ).as(workflow.*)
 
         val totalRows = listCountQuery.as(scalar[Long].single)
 

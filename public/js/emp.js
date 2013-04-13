@@ -26,6 +26,7 @@ function ShowAlert(aclass, message) {
 }
 
 function processJsonError(resp) {
+  console.log(resp);
   var data = JSON.parse(resp)
   if(typeof data !== "undefined") {
     for(var k in data) {
@@ -89,9 +90,11 @@ function TicketLink(ticketId, data) {
   this.typeNameI18N = ko.observable(data.type_name_i18n);
   this.typeNameI18NInverted = ko.observable(data.type_name_i18n_inverted);
   this.parentId     = ko.observable(data.parent_id);
+  this.parentTicketId = ko.observable(data.parent_ticket_id);
   this.parentResolutionId = ko.observable(data.parent_resolution_id);
   this.parentSummary= ko.observable(data.parent_summary);
   this.childId      = ko.observable(data.child_id);
+  this.childTicketId = ko.observable(data.child_ticket_id);
   this.childResolutionId = ko.observable(data.child_resolution_id);
   this.childSummary = ko.observable(data.child_summary);
   this.dateCreated  = ko.observable(data.date_created);
@@ -106,9 +109,9 @@ function TicketLink(ticketId, data) {
   }, this);
   this.visibleTicketId = ko.computed(function() {
     if(this.ticketId() === this.childId()) {
-      return this.parentId()
+      return this.parentTicketId()
     } else {
-      return this.childId()
+      return this.childTicketId()
     }
   }, this);
   this.visibleTicketSummary = ko.computed(function() {
@@ -271,7 +274,7 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
   self.reporters = ko.observableArray(assignees);
   self.chosenReporter = ko.observable(user.id);
   self.assignees = ko.observableArray(assignees);
-  self.chosenAssignee = ko.observable(-1);
+  self.chosenAssignee = ko.observable(null);
   self.ttypes = ko.observableArray(ttypes);
   self.chosenType = ko.observable(-1);
   self.priorities = ko.observableArray(priorities);
@@ -300,7 +303,9 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
         })
         .fail(function(e) { console.log(e); ShowAlert("alert-error", "XXX Failed to fetch assignees!") });
 
-      self.chosenAssignee(self.currentProject().defaultAssignee);
+      // Not setting the assigne when the project changes. THis code is wrong, as the defaultAssignee
+      // is either 0 for nobody or 1 for "owner of project". Setting that to the chosenAssignee is wrong
+      //self.chosenAssignee(self.currentProject().defaultAssignee);
       self.chosenPriority(self.currentProject().defaultPriorityId);
       self.chosenSeverity(self.currentProject().defaultSeverityId);
       self.chosenType(self.currentProject().defaultTypeId);
@@ -342,7 +347,9 @@ function TicketAddViewModel(user, projects, selectedProject, assignees, ttypes, 
 
   // Set the current information
   if(self.hasProject) {
-    self.chosenAssignee(self.currentProject().defaultAssignee());
+    // Not setting the assigne when the project changes. THis code is wrong, as the defaultAssignee
+    // is either 0 for nobody or 1 for "owner of project". Setting that to the chosenAssignee is wrong
+    //self.chosenAssignee(self.currentProject().defaultAssignee());
     self.chosenPriority(self.currentProject().defaultPriorityId());
     self.chosenSeverity(self.currentProject().defaultSeverityId());
     self.chosenType(self.currentProject().defaultTypeId());

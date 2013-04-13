@@ -27,7 +27,7 @@ case class ChangeProjectEvent(
  * `ticket/changed`: Represents a modification of a ticket.
  */
 case class ChangeTicketEvent(
-  ticketId: String,
+  ticketId: Long,
   // Will be set to true if this change resolved the ticket
   resolved: Boolean = false,
   newTicketId: Long,
@@ -40,7 +40,7 @@ case class ChangeTicketEvent(
  * `ticket/commentedon`: Represents a comment added to a ticket.
  */
 case class CommentTicketEvent(
-  ticketId: String,
+  ticketId: Long,
   commentId: Long
 ) extends EmperorEvent("ticket/commentedon")
 
@@ -48,8 +48,8 @@ case class CommentTicketEvent(
  * `ticket/linked`: Represents a link created between two tickets.
  */
 case class LinkTicketEvent(
-  parentId: String,
-  childId: String
+  parentId: Long,
+  childId: Long
 ) extends EmperorEvent("ticket/linked")
 
 /**
@@ -70,7 +70,7 @@ case class NewProjectEvent(
  * `ticket/created`: Represents the creation of a ticket.
  */
 case class NewTicketEvent(
-  ticketId: String
+  ticketId: Long
 ) extends EmperorEvent("ticket/created")
 
 /**
@@ -84,8 +84,8 @@ case class NewUserEvent(
  * `ticket/unlinked`: Represents the removal of a link between two tickets.
  */
 case class UnlinkTicketEvent(
-  childId: String,
-  parentId: String
+  childId: Long,
+  parentId: Long
 ) extends EmperorEvent("ticket/unlinked")
 
 /**

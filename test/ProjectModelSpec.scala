@@ -38,7 +38,7 @@ class ProjectModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
+        val newProject = ProjectModel.create(p).get
         newProject must beAnInstanceOf[models.Project]
 
         // Get it by id
@@ -77,8 +77,8 @@ class ProjectModelSpec extends Specification {
         val work = WorkflowModel.getById(1) // Assumes the default workflow exists
 
         val p = models.Project(
-          name = "Test Project 1",
-          key = "TEST1",
+          name = "Test Project 2",
+          key = "TEST2",
           workflowId = work.get.id.get,
           ownerId = None,
           permissionSchemeId = 1,
@@ -88,13 +88,11 @@ class ProjectModelSpec extends Specification {
           defaultAssignee = None,
           dateCreated = new DateTime
         )
-        val newProject = ProjectModel.create(p)
-        newProject.sequenceCurrent mustEqual(0)
+        val newProject = ProjectModel.create(p).get
 
         // Verify it increments
         val neyext = ProjectModel.getNextSequence(newProject.id.get)
-        neyext must beSome
-        neyext.get mustEqual(1)
+        neyext mustEqual(1)
 
         ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
