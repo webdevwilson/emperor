@@ -514,11 +514,11 @@ object TicketModel {
               'description  -> description,
               'summary      -> summary
             ).executeInsert()
+            // Return the right id
+            id
           }
           // WTF, why does using a transaction cause the select to fail?
           DB.withConnection { implicit conn =>
-            // XXX Might not be here?
-
 
             getFullById(tid.get).map({ t =>
               // Get on the bus!
