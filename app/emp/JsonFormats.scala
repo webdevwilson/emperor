@@ -95,9 +95,11 @@ object JsonFormats {
       typeId      = (json \ "type_id").as[Long],
       typeName    = (json \ "type_name").as[String],
       parentId    = (json \ "parent_id").as[Long],
+      parentTicketId = (json \ "parent_ticket_id").as[String],
       parentResolutionId = (json \ "parent_resolution_id").as[Option[Long]],
       parentSummary = (json \ "parent_summary").as[String],
       childId     = (json \ "child_id").as[Long],
+      childTicketId = (json \ "child_ticket_id").as[String],
       childResolutionId = (json \ "child_resolution_id").as[Option[Long]],
       childSummary = (json \ "child_summary").as[String],
       dateCreated = (json \ "date_created").as[Option[String]].map({ d => dateFormatterUTC.parseDateTime(d) }).getOrElse(new DateTime())
@@ -122,9 +124,11 @@ object JsonFormats {
         "type_name_i18n"  -> JsString(Messages(l.typeName)),
         "type_name_i18n_inverted" -> JsString(Messages(l.typeName + "_INVERT")),
         "parent_id"       -> JsNumber(l.parentId),
+        "parent_ticket_id" -> JsString(l.parentTicketId),
         "parent_resolution_id" -> parentRes,
         "parent_summary"  -> JsString(l.parentSummary),
         "child_id"        -> JsNumber(l.childId),
+        "child_ticket_id" -> JsString(l.childTicketId),
         "child_resolution_id" -> childRes,
         "child_summary"   -> JsString(l.childSummary),
         "date_created"    -> JsString(dateFormatter.print(l.dateCreated))

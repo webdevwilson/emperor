@@ -65,8 +65,8 @@ case class Link(
  */
 case class FullLink(
   id: Pk[Long] = NotAssigned, typeId: Long, typeName: String,
-  parentId: Long, parentSummary: String, parentResolutionId: Option[Long],
-  childId: Long, childSummary: String, childResolutionId: Option[Long],
+  parentId: Long, parentTicketId: String, parentSummary: String, parentResolutionId: Option[Long],
+  childId: Long, childTicketId: String, childSummary: String, childResolutionId: Option[Long],
   dateCreated: DateTime
 )
 
@@ -657,9 +657,11 @@ object TicketModel {
           typeId        = link.typeId,
           typeName      = link.typeName,
           parentId      = link.parentId,
+          parentTicketId = parent.ticketId,
           parentSummary = parent.summary,
           parentResolutionId = parent.resolution.id,
           childId       = link.childId,
+          childTicketId = child.ticketId,
           childSummary  = child.summary,
           childResolutionId = child.resolution.id,
           dateCreated   = link.dateCreated
@@ -688,10 +690,12 @@ object TicketModel {
             typeId        = l.typeId,
             typeName      = l.typeName,
             parentId      = l.parentId,
+            parentTicketId= parent.ticketId,
             parentSummary = parent.summary,
             parentResolutionId = parent.resolution.id,
             childId       = l.childId,
             childSummary  = child.summary,
+            childTicketId = child.ticketId,
             childResolutionId = child.resolution.id,
             dateCreated   = l.dateCreated
           ))

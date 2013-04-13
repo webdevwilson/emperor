@@ -90,9 +90,11 @@ function TicketLink(ticketId, data) {
   this.typeNameI18N = ko.observable(data.type_name_i18n);
   this.typeNameI18NInverted = ko.observable(data.type_name_i18n_inverted);
   this.parentId     = ko.observable(data.parent_id);
+  this.parentTicketId = ko.observable(data.parent_ticket_id);
   this.parentResolutionId = ko.observable(data.parent_resolution_id);
   this.parentSummary= ko.observable(data.parent_summary);
   this.childId      = ko.observable(data.child_id);
+  this.childTicketId = ko.observable(data.child_ticket_id);
   this.childResolutionId = ko.observable(data.child_resolution_id);
   this.childSummary = ko.observable(data.child_summary);
   this.dateCreated  = ko.observable(data.date_created);
@@ -107,9 +109,9 @@ function TicketLink(ticketId, data) {
   }, this);
   this.visibleTicketId = ko.computed(function() {
     if(this.ticketId() === this.childId()) {
-      return this.parentId()
+      return this.parentTicketId()
     } else {
-      return this.childId()
+      return this.childTicketId()
     }
   }, this);
   this.visibleTicketSummary = ko.computed(function() {
