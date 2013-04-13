@@ -482,63 +482,58 @@ object TicketModel {
    */
   def create(userId: Long, projectId: Long, typeId: Long, priorityId: Long, severityId: Long, summary: String, description: Option[String] = None,
     assigneeId: Option[Long] = None, attentionId: Option[Long] = None, position: Option[Long] = None
-  ): Option[FullTicket] = {
+  ): Either[String,FullTicket] = {
 
     // If this is missing? XXX
-    val project = ProjectModel.getById(projectId)
+    ProjectModel.getById(projectId).map({ project =>
 
-    // Fetch the starting status we should use for the project's workflow.
-    val startingStatus = project match {
-      case Some(x) => WorkflowModel.getStartingStatus(x.workflowId)
-      case None => None
-    }
-    // XXX Should log something up there, really
+      // Fetch the starting status we should use for the project's workflow.
+      val startingStatus = WorkflowModel.getStartingStatus(project.workflowId)
 
-    val result = startingStatus match {
-      case Some(status) => {
-        val tid = DB.withTransaction { implicit conn =>
+      startingStatus match {
+        case Some(status) => {
+          val tid = DB.withTransaction { implicit conn =>
 
-          val id = insertQuery.on(
-            'user_id      -> userId,
-            'project_id   -> projectId,
-            'project_ticket_id -> ProjectModel.getNextSequence(projectId)
-          ).executeInsert()
+            val id = insertQuery.on(
+              'user_id      -> userId,
+              'project_id   -> projectId,
+              'project_ticket_id -> ProjectModel.getNextSequence(projectId)
+            ).executeInsert()
 
-          insertDataQuery.on(
-            'ticket_id    -> id,
-            'user_id      -> userId,
-            'priority_id  -> priorityId,
-            'resolution_id-> None,
-            'assignee_id  -> assigneeId,
-            'attention_id -> attentionId,
-            'severity_id  -> severityId,
-            'status_id    -> status.id,
-            'type_id      -> typeId,
-            'position     -> position,
-            'description  -> description,
-            'summary      -> summary
-          ).executeInsert()
-        }
-        // WTF, why does using a transaction cause the select to fail?
-        DB.withConnection { implicit conn =>
-          // XXX Might not be here?
-          val nt = this.getFullById(tid.get)
-
-          nt.map { t =>
-            // Get on the bus!
-            EmperorEventBus.publish(
-              NewTicketEvent(
-                ticketId = t.id.get
-              )
-            )
+            insertDataQuery.on(
+              'ticket_id    -> id,
+              'user_id      -> userId,
+              'priority_id  -> priorityId,
+              'resolution_id-> None,
+              'assignee_id  -> assigneeId,
+              'attention_id -> attentionId,
+              'severity_id  -> severityId,
+              'status_id    -> status.id,
+              'type_id      -> typeId,
+              'position     -> position,
+              'description  -> description,
+              'summary      -> summary
+            ).executeInsert()
           }
-          nt
-        }
-      }
-      case None => None
-    }
+          // WTF, why does using a transaction cause the select to fail?
+          DB.withConnection { implicit conn =>
+            // XXX Might not be here?
 
-    result
+
+            getFullById(tid.get).map({ t =>
+              // Get on the bus!
+              EmperorEventBus.publish(
+                NewTicketEvent(
+                  ticketId = t.id.get
+                )
+              )
+              Right(t)
+            }).getOrElse(Left("ticket.error.create.database"))
+          }
+        }
+        case None => Left("ticket.error.create.starting_status")
+      }
+    }).getOrElse(Left("ticket.error.create.missing_project"))
   }
 
   /**

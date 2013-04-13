@@ -181,17 +181,20 @@ object Ticket extends Controller with Secured {
         // Check the permission and only execute the create if it's defined,
         // otherwise return a redurect and tell 'em no.
         maybeCan.map({ perm =>
-          val ticket = TicketModel.create(
+          TicketModel.create(
             userId = request.user.id.get, projectId = value.projectId, typeId = value.typeId, priorityId = value.priorityId,
             severityId = value.severityId, summary = value.summary, description = value.description,
             assigneeId = value.assigneeId, position = value.position
-          )
-          ticket match {
-            case Some(t) => {
-              Redirect(routes.Ticket.item("comments", t.ticketId)).flashing("success" -> "ticket.add.success")
+          ).fold(
+            // Something went wrong!
+            error => {
+              Redirect(routes.Core.index()).flashing("error" -> error)
+            },
+            // All good!
+            ticket => {
+              Redirect(routes.Ticket.item("comments", ticket.ticketId)).flashing("success" -> "ticket.add.success")
             }
-            case None => Redirect(routes.Core.index()).flashing("error" -> "ticket.add.failure")
-          }
+          )
         }).getOrElse(Redirect(routes.Core.index()).flashing("error" -> "auth.notauthorized"))
       }
     )

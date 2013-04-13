@@ -26,6 +26,7 @@ function ShowAlert(aclass, message) {
 }
 
 function processJsonError(resp) {
+  console.log(resp);
   var data = JSON.parse(resp)
   if(typeof data !== "undefined") {
     for(var k in data) {

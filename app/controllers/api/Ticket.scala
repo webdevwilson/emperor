@@ -40,12 +40,17 @@ object Ticket extends Controller with Secured {
             userId = request.user.id.get, projectId = projectId, typeId = value.typeId, priorityId = value.priorityId,
             severityId = value.severityId, summary = value.summary, description = value.description,
             assigneeId = value.assigneeId, position = value.position
-          ).map({ ticket =>
-            val json = Json.toJson(ticket)
-            // Inference goes nuts here unless we type this result
-            val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))
-            res
-          }).getOrElse(BadRequest(Json.toJson(Map("error" -> Messages("ticket.add.failure")))))
+          ).fold(
+            error => {
+              BadRequest(Json.toJson(Map("error" -> Messages(error))))
+            },
+            ticket => {
+              val json = Json.toJson(ticket)
+              // Inference goes nuts here unless we type this result
+              val res: Result = callback.map({ cb => Ok(Jsonp(cb, json)) }).getOrElse(Ok(json))
+              res
+            }
+          )
         }
       )
     }).getOrElse({
