@@ -41,5 +41,4 @@
 * Plugins
 * Email notification
 * First-class milestones
-* Ticket "stacks"
 * Attention Flagging

@@ -45,6 +45,6 @@ Emperor is in very active development and may change dramatically before a 1.0 r
 
 Emperor is written in [Scala](http://www.scala-lang.org/) and uses the
 [Play framework](http://www.playframework.org/).  It is written to work with
-MySQL and uses an embedded [ElasticSearch](http://www.elasticsearch.org/)
+PostgreSQL and uses an embedded or standalone [ElasticSearch](http://www.elasticsearch.org/)
 instance.
 
