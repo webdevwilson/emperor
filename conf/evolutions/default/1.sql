@@ -205,6 +205,7 @@ CREATE TABLE ticket_comments (
 CREATE VIEW full_tickets AS
 SELECT
   t.id      AS id,
+  td.id     AS data_id,
   t.project_ticket_id AS project_ticket_id,
   t.user_id     AS user_id,
   uc.realname   AS user_realname,
@@ -255,6 +256,7 @@ WHERE td.id IN (
 CREATE VIEW full_all_tickets AS
 SELECT
   t.id      AS id,
+  td.id     AS data_id,
   t.project_ticket_id AS project_ticket_id,
   t.user_id     AS user_id,
   uc.realname   AS user_realname,

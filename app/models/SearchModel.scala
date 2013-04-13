@@ -618,7 +618,7 @@ object SearchModel {
     val descChanged = newTick.description != oldTick.description
 
     val hdoc: Map[String,JsValue] = Map(
-      "ticket_id"         -> JsString(newTick.ticketId),
+      "ticket_id"         -> JsNumber(newTick.id.get),
       "user_id"           -> JsNumber(newTick.user.id),
       "user_realname"     -> JsString(newTick.user.name),
       "project_id"        -> JsNumber(newTick.project.id),
@@ -704,7 +704,7 @@ object SearchModel {
     )
     indexer.index(
       index = ticketHistoryIndex, `type` = ticketHistoryType,
-      id = newTick.id.toString, source = toJson(hdoc).toString,
+      id = newTick.dataId.toString, source = toJson(hdoc).toString,
       refresh = Some(block)
     )
 
@@ -749,9 +749,9 @@ object SearchModel {
         dateCreated   = ticket.dateCreated
       ))
 
-      val count = TicketModel.getAllFullCountById(ticket.ticketId)
+      val count = TicketModel.getAllFullCountById(ticket.id.get)
       if(count > 1) {
-        TicketModel.getAllFullById(ticket.ticketId).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
+        TicketModel.getAllFullById(ticket.id.get).foldLeft(None: Option[FullTicket])((oldTick, newTick) => {
           // First run will NOT index history because oldTick is None (as None starts the fold)
           oldTick.map { ot => indexHistory(oldTick = ot, newTick = newTick) }
 

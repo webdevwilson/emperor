@@ -89,7 +89,7 @@ case class NewTicket(
  * to avoid the 22 limit.
  */
 case class FullTicket(
-  id: Pk[Long] = NotAssigned, projectTicketId: Long, user: NamedThing,
+  id: Pk[Long] = NotAssigned, dataId: Long, projectTicketId: Long, user: NamedThing,
   assignee: OptionalNamedThing, attention: OptionalNamedThing,
   project: NamedKeyedThing,  priority: ColoredPositionedThing,
   resolution: OptionalNamedThing,
@@ -199,8 +199,8 @@ object TicketModel {
   val getDataByIdQuery = SQL("SELECT * FROM ticket_data WHERE id IN (SELECT MAX(id) FROM ticket_data WHERE ticket_id={ticket_id})")
   val getAllCurrentQuery = SQL("SELECT * FROM full_tickets ORDER BY date_created DESC")
   val getFullByIdQuery = SQL("SELECT * FROM full_tickets WHERE id={id}")
-  val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t WHERE t.ticket_id={ticket_id} ORDER BY date_created ASC")
-  val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets  WHERE ticket_id={ticket_id} ORDER BY date_created ASC")
+  val getAllFullByIdQuery = SQL("SELECT * FROM full_all_tickets t WHERE t.id={id} ORDER BY date_created ASC")
+  val getAllFullByIdCountQuery = SQL("SELECT COUNT(*) FROM full_all_tickets WHERE id={id}")
   val listQuery = SQL("SELECT * FROM tickets LIMIT {count} OFFSET {offset}")
   val listCountQuery = SQL("SELECT count(*) FROM tickets")
   val insertQuery = SQL("INSERT INTO tickets (user_id, project_id, project_ticket_id) VALUES ({user_id}, {project_id}, {project_ticket_id})")
@@ -272,6 +272,7 @@ object TicketModel {
   // Parser for retrieving a FullTicket
   val fullTicket = {
     get[Pk[Long]]("id") ~
+    get[Long]("data_id") ~
     get[Long]("project_ticket_id") ~
     get[Long]("user_id") ~
     get[String]("user_realname") ~
@@ -302,9 +303,10 @@ object TicketModel {
     get[String]("summary") ~
     get[Option[String]]("description") ~
     get[DateTime]("date_created") map {
-      case id~projTickId~userId~userName~assId~assName~attId~attName~projId~projName~projKey~priId~priName~priColor~priPos~resId~resName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
+      case id~dataId~projTickId~userId~userName~assId~assName~attId~attName~projId~projName~projKey~priId~priName~priColor~priPos~resId~resName~sevId~sevName~sevColor~sevPos~statusId~workflowStatusId~statusName~typeId~typeName~typeColor~position~summary~description~dateCreated =>
         FullTicket(
           id = id,
+          dataId = dataId,
           projectTicketId = projTickId,
           user = NamedThing(userId, userName),
           assignee = OptionalNamedThing(assId, assName),
@@ -625,17 +627,17 @@ object TicketModel {
     }
   }
 
-  def getAllFullById(id: String): List[FullTicket] = {
+  def getAllFullById(id: Long): List[FullTicket] = {
 
     DB.withConnection { implicit conn =>
-      getAllFullByIdQuery.on('ticket_id -> id).as(fullTicket.*)
+      getAllFullByIdQuery.on('id -> id).as(fullTicket.*)
     }
   }
 
-  def getAllFullCountById(id: String): Long = {
+  def getAllFullCountById(id: Long): Long = {
 
     DB.withConnection { implicit conn =>
-      getAllFullByIdCountQuery.on('ticket_id -> id).as(scalar[Long].single)
+      getAllFullByIdCountQuery.on('id -> id).as(scalar[Long].single)
     }
   }
 

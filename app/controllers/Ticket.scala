@@ -479,7 +479,7 @@ object Ticket extends Controller with Secured {
           }, {
             case statusChange: models.StatusChange => {
               if(WorkflowModel.verifyStatusInWorkflow(wf.id.get, statusChange.statusId)) {
-                TicketModel.changeStatus(ticket.id.get, statusChange.statusId, request.user.id.get, comment = statusChange.comment)
+                TicketModel.changeStatus(ticketId = ticket.id.get, newStatusId = statusChange.statusId, userId = request.user.id.get, comment = statusChange.comment)
                 Redirect(routes.Ticket.item("comments", ticketId)).flashing("success" -> "ticket.success.status")
               } else {
                 Redirect(routes.Ticket.item("comments", ticketId)).flashing("error" -> "ticket.error.status.invalid")

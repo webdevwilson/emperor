@@ -146,6 +146,7 @@ object JsonFormats {
     // all these IDs then poll the database for the values.
     def reads(json: JsValue): JsResult[FullTicket] = JsSuccess(FullTicket(
       id        = Id((json \ "id").as[Long]),
+      dataId    = (json \ "data_id").as[Long],
       projectTicketId = (json \ "project_ticket_id").as[Long],
       user      = NamedThing(
         id    = (json \ "user_id").as[Long],
@@ -200,6 +201,7 @@ object JsonFormats {
 
       val tdoc: Map[String,JsValue] = Map(
         "id"              -> JsNumber(ticket.id.get),
+        "data_id"         -> JsNumber(ticket.dataId),
         "ticket_id"       -> JsString(ticket.ticketId),
         "project_ticket_id" -> JsNumber(ticket.projectTicketId),
         "project_id"      -> JsNumber(ticket.project.id),
