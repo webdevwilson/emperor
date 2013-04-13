@@ -304,7 +304,7 @@ object Ticket extends Controller with Secured {
         // Find commits
         val commitRes = {
           val commFilters = Map(
-            "ticket_id" -> Seq(ticketId),
+            "ticket_id" -> Seq(ticket.id.get.toString),
             "type"      -> Seq("commit")
           )
 
@@ -318,7 +318,7 @@ object Ticket extends Controller with Secured {
 
         val commRes = {
           val commFilters = Map(
-            "ticket_id" -> Seq(ticketId),
+            "ticket_id" -> Seq(ticket.id.get.toString),
             "type"      -> Seq("comment")
           )
 
