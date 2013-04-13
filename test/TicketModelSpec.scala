@@ -55,32 +55,37 @@ class TicketModelSpec extends Specification {
           severityId = ts.id.get,
           summary = "Test Ticket 1"
         )
-        newTicket must beSome
-        newTicket.get must beAnInstanceOf[models.FullTicket]
-        newTicket.get.ticketId must beEqualTo("TEST1-1")
+        newTicket must beRight
+        newTicket match {
+          case Right(newTicket) => {
+            newTicket must beAnInstanceOf[models.FullTicket]
+            newTicket.ticketId must beEqualTo("TEST1-1")
 
-        val eTicket = TicketModel.getById(newTicket.get.id.get)
-        eTicket must beSome
-        eTicket.get must beAnInstanceOf[models.Ticket]
+            val eTicket = TicketModel.getById(newTicket.id.get)
+            eTicket must beSome
+            eTicket.get must beAnInstanceOf[models.Ticket]
 
-        val efTicket = TicketModel.getFullById(newTicket.get.id.get)
-        efTicket must beSome
-        efTicket.get must beAnInstanceOf[models.FullTicket]
+            val efTicket = TicketModel.getFullById(newTicket.id.get)
+            efTicket must beSome
+            efTicket.get must beAnInstanceOf[models.FullTicket]
 
-        val sTicket = TicketModel.getByStringId(newTicket.get.ticketId)
-        sTicket must beSome
-        sTicket.get must beAnInstanceOf[models.Ticket]
+            val sTicket = TicketModel.getByStringId(newTicket.ticketId)
+            sTicket must beSome
+            sTicket.get must beAnInstanceOf[models.Ticket]
 
-        val sfTicket = TicketModel.getFullByStringId(newTicket.get.ticketId)
-        sfTicket must beSome
-        sfTicket.get must beAnInstanceOf[models.FullTicket]
+            val sfTicket = TicketModel.getFullByStringId(newTicket.ticketId)
+            sfTicket must beSome
+            sfTicket.get must beAnInstanceOf[models.FullTicket]
 
-        val ticketData = TicketModel.getDataById(newTicket.get.id.get)
-        ticketData must beSome
-        ticketData.get must beAnInstanceOf[models.TicketData]
+            val ticketData = TicketModel.getDataById(newTicket.id.get)
+            ticketData must beSome
+            ticketData.get must beAnInstanceOf[models.TicketData]
 
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
         1 mustEqual(1)
       }
     }
@@ -118,13 +123,18 @@ class TicketModelSpec extends Specification {
           severityId = ts.id.get,
           summary = "Test Ticket 1"
         )
-        newTicket must beSome
+        newTicket must beRight
 
-        TicketModel.getActualId(newTicket.get.ticketId).get must beEqualTo(newTicket.get.id.get)
+        newTicket match {
+          case Right(newTicket) => {
+            TicketModel.getActualId(newTicket.ticketId).get must beEqualTo(newTicket.id.get)
 
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
-        1 mustEqual(1)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+            1 mustEqual(1)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
       }
     }
 
@@ -162,20 +172,25 @@ class TicketModelSpec extends Specification {
           summary = "Test Ticket 1"
         )
 
-        newTicket must beSome
-        newTicket.get.assignee.id must beNone
+        newTicket must beRight
+        newTicket match {
+          case Right(newTicket) => {
+            newTicket.assignee.id must beNone
 
-        val assignedTicket = TicketModel.assign(
-          ticketId = newTicket.get.id.get,
-          userId = user.id.get,
-          assigneeId = Some(user.id.get)
-        )
-        assignedTicket.assignee.id must beSome
-        assignedTicket.assignee.id.get must beEqualTo(user.id.get)
+            val assignedTicket = TicketModel.assign(
+              ticketId = newTicket.id.get,
+              userId = user.id.get,
+              assigneeId = Some(user.id.get)
+            )
+            assignedTicket.assignee.id must beSome
+            assignedTicket.assignee.id.get must beEqualTo(user.id.get)
 
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
-        1 mustEqual(1)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+            1 mustEqual(1)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
       }
     }
 
@@ -213,30 +228,35 @@ class TicketModelSpec extends Specification {
           summary = "Test Ticket 1"
         )
 
-        newTicket must beSome
-        newTicket.get.assignee.id must beNone
+        newTicket must beRight
+        newTicket match {
+          case Right(newTicket) => {
+            newTicket.assignee.id must beNone
 
-        val reso = TicketResolutionModel.getById(1)
+            val reso = TicketResolutionModel.getById(1)
 
-        // Resolve it!
-        val assignedTicket = TicketModel.resolve(
-          ticketId = newTicket.get.id.get,
-          userId = user.id.get,
-          resolutionId = reso.get.id.get
-        )
-        assignedTicket.resolution.id must beSome
-        assignedTicket.resolution.id.get must beEqualTo(reso.get.id.get)
+            // Resolve it!
+            val assignedTicket = TicketModel.resolve(
+              ticketId = newTicket.id.get,
+              userId = user.id.get,
+              resolutionId = reso.get.id.get
+            )
+            assignedTicket.resolution.id must beSome
+            assignedTicket.resolution.id.get must beEqualTo(reso.get.id.get)
 
-        // Unresolve it!
-        val unassignedTicket = TicketModel.unresolve(
-          ticketId = newTicket.get.id.get,
-          userId = user.id.get
-        )
-        unassignedTicket.resolution.id must beNone
+            // Unresolve it!
+            val unassignedTicket = TicketModel.unresolve(
+              ticketId = newTicket.id.get,
+              userId = user.id.get
+            )
+            unassignedTicket.resolution.id must beNone
 
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
-        1 mustEqual(1)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+            1 mustEqual(1)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
       }
     }
 
@@ -274,22 +294,27 @@ class TicketModelSpec extends Specification {
           summary = "Test Ticket 1"
         )
 
-        newTicket must beSome
-        newTicket.get.assignee.id must beNone
+        newTicket must beRight
+        newTicket match {
+          case Right(newTicket) => {
+            newTicket.assignee.id must beNone
 
-        val status = TicketStatusModel.getById(3)
+            val status = TicketStatusModel.getById(3)
 
-        // Resolve it!
-        val changedTicket = TicketModel.changeStatus(
-          ticketId = newTicket.get.id.get,
-          userId = user.id.get,
-          newStatusId = status.get.id.get
-        )
-        changedTicket.status.id must beEqualTo(status.get.id.get)
+            // Resolve it!
+            val changedTicket = TicketModel.changeStatus(
+              ticketId = newTicket.id.get,
+              userId = user.id.get,
+              newStatusId = status.get.id.get
+            )
+            changedTicket.status.id must beEqualTo(status.get.id.get)
 
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
-        1 mustEqual(1)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+            1 mustEqual(1)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
       }
     }
 
@@ -327,18 +352,23 @@ class TicketModelSpec extends Specification {
           summary = "Test Ticket 2"
         )
 
-        val comm = TicketModel.addComment(ticketId = newTicket.get.id.get, ctype = "comment", userId = user.id.get, content = "Comment!")
-        comm must beSome
-        comm.get must beAnInstanceOf[models.Comment]
+        newTicket match {
+          case Right(newTicket) => {
+            val comm = TicketModel.addComment(ticketId = newTicket.id.get, ctype = "comment", userId = user.id.get, content = "Comment!")
+            comm must beSome
+            comm.get must beAnInstanceOf[models.Comment]
 
-        val gcomm = TicketModel.getCommentById(comm.get.id.get)
-        gcomm must beSome
-        gcomm.get must beAnInstanceOf[models.Comment]
+            val gcomm = TicketModel.getCommentById(comm.get.id.get)
+            gcomm must beSome
+            gcomm.get must beAnInstanceOf[models.Comment]
 
-        TicketModel.deleteComment(comm.get.id.get)
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
-        1 mustEqual(1)
+            TicketModel.deleteComment(comm.get.id.get)
+            TicketModel.delete(newTicket.id.get)
+            ProjectModel.delete(newProject.id.get)
+            1 mustEqual(1)
+          }
+          case _ => failure("Didn't get a ticket back!")
+        }
       }
     }
 
@@ -413,7 +443,7 @@ class TicketModelSpec extends Specification {
         val ts = TicketSeverityModel.getById(1).get
         val tt = TicketTypeModel.getById(1).get
 
-        val newTicket = TicketModel.create(
+        val maybeNewTicket = TicketModel.create(
           userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
@@ -421,9 +451,9 @@ class TicketModelSpec extends Specification {
           typeId = tt.id.get,
           summary = "Test Ticket 4"
         )
-        newTicket must beSome
+        maybeNewTicket must beRight
 
-        val newTicket2 = TicketModel.create(
+        val maybeNewTicket2 = TicketModel.create(
           userId = user.id.get,
           projectId = newProject.id.get,
           priorityId = tp.id.get,
@@ -431,34 +461,44 @@ class TicketModelSpec extends Specification {
           typeId = tt.id.get,
           summary = "Test Ticket 5"
         )
-        newTicket2 must beSome
+        maybeNewTicket2 must beRight
 
         val lt = TicketLinkTypeModel.getById(1)
         lt must beSome
 
-        val link = TicketModel.link(
-          linkTypeId = lt.get.id.get, parentId = newTicket.get.id.get, childId = newTicket2.get.id.get
+        maybeNewTicket.fold(
+          error => failure("Didn't get back a ticket!"),
+          newTicket => {
+            maybeNewTicket2.fold(
+              error2 => failure("Didn't get back a ticket!"),
+              newTicket2 => {
+                val link = TicketModel.link(
+                  linkTypeId = lt.get.id.get, parentId = newTicket.id.get, childId = newTicket2.id.get
+                )
+                link must beSome
+                link.get.typeId must beEqualTo(lt.get.id.get)
+                link.get.typeName must beEqualTo(lt.get.name)
+                link.get.parentId must beEqualTo(newTicket.id.get)
+                link.get.parentSummary must beEqualTo(newTicket.summary)
+                link.get.childId must beEqualTo(newTicket2.id.get)
+                link.get.childSummary must beEqualTo(newTicket2.summary)
+
+                val links = TicketModel.getLinks(newTicket.id.get)
+                links must have size(1)
+                links(0).id.get must beEqualTo(link.get.id.get)
+
+                val fLink = TicketModel.getLinkById(link.get.id.get)
+                fLink must beSome
+                fLink.get.id.get must beEqualTo(link.get.id.get)
+
+                TicketModel.removeLink(link.get.id.get)
+                TicketModel.delete(newTicket2.id.get)
+                TicketModel.delete(newTicket.id.get)
+                ProjectModel.delete(newProject.id.get)
+              }
+            )
+          }
         )
-        link must beSome
-        link.get.typeId must beEqualTo(lt.get.id.get)
-        link.get.typeName must beEqualTo(lt.get.name)
-        link.get.parentId must beEqualTo(newTicket.get.id.get)
-        link.get.parentSummary must beEqualTo(newTicket.get.summary)
-        link.get.childId must beEqualTo(newTicket2.get.id.get)
-        link.get.childSummary must beEqualTo(newTicket2.get.summary)
-
-        val links = TicketModel.getLinks(newTicket.get.id.get)
-        links must have size(1)
-        links(0).id.get must beEqualTo(link.get.id.get)
-
-        val fLink = TicketModel.getLinkById(link.get.id.get)
-        fLink must beSome
-        fLink.get.id.get must beEqualTo(link.get.id.get)
-
-        TicketModel.removeLink(link.get.id.get)
-        TicketModel.delete(newTicket2.get.id.get)
-        TicketModel.delete(newTicket.get.id.get)
-        ProjectModel.delete(newProject.id.get)
         1 mustEqual(1)
       }
     }
