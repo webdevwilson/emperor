@@ -5,8 +5,10 @@ import emp.util.Pagination.Page
 import emp.util.Search
 import emp.util.Search._
 import emp.JsonFormats._
+import java.net.URL
 import scalastic.elasticsearch._, SearchParameterTypes._
 import play.api._
+import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json.Json._
 import play.api.libs.json._
@@ -37,14 +39,33 @@ object SearchModel {
 
   val config = Play.configuration.getConfig("emperor")
   // Embedded ES
-  val settings = Map(
-    "path.data" -> config.get.getString("es_directory").getOrElse("data")
-  )
-  val indexer = Indexer.at(
-    nodeBuilder.local(true).data(true).settings(
-      settingsBuilder.put(settings)
-    ).node
-  ).start
+  val esURL = config.get.getString("es.url")
+
+  val indexer = esURL.map({ esURL =>
+    // Use a transport-based ES client when we're supplied with a URL
+    Logger.debug("Connecting to remote ES at " + esURL)
+
+    val url = try {
+      new Some(new URL(esURL))
+    } catch {
+      case e: Exception => {
+        throw new java.lang.RuntimeException(e.getMessage)
+        None
+      }
+    }
+    Logger.debug("Trying to connect to " + url.get.getHost + " at " + url.get.getPort)
+    Indexer.transport(Map("cluster.name" -> "elasticsearch"), host = url.get.getHost, ports = Seq(url.get.getPort))
+  }).getOrElse({
+    // Use a built-in ES if we have no URL to talk to
+    Logger.debug("Using built-in ES node")
+    Indexer.at(
+      nodeBuilder.local(true).data(true).settings(
+        settingsBuilder.put(Map(
+          "path.data" -> config.get.getString("es.directory").getOrElse("data")
+        ))
+      ).node
+    ).start
+  })
 
   // Ticket ES index
   val ticketIndex = "tickets"

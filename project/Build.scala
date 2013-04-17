@@ -22,7 +22,8 @@ object ApplicationBuild extends Build {
     // ES thingies
     "org.elasticsearch" % "elasticsearch"       % "0.20.5",
     "com.spatial4j" % "spatial4j"               % "0.3",
-    "org.clapper"   %% "grizzled-slf4j"         % "1.0.1"
+    "org.clapper"   %% "grizzled-slf4j"         % "1.0.1",
+    "wabisabi"      %% "wabisabi"               % "0.0.1"
   )
 
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
@@ -31,6 +32,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here
     scalaVersion := "2.10.0"
   ).settings(
+    resolvers += "gphat" at "https://raw.github.com/gphat/mvn-repo/master/releases/",
     sourceGenerators in Compile <+= buildInfo,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "emp"
