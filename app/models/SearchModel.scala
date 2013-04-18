@@ -29,7 +29,11 @@ import org.elasticsearch.node._, NodeBuilder._
 
 import org.joda.time.format.DateTimeFormat
 
-import emp._
+// XXX
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import wabisabi.Client
+
 import emp._
 import scala.collection.JavaConversions._
 
@@ -38,34 +42,24 @@ object SearchModel {
   val dateFormatter = DateTimeFormat.forPattern("yyyyMMdd'T'HHmmss'Z'").withZoneUTC()
 
   val config = Play.configuration.getConfig("emperor")
-  // Embedded ES
-  val esURL = config.get.getString("es.url")
 
-  val indexer = esURL.map({ esURL =>
-    // Use a transport-based ES client when we're supplied with a URL
-    Logger.debug("Connecting to remote ES at " + esURL)
+  // Start ES, even though we may not need it. XXX
+  val indexer = Indexer.at(
+    nodeBuilder.local(true).data(true).settings(
+      settingsBuilder.put(Map(
+        "path.data" -> config.get.getString("es.directory").getOrElse("data")
+      ))
+    ).node
+  ).start
 
-    val url = try {
-      new Some(new URL(esURL))
-    } catch {
-      case e: Exception => {
-        throw new java.lang.RuntimeException(e.getMessage)
-        None
-      }
-    }
-    Logger.debug("Trying to connect to " + url.get.getHost + " at " + url.get.getPort)
-    Indexer.transport(Map("cluster.name" -> "elasticsearch"), host = url.get.getHost, ports = Seq(url.get.getPort))
-  }).getOrElse({
-    // Use a built-in ES if we have no URL to talk to
-    Logger.debug("Using built-in ES node")
-    Indexer.at(
-      nodeBuilder.local(true).data(true).settings(
-        settingsBuilder.put(Map(
-          "path.data" -> config.get.getString("es.directory").getOrElse("data")
-        ))
-      ).node
-    ).start
-  })
+  val esURL = config.get.getString("es.url").getOrElse("http://localhost:9200")
+  // Use a transport-based ES client when we're supplied with a URL
+  Logger.debug("Connecting to ES at " + esURL)
+
+  // val url = new URL(esURL)
+  Logger.debug("Trying to connect to " + esURL)
+  val esClient = new Client(esURL)
+
 
   // Ticket ES index
   val ticketIndex = "tickets"
@@ -547,7 +541,8 @@ object SearchModel {
   def checkIndices = {
 
     if(!indexer.exists(eventIndex).exists) {
-      indexer.createIndex(eventIndex, settings = Map("number_of_shards" -> "1"))
+      Await.result(esClient.createIndex(name = eventIndex,settings = Some("{\"settings\": { \"index\": { \"number_of_shards\": 1 } } }")), Duration(5, "seconds"))
+      // indexer.createIndex(eventIndex, settings = Map("number_of_shards" -> "1"))
       indexer.waitTillActive()
       indexer.putMapping(eventIndex, eventType, eventMapping)
     }
