@@ -1,9 +1,8 @@
 package emp.util
 
-import models.{ProjectModel,SearchModel}
 import collection.JavaConversions._
-// import scalastic.elasticsearch.Indexer
-import scalastic.elasticsearch._, SearchParameterTypes._
+import emp.util.Pagination.Page
+import models.{ProjectModel,SearchModel}
 import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.index.query._
 import org.elasticsearch.index.query.FilterBuilders._
@@ -14,7 +13,10 @@ import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.facet.FacetBuilders._
 import org.elasticsearch.search.sort._
 import play.api.Logger
-import emp.util.Pagination.Page
+import play.api.libs.json.Json
+import scala.concurrent.Future
+import scalastic.elasticsearch._, SearchParameterTypes._
+import wabisabi.Client
 
 /**
  * Utilities for search.
@@ -57,33 +59,41 @@ object Search {
    * Transform an ElasticSearch SearchResponse into a SearchResult.  Contains
    * logic for converting ES' crazy Facet classes into something sane.
    */
-  def parseSearchResponse[A](pager: Page[A], response: SearchResponse): SearchResult[A] = {
+  def parseSearchResponse[A](pager: Page[A], response: String): SearchResult[A] = {
 
-    val facets = response.facets.facets map { facet =>
-      Facets(
-        name  = facet.getName,
-        items = facet match {
-          case t: InternalStringTermsFacet => {
-            t.entries map { fitem =>
-              Facet(
-                value = fitem.getTerm,
-                count = fitem.getCount
-              )
-            }
-          }
-          case t: InternalLongTermsFacet => {
-            t.entries map { fitem =>
-              Facet(
-                value = fitem.getTerm,
-                count = fitem.getCount
-              )
-            }
-          }
-        }
-      )
-    } filter { f => f.items.size > 1 } // Eliminate facets with only one item
+    // val jason = Await.result(response, Duration(1, "seconds"))
+    // val jsonTrans = (__ \ "hits").json.pick[List[Comment]]
+    // val hits = Json.parse(jason).transform(jsonTrans)
+    // val hits = (Json.parse(jason) \ "hits" \ "hits" \\ "_source").map({ h => Json.fromJson[](h) })
 
-    SearchResult(pager = pager, facets = facets)
+    // val pager = Page(hits, 1, 1, 1)
+    // val pager = Page(hits, query.page, query.count, hits.totalHits)
+
+    // val facets = response.facets.facets map { facet =>
+    //   Facets(
+    //     name  = facet.getName,
+    //     items = facet match {
+    //       case t: InternalStringTermsFacet => {
+    //         t.entries map { fitem =>
+    //           Facet(
+    //             value = fitem.getTerm,
+    //             count = fitem.getCount
+    //           )
+    //         }
+    //       }
+    //       case t: InternalLongTermsFacet => {
+    //         t.entries map { fitem =>
+    //           Facet(
+    //             value = fitem.getTerm,
+    //             count = fitem.getCount
+    //           )
+    //         }
+    //       }
+    //     }
+    //   )
+    // } filter { f => f.items.size > 1 } // Eliminate facets with only one item
+
+    SearchResult(pager = pager, facets = Seq())
   }
 
   // XXX this could be abstracted if we pre-did the project id stuff…
@@ -96,7 +106,11 @@ object Search {
    * it will use the user in `query` to create a filter of visible projects. See
    * `getVisibileProjects` in [[models.ProjectModel]].
    */
-  def runQuery(indexer: Indexer, index: String, query: SearchQuery, filterMap: Map[String,String], sortMap: Map[String,String], facets: Map[String,String] = Map.empty, filterProjects: Boolean = true): SearchResponse = {
+  def runQuery(
+    client: Client, index: String, query: SearchQuery, filterMap: Map[String,String],
+    sortMap: Map[String,String], facets: Map[String,String] = Map.empty,
+    filterProjects: Boolean = true
+  ): Future[String] = {
 
     val termFilters: Option[FilterBuilder] = if(query.filters.nonEmpty) {
 
@@ -184,22 +198,28 @@ object Search {
       case None => SortOrder.DESC
     }
 
-    indexer.search(
-      query = actualQuery,
-      indices = Seq(index),
-      facets = facets.map { case (name, field) =>
-        termsFacet(name).field(field)
-      },
-      size = Some(query.count),
-      from = query.page match {
-        case 0 => Some(0)
-        case 1 => Some(0)
-        case _ => Some((query.page - 1) * query.count)
-      },
-      sortings = Seq(
-        // This is a bit messy… but it gets the job done.
-        FieldSort(field = sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created"), order = sortOrder)
-      )
+    val fullSearch = Json.obj(
+      "query" -> "{}", //Json.parse(actualQuery.toString),
+      "from" -> 0, //query.page match {
+      //   case 0 => 0
+      //   case 1 => 0
+      //   case _ => (query.page - 1) * query.count
+      // },
+      "size" -> query.count
     )
+
+    client.search(index = index, query = fullSearch.toString)
+      // query = actualQuery,
+      // indices = Seq(index),
+      // facets = facets.map { case (name, field) =>
+      //   termsFacet(name).field(field)
+      // },
+      // size = Some(query.count),
+      // from = ,
+      // sortings = Seq(
+      //   // This is a bit messy… but it gets the job done.
+      //   FieldSort(field = sortMap.get(query.sortBy.getOrElse("date_created")).getOrElse("date_created"), order = sortOrder)
+      // )
+    // )
   }
 }

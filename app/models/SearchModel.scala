@@ -32,6 +32,7 @@ import org.joda.time.format.DateTimeFormat
 // XXX
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 import wabisabi.Client
 
 import emp._
@@ -54,12 +55,10 @@ object SearchModel {
 
   val esURL = config.get.getString("es.url").getOrElse("http://localhost:9200")
   // Use a transport-based ES client when we're supplied with a URL
-  Logger.debug("Connecting to ES at " + esURL)
 
   // val url = new URL(esURL)
   Logger.debug("Trying to connect to " + esURL)
   val esClient = new Client(esURL)
-
 
   // Ticket ES index
   val ticketIndex = "tickets"
@@ -535,33 +534,40 @@ object SearchModel {
     "assignee" -> "assignee_name"
   )
 
+  val indexSettings = "{\"settings\": { \"index\": { \"number_of_shards\": 1 } } }"
+
   /**
    * Check that all the necessary indices exist.  If they don't, create them.
    */
   def checkIndices = {
 
-    if(!indexer.exists(eventIndex).exists) {
-      Await.result(esClient.createIndex(name = eventIndex,settings = Some("{\"settings\": { \"index\": { \"number_of_shards\": 1 } } }")), Duration(5, "seconds"))
-      // indexer.createIndex(eventIndex, settings = Map("number_of_shards" -> "1"))
-      indexer.waitTillActive()
-      indexer.putMapping(eventIndex, eventType, eventMapping)
-    }
-    if(!indexer.exists(ticketIndex).exists) {
-      indexer.createIndex(ticketIndex, settings = Map("number_of_shards" -> "1"))
-      indexer.waitTillActive()
-      indexer.putMapping(ticketIndex, ticketType, ticketMapping)
-    }
-    if(!indexer.exists(ticketCommentIndex).exists) {
-      indexer.createIndex(ticketCommentIndex, settings = Map("number_of_shards" -> "1"))
-      indexer.waitTillActive()
-      indexer.putMapping(ticketCommentIndex, ticketCommentType, ticketCommentMapping)
-    }
-    if(!indexer.exists(ticketHistoryIndex).exists) {
-      indexer.createIndex(ticketHistoryIndex, settings = Map("number_of_shards" -> "1"))
-      indexer.waitTillActive()
-      indexer.putMapping(ticketHistoryIndex, ticketHistoryType, ticketHistoryMapping)
-    }
-    indexer.refresh()
+    val indexNames = List(eventIndex, ticketIndex, ticketCommentIndex, ticketHistoryIndex)
+    val typeNames = List(eventType, ticketType, ticketCommentType, ticketHistoryType)
+    val mappings = List(eventMapping, ticketMapping, ticketCommentMapping, ticketHistoryMapping)
+
+    // Create the indices and set the mappings.
+    indexNames.zipWithIndex.foreach({ case (name, i) =>
+      Logger.debug(s"Creating index $name")
+      esClient.verifyIndex(name = name) onFailure {
+        // If the verify fails, that means it doesn't exist. We don't care about
+        // success because that means the index is there.
+        case _ => {
+          esClient.createIndex(name = name, settings = Some(indexSettings)) map { f =>
+            esClient.health(indices = Seq(name), waitForNodes = Some("1")) // XXX Number of shards should be configurable
+          } map { f =>
+            esClient.putMapping(indices = Seq(name), `type` = typeNames(i), body = mappings(i))
+          } recover {
+            case x: Throwable => {
+              Logger.error(s"Failed to create index: $name")
+              // Rethrow!
+              throw x
+            }
+          }
+        }
+      }
+    })
+    // Block for the last index, we want to make sure everything is done.
+    Await.result(esClient.health(indices = Seq(indexNames.last), waitForNodes = Some("1")), Duration(5, "seconds")) // XXX Number of shards should be configurable
   }
 
   /**
@@ -833,14 +839,17 @@ object SearchModel {
   def searchComment(query: SearchQuery): SearchResult[Comment] = {
 
     val res = Search.runQuery(
-      indexer = indexer, index = ticketCommentIndex, query = query,
+      client = esClient, index = ticketCommentIndex, query = query,
       filterMap = ticketCommentFilterMap, sortMap = ticketCommentSortMap,
       ticketCommentFacets, filterProjects = false
     )
-    val hits: Iterable[Comment] = res.hits.map { hit => Json.fromJson[Comment](Json.parse(hit.sourceAsString())).asOpt.get }
+    // val jsonTrans = (__ \ "hits").json.pick[JsArray]
+    val response = Await.result(res, Duration(1, "seconds"))
 
-    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    emp.util.Search.parseSearchResponse(pager = pager, response = res)
+    val hits = (Json.parse(response) \ "hits" \ "hits" \\ "_source").map({ h => Json.fromJson[models.Comment](h).asOpt.get })
+
+    val pager = Page(hits, query.page, query.count, 1) // XXX NO NO
+    emp.util.Search.parseSearchResponse(pager = pager, response = response)
   }
 
   /**
@@ -848,11 +857,14 @@ object SearchModel {
    */
   def searchEvent(query: SearchQuery): SearchResult[Event] = {
 
-    val res = Search.runQuery(indexer, eventIndex, query, eventFilterMap, eventSortMap, eventFacets)
-    val hits: Iterable[Event] = res.hits.map { hit => Json.fromJson[Event](Json.parse(hit.sourceAsString())).asOpt.get }
+    val res = Search.runQuery(esClient, eventIndex, query, eventFilterMap, eventSortMap, eventFacets)
+    // val jsonTrans = (__ \ "hits").json.pick[JsArray]
+    val response = Await.result(res, Duration(1, "seconds"))
 
-    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    emp.util.Search.parseSearchResponse(pager = pager, response = res)
+    val hits = (Json.parse(response) \ "hits" \ "hits" \\ "_source").map({ h => Json.fromJson[models.Event](h).asOpt.get })
+
+    val pager = Page(hits, query.page, query.count, 1) // XXX No No
+    emp.util.Search.parseSearchResponse(pager = pager, response = response)
   }
 
   /**
@@ -860,11 +872,14 @@ object SearchModel {
    */
   def searchTicket(query: SearchQuery): SearchResult[FullTicket] = {
 
-    val res = runQuery(indexer, ticketIndex, query, ticketFilterMap, ticketSortMap, ticketFacets)
-    val hits = res.hits.map { hit => Json.fromJson[FullTicket](Json.parse(hit.sourceAsString())).asOpt.get }
+    val res = runQuery(esClient, ticketIndex, query, ticketFilterMap, ticketSortMap, ticketFacets)
+    val response = Await.result(res, Duration(1, "seconds"))
 
-    val pager = Page(hits, query.page, query.count, res.hits.totalHits)
-    emp.util.Search.parseSearchResponse(pager = pager, response = res)
+    val hits = (Json.parse(response) \ "hits" \ "hits" \\ "_source").map({ h => Json.fromJson[models.FullTicket](h).asOpt.get })
+
+
+    val pager = Page(hits, query.page, query.count, 1) // XXX NO
+    emp.util.Search.parseSearchResponse(pager = pager, response = response)
   }
 
   /**

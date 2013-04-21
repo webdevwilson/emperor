@@ -23,7 +23,7 @@ object ApplicationBuild extends Build {
     "org.elasticsearch" % "elasticsearch"       % "0.20.5",
     "com.spatial4j" % "spatial4j"               % "0.3",
     "org.clapper"   %% "grizzled-slf4j"         % "1.0.1",
-    "wabisabi"      %% "wabisabi"               % "0.0.1"
+    "wabisabi"      %% "wabisabi"               % "0.0.1-SNAPSHOT"
   )
 
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
